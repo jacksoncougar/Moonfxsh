@@ -49,12 +49,7 @@ namespace Moonfish
 
         public static T GetFromCache<T>( this TagIdent identifier, CacheKey cacheKey, bool skipCache = false ) where T : GuerillaBlock
         {
-            if ( identifier == TagIdent.NullIdentifier ) return null;
             ActiveCache = Index[ cacheKey ];
-            if ( skipCache )
-            {
-               // ActiveCache.ClearCache( identifier );
-            }
             var item = ActiveCache.Deserialize<T>( identifier );
             return item;
         }

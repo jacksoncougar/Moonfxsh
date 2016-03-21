@@ -146,6 +146,7 @@ namespace Moonfish.Graphics
         {
             foreach ( var commandBuffer in PrimitiveIndirectDrawBuffer.Values )
             {
+                if(commandBuffer.Count>0)return;
                 commandBuffer.Clear( );
             }
 

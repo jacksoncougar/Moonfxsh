@@ -126,10 +126,10 @@ namespace Moonfish.Guerilla.Tags
 
         public bool Equals( IH2ObjectInstance other )
         {
-            var instance = other as ScenarioSceneryBlock;
-            if (instance == null) return false;
-            var objectInstance = ( IH2ObjectInstance ) this;
-            return other.ObjectDatum.ObjectID.UniqueID == objectInstance.ObjectDatum.ObjectID.UniqueID;
+            var type = other.ObjectDatum.ManualBSPFlags.Type == ObjectData.ManualBSPFlags.Type;
+            var uniqueId = other.ObjectDatum.ObjectID.UniqueID == ObjectData.ObjectID.UniqueID;
+
+            return type && uniqueId;
         }
 
         bool IEqualityComparer<IH2ObjectInstance>.Equals( IH2ObjectInstance x, IH2ObjectInstance y )
@@ -177,10 +177,10 @@ namespace Moonfish.Guerilla.Tags
 
         public bool Equals(IH2ObjectInstance other)
         {
-            var instance = other as ScenarioWeaponBlock;
-            if (instance == null) return false;
-            var objectInstance = (IH2ObjectInstance)this;
-            return other.ObjectDatum.ObjectID.UniqueID == objectInstance.ObjectDatum.ObjectID.UniqueID;
+            var type = other.ObjectDatum.ManualBSPFlags.Type == ObjectData.ManualBSPFlags.Type;
+            var uniqueId = other.ObjectDatum.ObjectID.UniqueID == ObjectData.ObjectID.UniqueID;
+
+            return type && uniqueId;
         }
 
         bool IEqualityComparer<IH2ObjectInstance>.Equals(IH2ObjectInstance x, IH2ObjectInstance y)
@@ -228,10 +228,10 @@ namespace Moonfish.Guerilla.Tags
 
         public bool Equals(IH2ObjectInstance other)
         {
-            var instance = other as ScenarioVehicleBlock;
-            if (instance == null) return false;
-            var objectInstance = (IH2ObjectInstance)this;
-            return other.ObjectDatum.ObjectID.UniqueID == objectInstance.ObjectDatum.ObjectID.UniqueID;
+            var type = other.ObjectDatum.ManualBSPFlags.Type == ObjectData.ManualBSPFlags.Type;
+            var uniqueId = other.ObjectDatum.ObjectID.UniqueID == ObjectData.ObjectID.UniqueID;
+
+            return type && uniqueId;
         }
 
         bool IEqualityComparer<IH2ObjectInstance>.Equals(IH2ObjectInstance x, IH2ObjectInstance y)
@@ -279,10 +279,10 @@ namespace Moonfish.Guerilla.Tags
 
         public bool Equals(IH2ObjectInstance other)
         {
-            var instance = other as ScenarioEquipmentBlock;
-            if (instance == null) return false;
-            var objectInstance = (IH2ObjectInstance)this;
-            return other.ObjectDatum.ObjectID.UniqueID == objectInstance.ObjectDatum.ObjectID.UniqueID;
+            var type = other.ObjectDatum.ManualBSPFlags.Type == ObjectData.ManualBSPFlags.Type;
+            var uniqueId = other.ObjectDatum.ObjectID.UniqueID == ObjectData.ObjectID.UniqueID;
+
+            return type && uniqueId;
         }
 
         bool IEqualityComparer<IH2ObjectInstance>.Equals(IH2ObjectInstance x, IH2ObjectInstance y)
@@ -330,10 +330,10 @@ namespace Moonfish.Guerilla.Tags
 
         public bool Equals(IH2ObjectInstance other)
         {
-            var instance = other as ScenarioCrateBlock;
-            if (instance == null) return false;
-            var objectInstance = (IH2ObjectInstance)this;
-            return other.ObjectDatum.ObjectID.UniqueID == objectInstance.ObjectDatum.ObjectID.UniqueID;
+            var type = other.ObjectDatum.ManualBSPFlags.Type == ObjectData.ManualBSPFlags.Type;
+            var uniqueId = other.ObjectDatum.ObjectID.UniqueID == ObjectData.ObjectID.UniqueID;
+
+            return type && uniqueId;
         }
 
         bool IEqualityComparer<IH2ObjectInstance>.Equals(IH2ObjectInstance x, IH2ObjectInstance y)

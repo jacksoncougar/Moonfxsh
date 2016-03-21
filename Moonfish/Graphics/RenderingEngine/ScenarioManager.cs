@@ -373,7 +373,13 @@ namespace Moonfish.Graphics
                 regionNames.Add( region.Name );
             }
             var sectionIndices = SelectRenderModelSections( renderBlock, regionNames, null, detailLevel );
-            return renderBlock.Sections.Where( ( e, i ) => sectionIndices.Contains( i ) ).ToArray( );
+
+            var blocks = new RenderModelSectionBlock[sectionIndices.Length];
+            for ( var i = 0; i < blocks.Length; ++i )
+            {
+                blocks[ i ] = renderBlock.Sections[ sectionIndices[ i ] ];
+            }
+            return blocks;
         }
 
         private static RenderModelSectionBlock[] ProcessVariant( ModelVariantBlock variantBlock,
@@ -397,27 +403,25 @@ namespace Moonfish.Graphics
         /// <param name="regionNames">A list of names for each region to return</param>
         /// <param name="permutationNames"></param>
         /// <param name="detailLevel">The detail level of mesh to return</param>
-        private static IEnumerable<int> SelectRenderModelSections( RenderModelBlock renderBlock,
+        private static int[] SelectRenderModelSections( RenderModelBlock renderBlock,
             List<StringIdent> regionNames, IReadOnlyList<StringIdent> permutationNames, DetailLevel detailLevel )
         {
             var indices = new int[renderBlock.Regions.Length];
-            for ( var i = 0; i < renderBlock.Regions.Length; i++ )
+            var index = 0;
+            foreach ( var region in renderBlock.Regions )
             {
-                var region = renderBlock.Regions[ i ];
                 if ( regionNames.BinarySearch( region.Name ) < 0 )
-                {
-                    indices[ i ] = -1;
                     continue;
-                }
+
                 var sectionIndex =
                     GetSectionIndex(
                         permutationNames == null
                             ? region.Permutations[ 0 ]
                             : region.Permutations.SingleOrDefault( u => u.Name == permutationNames[ 0 ] ) ??
                               region.Permutations[ 0 ], detailLevel );
-                indices[ i ] = sectionIndex;
+                indices[ index++ ] = sectionIndex;
             }
-            return indices;
+            return indices.TakeSubset( 0, index ).ToArray( );
         }
 
         /// <summary>

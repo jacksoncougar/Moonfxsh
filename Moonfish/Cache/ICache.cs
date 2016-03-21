@@ -16,6 +16,7 @@ namespace Moonfish.Cache
            return  Solution.Index.GetCacheKey( cache );
         }
     }
+
     public interface ICache:  IReadOnlyList<TagDatum>
     {
         TagDatum Add<T>( T item, string tagName ) where T : GuerillaBlock;

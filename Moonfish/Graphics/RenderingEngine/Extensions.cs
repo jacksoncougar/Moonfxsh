@@ -98,5 +98,10 @@ namespace Moonfish.Graphics.RenderingEngine
                     throw new ArgumentOutOfRangeException( nameof( blendOp ), blendOp, null );
             }
         }
+
+        public static IEnumerable<T> TakeSubset<T>( this IEnumerable<T> enumerable, int startIndex, int length )
+        {
+            return enumerable.Skip(startIndex).Take(length);
+        }
     }
 }

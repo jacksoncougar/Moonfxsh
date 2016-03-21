@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using OpenTK;
 
@@ -6,28 +7,40 @@ namespace Moonfish
 {
     public static class OpenTKExtensions
     {
+        [StructLayout(LayoutKind.Explicit)]
+        public unsafe struct FloatByteUnion
+        {
+            [FieldOffset( 0 )] public fixed byte bytes [sizeof ( float ) * 16];
+            [FieldOffset( 0 )] public fixed float floats [16];
+        }
 
+        private static byte[] byteBuffer = new byte[sizeof(float) * 16];
         public static void Write(this BinaryWriter binaryWriter, ref Matrix4 value)
         {
-            binaryWriter.Write(value.M11);
-            binaryWriter.Write(value.M12);
-            binaryWriter.Write(value.M13);
-            binaryWriter.Write(value.M14);
+            float[] elements =
+            {
+                value.M11,
+                value.M12,
+                value.M13,
+                value.M14,
 
-            binaryWriter.Write(value.M21);
-            binaryWriter.Write(value.M22);
-            binaryWriter.Write(value.M23);
-            binaryWriter.Write(value.M24);
+                value.M21,
+                value.M22,
+                value.M23,
+                value.M24,
 
-            binaryWriter.Write(value.M31);
-            binaryWriter.Write(value.M32);
-            binaryWriter.Write(value.M33);
-            binaryWriter.Write(value.M34);
+                value.M31,
+                value.M32,
+                value.M33,
+                value.M34,
 
-            binaryWriter.Write(value.M41);
-            binaryWriter.Write(value.M42);
-            binaryWriter.Write(value.M43);
-            binaryWriter.Write(value.M44);
+                value.M41,
+                value.M42,
+                value.M43,
+                value.M44,
+            };
+            Buffer.BlockCopy( elements, 0, byteBuffer, 0, byteBuffer.Length );
+            binaryWriter.Write(byteBuffer);
         }
         public static void Write(this BinaryWriter binaryWriter, Vector3 vector3)
         {

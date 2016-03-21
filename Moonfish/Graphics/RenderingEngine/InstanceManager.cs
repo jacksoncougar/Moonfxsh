@@ -36,12 +36,15 @@ namespace Moonfish.Graphics.RenderingEngine
             return PartInstances[ part ].Count;
         }
 
-        public IEnumerable<InstanceData> GetInstancesOf( GlobalGeometryPartBlockNew part )
+        public InstanceData[] GetInstancesOf( GlobalGeometryPartBlockNew part )
         {
-            foreach ( var instanceData in PartInstances[ part ].Select( u => InstanceData[ u ] ) )
+            var instanceDatum = new InstanceData[PartInstances[part].Count];
+            int index = 0;
+            foreach ( var instanceKey in PartInstances[part] )
             {
-                yield return instanceData;
+                instanceDatum[ index++ ] = InstanceData[ instanceKey ];
             }
+            return instanceDatum;
         }
 
         public void BufferInstanceData( InstanceDataBuffer buffer )
@@ -66,31 +69,29 @@ namespace Moonfish.Graphics.RenderingEngine
         /// ii.  Instances should refer to a collection of parts
         /// iii. Instance data is linked to a single instance
         /// </remarks>
-        public void CreateInstance(GlobalGeometryPartBlockNew part, IH2ObjectInstance instance, bool supportsPermutations)
+        public void CreateInstance( GlobalGeometryPartBlockNew part, IH2ObjectInstance instance,
+            bool supportsPermutations )
         {
             // 1. Check if the part is already in dictionary and initialize it into the dictionary if not 
-            if (!PartInstances.ContainsKey(part))
+            HashSet<InstanceKey> instances;
+            if ( !PartInstances.TryGetValue( part, out instances ) )
             {
                 // Initialize a collection of instance identifiers
-                PartInstances.Add(part, new HashSet<InstanceKey>());
+                instances = new HashSet<InstanceKey>( );
+                PartInstances.Add( part, instances );
             }
             // 2. Check to see if this instance has already been added
             InstanceKey key;
-            if (!InstanceKeys.ContainsKey(instance))
+            if ( !InstanceKeys.TryGetValue( instance, out key ) )
             {
                 // (a) Create a key for the new instance and (b) link the key with the instance
                 key = CreateInstanceKey( );
-                InstanceKeys.Add(instance, key);
+                InstanceKeys.Add( instance, key );
                 // (c) Link the key with the intance data
-                InstanceData.Add(key, new InstanceData(instance, supportsPermutations));
+                InstanceData.Add( key, new InstanceData( instance, supportsPermutations ) );
             }
             // 3. Check to see if the part is already linked with the instance
-            key = InstanceKeys[instance];
-            if (!PartInstances[part].Contains(key))
-            {
-                // Add this instance to the part's instances
-                PartInstances[part].Add(key);
-            }
+            instances.Add( key );
         }
 
         public bool RemoveInstance( GlobalGeometryPartBlockNew part, dynamic instance )
@@ -116,6 +117,11 @@ namespace Moonfish.Graphics.RenderingEngine
             public override int GetHashCode( )
             {
                 return _id.GetHashCode( );
+            }
+
+            public override bool Equals( object obj )
+            {
+                return base.Equals( obj );
             }
 
             public static InstanceKey operator ++( InstanceKey instanceKey )

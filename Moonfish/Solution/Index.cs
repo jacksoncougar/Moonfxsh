@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Moonfish.Cache;
@@ -28,20 +29,25 @@ namespace Moonfish
         Cache = 1
     }
 
-    public struct CacheKey
+    public struct CacheKey : IEquatable<CacheKey>
     {
         public CacheKey( short? count ) : this( )
         {
-            Key = count;
+            Key = count ?? -1;
         }
 
-        short? Key { get; }
+        private short Key { get; }
 
         public static CacheKey Null => new CacheKey( null );
 
         public override int GetHashCode( )
         {
-            return Key ?? -1;
+            return Key;
+        }
+
+        public bool Equals( CacheKey other )
+        {
+            return GetHashCode( ) == other.GetHashCode( );
         }
 
         public override bool Equals( object obj )
@@ -52,8 +58,6 @@ namespace Moonfish
 
         public static bool operator ==( CacheKey firstKey, CacheKey secondKey )
         {
-            if (firstKey.Key == null && secondKey.Key == null) return true;
-            if ( firstKey.Key == null || secondKey.Key == null ) return false;
             return firstKey.Key == secondKey.Key;
         }
 

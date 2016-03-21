@@ -65,7 +65,8 @@ namespace Moonfish.Tags
 
         public static void Write(this BinaryWriter binaryWriter, BlockFlags16 value)
         {
-            binaryWriter.Write(value.flags);
+            binaryWriter.Write((byte)value.Type);
+            binaryWriter.Write((byte)value.Source);
         }
 
         public static void Write(this BinaryWriter binaryWriter, BlockFlags32 value)

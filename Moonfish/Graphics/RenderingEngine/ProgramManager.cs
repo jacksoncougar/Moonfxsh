@@ -172,30 +172,36 @@ namespace Moonfish.Graphics
             Shaders[ "screen" ] = defaultProgram;
         }
 
-        private void LoadDebugShader()
+        private void LoadDebugShader( )
         {
-            var vertex_shader = new Shader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/debug.vert"), ShaderType.VertexShader);
-            var fragment_shader = new Shader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/debug.frag"), ShaderType.FragmentShader);
-            var program = new Program("debug");
+            var vertex_shader = new Shader( Path.Combine( AppDomain.CurrentDomain.BaseDirectory, "data/debug.vert" ),
+                ShaderType.VertexShader );
+            var fragment_shader = new Shader( Path.Combine( AppDomain.CurrentDomain.BaseDirectory, "data/debug.frag" ),
+                ShaderType.FragmentShader );
+            var program = new Program( "debug" );
 
-            program.Link(new List<Shader>(2) { vertex_shader, fragment_shader });
+            program.Link( new List<Shader>( 2 ) {vertex_shader, fragment_shader} );
 
-            var diffuseMapUniform = program.GetUniformLocation("diffuseSampler");
+            var diffuseMapUniform = program.GetUniformLocation( "diffuseSampler" );
 
-            program.Use();
-            program.SetUniform(diffuseMapUniform, 0);
-
-            StateManager.AlphaFuncChanged += delegate (object sender, D3DCMPFUNC function)
+            program.Use( );
+            program.SetUniform( diffuseMapUniform, 0 );
+            StateManager.AlphaTestEnableChanged += delegate( object sender, bool enabled )
             {
-                var uniformLocation = program.GetUniformLocation("AlphaFuncUniform");
-                program.SetUniform(uniformLocation, (int)function);
+                var uniformLocation = program.GetUniformLocation( "AlphaTestAnable" );
+                program.SetUniform( uniformLocation, enabled );
             };
-            StateManager.AlphaRefChanged += delegate (object sender, float alphaRef)
+            StateManager.AlphaFuncChanged += delegate( object sender, D3DCMPFUNC function )
             {
-                var uniformLocation = program.GetUniformLocation("AlphaRefUniform");
-                program.SetUniform(uniformLocation, alphaRef);
+                var uniformLocation = program.GetUniformLocation( "AlphaFuncUniform" );
+                program.SetUniform( uniformLocation, ( int ) function );
             };
-            Shaders["debug"] = program;
+            StateManager.AlphaRefChanged += delegate( object sender, float alphaRef )
+            {
+                var uniformLocation = program.GetUniformLocation( "AlphaRefUniform" );
+                program.SetUniform( uniformLocation, alphaRef );
+            };
+            Shaders[ "debug" ] = program;
         }
 
         private void LoadDebug2Shader()

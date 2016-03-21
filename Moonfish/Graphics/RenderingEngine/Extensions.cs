@@ -15,7 +15,25 @@ namespace Moonfish.Graphics.RenderingEngine
             return enumerable.Skip( param.Index ).Take( param.Length );
         }
 
-        public static BlendingFactorDest ConvertToBlendingFactorDest(this D3DBLEND blend)
+        public static CullFaceMode ConvertCullMode( this D3DCULL cull )
+        {
+            switch ( cull )
+            {
+                case D3DCULL.NONE:
+                    return CullFaceMode.FrontAndBack;
+                    break;
+                case D3DCULL.CW:
+                    return CullFaceMode.Back;
+                    break;
+                case D3DCULL.CCW:
+                    return CullFaceMode.Front;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException( nameof( cull ), cull, null );
+            }
+        }
+
+        public static BlendingFactorDest ConvertToBlendingFactorDest( this D3DBLEND blend )
         {
             switch ( blend )
             {
@@ -56,18 +74,23 @@ namespace Moonfish.Graphics.RenderingEngine
 
         public static BlendingFactorSrc ConvertToBlendingFactorSrc( this D3DBLEND blend )
         {
-            return ( BlendingFactorSrc ) blend.ConvertToBlendingFactorDest(  );
+            return ( BlendingFactorSrc ) blend.ConvertToBlendingFactorDest( );
         }
 
         public static BlendEquationMode ConvertToBlendEquation( this D3DBLENDOP blendOp )
         {
             switch ( blendOp )
             {
-                case D3DBLENDOP.ADD:return BlendEquationMode.FuncAdd;
-                case D3DBLENDOP.SUBTRACT:return BlendEquationMode.FuncSubtract;
-                case D3DBLENDOP.REVSUBTRACT:return BlendEquationMode.FuncReverseSubtract;
-                case D3DBLENDOP.MIN:return BlendEquationMode.Min;
-                case D3DBLENDOP.MAX:return BlendEquationMode.Max;
+                case D3DBLENDOP.ADD:
+                    return BlendEquationMode.FuncAdd;
+                case D3DBLENDOP.SUBTRACT:
+                    return BlendEquationMode.FuncSubtract;
+                case D3DBLENDOP.REVSUBTRACT:
+                    return BlendEquationMode.FuncReverseSubtract;
+                case D3DBLENDOP.MIN:
+                    return BlendEquationMode.Min;
+                case D3DBLENDOP.MAX:
+                    return BlendEquationMode.Max;
                 case D3DBLENDOP.ADDSIGNED:
                 case D3DBLENDOP.REVSUBTRACTSIGNED:
                 case D3DBLENDOP.FORCE_DWORD:

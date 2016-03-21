@@ -3,7 +3,8 @@
 layout(location = 0) in vec4 coordinate;
 layout(location = 1) smooth in vec4 texcoord;
 
-uniform int AlphaFuncUniform;
+uniform bool AlphaTestAnable = false;
+uniform int AlphaFuncUniform = 0;
 uniform float AlphaRefUniform = 0.5;
 
 layout(binding = 0) uniform sampler2D diffuseSampler;
@@ -18,7 +19,7 @@ void main()
 	vec4 colour = texture(diffuseSampler, texcoord.st);
 	vec4 normal = texture(normalSampler, texcoord.st) * 2.0 - 1.0;
 
-	//if (AlphaTest(AlphaFuncUniform, normal.a, AlphaRefUniform)) discard;
+	if (AlphaTestAnable && AlphaTest(AlphaFuncUniform, normal.a, AlphaRefUniform)) discard;
 
 	FragmentColour = colour;
 }
@@ -27,6 +28,13 @@ void main()
 bool AlphaTest(int alphaFunc, float srcAlpha, float alphaRef)
 {
 	// less
+	if (alphaFunc == 0x200) return false;
 	if (alphaFunc == 0x201 && (srcAlpha < alphaRef)) return true;
+	if (alphaFunc == 0x202 && (srcAlpha == alphaRef)) return true;
+	if (alphaFunc == 0x203 && (srcAlpha <= alphaRef)) return true;
+	if (alphaFunc == 0x204 && (srcAlpha > alphaRef)) return true;
+	if (alphaFunc == 0x205 && (srcAlpha != alphaRef)) return true;
+	if (alphaFunc == 0x206 && (srcAlpha >= alphaRef)) return true;
+	if (alphaFunc == 0x207) return true;
 	return false;
 }

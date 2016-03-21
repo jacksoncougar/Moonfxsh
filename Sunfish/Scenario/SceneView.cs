@@ -20,15 +20,7 @@ namespace Sunfish.Forms
     {
         public event EventHandler SceneInitialized;
 
-        private OpenTK.GLControl _glControl1;
-
-        public SceneView( CacheStream cacheStream )
-        {
-            SceneClock = new SceneClock( );
-            SceneClock.timer.Start( );
-            InitializeComponent( );
-            LoadGLControl( );
-        }
+        private GLControl _glControl1;
 
         public SceneView( )
         {
@@ -42,7 +34,7 @@ namespace Sunfish.Forms
 
         public DynamicScene Scene { get; set; }
 
-        private SceneClock SceneClock { get; }
+        public SceneClock SceneClock { get; }
 
         private void ChangeViewport( int width, int height )
         {
@@ -51,8 +43,6 @@ namespace Sunfish.Forms
 
         private void glControl1_Load( object sender, EventArgs e )
         {
-            //var tagDatum  = _cacheStream.Index.SingleOrDefault(u => u.Class == TagClass.Bloc && u.Path.Contains("fusion"));
-
             //  create a new dynamic scene and pass this control as the scene owner to hook control
             //  then load the selected map into the scene
             Scene = new DynamicScene(_glControl1);
@@ -66,11 +56,9 @@ namespace Sunfish.Forms
             //  the shader uniforms, and initalizes the camera before the first draw can be called
             glControl1_Resize( this, new EventArgs( ) );
             SceneInitialized?.Invoke( this, null );
-        }
 
-        public void LoadCache( ICache cacheStream )
-        {
-                Scene.Manager.Load( cacheStream );
+            OpenGL.EnableDebugging();
+
         }
 
         private void glControl1_Resize( object sender, EventArgs e )
@@ -125,10 +113,10 @@ namespace Sunfish.Forms
         {
 #if DEBUG
             // ReSharper disable once UseObjectOrCollectionInitializer
-            _glControl1 = new GLControl( new GraphicsMode( new ColorFormat( 32 ), 24, 8, 8 ), 3, 3,
+            _glControl1 = new GLControl( new GraphicsMode( new ColorFormat( 32 ), 24, 8, 8 ), 4, 4,
                 GraphicsContextFlags.Debug | GraphicsContextFlags.ForwardCompatible );
 #else
-            _glControl1 = new GLControl( new GraphicsMode(new ColorFormat(32), 24, 8, 8), 3, 3, GraphicsContextFlags.Default);
+            _glControl1 = new GLControl( new GraphicsMode(new ColorFormat(32), 24, 8, 8), 4, 4, GraphicsContextFlags.Default);
 #endif
             _glControl1.Load += glControl1_Load;
             
@@ -146,18 +134,6 @@ namespace Sunfish.Forms
             _glControl1.VSync = false;
 
             Controls.Add( _glControl1 );
-        }
-
-        private void openMapToolStripMenuItem_Click( object sender, EventArgs e )
-        {
-            var dialog = new OpenFileDialog
-            {
-                Filter = @"Blam! Map File (.map)|*.map"
-            };
-            if ( dialog.ShowDialog( ) != DialogResult.OK ) return;
-            LoadGLControl( );
-            _glControl1.Load += glControl1_Load;
-            glControl1_Load( null, null );
         }
 
         private void Scene_OnFrameReady( object sender, EventArgs e )

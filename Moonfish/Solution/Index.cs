@@ -157,6 +157,14 @@ namespace Moonfish
 
         public CacheKey GetCacheKey( ICache cache )
         {
+            var fileStream = (cache as FileStream);
+            if (fileStream != null)
+                foreach (var item in CacheReferences)
+                {
+                    var other = item.Value as FileStream;
+
+                    if (other != null && other.Name == fileStream.Name) return item.Key;
+                }
             foreach ( var item in CacheReferences )
             {
                 if ( item.Value == cache ) return item.Key;

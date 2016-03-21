@@ -9,6 +9,8 @@ namespace Moonfish.Graphics
 {
     public static class OpenGL
     {
+        private const int count = 10000;
+        static int[] ids = new int[count];
         static OpenGL( )
         {
 #if DEBUG
@@ -22,6 +24,7 @@ namespace Moonfish.Graphics
                 messageString.Clear( );
             };
             timer.Start( );
+            GL.DebugMessageControl( DebugSourceControl.DontCare, DebugTypeControl.DontCare, DebugSeverityControl.DontCare,0, new int[0], true  );
             GL.DebugMessageCallback( callback, IntPtr.Zero );
             GL.Khr.DebugMessageCallback( arbCallback, IntPtr.Zero );
             GL.GetError( );

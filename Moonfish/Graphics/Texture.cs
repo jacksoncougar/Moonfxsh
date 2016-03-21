@@ -208,7 +208,7 @@ namespace Moonfish.Graphics
                 PixelType.UnsignedByte, texelData );
 
             GL.GenerateMipmap( GenerateMipmapTarget.Texture2D );
-            return;
+            GL.BindTexture(TextureTarget.Texture2D, 0);
         }
 
         private void Dispose( bool disposing )
@@ -450,6 +450,7 @@ namespace Moonfish.Graphics
                         surfaceData );
                 }
             }
+            GL.BindTexture(TextureTarget.Texture2D, 0);
         }
 
         private void LoadTexture2D( TextureMagFilter textureMagFilter, TextureMinFilter textureMinFilter,
@@ -494,6 +495,7 @@ namespace Moonfish.Graphics
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
                     (int)TextureMinFilter.LinearMipmapLinear);
             }
+            GL.BindTexture(TextureTarget.Texture2D, 0);
         }
     };
 }

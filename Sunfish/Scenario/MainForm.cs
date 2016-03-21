@@ -31,17 +31,13 @@ namespace Sunfish.Forms
             if ( directory != null )
             {
                 var maps = Directory.GetFiles( directory, "*.map", SearchOption.TopDirectoryOnly );
-                foreach ( var map in maps )
-                {
-                    Solution.Index.AddCache( CacheStream.Open( map ));
-                }
-                //var resourceMaps = maps.GroupBy(
-                //    Halo2.CheckMapType
-                //    ).Where( x =>  x.Key == MapType.Shared || x.Key == MapType.MainMenu
-                //                  || x.Key == MapType.SinglePlayerShared )
-                //    .Select( g => g.First( ) ).ToList( );
-                //resourceMaps.ForEach( x =>
-                //    Solution.Index.AddCache( CacheStream.Open(x) ) );
+                var resourceMaps = maps.GroupBy(
+                    Halo2.CheckMapType
+                    ).Where(x => x.Key == MapType.Shared || x.Key == MapType.MainMenu
+                                 || x.Key == MapType.SinglePlayerShared)
+                    .Select(g => g.First()).ToList();
+                resourceMaps.ForEach(x =>
+                   Solution.Index.AddCache(CacheStream.Open(x)));
             }
             Solution.Index.AddCache(CacheStream.Open(fileName));
             _cacheStream = CacheStream.Open( fileName );
@@ -49,21 +45,25 @@ namespace Sunfish.Forms
             dockPanel1.DockBottomPortion = 350f;
             
                 _sceneView = new SceneView( );
+            
             _moonfxshExplorerForm = new MoonfxshExplorer();
 
             _sceneView.SceneInitialized += delegate
             {
-                foreach ( var cache in Solution.Index.Caches.ToArray(  ) )
+                _moonfxshExplorerForm.LoadTags(_cacheStream.ToArray());
+                Solution.SetScenario( ( ScenarioBlock ) _cacheStream.Index.ScenarioIdent.Get( _cacheStream.GetKey( ) ) );
+                
+                _sceneView.Scene.OnFrameReady += delegate
                 {
-                    _sceneView.LoadCache( cache );
-                    _moonfxshExplorerForm.LoadTags(cache.ToArray());
-                }
+                    this.Text = $@"{1/_sceneView.SceneClock.frameTime :#.###} Update:{ _sceneView.SceneClock.updateTime}";
+                };
             };
             
             _moonfxshExplorerForm.TagItemDoubleClick += ( sender, reference ) => EditTag( reference );
             _sceneView.Show( dockPanel1, DockState.Document );
             _moonfxshExplorerForm.Show( dockPanel1, DockState.DockBottom );
         }
+
 
         private void EditTag( TagDatum reference)
         {

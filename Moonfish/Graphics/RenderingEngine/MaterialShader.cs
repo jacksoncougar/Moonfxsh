@@ -19,7 +19,7 @@ namespace Moonfish.Graphics
         public MaterialShader( ShaderBlock shader, out ShaderPostprocessBitmapNewBlock[] bitmapBlocks )
         {
             CacheKey cacheKey;
-            if ( !Solution.TryGetCacheKey( shader, out cacheKey ) )
+            if ( !shader.TryGetCacheKey( out cacheKey ) )
             {
                 bitmapBlocks = new ShaderPostprocessBitmapNewBlock[0];
                 return;
@@ -84,11 +84,19 @@ namespace Moonfish.Graphics
 
                     handles.Add( new TextureHandle( bitmapParam ) {TextureStage = param.TextureStageIndex} );
                 }
-                var renderStates = shaderPass.Implementations[ implementationIndex ].RenderStates;
+                var renderStates = shaderPass.Implementations[implementationIndex].RenderStates;
+                var defaultRenderStates = shaderPass.Implementations[implementationIndex].DefaultRenderStates;
                 foreach ( var state in shaderPass.RenderStates.TakeSubset( renderStates ) )
                 {
                     handles.Add( new RenderStateHandle( state ) );
                 }
+
+                foreach (var state in shaderPass.RenderStates.TakeSubset(defaultRenderStates))
+                {
+                    handles.Add( new RenderStateHandle( state, true ) );
+                }
+
+                // this is where other passes would be rendered, if we felt like it.
                 implementationIndex++;
                 break;
             }
@@ -124,12 +132,6 @@ namespace Moonfish.Graphics
                     var texturestage = texture.TextureStageIndex;
 
                     GL.ActiveTexture( TextureUnit.Texture1 + texturestage );
-#if DEBUG
-                    var bitmapString =
-                        shader.PostprocessDefinition[ 0 ].Bitmaps[
-                            remappings[ implementations[ implementationIndex ].Bitmaps.Index + bitmap ].SourceIndex ]
-                            .BitmapGroup.ToString( );
-#endif
 
                     textures[
                         shader.PostprocessDefinition[ 0 ].Bitmaps[
@@ -167,15 +169,17 @@ namespace Moonfish.Graphics
 
         public class BindingHandle
         {
+            public bool DefaultState { get; protected set; }
         }
-
+        
         public class RenderStateHandle : BindingHandle
         {
             public D3DRENDERSTATETYPE RenderState;
             public int unionValue;
 
-            public RenderStateHandle( RenderStateBlock state )
+            public RenderStateHandle(  RenderStateBlock state, bool defaultState = false )
             {
+                DefaultState = defaultState;
                 RenderState = ( D3DRENDERSTATETYPE ) state.StateIndex;
                 unionValue = state.StateValue;
             }

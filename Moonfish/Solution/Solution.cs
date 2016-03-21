@@ -30,6 +30,13 @@ namespace Moonfish
         /// </summary>
         public static Index Index { get; } = new Index( );
 
+        public static ScenarioBlock Scenario{ get; private set; }
+
+        public static void SetScenario( ScenarioBlock scenario )
+        {
+            Scenario = scenario;
+        }
+
         public static GuerillaBlock GetFromCache( this TagReference tagReference, CacheKey cacheKey, bool skipCache = false )
         {
             return GetFromCache<GuerillaBlock>( tagReference.Ident, cacheKey, skipCache );
@@ -97,7 +104,8 @@ namespace Moonfish
             if (resourcePointer.Source == Halo2.ResourceSource.MainMenu)
                 source = (Stream)Index.Caches.FirstOrDefault(IsCacheCalled("mainmenu"));
 
-            if ( source == null ) return null;
+            if ( source == null )
+                return null;
 
             source.Position = resourcePointer.Address;
             var buffer = new byte[resourceLength];

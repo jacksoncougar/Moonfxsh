@@ -9,11 +9,19 @@ using Moonfish.Tags;
 
 namespace Moonfish.Cache
 {
+    public static class CacheExtensions
+    {
+        public static CacheKey GetKey( this ICache cache )
+        {
+           return  Solution.Index.GetCacheKey( cache );
+        }
+    }
     public interface ICache:  IReadOnlyList<TagDatum>
     {
         TagDatum Add<T>( T item, string tagName ) where T : GuerillaBlock;
         bool Contains<T>( T item ) where T : GuerillaBlock;
         T Deserialize<T>( TagIdent ident ) where T: GuerillaBlock;
+        string GetStringValue( StringIdent ident );
     };
 
     public class TagCache : MemoryStream , ICache
@@ -59,6 +67,14 @@ namespace Moonfish.Cache
         {
             return ( T ) items[ ident ];
         }
+
+        public string GetStringValue( StringIdent ident )
+        {
+            return string.Empty;
+        }
+
+        public IDictionary<StringIdent, string> Strings { get; } = new Dictionary<StringIdent, string>();
+
 
         public IEnumerator<TagDatum> GetEnumerator( )
         {

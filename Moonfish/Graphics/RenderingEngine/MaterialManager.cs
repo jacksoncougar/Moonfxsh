@@ -16,7 +16,9 @@ namespace Moonfish.Graphics.RenderingEngine
     public class MaterialManager
     {
         public Dictionary<TagIdent, MaterialShader> _materialDictionary = new Dictionary<TagIdent, MaterialShader>();
-        public Dictionary<TagIdent, TextureHandle> _textureDictionary = new Dictionary<TagIdent, TextureHandle>( );
+
+        public static Dictionary<TagIdent, TextureHandle> TextureDictionary { get; } =
+            new Dictionary<TagIdent, TextureHandle>( );
 
         public MaterialShader GetMaterial( TagGlobalKey key )
         {
@@ -29,7 +31,7 @@ namespace Moonfish.Graphics.RenderingEngine
             foreach ( var bitmap in bitmaps )
             {
                 var bitmapKey = GetBitmapKey( bitmap );
-                if ( _textureDictionary.ContainsKey( bitmapKey ) ) continue;
+                if ( TextureDictionary.ContainsKey( bitmapKey ) ) continue;
 
                 var layer = bitmap.BitmapIndex;
                 var bitmapBlock = ( BitmapBlock ) bitmap.BitmapGroup.Get( key.CacheKey );
@@ -39,7 +41,7 @@ namespace Moonfish.Graphics.RenderingEngine
                 }
                 var texture = new TextureHandle( );
                 texture.Load( bitmapBlock.Bitmaps[ layer ] );
-                _textureDictionary.Add( bitmapKey, texture );
+                TextureDictionary.Add( bitmapKey, texture );
             }
 
             return _materialDictionary[ key.TagKey ];
@@ -51,26 +53,63 @@ namespace Moonfish.Graphics.RenderingEngine
             return new TagIdent( bitmap.BitmapGroup.Index, ( short ) bitmap.BitmapIndex );
         }
 
-        public void Bind( MaterialShader material )
+        public IDisposable Bind( MaterialShader material )
         {
-            var bindings = material.Bind( );
-            foreach ( var handle in bindings )
+            return new Handle( material );
+        }
+
+        private class Handle : IDisposable
+        {
+            private bool disposed;
+            private List<MaterialShader.BindingHandle> DefaultBindings { get; set; } = new List<MaterialShader.BindingHandle>();
+
+            public Handle( MaterialShader material )
+            {
+                var bindings = material.Bind();
+                foreach (var handle in bindings)
+                {
+                    if ( handle.DefaultState )
+                    {
+                        DefaultBindings.Add( handle );
+                        continue;
+                    }
+                    ProcessState(handle);
+                }
+            }
+
+            private void Dispose( bool disposing )
+            {
+                if ( !disposing || disposed) return;
+                disposed = true;
+                foreach ( var handle in DefaultBindings )
+                {
+                    ProcessState( handle );
+                }
+            }
+
+            private static void ProcessState( MaterialShader.BindingHandle handle )
             {
                 var textureHandle = handle as MaterialShader.TextureHandle;
                 var stateHandle = handle as MaterialShader.RenderStateHandle;
                 if ( textureHandle != null )
                 {
-                    var texture = _textureDictionary[ textureHandle.Key ];
+                    var texture = TextureDictionary[ textureHandle.Key ];
 
                     GL.ActiveTexture( TextureUnit.Texture0 + textureHandle.TextureStage );
-                    texture.Bind(  );
+                    texture.Bind( );
                 }
-                if (stateHandle != null)
+                if ( stateHandle != null )
                 {
                     StateManager.DispatchState( stateHandle );
                 }
             }
+
+
+            public void Dispose( )
+            {
+                Dispose( true );
+                GC.SuppressFinalize( this );
+            }
         }
-        
     }
 }

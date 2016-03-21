@@ -87,8 +87,10 @@ namespace Moonfish.Graphics
 
         public void BufferPartData( GlobalGeometrySectionStructBlock section )
         {
+
             //  Check to see if data is buffered already
-            if ( _buckets.Any( u => section.Parts.All( u.Contains )))
+
+            if ( _buckets.Any( u => u.Contains( section ) ) )
                 return;
 
             //  Get the attribute types that the section contains and use them to check if any existing bucket 

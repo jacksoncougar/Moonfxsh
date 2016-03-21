@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Fasterflect;
 using Moonfish.Graphics.RenderingEngine;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
@@ -17,8 +18,12 @@ namespace Moonfish.Graphics
         private readonly Dictionary<GlobalGeometryPartBlockNew, TagGlobalKey> _shaderDictionary =
             new Dictionary<GlobalGeometryPartBlockNew, TagGlobalKey>( );
 
-        private InstanceManager InstanceManager { get; } = new InstanceManager( );
+        public InstanceManager InstanceManager { get; } = new InstanceManager( );
 
+        private Dictionary<TagGlobalKey, List<GlobalGeometryPartBlockNew>> OpaquePatches { get; } =
+            new Dictionary<TagGlobalKey, List<GlobalGeometryPartBlockNew>>( );
+
+        private List<PatchData> TransparentPatches { get; set; } = new List<PatchData>();
 
         public void AssignShader( GlobalGeometryPartBlockNew part, CacheKey cacheKey, TagIdent shaderIdent )
         {
@@ -36,63 +41,48 @@ namespace Moonfish.Graphics
             //TODO implement filtering here
         }
 
+        public void Sort( Camera eye )
+        {
+            OpaquePatches.Clear( );
+            TransparentPatches.Clear( );
+            var opaqueParts = InstanceManager.Parts.Where(
+                e => e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueShadowCasting ||
+                     e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueShadowOnly ||
+                     e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueNonshadowing );
+            var globalGeometryPartBlockNews = opaqueParts as GlobalGeometryPartBlockNew[] ?? opaqueParts.ToArray( );
+            foreach ( var part in globalGeometryPartBlockNews )
+            {
+                var key = _shaderDictionary[ part ];
+                if ( !OpaquePatches.ContainsKey( key ) ) OpaquePatches[ key ] = new List<GlobalGeometryPartBlockNew>( );
+                OpaquePatches[ key ].Add( part );
+            }
+
+            var transparentParts =
+                InstanceManager.Parts.Where( e => e.Type == GlobalGeometryPartBlockNew.TypeEnum.Transparent )
+                    .ToList( );
+            TransparentPatches = new List<PatchData>( SortTransparentParts( transparentParts, eye ) );
+        }
+
         /// <summary>
         ///     Creates an instance object for the given part
         /// </summary>
         /// <param name="part">The part to be instanced</param>
         /// <param name="instance">The instance data</param>
-        public void CreateInstance( GlobalGeometryPartBlockNew part, dynamic instance )
+        public void CreateInstance( GlobalGeometryPartBlockNew part, IH2ObjectInstance instance, bool supportsPermutations )
         {
-            InstanceManager.CreateInstance( part, instance );
+            InstanceManager.CreateInstance( part, instance , supportsPermutations);
         }
 
-        public IEnumerable<PatchData> GetOpaqueParts(TagGlobalKey shaderKey )
+        public IEnumerable<GlobalGeometryPartBlockNew> GetOpaqueParts( TagGlobalKey shaderKey )
         {
-            var opaqueParts = InstanceManager.Parts.Where(
-                e => _shaderDictionary[ e ] == shaderKey && (
-                    e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueShadowCasting ||
-                    e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueShadowOnly ||
-                    e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueNonshadowing ) );
-            foreach ( var part in opaqueParts )
-            {
-                foreach ( var instance in InstanceManager.GetInstancesOf( part ) )
-                {
-                    yield return new PatchData( part, instance )
-                    {
-                        ShaderKey = _shaderDictionary[ part ]
-                    };
-                }
-            }
+            return OpaquePatches.ContainsKey( shaderKey )
+                ? OpaquePatches[ shaderKey ]
+                : Enumerable.Empty<GlobalGeometryPartBlockNew>( );
         }
-
-        /// <summary>
-        ///     Returns all Opaque* type parts
-        /// </summary>
-        /// <returns>A sequence of patch data</returns>
-        public IEnumerable<PatchData> GetOpaqueParts( )
-        {
-            var opaqueParts = InstanceManager.Parts.Where(
-                e =>
-                    e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueShadowCasting ||
-                    e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueShadowOnly ||
-                    e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueNonshadowing );
-            var patches = new List<PatchData>( );
-            foreach ( var part in opaqueParts )
-            {
-                foreach ( var instance in InstanceManager.GetInstancesOf( part ) )
-                {
-                    patches.Add( new PatchData( part, instance )
-                    {
-                        ShaderKey = _shaderDictionary[ part ]
-                    } );
-                }
-            }
-            return patches;
-        }
-
+        
         public IEnumerable<TagGlobalKey> GetShaders( )
         {
-            return _shaderDictionary.Values.Distinct( );
+            return _shaderDictionary.Values;
         }
 
         /// <summary>
@@ -102,10 +92,7 @@ namespace Moonfish.Graphics
         /// <returns>A sequence of patch data</returns>
         public IEnumerable<PatchData> GetTransparentParts( Camera eye )
         {
-            var transparentParts =
-                InstanceManager.Parts.Where( e => e.Type == GlobalGeometryPartBlockNew.TypeEnum.Transparent )
-                    .ToList( );
-            return SortTransparentParts( transparentParts, eye );
+            return TransparentPatches;
         }
 
         public void RemoveInstance( GlobalGeometryPartBlockNew part, dynamic instance )
@@ -143,6 +130,16 @@ namespace Moonfish.Graphics
                 }
             }
             return transparentDrawsSortedList.Select( u => u.Value );
+        }
+
+        public void RemoveShader( GlobalGeometryPartBlockNew part )
+        {
+                
+        }
+
+        public void Clear( )
+        {
+            InstanceManager.ClearInstances( );
         }
     }
 }

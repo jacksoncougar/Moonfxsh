@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Moonfish.Guerilla;
 
@@ -6,7 +8,7 @@ namespace Moonfish.Tags
     [GuerillaType( MoonfishFieldType.FieldStringId )]
     [GuerillaType( MoonfishFieldType.FieldOldStringId )]
     [StructLayout( LayoutKind.Explicit, Size = 4 )]
-    public struct StringIdent
+    public struct StringIdent : IComparable<StringIdent>
     {
         private bool Equals( StringIdent other )
         {
@@ -61,10 +63,21 @@ namespace Moonfish.Tags
 
         public static StringIdent Zero => new StringIdent( 0, 0 );
 
+        public int CompareTo( StringIdent other )
+        {
+            var indexComparison = Index.CompareTo( other.Index );
+            return indexComparison == 0 ? Length.CompareTo( other.Length ) : indexComparison;
+            ;
+        }
+
         public override string ToString( )
         {
-            var value = Halo2.Strings[ this ];
-            return value;
+            return $@"{Index}:{Length}";
+        }
+
+        public string Get( CacheKey cacheKey )
+        {
+            return Solution.Index[ cacheKey ].GetStringValue( this );
         }
     }
 }

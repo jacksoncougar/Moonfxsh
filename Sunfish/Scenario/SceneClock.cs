@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 
 namespace Sunfish.Forms
@@ -6,14 +7,14 @@ namespace Sunfish.Forms
     {
         public readonly Stopwatch timer = new Stopwatch( );
         public long totalTime;
-        public long updateTime;
+        public float updateTime;
         public double accumulator;
         public double currentTime;
         public double frameTime;
         private float _newTime;
         private long _baseTick;
-        public const double DeltaTime = 0.09f;
-        public const double MinFrameTime = 0.001f;
+        public const double DeltaTime = 0.09f; //90ms
+        public const double MinFrameTime = 0.001f;//1ms
 
         public void Tick( )
         {
@@ -25,7 +26,7 @@ namespace Sunfish.Forms
             frameTime = _newTime - currentTime;
             if (frameTime > 0.25) frameTime = 0.25;
         }
-
+        
         public void Tock( )
         {
             currentTime = _newTime;
@@ -36,14 +37,10 @@ namespace Sunfish.Forms
 
         public bool Sleep => frameTime < MinFrameTime;
 
-        public SceneClock( )
-        {
-        }
-
         public void IntegrateUpdate( )
         {
 #if DEBUG
-            updateTime = timer.ElapsedTicks - _baseTick;
+            updateTime = (float)new TimeSpan( timer.ElapsedTicks - _baseTick ).TotalMilliseconds;
 #endif
             accumulator -= DeltaTime;
         }

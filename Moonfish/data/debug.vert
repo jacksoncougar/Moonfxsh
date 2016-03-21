@@ -30,6 +30,6 @@ void main()
 	diffuseColour = vec4(t, 1);
 	oTextureCoordinates = textureCoordinates;
 
-	gl_Position = ViewProjectionMatrixUniform  * worldMatrix * coordinates;
+	gl_Position =  ViewProjectionMatrixUniform  * instanceWorldMatrix * coordinates;
 	gl_PointSize = 5;
 }

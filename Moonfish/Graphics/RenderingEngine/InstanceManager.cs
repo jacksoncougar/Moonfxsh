@@ -18,8 +18,8 @@ namespace Moonfish.Graphics.RenderingEngine
         private readonly Dictionary<InstanceKey, InstanceData> InstanceData =
             new Dictionary<InstanceKey, InstanceData>();
 
-        private readonly Dictionary<GuerillaBlock, InstanceKey> InstanceKeys =
-            new Dictionary<GuerillaBlock, InstanceKey>();
+        private readonly Dictionary<IH2ObjectInstance, InstanceKey> InstanceKeys =
+            new Dictionary<IH2ObjectInstance, InstanceKey>();
 
         private readonly Dictionary<GlobalGeometryPartBlockNew, HashSet<InstanceKey>> PartInstances =
             new Dictionary<GlobalGeometryPartBlockNew, HashSet<InstanceKey>>();
@@ -44,6 +44,18 @@ namespace Moonfish.Graphics.RenderingEngine
             }
         }
 
+        public void BufferInstanceData( InstanceDataBuffer buffer )
+        {
+            using ( buffer.Create(  ) )
+            {
+                foreach ( var part in Parts )
+                {
+                    var instanceDatas = GetInstancesOf( part ).ToArray( );
+                    buffer.AddInstances( part, instanceDatas.Select( u => u.worldMatrix ) );
+                }
+            }
+        }
+
         /// <summary>
         ///     Creates an instance object for the given part
         /// </summary>
@@ -54,7 +66,7 @@ namespace Moonfish.Graphics.RenderingEngine
         /// ii.  Instances should refer to a collection of parts
         /// iii. Instance data is linked to a single instance
         /// </remarks>
-        public void CreateInstance(GlobalGeometryPartBlockNew part, dynamic instance)
+        public void CreateInstance(GlobalGeometryPartBlockNew part, IH2ObjectInstance instance, bool supportsPermutations)
         {
             // 1. Check if the part is already in dictionary and initialize it into the dictionary if not 
             if (!PartInstances.ContainsKey(part))
@@ -62,7 +74,6 @@ namespace Moonfish.Graphics.RenderingEngine
                 // Initialize a collection of instance identifiers
                 PartInstances.Add(part, new HashSet<InstanceKey>());
             }
-
             // 2. Check to see if this instance has already been added
             InstanceKey key;
             if (!InstanceKeys.ContainsKey(instance))
@@ -71,9 +82,8 @@ namespace Moonfish.Graphics.RenderingEngine
                 key = CreateInstanceKey( );
                 InstanceKeys.Add(instance, key);
                 // (c) Link the key with the intance data
-                InstanceData.Add(key, new InstanceData(instance));
+                InstanceData.Add(key, new InstanceData(instance, supportsPermutations));
             }
-
             // 3. Check to see if the part is already linked with the instance
             key = InstanceKeys[instance];
             if (!PartInstances[part].Contains(key))
@@ -114,5 +124,10 @@ namespace Moonfish.Graphics.RenderingEngine
                 return instanceKey;
             }
         };
+
+        public void ClearInstances( )
+        {
+            PartInstances.Clear(  );
+        }
     }
 }

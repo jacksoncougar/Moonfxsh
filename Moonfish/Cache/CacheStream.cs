@@ -292,6 +292,11 @@ namespace Moonfish.Cache
             return ( T ) _deserializedTagCache[ ident ];
         }
 
+        public string GetStringValue( StringIdent ident )
+        {
+            return Strings[ ident.Index ];
+        }
+
         private GuerillaBlock Deserialize(Type tagType)
         {
             var sourceReader = new BinaryReader(this);

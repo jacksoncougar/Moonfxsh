@@ -7,6 +7,7 @@ namespace Moonfish.Graphics.RenderingEngine
     public static class StateManager
     {
         public static EventHandler<bool> AlphaBlendEnableChanged;
+        public static EventHandler<bool> AlphaTestEnableChanged;
         public static EventHandler<D3DCMPFUNC> AlphaFuncChanged;
         public static EventHandler<float> AlphaRefChanged;
 
@@ -23,8 +24,8 @@ namespace Moonfish.Graphics.RenderingEngine
         public static void DispatchState( MaterialShader.RenderStateHandle stateHandle )
         {
             // Quit early if updating is pointless
-            if ( CurrentState.ContainsKey( stateHandle.RenderState ) &&
-                 CurrentState[ stateHandle.RenderState ] == stateHandle.unionValue )
+            if (CurrentState.ContainsKey(stateHandle.RenderState) &&
+                 CurrentState[stateHandle.RenderState] == stateHandle.unionValue)
                 return;
 
             switch ( stateHandle.RenderState )
@@ -32,8 +33,7 @@ namespace Moonfish.Graphics.RenderingEngine
                 case D3DRENDERSTATETYPE.ALPHATESTENABLE:
                 {
                     var enable = stateHandle.unionValue > 0;
-                    if ( enable ) GL.Enable( EnableCap.Blend );
-                    else GL.Disable( EnableCap.Blend );
+                    AlphaTestEnableChanged?.Invoke( null, enable );
                 }
                     break;
                 case D3DRENDERSTATETYPE.ALPHAFUNC:
@@ -81,11 +81,21 @@ namespace Moonfish.Graphics.RenderingEngine
                     break;
                     case D3DRENDERSTATETYPE.ZWRITEENABLE:
                 {
-                    var enable = stateHandle.unionValue > 0;
-
-                    if ( enable )
-                        GL.Enable( EnableCap.DepthTest );
-                    else GL.Disable( EnableCap.DepthTest );
+                    //var enable = stateHandle.unionValue > 0;
+                    //GL.DepthMask( enable );
+                }
+                    break;
+                    case D3DRENDERSTATETYPE.CULLMODE:
+                {
+                    var value = ( D3DCULL ) stateHandle.unionValue;
+                    var cullMode = value.ConvertCullMode( );
+                    GL.Enable( EnableCap.CullFace );
+                    GL.CullFace( cullMode );
+                }
+                    break;
+                default:
+                {
+                    
                 }
                     break;
             }

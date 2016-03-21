@@ -1,9 +1,12 @@
-﻿using OpenTK;
+﻿using System;
+using OpenTK;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Fasterflect;
 using Moonfish.Graphics;
 using Moonfish.Tags;
+// ReSharper disable ClassNeverInstantiated.Global
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,7 +15,7 @@ namespace Moonfish.Guerilla.Tags
         TagReference ObjectReference { get; }
     }
 
-    public interface IH2ObjectInstance
+    public interface IH2ObjectInstance : IEquatable<IH2ObjectInstance>, IEqualityComparer<IH2ObjectInstance>
     {
         /// <summary>
         /// index of ScenarioObjectNamesBlock element containing the scriptable name for this object instance
@@ -120,6 +123,24 @@ namespace Moonfish.Guerilla.Tags
                     rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
             }
         }
+
+        public bool Equals( IH2ObjectInstance other )
+        {
+            var instance = other as ScenarioSceneryBlock;
+            if (instance == null) return false;
+            var objectInstance = ( IH2ObjectInstance ) this;
+            return other.ObjectDatum.ObjectID.UniqueID == objectInstance.ObjectDatum.ObjectID.UniqueID;
+        }
+
+        bool IEqualityComparer<IH2ObjectInstance>.Equals( IH2ObjectInstance x, IH2ObjectInstance y )
+        {
+            return x.Equals( y );
+        }
+
+        int IEqualityComparer<IH2ObjectInstance>.GetHashCode( IH2ObjectInstance obj )
+        {
+            return obj.ObjectDatum.ObjectID.UniqueID;
+        }
     }
 
     public partial class ScenarioWeaponBlock : IH2ObjectInstance
@@ -152,6 +173,24 @@ namespace Moonfish.Guerilla.Tags
                 return
                     worldMatrix * rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
             }
+        }
+
+        public bool Equals(IH2ObjectInstance other)
+        {
+            var instance = other as ScenarioWeaponBlock;
+            if (instance == null) return false;
+            var objectInstance = (IH2ObjectInstance)this;
+            return other.ObjectDatum.ObjectID.UniqueID == objectInstance.ObjectDatum.ObjectID.UniqueID;
+        }
+
+        bool IEqualityComparer<IH2ObjectInstance>.Equals(IH2ObjectInstance x, IH2ObjectInstance y)
+        {
+            return x.Equals(y);
+        }
+
+        int IEqualityComparer<IH2ObjectInstance>.GetHashCode(IH2ObjectInstance obj)
+        {
+            return obj.ObjectDatum.ObjectID.UniqueID;
         }
     }
 
@@ -186,6 +225,24 @@ namespace Moonfish.Guerilla.Tags
                     worldMatrix * rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
             }
         }
+
+        public bool Equals(IH2ObjectInstance other)
+        {
+            var instance = other as ScenarioVehicleBlock;
+            if (instance == null) return false;
+            var objectInstance = (IH2ObjectInstance)this;
+            return other.ObjectDatum.ObjectID.UniqueID == objectInstance.ObjectDatum.ObjectID.UniqueID;
+        }
+
+        bool IEqualityComparer<IH2ObjectInstance>.Equals(IH2ObjectInstance x, IH2ObjectInstance y)
+        {
+            return x.Equals(y);
+        }
+
+        int IEqualityComparer<IH2ObjectInstance>.GetHashCode(IH2ObjectInstance obj)
+        {
+            return obj.ObjectDatum.ObjectID.UniqueID;
+        }
     }
 
     public partial class ScenarioEquipmentBlock : IH2ObjectInstance
@@ -219,6 +276,24 @@ namespace Moonfish.Guerilla.Tags
                     worldMatrix * rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
             }
         }
+
+        public bool Equals(IH2ObjectInstance other)
+        {
+            var instance = other as ScenarioEquipmentBlock;
+            if (instance == null) return false;
+            var objectInstance = (IH2ObjectInstance)this;
+            return other.ObjectDatum.ObjectID.UniqueID == objectInstance.ObjectDatum.ObjectID.UniqueID;
+        }
+
+        bool IEqualityComparer<IH2ObjectInstance>.Equals(IH2ObjectInstance x, IH2ObjectInstance y)
+        {
+            return x.Equals(y);
+        }
+
+        int IEqualityComparer<IH2ObjectInstance>.GetHashCode(IH2ObjectInstance obj)
+        {
+            return obj.ObjectDatum.ObjectID.UniqueID;
+        }
     }
 
     public partial class ScenarioCrateBlock : IH2ObjectInstance
@@ -251,6 +326,24 @@ namespace Moonfish.Guerilla.Tags
                 return
                     worldMatrix * rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
             }
+        }
+
+        public bool Equals(IH2ObjectInstance other)
+        {
+            var instance = other as ScenarioCrateBlock;
+            if (instance == null) return false;
+            var objectInstance = (IH2ObjectInstance)this;
+            return other.ObjectDatum.ObjectID.UniqueID == objectInstance.ObjectDatum.ObjectID.UniqueID;
+        }
+
+        bool IEqualityComparer<IH2ObjectInstance>.Equals(IH2ObjectInstance x, IH2ObjectInstance y)
+        {
+            return x.Equals(y);
+        }
+
+        int IEqualityComparer<IH2ObjectInstance>.GetHashCode(IH2ObjectInstance obj)
+        {
+            return obj.ObjectDatum.ObjectID.UniqueID;
         }
     };
 }

@@ -178,6 +178,11 @@ namespace Moonfish.Graphics
             GL.UniformMatrix2( location, false, ref value );
         }
 
+        public void SetUniform( int location, bool value )
+        {
+            GL.Uniform1( location, value ? 1 : 0 );
+        }
+
         public IDisposable Use( )
         {
             AssignActiveProgram( Ident );

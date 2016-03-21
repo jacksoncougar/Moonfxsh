@@ -23,7 +23,7 @@
         {
             get
             {
-                return (Halo2.ResourceSource) ((_value & 0xE0000000) >> 29);
+                return (Halo2.ResourceSource) ((_value & 0xE0000000) >> 30);
             }
         }
 

@@ -1,10 +1,34 @@
 ﻿using System.IO;
+using System.Runtime.InteropServices;
 using OpenTK;
 
 namespace Moonfish
 {
     public static class OpenTKExtensions
     {
+
+        public static void Write(this BinaryWriter binaryWriter, ref Matrix4 value)
+        {
+            binaryWriter.Write(value.M11);
+            binaryWriter.Write(value.M12);
+            binaryWriter.Write(value.M13);
+            binaryWriter.Write(value.M14);
+
+            binaryWriter.Write(value.M21);
+            binaryWriter.Write(value.M22);
+            binaryWriter.Write(value.M23);
+            binaryWriter.Write(value.M24);
+
+            binaryWriter.Write(value.M31);
+            binaryWriter.Write(value.M32);
+            binaryWriter.Write(value.M33);
+            binaryWriter.Write(value.M34);
+
+            binaryWriter.Write(value.M41);
+            binaryWriter.Write(value.M42);
+            binaryWriter.Write(value.M43);
+            binaryWriter.Write(value.M44);
+        }
         public static void Write(this BinaryWriter binaryWriter, Vector3 vector3)
         {
             binaryWriter.Write(vector3.X);

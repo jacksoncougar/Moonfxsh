@@ -41,7 +41,7 @@ namespace Moonfish.Graphics
 
         protected virtual void Draw( float delta )
         {
-            Manager.DebugDraw(Camera, ProgramManager);
+            Manager.DrawScenario(Camera, ProgramManager, Solution.Scenario);
         }
 
         private void BeginFrame( )

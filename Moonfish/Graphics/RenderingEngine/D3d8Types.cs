@@ -232,6 +232,14 @@ namespace Moonfish.Graphics.RenderingEngine
         // D3DBLEND_BOTHINVSRCALPHA not supported on Xbox
     };
 
+    public enum D3DCULL
+    {
+        NONE = 0,
+        CW = 0x900,
+        CCW = 0x901,
+        FORCE_DWORD = 0x7fffffff, /* force 32-bit size enum */
+    }
+
     public enum D3DCMPFUNC
     {
         NEVER = 0x200,

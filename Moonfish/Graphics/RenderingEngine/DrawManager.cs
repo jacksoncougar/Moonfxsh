@@ -181,8 +181,8 @@ namespace Moonfish.Graphics
                 using ( instanceData.Bind( ) )
                 {
                     GL.MultiDrawElementsIndirect(
-                        ( All ) drawCommandBuffer.PrimitiveType,
-                        All.UnsignedShort,
+                        drawCommandBuffer.PrimitiveType,
+                        DrawElementsType.UnsignedShort, 
                         IntPtr.Zero,
                         drawCommandBuffer.Count,
                         0 );

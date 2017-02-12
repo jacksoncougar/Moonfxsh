@@ -24,7 +24,7 @@ namespace Sunfish.Forms
             dockPanel1.Theme = new VS2013BlueTheme( );
 
 
-            var fileName = Path.Combine( Local.MapsDirectory, "05b_deltatowers.nomap" );
+            var fileName = Path.Combine( Local.MapsDirectory, "highplains2.map");
             CacheKey key;
 
             var directory = Path.GetDirectoryName( fileName );

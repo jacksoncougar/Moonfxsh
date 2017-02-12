@@ -28,6 +28,7 @@ namespace Sunfish.Forms
             SceneClock.timer.Start( );
             InitializeComponent( );
 
+            OpenTK.Toolkit.Init();
             LoadGLControl();
 
         }
@@ -113,8 +114,7 @@ namespace Sunfish.Forms
         {
 #if DEBUG
             // ReSharper disable once UseObjectOrCollectionInitializer
-            _glControl1 = new GLControl( new GraphicsMode( new ColorFormat( 32 ), 24, 8, 8 ), 4, 4,
-                GraphicsContextFlags.Debug | GraphicsContextFlags.ForwardCompatible );
+            _glControl1 = new GLControl( new GraphicsMode( new ColorFormat( 32 ), 24, 8, 8 ), 4, 4, GraphicsContextFlags.Default );
 #else
             _glControl1 = new GLControl( new GraphicsMode(new ColorFormat(32), 24, 8, 8), 4, 4, GraphicsContextFlags.Default);
 #endif

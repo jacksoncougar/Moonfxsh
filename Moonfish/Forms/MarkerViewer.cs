@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Moonfish.Cache;
-using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 
 using Point = System.Drawing.Point;

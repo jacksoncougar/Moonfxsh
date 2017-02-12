@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using BulletSharp;
+﻿using BulletSharp;
 using Moonfish.Graphics.Primitives;
 using OpenTK;
 using OpenTK.Graphics;

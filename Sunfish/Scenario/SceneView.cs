@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using Moonfish.Cache;
 using Moonfish.Graphics;
-using Moonfish.Guerilla.Tags;
-using Moonfish.Tags;
 using OpenTK;
 using OpenTK.Graphics;
 using WeifenLuo.WinFormsUI.Docking;
@@ -20,7 +15,7 @@ namespace Sunfish.Forms
     {
         public event EventHandler SceneInitialized;
 
-        private GLControl _glControl1;
+        private GLControl GlControl1 { get; set; }
 
         public SceneView( )
         {
@@ -46,12 +41,12 @@ namespace Sunfish.Forms
         {
             //  create a new dynamic scene and pass this control as the scene owner to hook control
             //  then load the selected map into the scene
-            Scene = new DynamicScene(_glControl1);
+            Scene = new DynamicScene(GlControl1);
 
             //  application idle will handle the render and update loop
             Application.Idle += HandleApplicationIdle;
             Scene.OnFrameReady += Scene_OnFrameReady;
-            _glControl1.Resize += glControl1_Resize;
+            GlControl1.Resize += glControl1_Resize;
 
             //  firing this method is meant to load the view-projection matrix values into 
             //  the shader uniforms, and initalizes the camera before the first draw can be called
@@ -64,7 +59,7 @@ namespace Sunfish.Forms
 
         private void glControl1_Resize( object sender, EventArgs e )
         {
-            ChangeViewport( _glControl1.Width, _glControl1.Height );
+            ChangeViewport( GlControl1.Width, GlControl1.Height );
             Scene.RenderFrame( 0f );
         }
 
@@ -114,31 +109,31 @@ namespace Sunfish.Forms
         {
 #if DEBUG
             // ReSharper disable once UseObjectOrCollectionInitializer
-            _glControl1 = new GLControl( new GraphicsMode( new ColorFormat( 32 ), 24, 8, 8 ), 4, 4, GraphicsContextFlags.Default );
+            GlControl1 = new GLControl( new GraphicsMode( new ColorFormat( 32 ), 24, 8, 8 ), 4, 4, GraphicsContextFlags.Default );
 #else
-            _glControl1 = new GLControl( new GraphicsMode(new ColorFormat(32), 24, 8, 8), 4, 4, GraphicsContextFlags.Default);
+            GlControl1 = new GLControl( new GraphicsMode(new ColorFormat(32), 24, 8, 8), 4, 4, GraphicsContextFlags.Default);
 #endif
-            _glControl1.Load += glControl1_Load;
+            GlControl1.Load += glControl1_Load;
             
             // 
             // glControl1
             // 
 
-            _glControl1.BackColor = Color.Black;
-            _glControl1.Dock = DockStyle.Fill;
-            _glControl1.Location = new Point( 0, 0 );
-            _glControl1.Margin = new System.Windows.Forms.Padding( 0 );
-            _glControl1.Name = "glControl1";
-            _glControl1.Size = new Size( 686, 425 );
-            _glControl1.TabIndex = 6;
-            _glControl1.VSync = false;
+            GlControl1.BackColor = Color.Black;
+            GlControl1.Dock = DockStyle.Fill;
+            GlControl1.Location = new Point( 0, 0 );
+            GlControl1.Margin = new Padding( 0 );
+            GlControl1.Name = "glControl1";
+            GlControl1.Size = new Size( 686, 425 );
+            GlControl1.TabIndex = 6;
+            GlControl1.VSync = false;
 
-            Controls.Add( _glControl1 );
+            Controls.Add( GlControl1 );
         }
 
         private void Scene_OnFrameReady( object sender, EventArgs e )
         {
-            _glControl1.SwapBuffers( );
+            GlControl1.SwapBuffers( );
         }
 
         private void SceneView_DragDrop( object sender, DragEventArgs e )
@@ -164,7 +159,7 @@ namespace Sunfish.Forms
         }
 
         [DllImport( "user32.dll" )]
-        private static extern int PeekMessage( out SceneView.NativeMessage message, IntPtr window, uint filterMin, uint filterMax,
+        private static extern int PeekMessage( out NativeMessage message, IntPtr window, uint filterMin, uint filterMax,
             uint remove );
 
         #endregion

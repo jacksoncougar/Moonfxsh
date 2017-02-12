@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ICSharpCode.TextEditor.Actions;
 using Moonfish.Cache;
 using Moonfish.Guerilla;
 using Moonfish.Guerilla.Tags;

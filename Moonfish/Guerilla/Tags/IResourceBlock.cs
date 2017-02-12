@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using Moonfish.Cache;
-
 namespace Moonfish.Guerilla.Tags
 {
     public interface IResourceBlock

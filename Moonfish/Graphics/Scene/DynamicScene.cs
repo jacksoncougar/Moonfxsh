@@ -2,10 +2,8 @@
 using System.Windows.Forms;
 using BulletSharp;
 using Moonfish.Graphics.Input;
-using Moonfish.Graphics.Primitives;
 using Moonfish.Guerilla.Tags;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics
 {

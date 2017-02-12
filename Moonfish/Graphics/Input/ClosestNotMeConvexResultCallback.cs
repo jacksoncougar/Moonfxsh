@@ -1,5 +1,4 @@
 using BulletSharp;
-using Moonfish.Collision;
 using OpenTK;
 
 namespace Moonfish.Graphics

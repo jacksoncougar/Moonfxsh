@@ -6,8 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Moonfish.Cache;
-using Moonfish.Guerilla.Tags;
-using Moonfish.ResourceManagement;
 using Moonfish.Tags;
 
 namespace Moonfish

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using BulletSharp;
 using Moonfish.Guerilla.Tags;
 using OpenTK;
 using OpenTK.Input;

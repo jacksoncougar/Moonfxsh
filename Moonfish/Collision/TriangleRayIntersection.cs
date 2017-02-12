@@ -1,8 +1,4 @@
-﻿using System;
-using Moonfish.Guerilla;
-using Moonfish.Guerilla.Tags;
-using OpenTK;
-using OpenTK.Graphics.OpenGL;
+﻿using OpenTK;
 
 namespace Moonfish.Collision
 {

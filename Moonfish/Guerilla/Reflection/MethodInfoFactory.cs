@@ -1,13 +1,9 @@
 using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using Fasterflect;
-using JetBrains.Annotations;
-using Microsoft.CSharp;
 using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Reflection

@@ -1,6 +1,4 @@
-﻿using Moonfish.Tags;
-
-namespace Moonfish
+﻿namespace Moonfish
 {
     public class TagInfo
     {

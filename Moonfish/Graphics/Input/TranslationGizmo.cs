@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Drawing;
 using Moonfish.Collision;
-using Moonfish.Graphics.Primitives;
 using OpenTK;
 
 namespace Moonfish.Graphics.Input

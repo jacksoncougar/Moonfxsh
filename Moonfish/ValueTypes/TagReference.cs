@@ -1,5 +1,4 @@
 using System.Runtime.InteropServices;
-using JetBrains.Annotations;
 using Moonfish.Guerilla;
 
 namespace Moonfish.Tags

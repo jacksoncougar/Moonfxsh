@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Fasterflect;
 using Microsoft.CSharp;
 using Moonfish.Guerilla.Reflection;

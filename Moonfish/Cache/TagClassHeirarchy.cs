@@ -1,4 +1,3 @@
-using System.Drawing;
 using Moonfish.Tags;
 
 namespace Moonfish.Cache

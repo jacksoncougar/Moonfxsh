@@ -1,5 +1,3 @@
-using System;
-
 namespace Moonfish.Graphics
 {
     /// <summary>

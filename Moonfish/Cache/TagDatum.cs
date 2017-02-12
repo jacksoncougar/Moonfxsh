@@ -1,4 +1,3 @@
-using System;
 using Moonfish.Tags;
 
 namespace Moonfish

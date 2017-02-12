@@ -1,5 +1,4 @@
 using Moonfish.Guerilla.Tags;
-using Moonfish.Tags;
 
 namespace Moonfish.Graphics
 {

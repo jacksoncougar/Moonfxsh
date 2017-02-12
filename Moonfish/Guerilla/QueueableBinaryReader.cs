@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Fasterflect;
-using Moonfish.Cache;
 using Moonfish.Tags;
 
 namespace Moonfish.Guerilla

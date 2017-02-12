@@ -1,7 +1,5 @@
 ﻿using System.Runtime.InteropServices;
-using System.Windows.Forms.VisualStyles;
 using Moonfish.Guerilla;
-using Moonfish.Guerilla.Tags;
 
 namespace Moonfish.Tags
 {

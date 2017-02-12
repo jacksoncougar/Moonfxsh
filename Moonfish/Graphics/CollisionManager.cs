@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using BulletSharp;
 using Moonfish.Graphics.Input;
-using Moonfish.Guerilla;
 using Moonfish.Guerilla.Tags;
 using OpenTK;
 

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-// ReSharper disable All
+﻿// ReSharper disable All
 
 namespace Moonfish.Graphics.RenderingEngine
 {

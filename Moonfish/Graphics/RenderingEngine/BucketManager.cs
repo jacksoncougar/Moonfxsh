@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using JetBrains.Annotations;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 using OpenTK;

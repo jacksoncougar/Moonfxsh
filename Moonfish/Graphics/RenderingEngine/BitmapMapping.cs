@@ -1,4 +1,3 @@
-using System.ComponentModel.Design.Serialization;
 using Moonfish.Guerilla.Tags;
 
 namespace Moonfish.Graphics

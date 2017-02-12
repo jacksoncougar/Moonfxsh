@@ -1,25 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Navigation;
 using Be.Windows.Forms;
 using Moonfish.Debug;
 using Moonfish.Graphics;
 using Moonfish.Guerilla;
 using Moonfish.Guerilla.CodeDom;
-using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 
 namespace Moonfish.Forms

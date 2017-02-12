@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
-using Moonfish.Graphics;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 

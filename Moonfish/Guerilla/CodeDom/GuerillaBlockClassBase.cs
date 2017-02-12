@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using Fasterflect;
 using JetBrains.Annotations;
-using Microsoft.CSharp;
 using Moonfish.Guerilla.Reflection;
 using Moonfish.Tags;
 using OpenTK;

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Moonfish.Cache;
 using Moonfish.Guerilla;
-using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 
 namespace Moonfish

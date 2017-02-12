@@ -1,5 +1,4 @@
-﻿using Moonfish.ResourceManagement;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 
 namespace Moonfish.Guerilla.Tags

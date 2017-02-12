@@ -1,10 +1,8 @@
-﻿using Moonfish.ResourceManagement;
-using OpenTK;
+﻿using OpenTK;
 using System;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {

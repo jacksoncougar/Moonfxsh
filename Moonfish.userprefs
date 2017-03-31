@@ -4,7 +4,7 @@
       <File FileName="Sunfish/Scenario/MainForm.cs" Line="94" Column="26" />
       <File FileName="Moonfish/Cache/CacheStream.cs" Line="96" Column="5" />
       <File FileName="Sunfish/Program.cs" Line="20" Column="20" />
-      <File FileName="Sunfish/Explorer Control/MoonfxshExplorer.cs" Line="13" Column="54" />
+      <File FileName="Sunfish/Explorer Control/MoonfxshExplorer.cs" Line="7" Column="37" />
       <File FileName="Moonfxsh Status" />
     </Files>
   </MonoDevelop.Ide.Workbench>

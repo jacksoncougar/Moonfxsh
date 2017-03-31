@@ -86,13 +86,15 @@ namespace Moonfish.Cache
             StructureMemoryBlocks = new List<VirtualMappedAddress>(count);
             for (var i = 0; i < count; ++i)
             {
-                base.Seek(address - secondaryMagic + i * 68, SeekOrigin.Begin);
+				var destination = address - secondaryMagic + i * 68;
+				base.Seek(destination, SeekOrigin.Begin);
                 var structureBlockOffset = binaryReader.ReadInt32();
                 var structureBlockLength = binaryReader.ReadInt32();
                 var structureBlockAddress = binaryReader.ReadInt32();
-                base.Seek(8, SeekOrigin.Current);
+				Position += 8;
                 var sbspIdentifier = binaryReader.ReadTagIdent();
-                base.Seek(4, SeekOrigin.Current);
+				Position += 4;
+                //base.Seek(4, SeekOrigin.Current);
                 var ltmpIdentifier = binaryReader.ReadTagIdent();
 
                 base.Seek(structureBlockOffset, SeekOrigin.Begin);

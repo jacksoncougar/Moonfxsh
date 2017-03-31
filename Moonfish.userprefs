@@ -1,65 +1,18 @@
 ﻿<Properties StartupConfiguration="{8850354E-75BF-4B69-9042-9BCC246D2268}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Moonfish/packages.config">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Moonfxsh Status">
     <Files>
-      <File FileName="Moonfish/Cache/CacheStream.cs" Line="22" Column="39" />
-      <File FileName="Moonfish/Cache/TagIndex.cs" Line="7" Column="7" />
-      <File FileName="Moonfish/Forms/DatumViewer.cs" Line="14" Column="7" />
-      <File FileName="Moonfish/Forms/GuerillaBlockViewer.cs" Line="10" Column="7" />
-      <File FileName="Moonfish/Forms/ShaderForm/AsmEditor.cs" Line="1" Column="1" />
-      <File FileName="Moonfish/Forms/MetaViewer.cs" Line="30" Column="28" />
-      <File FileName="Moonfish/Forms/ShaderForm/VrtxASMViewer.cs" Line="15" Column="28" />
-      <File FileName="Moonfish/Forms/VrtxViewer.cs" Line="15" Column="28" />
-      <File FileName="Moonfish/Graphics/Scene/Scene.cs" Line="8" Column="30" />
-      <File FileName="Moonfish/Forms/VrtxViewer.Designer.cs" Line="1" Column="1" />
-      <File FileName="Moonfish/Forms/ShaderForm/VrtxASMViewer.Designer.cs" Line="1" Column="1" />
-      <File FileName="Moonfish/Forms/MetaViewer.Designer.cs" Line="1" Column="1" />
-      <File FileName="Moonfish/Solution/Solution.cs" Line="1" Column="1" />
-      <File FileName="Moonfish/Forms/DataMapper.Designer.cs" Line="1" Column="1" />
-      <File FileName="Moonfish/Forms/ShaderForm/AsmEditor.Designer.cs" Line="1" Column="1" />
-      <File FileName="Moonfish/Guerilla/GuerillaBase.cs" Line="35" Column="66" />
-      <File FileName="Moonfish/Local.cs" Line="5" Column="40" />
-      <File FileName="Moonfish/Cache/CacheStream.CopyTo.cs" Line="132" Column="48" />
-      <File FileName="Moonfish/Forms/DataMapper.cs" Line="5" Column="1" />
-      <File FileName="Moonfish/Forms/DatumViewer.Designer.cs" Line="103" Column="67" />
-      <File FileName="Moonfish/Guerilla/CodeDom/GuerillaBlockClass.cs" Line="703" Column="90" />
-      <File FileName="Moonfish/Forms/ShaderProperties.Designer.cs" Line="100" Column="67" />
-      <File FileName="Moonfish/Graphics/RenderingEngine/DrawManager.cs" Line="184" Column="51" />
-      <File FileName="Moonfish/Graphics/CollisionManager.cs" Line="215" Column="55" />
-      <File FileName="Sunfish/Explorer Control/MoonfxshExplorer.cs" Line="165" Column="4" />
-      <File FileName="Sunfish/Scenario/SceneView.cs" Line="13" Column="14" />
-      <File FileName="../../../usr/lib/mono/xbuild/14.0/bin/Microsoft.Common.targets" Line="1" Column="1" />
-      <File FileName="Sunfish/TextureViewer.xaml.cs" Line="7" Column="22" />
-      <File FileName="Sunfish/packages.config" Line="1" Column="1" />
-      <File FileName="Sunfish/Explorer Control/MoonfxshExplorer.Designer.cs" Line="199" Column="15" />
-      <File FileName="Sunfish/Explorer Control/NavigationBar.xaml.cs" Line="37" Column="51" />
-      <File FileName="Moonfish/packages.config" Line="1" Column="1" />
+      <File FileName="Sunfish/Scenario/MainForm.cs" Line="94" Column="26" />
+      <File FileName="Moonfish/Cache/CacheStream.cs" Line="96" Column="5" />
+      <File FileName="Sunfish/Program.cs" Line="20" Column="20" />
+      <File FileName="Sunfish/Explorer Control/MoonfxshExplorer.cs" Line="13" Column="54" />
+      <File FileName="Moonfxsh Status" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State name="__root__">
-          <Node name="Moonfish" expanded="True">
-            <Node name="Moonfish" expanded="True">
-              <Node name="packages.config" selected="True" />
-            </Node>
-            <Node name="Sunfish" expanded="True">
-              <Node name="References" expanded="True">
-                <Node name="From Packages" expanded="True" />
-              </Node>
-              <Node name="Packages" expanded="True" />
-              <Node name="Explorer Control" expanded="True">
-                <Node name="MoonfxshExplorer.cs" expanded="True" />
-              </Node>
-              <Node name="Scenario" expanded="True" />
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/home/leaf/Moonfxsh/Moonfish/Forms/GuerillaBlockViewer.cs" relfile="Moonfish/Forms/GuerillaBlockViewer.cs" line="15" column="1" />
+      <Breakpoint file="/home/leaf/Moonfxsh/Sunfish/Scenario/MainForm.cs" relfile="Sunfish/Scenario/MainForm.cs" line="68" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

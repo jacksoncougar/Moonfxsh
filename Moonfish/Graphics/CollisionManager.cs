@@ -211,7 +211,8 @@ namespace Moonfish.Graphics
                 for ( var i = 0; i < vertexCount; ++i )
                 {
                     var value = binaryReader.ReadVector3( );
-                    Vector3.Transform( ref value, ref instanceWorldMatrix, out value );
+					var mat3 = new Matrix3(instanceWorldMatrix);
+                    Vector3.Transform( ref value, ref mat3, out value );
                     binaryWriter.Write( value );
                 }
             }

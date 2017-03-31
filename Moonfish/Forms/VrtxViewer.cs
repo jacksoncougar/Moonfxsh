@@ -13,7 +13,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows.Navigation;
 using Be.Windows.Forms;
 using Moonfish.Debug;
 using Moonfish.Guerilla;

@@ -42,8 +42,8 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new Sunfish.ToolStripBindableButton();
-            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
-            this.navigationBar1 = new Sunfish.Forms.NavigationBar();
+            //this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
+            //this.navigationBar1 = new Sunfish.Forms.NavigationBar();
             this.panel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -184,19 +184,19 @@
             // 
             // elementHost1
             // 
-            this.elementHost1.AutoSize = true;
-            this.elementHost1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.elementHost1.Location = new System.Drawing.Point(0, 31);
-            this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(820, 22);
-            this.elementHost1.TabIndex = 4;
-            this.elementHost1.Text = "elementHost1";
-            this.elementHost1.Child = this.navigationBar1;
+            //this.elementHost1.AutoSize = true;
+            //this.elementHost1.Dock = System.Windows.Forms.DockStyle.Top;
+            //this.elementHost1.Location = new System.Drawing.Point(0, 31);
+            //this.elementHost1.Name = "elementHost1";
+            //this.elementHost1.Size = new System.Drawing.Size(820, 22);
+            //this.elementHost1.TabIndex = 4;
+            //this.elementHost1.Text = "elementHost1";
+            //this.elementHost1.Child = this.navigationBar1;
             // 
             // MoonfxshExplorer
             // 
             this.ClientSize = new System.Drawing.Size(820, 484);
-            this.Controls.Add(this.elementHost1);
+            //this.Controls.Add(this.elementHost1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
@@ -223,10 +223,7 @@
         private System.Windows.Forms.ToolStripButton toolStripButton2;
         private System.Windows.Forms.ImageList explorerSmallImageList;
         private System.Windows.Forms.ImageList explorerLargeImages;
-        private NavigationBar addressbar1;
         private System.Windows.Forms.ImageList tinyIcons;
-        private System.Windows.Forms.Integration.ElementHost elementHost1;
-        private NavigationBar navigationBar1;
         private ToolStripBindableButton toolStripButton3;
     }
 }

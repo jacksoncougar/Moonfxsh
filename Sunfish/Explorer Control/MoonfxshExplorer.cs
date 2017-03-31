@@ -26,8 +26,8 @@ namespace Sunfish.Forms
             (toolStripButton3 as IBindableComponent).DataBindings.Add("Text", listView1, "View");
 
             // WPF interop Events
-            navigationBar1.AddressSubmitted += ( sender, e ) => { scenarioView1.SelectDirectoryNode( e ); };
-            navigationBar1.SearchSubmitted += ( sender, e ) => { Search( e ); };
+            ////navigationBar1.AddressSubmitted += ( sender, e ) => { scenarioView1.SelectDirectoryNode( e ); };
+            ////navigationBar1.SearchSubmitted += ( sender, e ) => { Search( e ); };
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace Sunfish.Forms
             if ( directoryNode == null ) return;
 
             ListDirectory( directoryNode.Path );
-            navigationBar1.DisplayPath( directoryNode.Path );
+            //navigationBar1.DisplayPath( directoryNode.Path );
         }
 
         private void scenarioView1_NodeMouseDoubleClick( object sender, TreeNodeMouseClickEventArgs e )
@@ -181,7 +181,7 @@ namespace Sunfish.Forms
         {
             if ( searchTerm == string.Empty ) return;
             scenarioView1.SelectedNode = null;
-            navigationBar1.AddressBox.Text = "Search Results in Cache";
+            //navigationBar1.AddressBox.Text = "Search Results in Cache";
 
             listView1.Items.Clear();
 

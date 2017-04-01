@@ -21,7 +21,7 @@ namespace Sunfish.Forms
         {
             InitializeComponent( );
 
-            dockPanel1.Theme = new VS2013BlueTheme( );
+            //dockPanel1.Theme = new VS2013BlueTheme( );
 
 
             var fileName = Path.Combine( Local.MapsDirectory, "ascension.map" );
@@ -33,34 +33,34 @@ namespace Sunfish.Forms
 				var directory = Path.GetDirectoryName(fileName);
 				if (!string.IsNullOrEmpty(directory))
 				{
-					var maps = Directory.GetFiles(directory, "*.map", SearchOption.TopDirectoryOnly);
-					var resourceMaps = maps.GroupBy(
-						Halo2.CheckMapType
-						).Where(x => x.Key == MapType.Shared || x.Key == MapType.MainMenu
-									 || x.Key == MapType.SinglePlayerShared)
-						.Select(g => g.First()).ToList();
-					resourceMaps.ForEach(x =>
-					   Solution.Index.AddCache(CacheStream.Open(x)));
+					//var maps = Directory.GetFiles(directory, "*.map", SearchOption.TopDirectoryOnly);
+					//var resourceMaps = maps.GroupBy(
+					//	Halo2.CheckMapType
+					//	).Where(x => x.Key == MapType.Shared || x.Key == MapType.MainMenu
+					//				 || x.Key == MapType.SinglePlayerShared)
+					//	.Select(g => g.First()).ToList();
+					//resourceMaps.ForEach(x =>
+					//   Solution.Index.AddCache(CacheStream.Open(x)));
 				}
-				Solution.Index.AddCache(CacheStream.Open(fileName));
-				_cacheStream = CacheStream.Open(fileName);
+				//Solution.Index.AddCache(CacheStream.Open(fileName));
+				//_cacheStream = CacheStream.Open(fileName);
 
-				dockPanel1.DockBottomPortion = 350f;
+				//dockPanel1.DockBottomPortion = 350f;
 
-				_sceneView = new SceneView();
+				//_sceneView = new SceneView();
 
-				_moonfxshExplorerForm = new MoonfxshExplorer();
+				//_moonfxshExplorerForm = new MoonfxshExplorer();
 
-				_sceneView.SceneInitialized += delegate
-				{
-					_moonfxshExplorerForm.LoadTags(_cacheStream.ToArray());
-					Solution.SetScenario((ScenarioBlock)_cacheStream.Index.ScenarioIdent.Get(_cacheStream.GetKey()));
+				//_sceneView.SceneInitialized += delegate
+				//{
+				//	_moonfxshExplorerForm.LoadTags(_cacheStream.ToArray());
+				//	Solution.SetScenario((ScenarioBlock)_cacheStream.Index.ScenarioIdent.Get(_cacheStream.GetKey()));
 
-					_sceneView.Scene.OnFrameReady += delegate
-					{
-						this.Text = $@"{1 / _sceneView.SceneClock.frameTime:#.###} Update:{ _sceneView.SceneClock.updateTime}";
-					};
-				};
+				//	_sceneView.Scene.OnFrameReady += delegate
+				//	{
+				//		this.Text = $@"{1 / _sceneView.SceneClock.frameTime:#.###} Update:{ _sceneView.SceneClock.updateTime}";
+				//	};
+				//};
 			
             //_moonfxshExplorerForm.TagItemDoubleClick += ( sender, reference ) => EditTag( reference );
             //_sceneView.Show( dockPanel1, DockState.Document );

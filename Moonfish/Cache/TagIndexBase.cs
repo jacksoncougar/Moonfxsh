@@ -10,8 +10,8 @@ namespace Moonfish.Cache
         public int classArrayAddress;
         public int classArrayCount;
         public int datumArrayAddress;
-        public TagIdent ScenarioIdent { get; private set; }
-        public TagIdent GlobalsIdent { get; private set; }
+        public TagIdent ScenarioIdent { get; set; }
+        public TagIdent GlobalsIdent { get; set; }
         public int _noodleValue;
         public int datumArrayCount;
         private readonly TagClass fourCC;

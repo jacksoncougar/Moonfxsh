@@ -31,7 +31,7 @@ namespace Moonfish.Cache
             return new CacheStream( map.Name );
         }
 
-        public void SaveTo( Stream outputStream )
+        public Stream SaveTo( Stream outputStream )
         {
             var newHeader = Header.CreateShallowCopy( );
 
@@ -125,6 +125,8 @@ namespace Moonfish.Cache
 
             outputStream.Seek( 0, SeekOrigin.Begin );
             newHeader.SerializeTo( outputStream );
+
+			return outputStream;
         }
 
         internal static CacheStream SaveAs( CacheStream map, string destFileName )
@@ -193,6 +195,8 @@ namespace Moonfish.Cache
 
         private void CopyLipsyncResources( Stream outputStream )
         {
+			if (!Index.Any(x => x.Class == TagClass.Ugh)) return;
+
             var ughData = Index.First( x => x.Class == TagClass.Ugh );
             var ughBlock = ( SoundCacheFileGestaltBlock ) Deserialize( ughData.Identifier );
             foreach ( var soundGestaltExtraInfoBlock in ughBlock.ExtraInfos )
@@ -312,7 +316,9 @@ namespace Moonfish.Cache
 
         private void CopySoundResources( Stream outputStream )
         {
-            var ughData = Index.First( x => x.Class == TagClass.Ugh );
+			if (!Index.Any(x => x.Class == TagClass.Ugh)) return;
+
+			var ughData = Index.First( x => x.Class == TagClass.Ugh );
             var ughBlock = ( SoundCacheFileGestaltBlock ) Deserialize( ughData.Identifier );
             for ( var index = 0; index < ughBlock.Chunks.Length; index++ )
             {
@@ -323,6 +329,8 @@ namespace Moonfish.Cache
 
         private int CopyStructureMeta( Stream outputStream )
         {
+			if (!Index.Any(x => x.Class == TagClass.Scnr)) return 0;
+
             var allocationLength = 0;
             var scnrBlock = ( ScenarioBlock ) Deserialize( Index.ScenarioIdent );
             var buffer = new byte[0x2000000]; // 32 mebibytes
@@ -403,6 +411,8 @@ namespace Moonfish.Cache
 
         private void CopyStructureResources( Stream outputStream )
         {
+			if (!Index.Any(x => x.Class == TagClass.Scnr)) return;
+
             var scnrBlock = ( ScenarioBlock ) Deserialize( Index.ScenarioIdent );
             foreach ( var scenarioStructureBspReferenceBlock in scnrBlock.StructureBSPs )
             {
@@ -439,6 +449,8 @@ namespace Moonfish.Cache
 
         private void CopyUnicodeTable( Stream outputStream )
         {
+			if (TagIdent.IsNull(Index.GlobalsIdent)) return;
+
             var globalsBlock = ( GlobalsBlock ) Deserialize( Index.GlobalsIdent );
             var newUnicodeBlockInfo = new MoonfishGlobalUnicodeBlockInfoStructBlock
             {

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -50,7 +51,12 @@ namespace Moonfish.Cache
             }
         }
 
-        public IEnumerable<TagDatum> GetTags( string path )
+		internal void Remove(int i)
+		{
+			_data.RemoveAt(i);
+		}
+
+		public IEnumerable<TagDatum> GetTags( string path )
         {
             return _data.Where( u => u.Path.StartsWith( path ) );
         }
@@ -67,7 +73,7 @@ namespace Moonfish.Cache
 
         public void Update(TagIdent ident, TagDatum item)
         {
-            _data[ident.Index] = item;
+			_data[ident.Index] = item;
         }
 
         public int IndexOf(TagDatum item)

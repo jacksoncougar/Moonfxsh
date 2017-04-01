@@ -24,6 +24,19 @@ namespace Moonfish.Cache
         public readonly List<VirtualMappedAddress> StructureMemoryBlocks;
         public readonly CacheHeader Header;
 
+		public void UpdateBinding(TagIdent oldIdent, TagIdent newIdent)
+		{
+			var index = StructureMemoryBlockBindings[oldIdent];
+			StructureMemoryBlockBindings.Remove(oldIdent);
+			StructureMemoryBlockBindings.Add(newIdent, index);
+		}
+
+		public void UpdateCache(TagIdent ident, GuerillaBlock block)
+		{
+			_deserializedTagCache.Remove(ident);
+			_deserializedTagCache.Add(ident, block);
+		}
+
         public static CacheStream Open(string fileName)
         {
             var directory = Path.GetDirectoryName(fileName);
@@ -39,7 +52,8 @@ namespace Moonfish.Cache
         }
 
         public CacheStream(string filename)
-            : base(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 8*1024)  
+
+			: base(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 8*1024)  
         {
             //HEADER
             var binaryReader = new BinaryReader(this, Encoding.UTF8);
@@ -153,12 +167,20 @@ namespace Moonfish.Cache
 
         public TagIndex Index { get; private set; }
 
-        public override long Position
+		public override bool CanWrite
+		{
+			get
+			{
+				return base.CanWrite;
+			}
+		}
+
+		public override long Position
         {
             get
             {
                 var value = (int) base.Position;
-                return TryConvertOffsetToPointer(ref value) ? value : base.Position;
+                return TryConvertOffsetToPointer(ref value) ? value : value;
             }
             set
             {
@@ -341,6 +363,7 @@ namespace Moonfish.Cache
             {
                 offset = CheckOffset(offset);
             }
+			//base.Position = offset;
             base.Seek(offset, origin);
             return Position;
         }

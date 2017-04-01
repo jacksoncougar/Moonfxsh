@@ -8,8 +8,8 @@ namespace Moonfish.Tags
     [StructLayout(LayoutKind.Sequential, Size = 8)]
     public struct TagReference
     {
-        public readonly TagClass Class;
-        public readonly TagIdent Ident;
+        public TagClass Class;
+        public TagIdent Ident;
 
         public TagReference(TagClass tagClass, TagIdent tagID)
         {

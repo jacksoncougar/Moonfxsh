@@ -47,9 +47,9 @@ namespace Moonfish.Guerilla
 
             offset = (int) dataStream.Seek(datum.VirtualAddress, SeekOrigin.Begin);
 
-
             elementArray.virtualAddress = datum.VirtualAddress;
-            ValidateTagBlock(elementArray, elementArray.ToFixedArrayPointer(), binaryReader, ref offset);
+
+			ValidateTagBlock(elementArray, elementArray.ToFixedArrayPointer(), binaryReader, ref offset);
 
             if (error)
                 OnWriteMessage(string.Format("Tag ({0}.{1})", datum.Path, datum.Class.ToTokenString()));

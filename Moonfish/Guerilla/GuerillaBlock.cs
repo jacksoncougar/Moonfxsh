@@ -72,8 +72,8 @@ namespace Moonfish.Guerilla
             var array = new T[blamPointer.ElementCount];
             if (!BlamPointer.IsNull(blamPointer) && binaryReader.BaseStream.Position != blamPointer.StartAddress)
             {
-                var offset = blamPointer.StartAddress - binaryReader.BaseStream.Position;
-                binaryReader.BaseStream.Seek(offset, SeekOrigin.Current);
+                //var offset = blamPointer.StartAddress - binaryReader.BaseStream.Position;
+				binaryReader.BaseStream.Position = blamPointer.StartAddress;//(offset, SeekOrigin.Current);
             }
             var pointerArray = new Queue<BlamPointer>[blamPointer.ElementCount];
 

@@ -1,16 +1,27 @@
 ﻿<Properties StartupConfiguration="{DD0C713C-6119-4D6D-8F0A-CAA8F34763BF}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Moonfish/packages.config">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Moonfxsh Status">
     <Files>
-      <File FileName="Sunfish/Scenario/MainForm.cs" Line="26" Column="4" />
-      <File FileName="Moonfish/Cache/CacheStream.cs" Line="96" Column="5" />
-      <File FileName="Sunfish/Program.cs" Line="14" Column="23" />
-      <File FileName="Sunfish/Explorer Control/MoonfxshExplorer.cs" Line="20" Column="2" />
-      <File FileName="Sunfish/Explorer Control/ScenarioView.cs" Line="1" Column="1" />
-      <File FileName="Moonfish/main.cs" Line="14" Column="4" />
-      <File FileName="Moonfish/packages.config" Line="1" Column="1" />
+      <File FileName="Moonfish/main.cs" Line="17" Column="4" />
+      <File FileName="Moonfish/Cache/TagIndex.cs" Line="66" Column="1" />
+      <File FileName="Moonfish/Cache/CacheStream.CopyTo.cs" Line="269" Column="1" />
+      <File FileName="Moonfish/Cache/CacheStream.cs" Line="324" Column="31" />
+      <File FileName="Moonfish/Guerilla/GuerillaBlockExtensions.cs" Line="63" Column="13" />
+      <File FileName="Moonfish/ValueTypes/TagReference.cs" Line="12" Column="15" />
+      <File FileName="Moonfish/Guerilla/Tags.Generated/ActorStartingLocationsBlock.generated.cs" Line="1" Column="1" />
+      <File FileName="Moonfish/Guerilla/Tags.Generated/ScenarioStructureBspBlock.generated.cs" Line="20" Column="26" />
+      <File FileName="Moonfish/Guerilla/QueueableBinaryWriter.cs" Line="38" Column="1" />
+      <File FileName="Moonfish/Guerilla/Tags.Generated/ScenarioBlock.generated.cs" Line="114" Column="65" />
+      <File FileName="Moonfish/Guerilla/GuerillaExtensions.cs" Line="1" Column="10" />
+      <File FileName="Moonfish/Guerilla/Tags.Generated/SoundCacheFileGestaltBlock.generated.cs" Line="75" Column="9" />
+      <File FileName="Moonfish/Moonfish.csproj" Line="14" Column="38" />
+      <File FileName="Moonfish/Guerilla/GuerillaBlock.cs" Line="70" Column="36" />
+      <File FileName="Moonfish/Guerilla/Tags.Generated/SoundClassesBlock.generated.cs" Line="10" Column="1" />
+      <File FileName="Moonfish/Cache/TagDatum.cs" Line="9" Column="25" />
+      <File FileName="Moonfish/ValueTypes/TagClass.cs" Line="79" Column="1" />
+      <File FileName="Moonfxsh Status" />
     </Files>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/home/leaf/Moonfxsh/Moonfish/Forms/GuerillaBlockViewer.cs" relfile="Moonfish/Forms/GuerillaBlockViewer.cs" line="15" column="1" />

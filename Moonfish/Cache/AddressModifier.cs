@@ -1,29 +1,31 @@
-using System;
-using System.Diagnostics.Contracts;
-using System.IO;
-using Moonfish.Tags;
-
 namespace Moonfish
 {
 	/// <summary>
-	/// Address translation constant that when added to a stream position value results in a virtual address, 
+	/// Address modifier that when added to a stream position value results in a virtual address, 
 	/// and when subtracted from a virtual address results in a stream position value.
 	/// 
 	/// Known as magic.
 	/// </summary>
-	public struct AddressTranslationConstant
+	public struct AddressModifier
 	{
-		long magic;
+		int magic;
 
 		/// <summary>
 		/// Creates the translation constant for virtual to position address conversion.
 		/// </summary>
-		/// <returns>The translation constant</returns>
 		/// <param name="position">Position.</param>
 		/// <param name="address">Address.</param>
-		public AddressTranslationConstant(long position, long address)
+		public AddressModifier(long position, long address)
 		{
-			magic = address - position;
+			magic = (int)address - (int)position;
+		}
+
+		/// <summary>
+		/// Creates the translation constant for virtual to position address conversion.
+		/// </summary>
+		public AddressModifier(int magic)
+		{
+			this.magic = magic;
 		}
 
 		/// <summary>
@@ -33,7 +35,7 @@ namespace Moonfish
 		/// <param name="position">The stream position.</param>
 		public long ToVirtualAddress(long position)
 		{
-			var address = position + magic;
+			var address = (int)(position + magic);
 
 			return address;
 		}
@@ -45,7 +47,7 @@ namespace Moonfish
 		/// <param name="address">The virtual address.</param>
 		public long ToStreamPosition(long address)
 		{
-			var position = address - magic;
+			var position = (int)(address - magic);
 
 			return position;
 		}

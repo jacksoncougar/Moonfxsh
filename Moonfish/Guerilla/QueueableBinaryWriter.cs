@@ -76,30 +76,7 @@ namespace Moonfish.Guerilla
                     BaseStream.Seek( item.Pointer.StartAddress );
                 }
 
-                var dataQueueItem = item as ByteDataQueueItem;
-                if ( dataQueueItem != null )
-                {
-                    Write( dataQueueItem.Data );
-                    continue;
-                }
-
-                var shortDataQueueItem = item as ShortDataQueueItem;
-                if ( shortDataQueueItem != null )
-                {
-                    var buffer = shortDataQueueItem.Data;
-                    for ( var i = 0; i < buffer.Length; ++i )
-                        Write( shortDataQueueItem.Data[ i ] );
-                    continue;
-                }
-
-                var guerillaBlockQueueItem = item as GuerillaQueueItem;
-                if ( guerillaBlockQueueItem == null ) continue;
-
-                //  then foreach element in the block array call the write method
-                foreach ( GuerillaBlock block in guerillaBlockQueueItem.DataBlocks )
-                {
-                    block.Write_( this );
-                }
+				item.Write(this);
             }
         }
 
@@ -146,10 +123,25 @@ namespace Moonfish.Guerilla
             _queueAddress = blamPointer.EndAddress;
         }
 
+		/// <summary>
+		/// Queue item used for allocating space for read and write operations on a stream.
+		/// </summary>
         private abstract class QueueItem
         {
+			/// <summary>
+			/// Gets or sets the pointer to the allocated space in the stream.
+			/// </summary>
+			/// <value>The pointer to allocated space in the stream.</value>
             public abstract BlamPointer Pointer { get; set; }
-            public abstract object ReferenceField { get; }
+			/// <summary>
+			/// Gets the reference to the queued data. 
+			/// </summary>
+			/// <remarks>
+			/// This is used as a key to lookup queue items.
+			/// </remarks>
+			/// <value>The reference field.</value>
+			public abstract object ReferenceField { get; }
+			public abstract void Write(BinaryWriter writer); 
         };
 
         private class ByteDataQueueItem : QueueItem
@@ -166,7 +158,12 @@ namespace Moonfish.Guerilla
             {
                 get { return Data; }
             }
-        }
+
+			public override void Write(BinaryWriter writer)
+			{
+				writer.Write(Data);
+			}
+		}
 
         private class ShortDataQueueItem : QueueItem
         {
@@ -182,7 +179,16 @@ namespace Moonfish.Guerilla
             {
                 get { return Data; }
             }
-        }
+
+			public override void Write(BinaryWriter writer)
+			{
+				var buffer = Data;
+				for (var index = 0; index < buffer.Length; ++index)
+				{
+					writer.Write(buffer[index]);
+				}
+			}
+		}
 
         private class GuerillaQueueItem : QueueItem
         {
@@ -198,6 +204,14 @@ namespace Moonfish.Guerilla
             {
                 get { return DataBlocks; }
             }
-        };
+
+			public override void Write(BinaryWriter writer)
+			{
+				foreach (var block in DataBlocks)
+				{
+					writer.Write(block);
+				}
+			}
+		};
     };
 }

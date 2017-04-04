@@ -14,10 +14,10 @@ namespace Moonfish.Guerilla.CodeDom
             var nameToken = new StringBuilder(field.Strings.Name.ToPascalCase().ToAlphaNumericToken());
             var typeToken = GetTypeToken(field);
             var fieldTypeName = nameToken + typeToken;
-            fieldTypeName = parentClass.TokenDictionary.Contains(fieldTypeName)
+            fieldTypeName = parentClass.UsedNames.Contains(fieldTypeName)
                 ? parentClass.TargetClass.Name.Replace("Block", "") + fieldTypeName
                 : fieldTypeName;
-            return parentClass.TokenDictionary.GenerateValidToken(fieldTypeName);
+            return parentClass.UsedNames.GenerateValidToken(fieldTypeName);
         }
 
         private static string GetTypeToken(MoonfishTagField field)

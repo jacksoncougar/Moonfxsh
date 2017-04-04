@@ -16,30 +16,59 @@ namespace Moonfish.Guerilla.CodeDom
     [SuppressMessage("ReSharper", "BitwiseOperatorOnEnumWithoutFlags")]
     internal class GuerillaBlockClassBase
     {
+		/// <summary>
+		/// The dictionary to lookup C# types corresponding to underlying guerilla types.
+		/// </summary>
         protected static Dictionary<MoonfishFieldType, Type> ValueTypeDictionary;
-        private static GuerillaCommentCollection _comments = new GuerillaCommentCollection();
-        internal CodeTypeDeclaration TargetClass;
-        protected CodeCompileUnit TargetUnit;
-        [NotNull] internal TokenDictionary TokenDictionary;
 
+		/// <summary>
+		/// The comments found while parsing the guerilla fields.
+		/// </summary>
+        private static GuerillaCommentCollection _comments = new GuerillaCommentCollection();
+        
+		internal CodeTypeDeclaration TargetClass;
+        protected CodeCompileUnit TargetUnit;
+
+        /// <summary>
+        /// The token dictionary of names which have been used in this class.
+        /// </summary>
+		[NotNull] internal TokenDictionary UsedNames;
+
+		/// <summary>
+		/// Initializes the <see cref="T:Moonfish.Guerilla.CodeDom.GuerillaBlockClassBase"/> class static members.
+		/// </summary>
+		/// <remarks>
+		/// Initializes the <see cref="ValueTypeDictionary"/> member from the current assembly.
+		/// </remarks>
         static GuerillaBlockClassBase()
         {
-            BinaryIOReflection.CacheMethods();
             var assembly = typeof (StringIdent).Assembly;
+
+			// get all the types in the assembley decorated with the appropriate attribute.
             var query = from type in assembly.GetTypes()
                 where type.GetCustomAttributes(typeof (GuerillaTypeAttribute), false).Any()
                 select type;
             var valueTypes = query.ToArray();
+
+			// initialize cache of write and read methods for types in the assembly.
+			BinaryIOReflection.CacheMethods();
+
+
             ValueTypeDictionary = new Dictionary<MoonfishFieldType, Type>(valueTypes.Count());
             foreach (var type in valueTypes)
             {
                 var guerillaTypeAttributes =
                     (GuerillaTypeAttribute[]) type.GetCustomAttributes(typeof (GuerillaTypeAttribute), false);
+				
                 foreach (var guerillaType in guerillaTypeAttributes)
                 {
                     ValueTypeDictionary.Add(guerillaType.FieldType, type);
                 }
             }
+
+			/*
+			 * Initialize basic valuetypes and linear math types
+			 */
             ValueTypeDictionary.Add(MoonfishFieldType.FieldAngle, typeof (float));
             ValueTypeDictionary.Add(MoonfishFieldType.FieldRealEulerAngles_3D, typeof (Vector3));
             ValueTypeDictionary.Add(MoonfishFieldType.FieldCharInteger, typeof (byte));
@@ -63,21 +92,27 @@ namespace Moonfish.Guerilla.CodeDom
 
         protected GuerillaBlockClassBase(string className)
         {
-            TokenDictionary = new TokenDictionary();
-            TokenDictionary.Add(className);
-            TargetUnit = new CodeCompileUnit();
-            var tagsCodeNamespace = new CodeNamespace("Moonfish.Guerilla.Tags");
+			CodeNamespace tagsCodeNamespace = new CodeNamespace("Moonfish.Guerilla.Tags");
+            
+			UsedNames = new TokenDictionary();
+            UsedNames.Add(className);
+
+			TargetUnit = new CodeCompileUnit();
+            
             tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("Moonfish.Tags"));
             tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("Moonfish.Model"));
             tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("System.IO"));
             tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("System.Collections.Generic"));
             tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("System.Linq"));
-            TargetClass = new CodeTypeDeclaration(className)
+            
+			TargetClass = new CodeTypeDeclaration(className)
             {
                 TypeAttributes = TypeAttributes.Public
             };
-            tagsCodeNamespace.Types.Add(TargetClass);
-            TargetUnit.Namespaces.Add(tagsCodeNamespace);
+            
+			tagsCodeNamespace.Types.Add(TargetClass);
+            
+			TargetUnit.Namespaces.Add(tagsCodeNamespace);
         }
 
         protected string GenerateName(MemberAttributes attributes,
@@ -89,7 +124,7 @@ namespace Moonfish.Guerilla.CodeDom
         protected string GenerateName(MemberAttributes attributes, TokenDictionary tokenDictionary, bool takeFirstMatch,
             params string[] nameStrings)
         {
-            tokenDictionary = tokenDictionary ?? TokenDictionary;
+            tokenDictionary = tokenDictionary ?? UsedNames;
             string validToken = null;
             foreach (var nameString in nameStrings)
             {
@@ -140,18 +175,20 @@ namespace Moonfish.Guerilla.CodeDom
                 : GenerateName(attributes, field.Strings.Name, fieldTypeName);
         }
 
-        protected static void GenerateSummary(CodeTypeMember member)
-        {
-            var comment = PullComments();
-            if (comment.HasSummary)
-                member.Comments.AddRange(
-                    new[]
-                    {
-                        new CodeCommentStatement("<summary>", true),
-                        new CodeCommentStatement(comment.Summary.Trim(), true),
-                        new CodeCommentStatement("</summary>", true)
-                    });
-        }
+		protected static void GenerateSummary(CodeTypeMember member)
+		{
+			var comment = PullComments();
+			if (comment.HasSummary)
+			{
+				member.Comments.AddRange(
+					new[]
+					{
+						new CodeCommentStatement("<summary>", true),
+						new CodeCommentStatement(comment.Summary.Trim(), true),
+						new CodeCommentStatement("</summary>", true)
+					});
+			}
+		}
 
         protected static void PushComments(string value)
         {

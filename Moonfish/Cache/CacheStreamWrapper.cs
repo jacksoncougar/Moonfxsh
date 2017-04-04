@@ -1,15 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Security.Cryptography;
-using System.Text;
-using Fasterflect;
-using Moonfish.Guerilla;
-using Moonfish.Guerilla.Tags;
-using Moonfish.Tags;
 
 namespace Moonfish.Cache
 {
@@ -18,7 +8,11 @@ namespace Moonfish.Cache
 	/// </summary>
 	public abstract class CacheStreamWrapper<T> : Stream where T : Stream
 	{
-		private readonly T baseStream;
+		/// <summary>
+		/// Gets the wrapped stream.
+		/// </summary>
+		/// <value>The base stream.</value>
+		protected T BaseStream { get; private set; }
 
 		/// <summary>
 		/// The virtual addressed sections within the stream.
@@ -36,7 +30,7 @@ namespace Moonfish.Cache
 		/// <param name="stream">The stream to wrap.</param>
 		protected CacheStreamWrapper(T stream)
 		{
-			baseStream = stream;
+			BaseStream = stream;
 		}
 
 		/// <summary>
@@ -50,13 +44,35 @@ namespace Moonfish.Cache
 		/// When a section is active is will be checked during calls that change the 
 		/// position. If the section contains the value the streams position will be changed.
 		/// </remarks>
-		protected int CreateVirtualSection(int start, int length, int address, bool active)
+		protected int CreateVirtualSection(int address, int length, int start, bool active)
 		{
 			VirtualStreamSection section;
-			int sub;
 
 			section = new VirtualStreamSection(address, length, start, this);
 
+			return AddVirtualSection(section, active);
+		}
+
+		/// <summary>
+		/// Creates a virtual section within the stream.
+		/// </summary>
+		/// <param name="address">The virtual address where the section starts</param>
+		/// <param name="length">The length of the virtual section.</param>
+		/// <param name="magic">The AddressModifier of the virtual section</param>
+		/// <param name="active">If set to <c>true</c> the created virtual section will be active.</param>
+		protected int CreateVirtualSection(int address, int length, AddressModifier magic, bool active)
+		{
+			VirtualStreamSection section;
+
+			section = new VirtualStreamSection(address, length, magic, this);
+
+			return AddVirtualSection(section, active);
+		}
+
+		private int AddVirtualSection(VirtualStreamSection section, bool active)
+		{
+			int sub;
+			
 			memorySections.Add(section);
 			sub = memorySections.IndexOf(section);
 
@@ -68,10 +84,6 @@ namespace Moonfish.Cache
 			return sub;
 		}
 
-		protected void CreateVirtualSection(int address, int length, AddressModifier magic, bool active)
-		{
-			
-		}
 		protected void EnableVirtualSection(int index) => activeSections.Add(index);
 		protected void DisableVirtualSection(int index) => activeSections.Remove(index);
 
@@ -83,13 +95,13 @@ namespace Moonfish.Cache
 		{
 			get
 			{
-				var position = baseStream.Position;
+				var position = BaseStream.Position;
 
 				foreach (var sub in activeSections)
 				{
 					if (memorySections[sub].Contains(position, false))
 					{
-						position = memorySections[sub].Position;
+						position = memorySections[sub].ConvertPosition(position, false, true);
 						break;
 					}
 				}
@@ -110,24 +122,23 @@ namespace Moonfish.Cache
 		/// <param name="origin">A value of type <see cref="SeekOrigin"/> indicating the reference point used to obtain the new position.</param>
 		public override long Seek(long offset, SeekOrigin origin)
 		{
-			long position = -1; // keep the compiler happy...
+			long position;
 
 			// if this is an absolute position and not contained in the stream it could be an address.
 			if (origin == SeekOrigin.Begin && !(0 <= offset && offset < Length))
 			{
 				foreach (var sub in activeSections)
 				{
-					if (memorySections[sub].Contains(offset, false))
+					if (memorySections[sub].Contains(offset, true))
 					{
-						position = memorySections[sub].Seek(offset, origin);
+						offset = memorySections[sub].ConvertPosition(offset, true, false);
 						break;
 					}
 				}
 			}
-			else
-			{
-				position = baseStream.Seek(offset, origin);
-			}
+
+			position = BaseStream.Seek(offset, origin);
+
 
 			return position;
 		}
@@ -135,38 +146,38 @@ namespace Moonfish.Cache
 		/// Gets a value indicating whether this <see cref="T:Moonfish.VirtualMappedStreamSection"/> can read.
 		/// </summary>
 		/// <value><c>true</c> if can read; otherwise, <c>false</c>.</value>
-		public override bool CanRead => baseStream.CanRead;
+		public override bool CanRead => BaseStream.CanRead;
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="T:Moonfish.VirtualMappedStreamSection"/> can seek.
 		/// </summary>
 		/// <value><c>true</c> if can seek; otherwise, <c>false</c>.</value>
-		public override bool CanSeek => baseStream.CanSeek;
+		public override bool CanSeek => BaseStream.CanSeek;
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="T:Moonfish.VirtualMappedStreamSection"/> can write.
 		/// </summary>
 		/// <value><c>true</c> if can write; otherwise, <c>false</c>.</value>
-		public override bool CanWrite => baseStream.CanWrite;
+		public override bool CanWrite => BaseStream.CanWrite;
 
 		/// <summary>
 		/// Gets the length.
 		/// </summary>
 		/// <value>The length.</value>
-		public override long Length => baseStream.Length;
+		public override long Length => BaseStream.Length;
 
 		/// <summary>
 		/// Flush this instance.
 		/// </summary>
-		public override void Flush() => baseStream.Flush();
+		public override void Flush() => BaseStream.Flush();
 
-		public override void SetLength(long value) => baseStream.SetLength(value);
+		public override void SetLength(long value) => BaseStream.SetLength(value);
 
 		public override int Read(byte[] buffer, int offset, int count)
-		=> baseStream.Read(buffer, offset, count);
+		=> BaseStream.Read(buffer, offset, count);
 
 		public override void Write(byte[] buffer, int offset, int count)
-		=> baseStream.Write(buffer, offset, count);
+		=> BaseStream.Write(buffer, offset, count);
 	};
 	
 }

@@ -69,54 +69,78 @@ namespace Moonfish.Guerilla
         public virtual T[] ReadBlockArrayData<T>(BinaryReader binaryReader, BlamPointer blamPointer)
             where T : GuerillaBlock
         {
-            var array = new T[blamPointer.ElementCount];
-            if (!BlamPointer.IsNull(blamPointer) && binaryReader.BaseStream.Position != blamPointer.StartAddress)
-            {
-                //var offset = blamPointer.StartAddress - binaryReader.BaseStream.Position;
-				binaryReader.BaseStream.Position = blamPointer.StartAddress;//(offset, SeekOrigin.Current);
-            }
-            var pointerArray = new Queue<BlamPointer>[blamPointer.ElementCount];
+			var blocks = new T[blamPointer.ElementCount];
+			var pointers = new Queue<BlamPointer>[blamPointer.ElementCount];
+			var ctor = GetObjectActivator<T>(typeof(T));
 
-            var ctor = GetObjectActivator<T>(typeof (T));
-
-            for (var i = 0; i < blamPointer.ElementCount; ++i)
-            {
-                var element = (T) ctor();
-                array[i] = element;
-                pointerArray[i] = array[i].ReadFields(binaryReader);
+			if (!BlamPointer.IsNull(blamPointer) && binaryReader.BaseStream.Position != blamPointer.StartAddress)
+			{
+				//TODO make this work with seek.
+				binaryReader.BaseStream.Position = blamPointer.StartAddress;
             }
             for (var i = 0; i < blamPointer.ElementCount; ++i)
             {
-                array[i].ReadInstances(binaryReader, pointerArray[i]);
+				blocks[i] = (T)ctor();
+                pointers[i] = blocks[i].ReadFields(binaryReader);
             }
-            return array;
+            for (var i = 0; i < blamPointer.ElementCount; ++i)
+            {
+                blocks[i].ReadInstances(binaryReader, pointers[i]);
+            }
+
+            return blocks;
         }
 
         private static ObjectActivator<GuerillaBlock> GetObjectActivator<T>(Type type) where T : GuerillaBlock
         {
             ObjectActivator<GuerillaBlock> ctor;
-            if (Activators.TryGetValue(type, out ctor)) return ctor;
 
-            ctor = GetActivator<T>(type.GetConstructor(Type.EmptyTypes));
-            Activators[type] = ctor;
+			if (!Activators.TryGetValue(type, out ctor))
+			{
+				ctor = GetActivator<T>(type.GetConstructor(Type.EmptyTypes));
+				Activators[type] = ctor;
+			}
+
             return ctor;
         }
 
         public virtual byte[] ReadDataByteArray(BinaryReader binaryReader, BlamPointer blamPointer)
         {
-            if (BlamPointer.IsNull(blamPointer)) return new byte[0];
-            binaryReader.BaseStream.Position = blamPointer.StartAddress;
-            return binaryReader.ReadBytes(blamPointer.ElementCount);
+			byte[] data;
+
+			if (BlamPointer.IsNull(blamPointer))
+			{
+				data = new byte[0];
+			}
+            else
+			{
+				binaryReader.BaseStream.Position = blamPointer.StartAddress;
+
+				data = binaryReader.ReadBytes(blamPointer.ElementCount);
+			}
+
+			return data;
         }
 
         public virtual short[] ReadDataShortArray(BinaryReader binaryReader, BlamPointer blamPointer)
         {
-            if (BlamPointer.IsNull(blamPointer)) return new short[0];
-            binaryReader.BaseStream.Position = blamPointer.StartAddress;
-            var elements = new short[blamPointer.ElementCount];
-            var buffer = binaryReader.ReadBytes(blamPointer.ElementCount * 2);
-            Buffer.BlockCopy(buffer, 0, elements, 0, buffer.Length);
-            return elements;
+			short[] data;
+			byte[] temp;
+
+			if (BlamPointer.IsNull(blamPointer))
+			{
+				data = new short[0];
+			}
+			else
+			{
+				binaryReader.BaseStream.Position = blamPointer.StartAddress;
+
+				data = new short[blamPointer.ElementCount];
+				temp = binaryReader.ReadBytes(blamPointer.ElementCount * 2);
+
+				Buffer.BlockCopy(temp, 0, data, 0, temp.Length);
+			}
+			return data;
         }
 
         public virtual Queue<BlamPointer> ReadFields(BinaryReader binaryReader)

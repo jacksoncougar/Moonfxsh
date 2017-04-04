@@ -12,7 +12,8 @@ namespace Moonfish.Guerilla
     public partial class Guerilla
     {
         /// <summary>
-        ///     Returns the alignment value defined by the LayoutAttribute and will fallback on returning 4 if no LayoutAttribute
+        ///     Returns the alignment value defined by the LayoutAttribute and will 
+		/// 	fallback on returning 4 if no LayoutAttribute
         ///     is
         ///     found
         /// </summary>

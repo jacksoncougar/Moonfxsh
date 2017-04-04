@@ -5,46 +5,37 @@ namespace Moonfish.Guerilla
 {
     internal class VirtualMemoryStream : MemoryStream
     {
-        private VirtualMappedAddress map;
+		private VirtualStreamSection map;
 
         public VirtualMemoryStream(string path, int virtualAddress)
             : base(File.ReadAllBytes(path))
         {
-            map = new VirtualMappedAddress()
-            {
-                Address = virtualAddress,
-                Length = (int) Length,
-                Magic = virtualAddress
-            };
+			map = new VirtualStreamSection(virtualAddress, (int)Length, virtualAddress, this);
         }
 
         public sealed override long Length => base.Length;
 
-        public override long Seek(long offset, SeekOrigin origin)
+        public override long Seek(long offset, SeekOrigin loc)
         {
-            return base.Seek(CheckOffset(offset), origin);
+			long position;
+
+			if (map.Contains(offset, true))
+				offset = map.ConvertPosition(offset, true, false);
+
+			position = base.Seek(offset, loc);
+			
+			return position;
         }
 
         public override long Position
-        {
-            get { return base.Position; }
-            set { base.Position = CheckOffset(value); }
-        }
-
-        private long CheckOffset(long value)
-        {
-            if (value < 0 || value > Length)
-            {
-                return PointerToOffset((int) value);
-            }
-            return value;
-        }
-
-        private int PointerToOffset(int value)
-        {
-            if (map.ContainsVirtualOffset(value))
-                return map.GetOffset(value);
-            throw new InvalidOperationException();
-        }
+		{
+			get { return base.Position; }
+			set
+			{
+				if (map.Contains(value))
+					base.Position = map.ConvertPosition(value);
+				else base.Position = value;
+			}
+		}
     }
 }

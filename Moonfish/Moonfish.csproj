@@ -133,12 +133,12 @@
     <Compile Include="Cache\CacheStream.IndexInfo.cs" />
     <Compile Include="Cache\ICache.cs" />
     <Compile Include="Cache\StructureAllocationHeader.cs" />
-    <Compile Include="Cache\StructureCache.cs" />
+    <Compile Include="Cache\VirtualMemorySectionID.cs" />
     <Compile Include="Cache\TagClassHeirarchy.cs" />
     <Compile Include="Cache\TagDatum.cs" />
     <Compile Include="Cache\TagIndex.cs" />
     <Compile Include="Cache\TagIndexBase.cs" />
-    <Compile Include="Cache\VirtualMappedAddress.cs" />
+    <Compile Include="Cache\VirtualStreamSection.cs" />
     <Compile Include="Cache\VirtualStream.cs" />
     <Compile Include="Collision\DebugDrawer.cs" />
     <Compile Include="Collision\Shapes.cs" />
@@ -1442,6 +1442,9 @@
     <Compile Include="ValueTypes\Range.cs" />
     <Compile Include="Cache\HaloVersion.cs" />
     <Compile Include="ValueTypes\VertexBuffer.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Cache\AddressModifier.cs" />
+    <Compile Include="Cache\CacheStreamWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\CacheStream.StringsInfo.cs" />

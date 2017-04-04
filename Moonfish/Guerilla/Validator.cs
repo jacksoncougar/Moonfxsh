@@ -36,11 +36,7 @@ namespace Moonfish.Guerilla
 
             var binaryReader = new BinaryReader(dataStream);
 
-            var virtualTagMemory = new VirtualMappedAddress
-            {
-                Address = datum.VirtualAddress,
-                Length = datum.Length
-            };
+			var virtualTagMemory = new VirtualStreamSection(datum.VirtualAddress, datum.Length, 0, dataStream);
 
             _isValidDelegate = virtualTagMemory.Contains;
             _isPointerOwnedByTagDelegate = virtualTagMemory.Contains;
@@ -83,22 +79,17 @@ namespace Moonfish.Guerilla
                         error = false;
                         if (!(tag.Class == validateTag.Class)) continue;
 
-                        var metaTableMemory = map.DefaultMemoryBlock;
+                        //var metaTableMemory = map..DefaultMemoryBlock;
                         if (tag.Class == (TagClass)"sbsp" || tag.Class == (TagClass)"ltmp")
                         {
-                            metaTableMemory =
-                                map.StructureMemoryBlocks[map.StructureMemoryBlockBindings[tag.Identifier]];
-                            map.ActiveAllocation(StructureCache.VirtualStructureCache0 +
+                        //        map.StructureMemoryBlocks[map.StructureMemoryBlockBindings[tag.Identifier]];
+                            map.SwitchActiveAllocation(VirtualMemorySectionID.VirtualStructureCache0 +
                                                  map.StructureMemoryBlockBindings[tag.Identifier]);
                         }
-                        var virtualTagMemory = new VirtualMappedAddress
-                        {
-                            Address = tag.VirtualAddress,
-                            Length = tag.Length
-                        };
+						//var virtualTagMemory = new VirtualMappedStreamSection(tag.VirtualAddress, tag.Length, 0, map);
 
-                        _isValidDelegate = metaTableMemory.Contains;
-                        _isPointerOwnedByTagDelegate = virtualTagMemory.Contains;
+                        //_isValidDelegate = metaTableMemory.Contains;
+                        //_isPointerOwnedByTagDelegate = virtualTagMemory.Contains;
                         _pointersList.Clear();
 
                         offset = (int) map.Seek(tag.Identifier);

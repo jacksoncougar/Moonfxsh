@@ -3,8 +3,9 @@ namespace Moonfish.Cache
     /// <summary>
     /// 
     /// </summary>
-    public enum StructureCache
+    public enum VirtualMemorySectionID
     {
+		ObjectCache = 0,
         VirtualStructureCache0 = 1,
         VirtualStructureCache1,
         VirtualStructureCache2,

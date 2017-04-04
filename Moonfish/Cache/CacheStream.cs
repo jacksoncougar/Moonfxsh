@@ -13,16 +13,18 @@ using Moonfish.Tags;
 
 namespace Moonfish.Cache
 {
-    public partial class CacheStream : FileStream, ICache
+	public partial class CacheStream : CacheStreamWrapper<FileStream>, ICache
     {
         private readonly Dictionary<TagIdent, GuerillaBlock> _deserializedTagCache;
         private readonly Dictionary<TagIdent, string> _tagHashDictionary;
-        public readonly VirtualMappedAddress DefaultMemoryBlock;
 
         public readonly string[] Strings;
         public readonly Dictionary<TagIdent, int> StructureMemoryBlockBindings;
-        public readonly List<VirtualMappedAddress> StructureMemoryBlocks;
         public readonly CacheHeader Header;
+
+		public string Name => BaseStream.Name;
+
+		private VirtualMemorySectionID activeAllocation = VirtualMemorySectionID.VirtualStructureCache0;
 
 		public void UpdateBinding(TagIdent oldIdent, TagIdent newIdent)
 		{
@@ -53,7 +55,7 @@ namespace Moonfish.Cache
 
         public CacheStream(string filename)
 
-			: base(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 8*1024)  
+			: base(new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 8*1024))  
         {
             //HEADER
             var binaryReader = new BinaryReader(this, Encoding.UTF8);
@@ -81,12 +83,10 @@ namespace Moonfish.Cache
             var secondaryMagic = Index[Index.GlobalsIdent].VirtualAddress -
                                  (Header.IndexInfo.IndexOffset + Header.IndexInfo.IndexLength);
 
-            DefaultMemoryBlock = new VirtualMappedAddress
-            {
-                Address = Index[0].VirtualAddress,
-                Length = Header.IndexInfo.MetaAllocationLength,
-                Magic = secondaryMagic
-            };
+			CreateVirtualSection(Index[Index.GlobalsIdent].VirtualAddress, 
+			                     Header.IndexInfo.MetaAllocationLength, 
+			                     new AddressModifier(secondaryMagic), true);
+      
 
             /* Intent: read the sbsp and lightmap address and lengths from the scenario tag 
              * and store them in the Tags array.
@@ -96,8 +96,7 @@ namespace Moonfish.Cache
             var count = binaryReader.ReadInt32();
             var address = binaryReader.ReadInt32();
 
-            StructureMemoryBlockBindings = new Dictionary<TagIdent, int>(count*2);
-            StructureMemoryBlocks = new List<VirtualMappedAddress>(count);
+			StructureMemoryBlockBindings = new Dictionary<TagIdent, int>(count * 2);
             for (var i = 0; i < count; ++i)
             {
 				var destination = address - secondaryMagic + i * 68;
@@ -105,14 +104,14 @@ namespace Moonfish.Cache
                 var structureBlockOffset = binaryReader.ReadInt32();
                 var structureBlockLength = binaryReader.ReadInt32();
                 var structureBlockAddress = binaryReader.ReadInt32();
-				Position += 8;
+				//Position += 8;
+				base.Seek(8, SeekOrigin.Current);
                 var sbspIdentifier = binaryReader.ReadTagIdent();
-				Position += 4;
-                //base.Seek(4, SeekOrigin.Current);
+				//Position += 4;
+                base.Seek(4, SeekOrigin.Current);
                 var ltmpIdentifier = binaryReader.ReadTagIdent();
 
                 base.Seek(structureBlockOffset, SeekOrigin.Begin);
-
 
                 var blockLength = binaryReader.ReadInt32();
                 var sbspVirtualAddress = binaryReader.ReadInt32();
@@ -125,20 +124,17 @@ namespace Moonfish.Cache
 
                 var ltmpLength = blockLength - sbspLength;
 
-                var block = new VirtualMappedAddress
-                {
-                    Address = structureBlockAddress,
-                    Length = structureBlockLength,
-                    Magic = structureBlockAddress - structureBlockOffset
-                };
+				var index = CreateVirtualSection(
+					structureBlockAddress,
+					structureBlockLength,
+					structureBlockOffset,
+					true);
 
                 var sbspDatum = Index[sbspIdentifier];
                 sbspDatum.VirtualAddress = sbspVirtualAddress;
                 sbspDatum.Length = sbspLength;
                 Index.Update(sbspIdentifier, sbspDatum);
 
-                StructureMemoryBlocks.Add(block);
-                var index = StructureMemoryBlocks.Count - 1;
                 StructureMemoryBlockBindings[sbspIdentifier] = index;
 
                 if (hasLightmapData)
@@ -150,7 +146,7 @@ namespace Moonfish.Cache
                     StructureMemoryBlockBindings[ltmpIdentifier] = index;
                 }
 
-                ActiveAllocation(StructureCache.VirtualStructureCache0);
+                SwitchActiveAllocation(VirtualMemorySectionID.VirtualStructureCache0);
             }
 
 
@@ -167,29 +163,6 @@ namespace Moonfish.Cache
 
         public TagIndex Index { get; private set; }
 
-		public override bool CanWrite
-		{
-			get
-			{
-				return base.CanWrite;
-			}
-		}
-
-		public override long Position
-        {
-            get
-            {
-                var value = (int) base.Position;
-                return TryConvertOffsetToPointer(ref value) ? value : value;
-            }
-            set
-            {
-                base.Position = CheckOffset(value);
-            }
-        }
-
-        private VirtualMappedAddress ActiveStructureMemoryAllocation { get; set; }
-
         public int Count
         {
             get { return Index.Count; }
@@ -202,14 +175,15 @@ namespace Moonfish.Cache
 
         public TagDatum GetOwner(int address)
         {
-            foreach (var data in from data in Index
-                let start = VirtualAddressToFileOffset(data.VirtualAddress)
-                let length = data.Length
-                where address >= start && address < start + length
-                select data)
-            {
-                return data;
-            }
+			//TODO fix this bad code.
+            //foreach (var data in from data in Index
+            //    let start = VirtualAddressToFileOffset(data.VirtualAddress)
+            //    let length = data.Length
+            //    where address >= start && address < start + length
+            //    select data)
+            //{
+            //    return data;
+            //}
             return new TagDatum();
         }
 
@@ -275,10 +249,10 @@ namespace Moonfish.Cache
             binaryWriter.WritePadding(512);
         }
 
-        public void ActiveAllocation(StructureCache activeAllocation)
+        public void SwitchActiveAllocation(VirtualMemorySectionID allocation)
         {
-            var index = (int) activeAllocation;
-            ActiveStructureMemoryAllocation = StructureMemoryBlocks[index];
+			DisableVirtualSection((int)activeAllocation);
+			EnableVirtualSection((int)allocation);
         }
 
         public string CalculateHash(TagIdent ident)
@@ -288,11 +262,6 @@ namespace Moonfish.Cache
                 var hash = Convert.ToBase64String(sha1.ComputeHash(GetInternalTagMeta(ident)));
                 return hash;
             }
-        }
-
-        public bool ContainsPointer(BlamPointer blamPointer)
-        {
-            return DefaultMemoryBlock.Contains(blamPointer) || ActiveStructureMemoryAllocation.Contains(blamPointer);
         }
 
         public GuerillaBlock Deserialize( TagIdent ident )
@@ -349,23 +318,12 @@ namespace Moonfish.Cache
             if (Index[tagident].Class == TagClass.Sbsp || Index[tagident].Class == TagClass.Ltmp)
             {
                 var index = StructureMemoryBlockBindings[tagident];
-                ActiveAllocation(StructureCache.VirtualStructureCache0 + index);
+                SwitchActiveAllocation(VirtualMemorySectionID.VirtualStructureCache0 + index);
             }
             var offset = Header.Version == HaloVersion.XBOX_RETAIL
                 ? Index[tagident].VirtualAddress
                 : Header.IndexInfo.IndexOffset + Index[tagident].VirtualAddress;
             return Seek(offset, SeekOrigin.Begin);
-        }
-
-        public override long Seek(long offset, SeekOrigin origin)
-        {
-            if (origin == SeekOrigin.Begin)
-            {
-                offset = CheckOffset(offset);
-            }
-			//base.Position = offset;
-            base.Seek(offset, origin);
-            return Position;
         }
 
         public bool Sign()
@@ -412,16 +370,6 @@ namespace Moonfish.Cache
             return checksum;
         }
 
-        private long CheckOffset(long value)
-        {
-            // if 'value' is a Pointer
-            if (value < 0 || value > Length)
-            {
-                return VirtualAddressToFileOffset((int) value);
-            }
-            return value;
-        }
-
         /// <summary>
         ///     Returns the meta that is linked to the Tag
         /// </summary>
@@ -437,36 +385,6 @@ namespace Moonfish.Cache
                 Read(buffer, 0, tag.Length);
                 return buffer;
             }
-        }
-
-        private bool TryConvertOffsetToPointer(ref int value)
-        {
-            if (DefaultMemoryBlock.ContainsFileOffset(value))
-            {
-                value = DefaultMemoryBlock.GetOffset(value, false, true);
-                return true;
-            }
-            if (ActiveStructureMemoryAllocation.ContainsFileOffset(value))
-            {
-                value = ActiveStructureMemoryAllocation.GetOffset(value, false, true);
-                return true;
-            }
-            return false;
-        }
-
-        public int VirtualAddressToFileOffset(int value)
-        {
-            if (DefaultMemoryBlock.ContainsVirtualOffset(value))
-            {
-                return DefaultMemoryBlock.GetOffset(value);
-            }
-            if (ActiveStructureMemoryAllocation.ContainsVirtualOffset(value))
-            {
-                return ActiveStructureMemoryAllocation.GetOffset(value);
-            }
-            foreach (var block in StructureMemoryBlocks.Where(block => block.ContainsVirtualOffset(value)))
-                return block.GetOffset(value);
-            throw new InvalidOperationException();
         }
 
         /// <summary>

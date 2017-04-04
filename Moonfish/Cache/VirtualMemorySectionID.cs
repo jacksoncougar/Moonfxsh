@@ -5,7 +5,7 @@ namespace Moonfish.Cache
     /// </summary>
     public enum StructureCache
     {
-        VirtualStructureCache0,
+        VirtualStructureCache0 = 1,
         VirtualStructureCache1,
         VirtualStructureCache2,
         VirtualStructureCache3,

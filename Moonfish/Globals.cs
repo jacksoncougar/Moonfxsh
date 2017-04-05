@@ -6,8 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Moonfish.Cache;
-using Moonfish.Guerilla.Tags;
-using Moonfish.ResourceManagement;
 using Moonfish.Tags;
 
 namespace Moonfish
@@ -90,7 +88,7 @@ namespace Moonfish
             }
         }
 
-        public static Type GetTypeOf(TagClass className)
+        private static Type GetTypeOf(TagClass className)
         {
             Type type;
             return definedTagGroupsDictionary.TryGetValue(className, out type) ? type : null;

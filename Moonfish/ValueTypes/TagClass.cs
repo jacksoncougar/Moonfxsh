@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using Moonfish.Guerilla;
@@ -12,6 +13,8 @@ namespace Moonfish.Tags
     [StructLayout(LayoutKind.Sequential, Size = 4)]
     public partial struct TagClass : IEquatable<TagClass>, IEquatable<string>
     {
+        private static Dictionary<TagClass, Type> classTypes;
+
         private readonly byte a;
         private readonly byte b;
         private readonly byte c;
@@ -52,6 +55,40 @@ namespace Moonfish.Tags
         public TagClass(string value)
         {
             this = (TagClass) value;
+        }
+
+        static TagClass()
+        {
+            Type[] types;
+            Assembly assembly = typeof (TagClass).Assembly;
+
+            if (assembly == null) throw new ArgumentNullException("assembly");
+
+            try
+            {
+                types = assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException e)
+            {
+                types = e.Types.Where(t => t != null).ToArray();
+            }
+
+            classTypes = new Dictionary<TagClass, Type>(types.Length);
+
+            foreach (var type in types.Where(x => x.IsDefined(typeof (TagClassAttribute), false)))
+            {
+                AddClassType(type);
+            }
+        }
+
+        private static void AddClassType(Type type)
+        {
+            var attribute = type.GetCustomAttributes(typeof(TagClassAttribute), false).FirstOrDefault() as                             TagClassAttribute;
+
+            if (attribute != null)
+            {
+                classTypes.Add(attribute.TagClass, type);
+            }
         }
 
         public static explicit operator TagClass(string str)
@@ -109,6 +146,17 @@ namespace Moonfish.Tags
         bool IEquatable<string>.Equals(string other)
         {
             return this == (TagClass) other;
+        }
+
+        /// <summary>
+        /// Gets the System.Type of the corresponding GuerillaBlock class.
+        /// </summary>
+        /// <returns>the System.Type type</returns>
+        public Type GetClassType()
+        {
+            Type type = classTypes[this];
+
+            return type;    
         }
 
         public string ToTokenString()

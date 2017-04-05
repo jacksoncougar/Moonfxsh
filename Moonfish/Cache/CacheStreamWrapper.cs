@@ -6,7 +6,7 @@ namespace Moonfish.Cache
 	/// <summary>
 	/// Cache stream wrapper that allows for sections of the stream to be addressed by memory addresses.
 	/// </summary>
-	public abstract class CacheStreamWrapper<T> : Stream where T : Stream
+	public class CacheStreamWrapper<T> : Stream where T : Stream
 	{
 		/// <summary>
 		/// Gets the wrapped stream.
@@ -28,7 +28,7 @@ namespace Moonfish.Cache
 		/// Initializes a new instance of the <see cref="T:Moonfish.Cache.CacheStreamWrapper`1"/> class to encapsulate the given stream
 		/// </summary>
 		/// <param name="stream">The stream to wrap.</param>
-		protected CacheStreamWrapper(T stream)
+		public CacheStreamWrapper(T stream)
 		{
 			BaseStream = stream;
 		}
@@ -44,7 +44,7 @@ namespace Moonfish.Cache
 		/// When a section is active is will be checked during calls that change the 
 		/// position. If the section contains the value the streams position will be changed.
 		/// </remarks>
-		protected int CreateVirtualSection(int address, int length, int start, bool active)
+		public int CreateVirtualSection(int address, int length, int start, bool active)
 		{
 			VirtualStreamSection section;
 
@@ -60,7 +60,7 @@ namespace Moonfish.Cache
 		/// <param name="length">The length of the virtual section.</param>
 		/// <param name="magic">The AddressModifier of the virtual section</param>
 		/// <param name="active">If set to <c>true</c> the created virtual section will be active.</param>
-		protected int CreateVirtualSection(int address, int length, AddressModifier magic, bool active)
+		public int CreateVirtualSection(int address, int length, AddressModifier magic, bool active)
 		{
 			VirtualStreamSection section;
 
@@ -84,8 +84,8 @@ namespace Moonfish.Cache
 			return sub;
 		}
 
-		protected void EnableVirtualSection(int index) => activeSections.Add(index);
-		protected void DisableVirtualSection(int index) => activeSections.Remove(index);
+		public void EnableVirtualSection(int index) => activeSections.Add(index);
+		public void DisableVirtualSection(int index) => activeSections.Remove(index);
 
 		/// <summary>
 		/// Gets or sets the position of the stream

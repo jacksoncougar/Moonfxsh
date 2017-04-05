@@ -18,17 +18,18 @@ namespace Moonfish.Cache
 
         public static CacheStream Save( CacheStream map )
         {
-            var filename = Path.Combine( Local.MapsDirectory, @"temp.map" );
-            var copyStream = new FileStream( filename, FileMode.Create,
-                FileAccess.Write, FileShare.ReadWrite, 4 * 1024, FileOptions.SequentialScan );
-            using ( copyStream )
-            using ( map )
-            {
-                map.SaveTo( copyStream );
-            }
-            File.Delete( map.Name );
-            File.Move( filename, map.Name );
-            return new CacheStream( map.Name );
+            // var filename = Path.Combine( Local.MapsDirectory, @"temp.map" );
+            // var copyStream = new FileStream( filename, FileMode.Create,
+            //     FileAccess.Write, FileShare.ReadWrite, 4 * 1024, FileOptions.SequentialScan );
+            // using ( copyStream )
+            // using ( map.BaseStream as FileStream )
+            // {
+            //     map.SaveTo( copyStream );
+            // }
+            // File.Delete( map.Name );
+            // File.Move( filename, map.Name );
+            // return new CacheStream( map.Name );
+            return map;
         }
 
         public Stream SaveTo( Stream outputStream )
@@ -44,7 +45,7 @@ namespace Moonfish.Cache
 
             //  reserve 2048 bytes for the header
 
-            Seek( 2048, SeekOrigin.Begin );
+            BaseStream.Seek( 2048, SeekOrigin.Begin );
             outputStream.Seek( 2048, SeekOrigin.Begin );
 
             //  process sound resources
@@ -223,14 +224,14 @@ namespace Moonfish.Cache
                 //  well, shit.
                 System.Diagnostics.Debug.WriteLineIf( address < GetFilePosition( ),
                     "Warning: address < GetFilePosition()" );
-                this.Seek( address );
+                BaseStream.Seek( address );
             }
             //  this is not strictly an error but it should be treated as such
             if ( address > GetFilePosition( ) )
             {
                 System.Diagnostics.Debug.WriteLineIf( address > GetFilePosition( ),
                     "Warning: address > GetFilePosition()" );
-                this.Seek( address );
+                BaseStream.Seek( address );
             }
             System.Diagnostics.Debug.WriteLineIf( address % 512 != 0, "Warning: address % 512 != 0" );
             if ( outputStream.Position % 512 != 0 )
@@ -243,7 +244,7 @@ namespace Moonfish.Cache
             resourceBlock.SetResourcePointer( ( int ) position, index );
 
             var size = Padding.Align( length, 512 );
-            this.BufferedCopyBytesTo( size, outputStream );
+            BaseStream.BufferedCopyBytesTo( size, outputStream );
         }
 
         private void CopyMeta( Stream outputStream, int address, out int metaDataSize )
@@ -464,15 +465,15 @@ namespace Moonfish.Cache
             var alignedTableSize = Padding.Align( globalsBlock.UnicodeBlockInfo.EnglishStringTableLength, 512 );
 
             //  move the stream to the start of the unicode data
-            Seek( globalsBlock.UnicodeBlockInfo.EnglishStringIndexAddress, SeekOrigin.Begin );
+            BaseStream.Seek( globalsBlock.UnicodeBlockInfo.EnglishStringIndexAddress, SeekOrigin.Begin );
 
             //  copy the table-index and index to the output stream
             newUnicodeBlockInfo.EnglishStringIndexAddress = ( int ) outputStream.Position;
             Padding.AssertIsAligned( 512, outputStream );
-            this.BufferedCopyBytesTo( alignedIndexSize, outputStream );
+            BaseStream.BufferedCopyBytesTo( alignedIndexSize, outputStream );
             newUnicodeBlockInfo.EnglishStringTableAddress = ( int ) outputStream.Position;
             Padding.AssertIsAligned( 512, outputStream );
-            this.BufferedCopyBytesTo( alignedTableSize, outputStream );
+            BaseStream.BufferedCopyBytesTo( alignedTableSize, outputStream );
 
             //  assign the new UnicodeBlockInfo data to the globals block
             globalsBlock.UnicodeBlockInfo = newUnicodeBlockInfo;

@@ -59,7 +59,7 @@ namespace Moonfish
             var ResourceLocation = blockInfo.ResourceLocation;
             Stream source = null;
             if ( ResourceLocation == Halo2.ResourceSource.Local )
-                source = ActiveCache as CacheStream;
+                source = (ActiveCache as CacheStream)?.BaseStream;
             if ( ResourceLocation == Halo2.ResourceSource.Shared )
                 source = ( Stream ) Index.Caches.FirstOrDefault( IsCacheCalled( "shared" ) );
             if ( ResourceLocation == Halo2.ResourceSource.SinglePlayerShared )
@@ -91,7 +91,7 @@ namespace Moonfish
             var resourceLength = blockInfo.GetResourceLength( index );
 
             if ( resourcePointer.Source == Halo2.ResourceSource.Local )
-                source = ActiveCache as CacheStream;
+                source = (ActiveCache as CacheStream)?.BaseStream;
             if (resourcePointer.Source == Halo2.ResourceSource.Shared)
                 source = (Stream)Index.Caches.FirstOrDefault(IsCacheCalled("shared"));
             if (resourcePointer.Source == Halo2.ResourceSource.SinglePlayerShared)

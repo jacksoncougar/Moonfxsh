@@ -154,18 +154,18 @@ namespace Moonfish.Tags
 
         public static TagIdent ReadTagIdent( this BinaryReader binaryReader )
         {
-            var cacheStream = binaryReader.BaseStream as CacheStream;
-            if ( cacheStream != null )
-            {
-                var checksum = cacheStream.Header.Checksum;
-                var key = ( short ) ( checksum & 0x7FFF );
-                var index = binaryReader.ReadInt16( );
+            // var cacheStream = binaryReader.BaseStream as CacheStream;
+            // if ( cacheStream != null )
+            // {
+            //     var checksum = cacheStream.Header.Checksum;
+            //     var key = ( short ) ( checksum & 0x7FFF );
+            //     var index = binaryReader.ReadInt16( );
 
-                // Read the salt and throw is away
-                binaryReader.ReadInt16( );
-                // Preserve null idents
-                return new TagIdent( index, index < 0 ? ( short ) -1 : key );
-            }
+            //     // Read the salt and throw is away
+            //     binaryReader.ReadInt16( );
+            //     // Preserve null idents
+            //     return new TagIdent( index, index < 0 ? ( short ) -1 : key );
+            // }
             return new TagIdent( binaryReader.ReadInt16( ), binaryReader.ReadInt16( ) );
         }
 

@@ -22,7 +22,7 @@ namespace Moonfish.Cache
         public TagIndex(CacheStream cache, IReadOnlyList<string> paths)
             : base(cache)
         {
-            var binaryReader = new BinaryReader(cache);
+            var binaryReader = new BinaryReader(cache.BaseStream);
             _classes = new List<TagClassHeirarchy>(new TagClassHeirarchy[classArrayCount]);
             for (var i = 0; i < classArrayCount; i++)
             {

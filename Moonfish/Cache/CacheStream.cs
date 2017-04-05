@@ -13,70 +13,40 @@ using Moonfish.Tags;
 
 namespace Moonfish.Cache
 {
-	
-	public partial class CacheStream : CacheStreamWrapper<FileStream>, ICache
+    public partial class CacheStream : ICache, IDisposable
     {
-        private readonly Dictionary<TagIdent, GuerillaBlock> _deserializedTagCache;
-        private readonly Dictionary<TagIdent, string> _tagHashDictionary;
+        public CacheStreamWrapper<Stream> BaseStream {get; private set;}
+
+        private readonly Dictionary<TagIdent, GuerillaBlock> tagCache;
+        private readonly Dictionary<TagIdent, string> tagHashs;
 
         public readonly string[] Strings;
         public readonly Dictionary<TagIdent, int> StructureMemoryBlockBindings;
         public readonly CacheHeader Header;
 
-		public string Name => BaseStream.Name;
-
 		private VirtualMemorySectionID activeAllocation = VirtualMemorySectionID.VirtualStructureCache0;
 
-		public void UpdateBinding(TagIdent oldIdent, TagIdent newIdent)
-		{
-			var index = StructureMemoryBlockBindings[oldIdent];
-			StructureMemoryBlockBindings.Remove(oldIdent);
-			StructureMemoryBlockBindings.Add(newIdent, index);
-		}
-
-		public void UpdateCache(TagIdent ident, GuerillaBlock block)
-		{
-			_deserializedTagCache.Remove(ident);
-			_deserializedTagCache.Add(ident, block);
-		}
-
-        public static CacheStream Open(string fileName)
-        {
-            var directory = Path.GetDirectoryName(fileName);
-
-            if (directory != null)
-                LoadResourceMaps(directory);
-
-            return new CacheStream(fileName);
-        }
-
-        private static void LoadResourceMaps(string directory)
-        {
-        }
-
         public CacheStream(string filename)
-
-			: base(new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 8*1024))  
         {
+            BaseStream = new CacheStreamWrapper<Stream>(new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 8*1024));
+            
             //HEADER
-            var binaryReader = new BinaryReader(this, Encoding.UTF8);
+            var binaryReader = new BinaryReader(BaseStream, Encoding.UTF8);
 
-            Header = CacheHeader.DeserializeFrom(this);
+            Header = CacheHeader.DeserializeFrom(BaseStream);
 
-            base.Seek(Header.PathsInfo.PathTableAddress, SeekOrigin.Begin);
+            BaseStream.Seek(Header.PathsInfo.PathTableAddress, SeekOrigin.Begin);
             var paths = Encoding.UTF8.GetString(binaryReader.ReadBytes(Header.PathsInfo.PathTableLength - 1)).Split(Char.MinValue);
-
-            //Halo2.Paths.Assign(paths);
 
             //STRINGS
 
-            base.Seek(Header.StringsInfo.StringTableAddress, SeekOrigin.Begin);
+            BaseStream.Seek(Header.StringsInfo.StringTableAddress, SeekOrigin.Begin);
             Strings = Encoding.UTF8.GetString(binaryReader.ReadBytes(Header.StringsInfo.StringTableLength - 1)).Split(Char.MinValue);
 
             Halo2.Strings.Assign(new List<string>(Strings));
 
             //  INDEX
-            base.Seek(Header.IndexInfo.IndexOffset, SeekOrigin.Begin);
+            BaseStream.Seek(Header.IndexInfo.IndexOffset, SeekOrigin.Begin);
 
             Index = new TagIndex(this, paths);
 
@@ -84,7 +54,7 @@ namespace Moonfish.Cache
             var secondaryMagic = Index[Index.GlobalsIdent].VirtualAddress -
                                  (Header.IndexInfo.IndexOffset + Header.IndexInfo.IndexLength);
 
-			CreateVirtualSection(Index[Index.GlobalsIdent].VirtualAddress, 
+			BaseStream.CreateVirtualSection(Index[Index.GlobalsIdent].VirtualAddress, 
 			                     Header.IndexInfo.MetaAllocationLength, 
 			                     new AddressModifier(secondaryMagic), true);
       
@@ -93,7 +63,7 @@ namespace Moonfish.Cache
              * and store them in the Tags array.
              */
 
-            base.Seek(Index[Index.ScenarioIdent].VirtualAddress - secondaryMagic + 528, SeekOrigin.Begin);
+            BaseStream.Seek(Index[Index.ScenarioIdent].VirtualAddress - secondaryMagic + 528, SeekOrigin.Begin);
             var count = binaryReader.ReadInt32();
             var address = binaryReader.ReadInt32();
 
@@ -101,18 +71,18 @@ namespace Moonfish.Cache
             for (var i = 0; i < count; ++i)
             {
 				var destination = address - secondaryMagic + i * 68;
-				base.Seek(destination, SeekOrigin.Begin);
+				BaseStream.Seek(destination, SeekOrigin.Begin);
                 var structureBlockOffset = binaryReader.ReadInt32();
                 var structureBlockLength = binaryReader.ReadInt32();
                 var structureBlockAddress = binaryReader.ReadInt32();
 				//Position += 8;
-				base.Seek(8, SeekOrigin.Current);
+				BaseStream.Seek(8, SeekOrigin.Current);
                 var sbspIdentifier = binaryReader.ReadTagIdent();
 				//Position += 4;
-                base.Seek(4, SeekOrigin.Current);
+                BaseStream.Seek(4, SeekOrigin.Current);
                 var ltmpIdentifier = binaryReader.ReadTagIdent();
 
-                base.Seek(structureBlockOffset, SeekOrigin.Begin);
+                BaseStream.Seek(structureBlockOffset, SeekOrigin.Begin);
 
                 var blockLength = binaryReader.ReadInt32();
                 var sbspVirtualAddress = binaryReader.ReadInt32();
@@ -125,11 +95,11 @@ namespace Moonfish.Cache
 
                 var ltmpLength = blockLength - sbspLength;
 
-				var index = CreateVirtualSection(
+				var index = BaseStream.CreateVirtualSection(
 					structureBlockAddress,
 					structureBlockLength,
 					structureBlockOffset,
-					true);
+					false);
 
                 var sbspDatum = Index[sbspIdentifier];
                 sbspDatum.VirtualAddress = sbspVirtualAddress;
@@ -151,8 +121,8 @@ namespace Moonfish.Cache
             }
 
 
-            _deserializedTagCache = new Dictionary<TagIdent, GuerillaBlock>(Index.Count);
-            _tagHashDictionary = new Dictionary<TagIdent, string>(Index.Count);
+            tagCache = new Dictionary<TagIdent, GuerillaBlock>(Index.Count);
+            tagHashs = new Dictionary<TagIdent, string>(Index.Count);
 
             Initialize();
         }
@@ -203,7 +173,7 @@ namespace Moonfish.Cache
                                 item.GetType( ).BaseType?.GetCustomAttributes(typeof ( TagClassAttribute ) ).FirstOrDefault();
             var tagDatum = Index.Add(attribute.TagClass, tagName, serializedTagData.Length, lastDatum.VirtualAddress);
 
-            _deserializedTagCache.Add(tagDatum.Identifier, item );
+            tagCache.Add(tagDatum.Identifier, item );
 
             var paths = Index.Select( x => x.Path );
             
@@ -216,53 +186,28 @@ namespace Moonfish.Cache
             //Allocate(tagDatum.Identifier, serializedTagData.Length);
         }
 
-        private void Allocate(TagIdent ident, int size)
-        {
-            //create virtual stream to write into
-            var tagCacheStream = new VirtualStream(Index[Index.GlobalsIdent].VirtualAddress);
-
-            var binaryWriter = new BinaryWriter(tagCacheStream);
-
-            for (var i = 0; i < Index.Count; ++i)
-            {
-                var datum = Index[i];
-
-                // is this address affected by the shift?
-                if (datum.Identifier == ident)
-                {
-                    var alignment = Guerilla.Guerilla.AlignmentOf(Halo2.GetTypeOf(Index[ident].Class));
-                    datum.VirtualAddress = binaryWriter.BaseStream.Align(alignment);
-                    binaryWriter.Write(new byte[size]);
-                    datum.Length = size;
-                    Index.Update(datum.Identifier, datum);
-                }
-                else
-                {
-                    var data = Deserialize(datum.Identifier);
-                    var length = binaryWriter.BaseStream.Length;
-                    binaryWriter.Write(data);
-                    binaryWriter.Seek(0, SeekOrigin.End);
-                    length = (int) binaryWriter.BaseStream.Length - length;
-                    datum.Length = (int) length;
-                    Index.Update(datum.Identifier, datum);
-                }
-            }
-            binaryWriter.WritePadding(512);
-        }
-
         public void SwitchActiveAllocation(VirtualMemorySectionID allocation)
         {
-			DisableVirtualSection((int)activeAllocation);
-			EnableVirtualSection((int)allocation);
+			BaseStream.DisableVirtualSection((int)activeAllocation);
+			BaseStream.EnableVirtualSection((int)allocation);
         }
 
         public string CalculateHash(TagIdent ident)
         {
-            using (var sha1 = new SHA1CryptoServiceProvider())
-            {
-                var hash = Convert.ToBase64String(sha1.ComputeHash(Read(ident)));
-                return hash;
-            }
+            var sha1 = new SHA1CryptoServiceProvider();
+            var buffer = sha1.ComputeHash(ReadTagMeta(ident));
+            var hash = Convert.ToBase64String(buffer);
+
+            return hash;    
+        }
+        private GuerillaBlock Deserialize(Type tagType)
+        {
+            var sourceReader = new BinaryReader(BaseStream);
+            var instance = (GuerillaBlock) Activator.CreateInstance(tagType);
+
+            instance.Read(sourceReader);
+
+            return instance;
         }
 
         public GuerillaBlock Deserialize( TagIdent ident )
@@ -273,17 +218,19 @@ namespace Moonfish.Cache
         public T Deserialize<T>( TagIdent ident ) where T : GuerillaBlock
         {
             GuerillaBlock deserializedTag;
-            if ( _deserializedTagCache.TryGetValue( ident, out deserializedTag ) )
+         
+            if ( tagCache.TryGetValue( ident, out deserializedTag ) )
                 return ( T ) deserializedTag;
 
-            var type = Halo2.GetTypeOf( Index[ ident ].Class );
+            var type = Index[ ident ].Class.GetClassType();
+            
             if ( type == null ) return null;
 
             Seek( ident );
-            _deserializedTagCache[ ident ] = Deserialize( type );
-            _tagHashDictionary[ ident ] = CalculateHash( ident );
+            tagCache[ ident ] = Deserialize( type );
+            tagHashs[ ident ] = CalculateHash( ident );
 
-            return ( T ) _deserializedTagCache[ ident ];
+            return ( T ) tagCache[ ident ];
         }
 
         public string GetStringValue( StringIdent ident )
@@ -291,27 +238,9 @@ namespace Moonfish.Cache
             return Strings[ ident.Index ];
         }
 
-        private GuerillaBlock Deserialize(Type tagType)
-        {
-            var sourceReader = new BinaryReader(this);
-            var instance = (GuerillaBlock) Activator.CreateInstance(tagType);
-            instance.Read(sourceReader);
-            return instance;
-        }
-
         public long GetFilePosition()
         {
-            return base.Position;
-        }
-
-        public string GetTagHash(TagIdent ident)
-        {
-            return _tagHashDictionary.ContainsKey(ident) ? _tagHashDictionary[ident] : null;
-        }
-
-        public void ClearCache(TagIdent ident)
-        {
-            _deserializedTagCache.Remove(ident);
+            return BaseStream.Position;
         }
 
         public long Seek(TagIdent tagident)
@@ -324,15 +253,15 @@ namespace Moonfish.Cache
             var offset = Header.Version == HaloVersion.XBOX_RETAIL
                 ? Index[tagident].VirtualAddress
                 : Header.IndexInfo.IndexOffset + Index[tagident].VirtualAddress;
-            return Seek(offset, SeekOrigin.Begin);
+            return BaseStream.Seek(offset, SeekOrigin.Begin);
         }
 
         public bool Sign()
         {
-            if (!CanWrite) return false;
+            if (!BaseStream.CanWrite) return false;
             var checksum = CalculateChecksum();
 
-            var writer = new BinaryWriter(this);
+            var writer = new BinaryWriter(BaseStream);
             writer.BaseStream.Position = 0x000002F0;
             writer.Write(checksum);
             return true;
@@ -343,15 +272,15 @@ namespace Moonfish.Cache
             const int blockSize = 512;
             var buffer = new byte[blockSize];
 
-            var wordCount = ((int) Length - 2048)/sizeof (uint);
+            var wordCount = ((int) BaseStream.Length - 2048) / sizeof (uint);
             var passCount = wordCount/(blockSize/4);
             var remainder = wordCount%passCount;
 
-            Position = 2048;
+            BaseStream.Position = 2048;
             var checksum = 0;
             for (var pass = 0; pass < passCount; pass++)
             {
-                Read(buffer, 0, blockSize);
+                BaseStream.Read(buffer, 0, blockSize);
                 for (var index = 0; index < blockSize/sizeof (uint); index += 4)
                 {
                     checksum ^= BitConverter.ToInt32(buffer, (index + 0)*sizeof (uint));
@@ -360,7 +289,7 @@ namespace Moonfish.Cache
                     checksum ^= BitConverter.ToInt32(buffer, (index + 3)*sizeof (uint));
                 }
             }
-            Read(buffer, 0, remainder);
+            BaseStream.Read(buffer, 0, remainder);
             for (var index = 0; index < remainder/sizeof (uint); index += 4)
             {
                 checksum ^= BitConverter.ToInt32(buffer, (index + 0)*sizeof (uint));
@@ -376,19 +305,20 @@ namespace Moonfish.Cache
         /// </summary>
         /// <param name="ident"></param>
         /// <returns></returns>
-		public void Read(TagIdent ident, byte[] buffer)
+		public byte[] ReadTagMeta(TagIdent ident)
         {
 			TagDatum datum;
+            byte[] buffer;
 
-            using (this.Pin())
+            using (BaseStream.Pin())
             {
                 Seek(ident);
                 datum = Index[ident];
                 buffer = new byte[datum.Length];
-                Read(buffer, 0, datum.Length);
+                BaseStream.Read(buffer, 0, datum.Length);
             }
 
-			return;
+			return buffer;
         }
 
         /// <summary>
@@ -398,7 +328,7 @@ namespace Moonfish.Cache
         /// <returns></returns>
         public bool Contains<T>( T guerillaBlock ) where T :GuerillaBlock
         {
-            foreach ( var block in _deserializedTagCache )
+            foreach ( var block in tagCache )
             {
                 if ( block.Value == guerillaBlock )
                     return true;
@@ -425,5 +355,40 @@ namespace Moonfish.Cache
         {
             return Index.GetEnumerator();
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    BaseStream.Dispose();
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~CacheStream() {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
+        void IDisposable.Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            // GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

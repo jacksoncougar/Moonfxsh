@@ -70,7 +70,7 @@ namespace Moonfish.Guerilla
             {
                 using (var map = new CacheStream(file))
                 {
-                    var binaryReader = new BinaryReader(map);
+                    var binaryReader = new BinaryReader(map.BaseStream);
 
                     //OnWriteMessage(string.Format("Begin ({0})", map.MapName));
 
@@ -344,8 +344,8 @@ namespace Moonfish.Guerilla
                                              Padding.GetCount(address, info.alignment);
                         if (pointer.StartAddress != alignedAddress)
                         {
-                            var mapStream = reader.BaseStream as CacheStream;
-                            if (mapStream != null)
+                            //TODO maybe fix or remove this entire namespace...
+                            if (false)
                             {
                                 error = true;
                                 OnWriteMessage(string.Format("{2}: Expected address \"{0}\"  - actually was \"{1}\" delta \"{3}\"",

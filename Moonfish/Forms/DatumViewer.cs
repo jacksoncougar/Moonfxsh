@@ -23,7 +23,7 @@ namespace Moonfish.Forms
         {
             InitializeComponent( );
 
-            _cacheStream = CacheStream.Open( Path.Combine( Local.MapsDirectory, "headlong.map" ) );
+            _cacheStream = new CacheStream(Path.Combine( Local.MapsDirectory, "headlong.map" ) );
             var objectListView = new TagDatumView( );
             var guerillaPropertyView = new GuerillaBlockPropertyViewer( );
 

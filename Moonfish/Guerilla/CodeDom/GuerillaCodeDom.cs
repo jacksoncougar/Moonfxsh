@@ -18,7 +18,7 @@ namespace Moonfish.Guerilla.CodeDom
             foreach (var cacheStream in GetAllMaps())
             {
                 int length = 0;
-                while ((length = cacheStream.Read(buffer, 0, buffer.Length)) > 0)
+                while ((length = cacheStream.BaseStream.Read(buffer, 0, buffer.Length)) > 0)
                 {
                     var blockCount = length / blockLength;
                     var remainder = length % blockLength;

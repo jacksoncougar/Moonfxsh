@@ -50,17 +50,15 @@ namespace Moonfish
 				Console.WriteLine("Bad File Argument");
 				return;
 			}
-			stream = CacheStream.Open(extra[0]);
+			stream = new CacheStream(extra[0]);
 			stream.Seek(stream[3].Identifier);
-			var test = stream.Position;
-			stream.Position = test;
 
 			if (validate)
 			{
 				validator = new Validator();
 				foreach (TagDatum datum in stream)
 				{
-					validator.Validate(datum, stream);
+					//validator.Validate(datum, stream);
 				}
 			}
 

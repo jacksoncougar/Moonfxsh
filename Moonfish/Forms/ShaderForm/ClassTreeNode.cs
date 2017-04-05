@@ -10,7 +10,7 @@ namespace Moonfish.Forms.ShaderForm
         public ClassTreeNode(TagClass @class)
         {
 
-            Text = Halo2.GetTypeOf( @class ).Name;
+            Text = @class.GetClassType().Name;
             Class = @class;
         }
 

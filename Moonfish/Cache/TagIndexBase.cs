@@ -18,7 +18,7 @@ namespace Moonfish.Cache
 
         protected TagIndexBase(CacheStream cache)
         {
-            var binaryReader = new BinaryReader(cache);
+            var binaryReader = new BinaryReader(cache.BaseStream);
             classArrayAddress = binaryReader.ReadInt32();
             classArrayCount = binaryReader.ReadInt32();
             datumArrayAddress = binaryReader.ReadInt32();

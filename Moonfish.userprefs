@@ -1,17 +1,19 @@
 ﻿<Properties StartupConfiguration="{DD0C713C-6119-4D6D-8F0A-CAA8F34763BF}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Moonfish/Cache/CacheStreamWrapper.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Moonfxsh Status">
     <Files>
-      <File FileName="Moonfish/Cache/CacheStream.cs" Line="86" Column="1" />
+      <File FileName="Moonfish/Cache/CacheStream.cs" Line="10" Column="1" />
       <File FileName="Moonfish/Cache/AddressModifier.cs" Line="32" Column="1" />
       <File FileName="Moonfish/Cache/VirtualStreamSection.cs" Line="6" Column="10" />
       <File FileName="Moonfish/Cache/VirtualMemorySectionID.cs" Line="7" Column="6" />
       <File FileName="Moonfish/Guerilla/VirtualMemoryStream.cs" Line="21" Column="4" />
       <File FileName="Moonfish/Cache/CacheStream.CopyTo.cs" Line="28" Column="14" />
-      <File FileName="Moonfish/Cache/CacheStreamWrapper.cs" Line="12" Column="31" />
+      <File FileName="Moonfish/Cache/CacheStreamWrapper.cs" Line="59" Column="3" />
       <File FileName="Moonfish/Guerilla/Validator.cs" Line="93" Column="47" />
       <File FileName="Moonfish/main.cs" Line="56" Column="16" />
       <File FileName="Moonfish/Cache/CacheStream.Header.cs" Line="93" Column="1" />
       <File FileName="Moonfish/Cache/TagIndexBase.cs" Line="14" Column="25" />
+      <File FileName="Moonfish/Cache/ICache.cs" Line="20" Column="22" />
+      <File FileName="Moonfxsh Status" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />

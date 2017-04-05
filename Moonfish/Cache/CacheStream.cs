@@ -13,6 +13,7 @@ using Moonfish.Tags;
 
 namespace Moonfish.Cache
 {
+	
 	public partial class CacheStream : CacheStreamWrapper<FileStream>, ICache
     {
         private readonly Dictionary<TagIdent, GuerillaBlock> _deserializedTagCache;
@@ -259,7 +260,7 @@ namespace Moonfish.Cache
         {
             using (var sha1 = new SHA1CryptoServiceProvider())
             {
-                var hash = Convert.ToBase64String(sha1.ComputeHash(GetInternalTagMeta(ident)));
+                var hash = Convert.ToBase64String(sha1.ComputeHash(Read(ident)));
                 return hash;
             }
         }
@@ -375,16 +376,19 @@ namespace Moonfish.Cache
         /// </summary>
         /// <param name="ident"></param>
         /// <returns></returns>
-        private byte[] GetInternalTagMeta(TagIdent ident)
+		public void Read(TagIdent ident, byte[] buffer)
         {
+			TagDatum datum;
+
             using (this.Pin())
             {
                 Seek(ident);
-                var tag = Index[ident];
-                var buffer = new byte[tag.Length];
-                Read(buffer, 0, tag.Length);
-                return buffer;
+                datum = Index[ident];
+                buffer = new byte[datum.Length];
+                Read(buffer, 0, datum.Length);
             }
+
+			return;
         }
 
         /// <summary>

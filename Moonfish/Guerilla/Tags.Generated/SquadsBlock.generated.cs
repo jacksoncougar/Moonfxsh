@@ -77,7 +77,7 @@ namespace Moonfish.Guerilla.Tags
             this.InitialSecondaryWeapon = binaryReader.ReadShortBlockIndex1();
             this.GrenadeType = ((GrenadeTypeEnum)(binaryReader.ReadInt16()));
             this.InitialOrder = binaryReader.ReadShortBlockIndex1();
-            this.VehicleVariant = binaryReader.ReadStringID();
+            this.VehicleVariant = binaryReader.ReadStringIdent();
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(100));
             this.PlacementScript = binaryReader.ReadString32();
             this.fieldskip = binaryReader.ReadBytes(2);

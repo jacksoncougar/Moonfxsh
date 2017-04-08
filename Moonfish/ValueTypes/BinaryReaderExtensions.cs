@@ -137,14 +137,9 @@ namespace Moonfish.Tags
             return new String32( new string( Encoding.UTF8.GetChars( binaryReader.ReadBytes( 32 ) ) ) );
         }
 
-        public static StringIdent ReadStringID( this BinaryReader binaryReader )
-        {
-            return ( StringIdent ) binaryReader.ReadInt32( );
-        }
-
         public static StringIdent ReadStringIdent( this BinaryReader binaryReader )
         {
-            return new StringIdent( binaryReader.ReadInt32( ) );
+            return ( StringIdent ) binaryReader.ReadInt32( );
         }
 
         public static TagClass ReadTagClass( this BinaryReader binaryReader )

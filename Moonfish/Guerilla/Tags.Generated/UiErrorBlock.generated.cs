@@ -47,10 +47,10 @@ namespace Moonfish.Guerilla.Tags
             this.UiErrorFlags = ((Flags)(binaryReader.ReadInt16()));
             this.DefaultButton = ((DefaultButtonEnum)(binaryReader.ReadByte()));
             this.fieldpad = binaryReader.ReadBytes(1);
-            this.Title = binaryReader.ReadStringID();
-            this.Message = binaryReader.ReadStringID();
-            this.Ok = binaryReader.ReadStringID();
-            this.Cancel = binaryReader.ReadStringID();
+            this.Title = binaryReader.ReadStringIdent();
+            this.Message = binaryReader.ReadStringIdent();
+            this.Ok = binaryReader.ReadStringIdent();
+            this.Cancel = binaryReader.ReadStringIdent();
             return pointerQueue;
         }
         public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)

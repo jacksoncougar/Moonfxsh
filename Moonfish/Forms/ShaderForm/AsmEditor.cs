@@ -28,7 +28,7 @@ namespace Moonfish.Forms.ShaderForm
             textEditorControl1.Refresh();
         }
 
-        public void DisplayVertexInstructions( TagDatum vertexDatum, CacheStream cache )
+        public void DisplayVertexInstructions( TagDatum vertexDatum, Map cache )
         {
             var vertexBlock = ( VertexShaderBlock ) cache.Deserialize( vertexDatum.Identifier );
             var code = vertexBlock.GeometryClassifications[0].Code;

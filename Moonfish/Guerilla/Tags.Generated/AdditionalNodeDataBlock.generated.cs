@@ -41,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
         public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(System.IO.BinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
-            this.NodeName = binaryReader.ReadStringID();
+            this.NodeName = binaryReader.ReadStringIdent();
             this.DefaultRotation = binaryReader.ReadQuaternion();
             this.DefaultTranslation = binaryReader.ReadVector3();
             this.DefaultScale = binaryReader.ReadSingle();

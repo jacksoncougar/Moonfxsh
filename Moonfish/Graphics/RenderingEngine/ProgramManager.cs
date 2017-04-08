@@ -113,7 +113,7 @@ namespace Moonfish.Graphics
             return ActiveProgram;
         }
 
-        public void LoadMaterials( IList<GlobalGeometryMaterialBlock> materials, CacheStream cacheStream,
+        public void LoadMaterials( IList<GlobalGeometryMaterialBlock> materials, Map cacheStream,
             IList<int> indices = null )
         {
             //for ( var index = 0; index < materials.Count; index++ )

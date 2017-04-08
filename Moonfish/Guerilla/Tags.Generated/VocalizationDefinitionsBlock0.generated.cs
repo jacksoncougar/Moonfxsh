@@ -62,8 +62,8 @@ namespace Moonfish.Guerilla.Tags
         public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(System.IO.BinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
-            this.Vocalization = binaryReader.ReadStringID();
-            this.ParentVocalization = binaryReader.ReadStringID();
+            this.Vocalization = binaryReader.ReadStringIdent();
+            this.ParentVocalization = binaryReader.ReadStringIdent();
             this.ParentIndex = binaryReader.ReadInt16();
             this.Priority = ((PriorityEnum)(binaryReader.ReadInt16()));
             this.VocalizationDefinitions0Flags = ((Flags)(binaryReader.ReadInt32()));
@@ -86,7 +86,7 @@ namespace Moonfish.Guerilla.Tags
             this.ListenerEmotion = ((ListenerEmotionEnum)(binaryReader.ReadInt16()));
             this.PlayerSkipFraction = binaryReader.ReadSingle();
             this.SkipFraction = binaryReader.ReadSingle();
-            this.SampleLine = binaryReader.ReadStringID();
+            this.SampleLine = binaryReader.ReadStringIdent();
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(12));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(96));
             return pointerQueue;

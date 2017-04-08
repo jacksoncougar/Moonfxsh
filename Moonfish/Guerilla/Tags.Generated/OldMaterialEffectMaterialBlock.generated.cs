@@ -45,7 +45,7 @@ namespace Moonfish.Guerilla.Tags
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.Effect = binaryReader.ReadTagReference();
             this.Sound = binaryReader.ReadTagReference();
-            this.MaterialName = binaryReader.ReadStringID();
+            this.MaterialName = binaryReader.ReadStringIdent();
             this.fieldskip = binaryReader.ReadBytes(4);
             this.SweetenerMode = ((SweetenerModeEnum)(binaryReader.ReadByte()));
             this.fieldpad = binaryReader.ReadBytes(3);

@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
         public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(System.IO.BinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
-            this.Name = binaryReader.ReadStringID();
+            this.Name = binaryReader.ReadStringIdent();
             this.GlobalDamageSectionFlags = ((Flags)(binaryReader.ReadInt32()));
             this.VitalityPercentage = binaryReader.ReadSingle();
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(80));
@@ -55,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
             this.StunTime = binaryReader.ReadSingle();
             this.RechargeTime = binaryReader.ReadSingle();
             this.fieldpad = binaryReader.ReadBytes(4);
-            this.ResurrectionRestoredRegionName = binaryReader.ReadStringID();
+            this.ResurrectionRestoredRegionName = binaryReader.ReadStringIdent();
             this.fieldpad0 = binaryReader.ReadBytes(4);
             return pointerQueue;
         }

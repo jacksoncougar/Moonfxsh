@@ -17,13 +17,13 @@ namespace Moonfish.Forms
 {
     public partial class DatumViewer : Form
     {
-        private CacheStream _cacheStream;
+        private Map _cacheStream;
 
         public DatumViewer( )
         {
             InitializeComponent( );
 
-            _cacheStream = new CacheStream(Path.Combine( Local.MapsDirectory, "headlong.map" ) );
+            _cacheStream = new Map(Path.Combine( Local.MapsDirectory, "headlong.map" ) );
             var objectListView = new TagDatumView( );
             var guerillaPropertyView = new GuerillaBlockPropertyViewer( );
 

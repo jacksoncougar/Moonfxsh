@@ -107,7 +107,7 @@ namespace Moonfish.Guerilla.Tags
             this.BlurSpeed = binaryReader.ReadSingle();
             this.SpecificType = ((SpecificTypeEnum)(binaryReader.ReadInt16()));
             this.PlayerTrainingVehicleType = ((PlayerTrainingVehicleTypeEnum)(binaryReader.ReadInt16()));
-            this.FlipMessage = binaryReader.ReadStringID();
+            this.FlipMessage = binaryReader.ReadStringIdent();
             this.TurnScale = binaryReader.ReadSingle();
             this.SpeedTurnPenaltyPower = binaryReader.ReadSingle();
             this.SpeedTurnPenalty = binaryReader.ReadSingle();

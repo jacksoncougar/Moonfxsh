@@ -53,7 +53,7 @@ namespace Moonfish.Guerilla.Tags
         public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(System.IO.BinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
-            this.MarkerName = binaryReader.ReadStringID();
+            this.MarkerName = binaryReader.ReadStringIdent();
             this.AntiGravityPointDefinitionFlags = ((Flags)(binaryReader.ReadInt32()));
             this.AntigravStrength = binaryReader.ReadSingle();
             this.AntigravOffset = binaryReader.ReadSingle();
@@ -65,7 +65,7 @@ namespace Moonfish.Guerilla.Tags
             this.fieldpad = binaryReader.ReadBytes(12);
             this.fieldpad0 = binaryReader.ReadBytes(2);
             this.fieldpad1 = binaryReader.ReadBytes(2);
-            this.DamageSourceRegionName = binaryReader.ReadStringID();
+            this.DamageSourceRegionName = binaryReader.ReadStringIdent();
             this.DefaultStateError = binaryReader.ReadSingle();
             this.MinorDamageError = binaryReader.ReadSingle();
             this.MediumDamageError = binaryReader.ReadSingle();

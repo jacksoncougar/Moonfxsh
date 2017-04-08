@@ -42,7 +42,7 @@ namespace Moonfish.Guerilla.Tags
             this.Weight = binaryReader.ReadSingle();
             this.ColorLowerBound = binaryReader.ReadColorR8G8B8();
             this.ColorUpperBound = binaryReader.ReadColorR8G8B8();
-            this.VariantName = binaryReader.ReadStringID();
+            this.VariantName = binaryReader.ReadStringIdent();
             return pointerQueue;
         }
         public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)

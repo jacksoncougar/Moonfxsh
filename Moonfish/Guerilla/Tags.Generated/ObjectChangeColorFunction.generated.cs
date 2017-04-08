@@ -45,8 +45,8 @@ namespace Moonfish.Guerilla.Tags
             this.ObjectChangeColorFunctionScaleFlags = ((ScaleFlags)(binaryReader.ReadInt32()));
             this.ColorLowerBound = binaryReader.ReadColorR8G8B8();
             this.ColorUpperBound = binaryReader.ReadColorR8G8B8();
-            this.DarkenBy = binaryReader.ReadStringID();
-            this.ScaleBy = binaryReader.ReadStringID();
+            this.DarkenBy = binaryReader.ReadStringIdent();
+            this.ScaleBy = binaryReader.ReadStringIdent();
             return pointerQueue;
         }
         public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)

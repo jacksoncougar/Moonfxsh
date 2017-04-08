@@ -120,7 +120,7 @@ namespace Moonfish.Guerilla.Tags
             this.DefaultDialogue = binaryReader.ReadTagReference();
             this.UNUSED = binaryReader.ReadTagReference();
             this.ModelFlags = ((Flags)(binaryReader.ReadInt32()));
-            this.DefaultDialogueEffect = binaryReader.ReadStringID();
+            this.DefaultDialogueEffect = binaryReader.ReadStringIdent();
             int i;
             for (i = 0; (i < 32); i = (i + 1))
             {
@@ -135,7 +135,7 @@ namespace Moonfish.Guerilla.Tags
             this.ModelRuntimeFlags = ((RuntimeFlags)(binaryReader.ReadInt32()));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(48));
             this.HologramShader = binaryReader.ReadTagReference();
-            this.HologramControlFunction = binaryReader.ReadStringID();
+            this.HologramControlFunction = binaryReader.ReadStringIdent();
             return pointerQueue;
         }
         public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)

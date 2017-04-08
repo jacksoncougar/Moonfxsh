@@ -79,18 +79,18 @@ namespace Moonfish.Guerilla.Tags
             this.DamageThreshold = binaryReader.ReadSingle();
             this.TransitionEffect = binaryReader.ReadTagReference();
             pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(pointerQueue.Concat(this.DamageEffect.ReadFields(binaryReader)));
-            this.Region = binaryReader.ReadStringID();
+            this.Region = binaryReader.ReadStringIdent();
             this.NewState = ((NewStateEnum)(binaryReader.ReadInt16()));
             this.RuntimeRegionIndex = binaryReader.ReadInt16();
-            this.EffectMarkerName = binaryReader.ReadStringID();
+            this.EffectMarkerName = binaryReader.ReadStringIdent();
             pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(pointerQueue.Concat(this.DamageEffectMarker.ReadFields(binaryReader)));
             this.ResponseDelay = binaryReader.ReadSingle();
             this.DelayEffect = binaryReader.ReadTagReference();
-            this.DelayEffectMarkerName = binaryReader.ReadStringID();
-            this.ConstraintgroupName = binaryReader.ReadStringID();
-            this.EjectingSeatLabel = binaryReader.ReadStringID();
+            this.DelayEffectMarkerName = binaryReader.ReadStringIdent();
+            this.ConstraintgroupName = binaryReader.ReadStringIdent();
+            this.EjectingSeatLabel = binaryReader.ReadStringIdent();
             this.SkipFraction = binaryReader.ReadSingle();
-            this.DestroyedChildObjectMarkerName = binaryReader.ReadStringID();
+            this.DestroyedChildObjectMarkerName = binaryReader.ReadStringIdent();
             this.TotalDamageThreshold = binaryReader.ReadSingle();
             return pointerQueue;
         }

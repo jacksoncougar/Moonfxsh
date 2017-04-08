@@ -77,7 +77,7 @@ namespace Moonfish.Guerilla.Tags
             this.Y0 = binaryReader.ReadSingle();
             this.Z0 = binaryReader.ReadSingle();
             this.fieldpad = binaryReader.ReadBytes(32);
-            this.Marker = binaryReader.ReadStringID();
+            this.Marker = binaryReader.ReadStringIdent();
             this.CellBirthChance = binaryReader.ReadSingle();
             this.fieldpad0 = binaryReader.ReadBytes(32);
             this.CellGeneMutates1In = binaryReader.ReadInt32();

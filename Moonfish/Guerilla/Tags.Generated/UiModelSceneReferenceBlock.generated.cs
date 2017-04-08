@@ -60,9 +60,9 @@ namespace Moonfish.Guerilla.Tags
             this.CameraPosition = binaryReader.ReadVector3();
             this.FovDegress = binaryReader.ReadSingle();
             this.UiViewport = binaryReader.ReadVector2();
-            this.UNUSEDIntroAnim = binaryReader.ReadStringID();
-            this.UNUSEDOutroAnim = binaryReader.ReadStringID();
-            this.UNUSEDAmbientAnim = binaryReader.ReadStringID();
+            this.UNUSEDIntroAnim = binaryReader.ReadStringIdent();
+            this.UNUSEDOutroAnim = binaryReader.ReadStringIdent();
+            this.UNUSEDAmbientAnim = binaryReader.ReadStringIdent();
             return pointerQueue;
         }
         public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)

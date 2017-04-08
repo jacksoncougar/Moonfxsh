@@ -45,8 +45,8 @@ namespace Moonfish.Guerilla.Tags
             this.NodeA = binaryReader.ReadShortBlockIndex1();
             this.NodeB = binaryReader.ReadShortBlockIndex1();
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(12));
-            this.NodeAMaterial = binaryReader.ReadStringID();
-            this.NodeBMaterial = binaryReader.ReadStringID();
+            this.NodeAMaterial = binaryReader.ReadStringIdent();
+            this.NodeBMaterial = binaryReader.ReadStringIdent();
             return pointerQueue;
         }
         public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)

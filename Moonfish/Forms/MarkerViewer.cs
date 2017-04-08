@@ -15,7 +15,7 @@ namespace Moonfish.Graphics
     public partial class MarkerViewer : Form
     {
         private DynamicScene Scene { get; set; }
-        private CacheStream Map { get; set; }
+        private Map Map { get; set; }
         private TagIdent SelectedTag { get; set; }
 
         #region Peek Message Native
@@ -111,7 +111,7 @@ namespace Moonfish.Graphics
 
         private void LoadMap(string fileName)
         {
-            Map = new CacheStream(fileName);
+            Map = new Map(fileName);
 
             listBox1.Items.Clear();
             listBox1.Items.AddRange(Map.Index.Where(x => x.Class.ToString() == "hlmt").Select(x => (object) x).ToArray());

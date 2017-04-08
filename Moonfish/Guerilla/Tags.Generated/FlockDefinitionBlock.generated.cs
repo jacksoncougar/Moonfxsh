@@ -103,7 +103,7 @@ namespace Moonfish.Guerilla.Tags
             this.DangerScale = binaryReader.ReadSingle();
             this.RandomOffsetScale = binaryReader.ReadSingle();
             this.RandomOffsetPeriod = binaryReader.ReadRange();
-            this.FlockName = binaryReader.ReadStringID();
+            this.FlockName = binaryReader.ReadStringIdent();
             return pointerQueue;
         }
         public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)

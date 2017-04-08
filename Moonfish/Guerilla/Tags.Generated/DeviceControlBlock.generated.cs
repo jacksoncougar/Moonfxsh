@@ -49,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
             this.Type = ((TypeEnum)(binaryReader.ReadInt16()));
             this.TriggersWhen = ((TriggersWhenEnum)(binaryReader.ReadInt16()));
             this.CallValue = binaryReader.ReadSingle();
-            this.ActionString = binaryReader.ReadStringID();
+            this.ActionString = binaryReader.ReadStringIdent();
             this.On = binaryReader.ReadTagReference();
             this.Off = binaryReader.ReadTagReference();
             this.Deny = binaryReader.ReadTagReference();

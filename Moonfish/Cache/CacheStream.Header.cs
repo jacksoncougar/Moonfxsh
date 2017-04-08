@@ -5,7 +5,7 @@ using Moonfish.Tags;
 
 namespace Moonfish.Cache
 {
-    partial class CacheStream
+    partial class Map
     {
         public class CacheHeader
         {

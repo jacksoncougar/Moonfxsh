@@ -9,9 +9,9 @@ namespace Moonfish.Cache
 {
     internal class CacheWriter : BinaryWriter
     {
-        public CacheStream cacheStream;
+        public Map cacheStream;
 
-        public CacheWriter(CacheStream stream)
+        public CacheWriter(Map stream)
         {
             cacheStream = stream;
         }

@@ -63,12 +63,12 @@ namespace Moonfish.Guerilla.Tags
             this.Audience = ((AudienceEnum)(binaryReader.ReadInt16()));
             this.fieldpad0 = binaryReader.ReadBytes(2);
             this.fieldpad1 = binaryReader.ReadBytes(2);
-            this.DisplayString = binaryReader.ReadStringID();
+            this.DisplayString = binaryReader.ReadStringIdent();
             this.RequiredField = ((RequiredFieldEnum)(binaryReader.ReadInt16()));
             this.ExcludedAudience = ((ExcludedAudienceEnum)(binaryReader.ReadInt16()));
-            this.PrimaryString = binaryReader.ReadStringID();
+            this.PrimaryString = binaryReader.ReadStringIdent();
             this.PrimaryStringDuration = binaryReader.ReadInt32();
-            this.PluralDisplayString = binaryReader.ReadStringID();
+            this.PluralDisplayString = binaryReader.ReadStringIdent();
             this.fieldpad2 = binaryReader.ReadBytes(28);
             this.SoundDelay = binaryReader.ReadSingle();
             this.GameEngineKingEventSoundFlags = ((SoundFlags)(binaryReader.ReadInt16()));

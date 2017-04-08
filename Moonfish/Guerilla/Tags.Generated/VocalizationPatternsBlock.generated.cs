@@ -60,7 +60,7 @@ namespace Moonfish.Guerilla.Tags
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.DialogueType = ((DialogueTypeEnum)(binaryReader.ReadInt16()));
             this.VocalizationIndex = binaryReader.ReadInt16();
-            this.VocalizationName = binaryReader.ReadStringID();
+            this.VocalizationName = binaryReader.ReadStringIdent();
             this.SpeakerType = ((SpeakerTypeEnum)(binaryReader.ReadInt16()));
             this.VocalizationPatternsFlags = ((Flags)(binaryReader.ReadInt16()));
             this.Listenertarget = ((ListenertargetEnum)(binaryReader.ReadInt16()));
@@ -75,10 +75,10 @@ namespace Moonfish.Guerilla.Tags
             this.CauseActorType = ((CauseActorTypeEnum)(binaryReader.ReadInt16()));
             this.CauseType = ((CauseTypeEnum)(binaryReader.ReadInt16()));
             this.SubjectType = ((SubjectTypeEnum)(binaryReader.ReadInt16()));
-            this.CauseAiTypeName = binaryReader.ReadStringID();
+            this.CauseAiTypeName = binaryReader.ReadStringIdent();
             this.SpatialRelation = ((SpatialRelationEnum)(binaryReader.ReadInt16()));
             this.fieldpad2 = binaryReader.ReadBytes(2);
-            this.SubjectAiTypeName = binaryReader.ReadStringID();
+            this.SubjectAiTypeName = binaryReader.ReadStringIdent();
             this.fieldpad3 = binaryReader.ReadBytes(8);
             this.VocalizationPatternsConditions = ((Conditions)(binaryReader.ReadInt32()));
             return pointerQueue;

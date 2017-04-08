@@ -96,7 +96,7 @@ namespace Moonfish.Guerilla.Tags
             this.fieldpad1 = binaryReader.ReadBytes(4);
             this.DynamicLightSphereRadius = binaryReader.ReadSingle();
             this.DynamicLightSphereOffset = binaryReader.ReadVector3();
-            this.DefaultModelVariant = binaryReader.ReadStringID();
+            this.DefaultModelVariant = binaryReader.ReadStringIdent();
             this.Model = binaryReader.ReadTagReference();
             this.CrateObject = binaryReader.ReadTagReference();
             this.ModifierShader = binaryReader.ReadTagReference();

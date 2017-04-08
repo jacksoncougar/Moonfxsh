@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Moonfish.Cache
 {
-    public partial class CacheStream
+    public partial class Map
     {
         public struct StringsInfoStruct
         {

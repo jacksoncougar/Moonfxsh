@@ -141,15 +141,15 @@ namespace Moonfish.Guerilla.CodeDom
             }
         }
 
-        public static IEnumerable<CacheStream> GetAllMaps()
+        public static IEnumerable<Map> GetAllMaps()
         {
             var filenames = Directory.GetFiles(Local.MapsDirectory, "*.map", SearchOption.AllDirectories);
             foreach (var filename in filenames)
             {
-                CacheStream testmap = null;
+                Map testmap = null;
                 try
                 {
-                    testmap = new CacheStream(filename);
+                    testmap = new Map(filename);
                 }
                 catch (InvalidDataException)
                 {

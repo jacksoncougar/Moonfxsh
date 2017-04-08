@@ -50,7 +50,6 @@ namespace Moonfish.Cache
             return tagDatum;
         }
 
-
         public bool Contains<T>( T item ) where T : GuerillaBlock
         {
             foreach ( var block in items.Values )

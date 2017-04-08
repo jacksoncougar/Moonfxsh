@@ -56,13 +56,13 @@ namespace Moonfish.Guerilla.Tags
         public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(System.IO.BinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
-            this.Name = binaryReader.ReadStringID();
+            this.Name = binaryReader.ReadStringIdent();
             pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(pointerQueue.Concat(this.HudWidgetInputsStruct.ReadFields(binaryReader)));
             pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(pointerQueue.Concat(this.HudWidgetStateDefinitionStruct.ReadFields(binaryReader)));
             this.Anchor = ((AnchorEnum)(binaryReader.ReadInt16()));
             this.HudTextWidgetsFlags = ((Flags)(binaryReader.ReadInt16()));
             this.Shader = binaryReader.ReadTagReference();
-            this.String = binaryReader.ReadStringID();
+            this.String = binaryReader.ReadStringIdent();
             this.Justification = ((JustificationEnum)(binaryReader.ReadInt16()));
             this.fieldpad = binaryReader.ReadBytes(2);
             this.FullscreenFontIndex = ((FullscreenFontIndexEnum)(binaryReader.ReadByte()));

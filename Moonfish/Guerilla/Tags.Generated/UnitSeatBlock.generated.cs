@@ -79,12 +79,12 @@ namespace Moonfish.Guerilla.Tags
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.UnitSeatFlags = ((Flags)(binaryReader.ReadInt32()));
-            this.Label = binaryReader.ReadStringID();
-            this.MarkerName = binaryReader.ReadStringID();
-            this.EntryMarkerName = binaryReader.ReadStringID();
-            this.BoardingGrenadeMarker = binaryReader.ReadStringID();
-            this.BoardingGrenadeString = binaryReader.ReadStringID();
-            this.BoardingMeleeString = binaryReader.ReadStringID();
+            this.Label = binaryReader.ReadStringIdent();
+            this.MarkerName = binaryReader.ReadStringIdent();
+            this.EntryMarkerName = binaryReader.ReadStringIdent();
+            this.BoardingGrenadeMarker = binaryReader.ReadStringIdent();
+            this.BoardingGrenadeString = binaryReader.ReadStringIdent();
+            this.BoardingMeleeString = binaryReader.ReadStringIdent();
             this.PingScale = binaryReader.ReadSingle();
             this.TurnoverTime = binaryReader.ReadSingle();
             pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(pointerQueue.Concat(this.Acceleration.ReadFields(binaryReader)));
@@ -99,7 +99,7 @@ namespace Moonfish.Guerilla.Tags
             this.SpeedExponent = binaryReader.ReadSingle();
             pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(pointerQueue.Concat(this.UnitCamera.ReadFields(binaryReader)));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(8));
-            this.EnterSeatString = binaryReader.ReadStringID();
+            this.EnterSeatString = binaryReader.ReadStringIdent();
             this.YawMinimum = binaryReader.ReadSingle();
             this.YawMaximum = binaryReader.ReadSingle();
             this.BuiltinGunner = binaryReader.ReadTagReference();
@@ -107,7 +107,7 @@ namespace Moonfish.Guerilla.Tags
             this.EntryMarkerConeAngle = binaryReader.ReadSingle();
             this.EntryMarkerFacingAngle = binaryReader.ReadSingle();
             this.MaximumRelativeVelocity = binaryReader.ReadSingle();
-            this.InvisibleSeatRegion = binaryReader.ReadStringID();
+            this.InvisibleSeatRegion = binaryReader.ReadStringIdent();
             this.RuntimeInvisibleSeatRegionIndex = binaryReader.ReadInt32();
             return pointerQueue;
         }

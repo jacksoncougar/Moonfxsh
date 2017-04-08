@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.TextValuePairReferenceFlags = ((Flags)(binaryReader.ReadInt32()));
             this.Value = binaryReader.ReadInt32();
-            this.LabelStringId = binaryReader.ReadStringID();
+            this.LabelStringId = binaryReader.ReadStringIdent();
             return pointerQueue;
         }
         public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)

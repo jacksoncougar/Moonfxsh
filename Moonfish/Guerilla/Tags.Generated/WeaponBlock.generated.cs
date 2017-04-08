@@ -120,7 +120,7 @@ namespace Moonfish.Guerilla.Tags
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.WeaponWeaponFlags = ((WeaponFlags)(binaryReader.ReadInt32()));
-            this.FieldOldStringId = binaryReader.ReadStringID();
+            this.FieldOldStringId = binaryReader.ReadStringIdent();
             this.SecondaryTriggerMode = ((SecondaryTriggerModeEnum)(binaryReader.ReadInt16()));
             this.MaximumAlternateShotsLoaded = binaryReader.ReadInt16();
             this.TurnOnTime = binaryReader.ReadSingle();
@@ -165,9 +165,9 @@ namespace Moonfish.Guerilla.Tags
             this.ZoomoutSound = binaryReader.ReadTagReference();
             this.ActiveCamoDing = binaryReader.ReadSingle();
             this.ActiveCamoRegrowthRate = binaryReader.ReadSingle();
-            this.HandleNode = binaryReader.ReadStringID();
-            this.WeaponClass = binaryReader.ReadStringID();
-            this.WeaponName = binaryReader.ReadStringID();
+            this.HandleNode = binaryReader.ReadStringIdent();
+            this.WeaponClass = binaryReader.ReadStringIdent();
+            this.WeaponName = binaryReader.ReadStringIdent();
             this.MultiplayerWeaponType = ((MultiplayerWeaponTypeEnum)(binaryReader.ReadInt16()));
             this.WeaponType = ((WeaponTypeEnum)(binaryReader.ReadInt16()));
             pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(pointerQueue.Concat(this.Tracking.ReadFields(binaryReader)));

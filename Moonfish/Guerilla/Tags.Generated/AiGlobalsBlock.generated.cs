@@ -91,7 +91,7 @@ namespace Moonfish.Guerilla.Tags
             this.DangerExtendedBodyDamage = binaryReader.ReadSingle();
             this.fieldpad3 = binaryReader.ReadBytes(48);
             this.GlobalDialogueTag = binaryReader.ReadTagReference();
-            this.DefaultMissionDialogueSoundEffect = binaryReader.ReadStringID();
+            this.DefaultMissionDialogueSoundEffect = binaryReader.ReadStringIdent();
             this.fieldpad4 = binaryReader.ReadBytes(20);
             this.JumpDown = binaryReader.ReadSingle();
             this.JumpStep = binaryReader.ReadSingle();

@@ -58,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
             this.Bounds = binaryReader.ReadVector2();
             this.Bitmap = binaryReader.ReadTagReference();
             this.BitmapOffset = binaryReader.ReadPoint();
-            this.StringId = binaryReader.ReadStringID();
+            this.StringId = binaryReader.ReadStringIdent();
             this.RenderDepthBias = binaryReader.ReadInt16();
             this.MouseRegionTopOffset = binaryReader.ReadInt16();
             this.ButtonWidgetReferenceButtonFlags = ((ButtonFlags)(binaryReader.ReadInt32()));

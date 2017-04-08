@@ -60,7 +60,7 @@ namespace Moonfish.Guerilla.Tags
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.PlanarFogFlags = ((Flags)(binaryReader.ReadInt16()));
             this.Priority = binaryReader.ReadInt16();
-            this.GlobalMaterialName = binaryReader.ReadStringID();
+            this.GlobalMaterialName = binaryReader.ReadStringIdent();
             this.fieldpad = binaryReader.ReadBytes(2);
             this.fieldpad0 = binaryReader.ReadBytes(2);
             this.MaximumDensity = binaryReader.ReadSingle();

@@ -49,8 +49,8 @@ namespace Moonfish.Guerilla.Tags
             this.BooleanValue = ((BooleanValueEnum)(binaryReader.ReadInt16()));
             this.IntegerValue = binaryReader.ReadInt32();
             this.FpValue = binaryReader.ReadSingle();
-            this.TextValueStringId = binaryReader.ReadStringID();
-            this.TextLabelStringId = binaryReader.ReadStringID();
+            this.TextValueStringId = binaryReader.ReadStringIdent();
+            this.TextLabelStringId = binaryReader.ReadStringIdent();
             return pointerQueue;
         }
         public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)

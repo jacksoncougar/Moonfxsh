@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.fieldpad = binaryReader.ReadBytes(2);
             this.Type = ((TypeEnum)(binaryReader.ReadInt16()));
-            this.AttachmentMarkerName = binaryReader.ReadStringID();
+            this.AttachmentMarkerName = binaryReader.ReadStringIdent();
             this.fieldpad0 = binaryReader.ReadBytes(56);
             this.FalloffDistanceFromCamera = binaryReader.ReadSingle();
             this.CutoffDistanceFromCamera = binaryReader.ReadSingle();

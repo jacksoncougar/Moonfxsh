@@ -13,7 +13,7 @@ namespace Sunfish.Forms
 {
     public partial class MainForm : Form
     {
-        private readonly CacheStream _cacheStream;
+        private readonly Map _cacheStream;
         private SceneView _sceneView;
         private MoonfxshExplorer _moonfxshExplorerForm;
 

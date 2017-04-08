@@ -48,14 +48,14 @@ namespace Moonfish.Guerilla.Tags.Generated
         public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(System.IO.BinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
-            this.Name = binaryReader.ReadStringID();
-            this.ParentName = binaryReader.ReadStringID();
+            this.Name = binaryReader.ReadStringIdent();
+            this.ParentName = binaryReader.ReadStringIdent();
             this.fieldpad = binaryReader.ReadBytes(2);
             this.MaterialsFlags = ((Flags)(binaryReader.ReadInt16()));
             this.OldMaterialType = ((OldMaterialTypeEnum)(binaryReader.ReadInt16()));
             this.fieldpad0 = binaryReader.ReadBytes(2);
-            this.GeneralArmor = binaryReader.ReadStringID();
-            this.SpecificArmor = binaryReader.ReadStringID();
+            this.GeneralArmor = binaryReader.ReadStringIdent();
+            this.SpecificArmor = binaryReader.ReadStringIdent();
             pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(pointerQueue.Concat(this.PhysicsProperties.ReadFields(binaryReader)));
             this.OldMaterialPhysics = binaryReader.ReadTagReference();
             this.BreakableSurface = binaryReader.ReadTagReference();

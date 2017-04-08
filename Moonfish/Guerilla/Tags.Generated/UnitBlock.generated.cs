@@ -113,8 +113,8 @@ namespace Moonfish.Guerilla.Tags
             this.CasualAimingModifier = binaryReader.ReadSingle();
             this.LookingVelocityMaximum = binaryReader.ReadSingle();
             this.LookingAccelerationMaximum = binaryReader.ReadSingle();
-            this.RightHandNode = binaryReader.ReadStringID();
-            this.LeftHandNode = binaryReader.ReadStringID();
+            this.RightHandNode = binaryReader.ReadStringIdent();
+            this.LeftHandNode = binaryReader.ReadStringIdent();
             pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(pointerQueue.Concat(this.MoreDamnNodes.ReadFields(binaryReader)));
             this.MeleeDamage = binaryReader.ReadTagReference();
             pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(pointerQueue.Concat(this.YourMomma.ReadFields(binaryReader)));

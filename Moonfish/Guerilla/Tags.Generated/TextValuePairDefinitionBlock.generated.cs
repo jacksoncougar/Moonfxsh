@@ -47,9 +47,9 @@ namespace Moonfish.Guerilla.Tags
             this.Parameter = ((ParameterEnum)(binaryReader.ReadInt32()));
             this.fieldpad = binaryReader.ReadBytes(4);
             this.StringList = binaryReader.ReadTagReference();
-            this.TitleText = binaryReader.ReadStringID();
-            this.HeaderText = binaryReader.ReadStringID();
-            this.DescriptionText = binaryReader.ReadStringID();
+            this.TitleText = binaryReader.ReadStringIdent();
+            this.HeaderText = binaryReader.ReadStringIdent();
+            this.DescriptionText = binaryReader.ReadStringIdent();
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(12));
             return pointerQueue;
         }

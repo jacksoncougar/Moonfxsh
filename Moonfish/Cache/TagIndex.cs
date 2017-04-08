@@ -19,7 +19,7 @@ namespace Moonfish.Cache
             get { return _classes; }
         }
 
-        public TagIndex(CacheStream cache, IReadOnlyList<string> paths)
+        public TagIndex(Map cache, IReadOnlyList<string> paths)
             : base(cache)
         {
             var binaryReader = new BinaryReader(cache.BaseStream);
@@ -31,7 +31,7 @@ namespace Moonfish.Cache
             }
 
             _data = new List<TagDatum>(new TagDatum[datumArrayCount]);
-            var cacheKey = CacheKey.Create(cache);
+            var cacheKey = default(CacheKey);// CacheKey.Create(cache);
             for (var i = 0; i < datumArrayCount && i < paths.Count; i++)
             {
                 TagDatum data;

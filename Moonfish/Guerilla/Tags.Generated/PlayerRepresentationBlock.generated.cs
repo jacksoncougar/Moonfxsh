@@ -49,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
             this.fieldpad = binaryReader.ReadBytes(40);
             this.fieldpad0 = binaryReader.ReadBytes(120);
             this.ThirdPersonUnit = binaryReader.ReadTagReference();
-            this.ThirdPersonVariant = binaryReader.ReadStringID();
+            this.ThirdPersonVariant = binaryReader.ReadStringIdent();
             return pointerQueue;
         }
         public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)

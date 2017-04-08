@@ -53,7 +53,7 @@ namespace Moonfish.Guerilla.Tags
             this.AntigravDampFraction = binaryReader.ReadSingle();
             this.AntigravNormalK1 = binaryReader.ReadSingle();
             this.AntigravNormalK0 = binaryReader.ReadSingle();
-            this.DamageSourceRegionName = binaryReader.ReadStringID();
+            this.DamageSourceRegionName = binaryReader.ReadStringIdent();
             this.fieldpad = binaryReader.ReadBytes(64);
             return pointerQueue;
         }

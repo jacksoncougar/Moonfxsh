@@ -15,7 +15,7 @@ namespace Moonfish.Graphics
     public partial class ShaderViewer : Form
     {
         private Scene Scene { get; set; }
-        private CacheStream Map { get; set; }
+        private Map Map { get; set; }
 
         #region Peek Message Native
 

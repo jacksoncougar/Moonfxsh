@@ -41,8 +41,8 @@ namespace Moonfish.Guerilla.Tags
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.fieldpad = binaryReader.ReadBytes(4);
-            this.AtmosphericFogSource = binaryReader.ReadStringID();
-            this.Interpolator = binaryReader.ReadStringID();
+            this.AtmosphericFogSource = binaryReader.ReadStringIdent();
+            this.Interpolator = binaryReader.ReadStringIdent();
             this.fieldskip = binaryReader.ReadBytes(2);
             this.fieldskip0 = binaryReader.ReadBytes(2);
             return pointerQueue;

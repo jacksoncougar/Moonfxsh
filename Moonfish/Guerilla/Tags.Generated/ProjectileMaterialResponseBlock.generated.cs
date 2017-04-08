@@ -61,7 +61,7 @@ namespace Moonfish.Guerilla.Tags
             this.ProjectileMaterialResponseFlags = ((Flags)(binaryReader.ReadInt16()));
             this.Response = ((ResponseEnum)(binaryReader.ReadInt16()));
             this.DONOTUSE = binaryReader.ReadTagReference();
-            this.MaterialName = binaryReader.ReadStringID();
+            this.MaterialName = binaryReader.ReadStringIdent();
             this.fieldskip = binaryReader.ReadBytes(4);
             this.ProjectileMaterialResponseProjectileMaterialResponseResponse = ((ProjectileMaterialResponseResponseEnum)(binaryReader.ReadInt16()));
             this.ProjectileMaterialResponseProjectileMaterialResponseFlags0 = ((ProjectileMaterialResponseFlags0)(binaryReader.ReadInt16()));

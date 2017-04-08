@@ -60,7 +60,7 @@ namespace Moonfish.Guerilla.Tags
             this.fieldskip = binaryReader.ReadBytes(12);
             this.fieldskip0 = binaryReader.ReadBytes(4);
             this.Checksum = binaryReader.ReadInt32();
-            this.Name = binaryReader.ReadStringID();
+            this.Name = binaryReader.ReadStringIdent();
             this.PathfindingPolicy = ((PathfindingPolicyEnum)(binaryReader.ReadInt16()));
             this.LightmappingPolicy = ((LightmappingPolicyEnum)(binaryReader.ReadInt16()));
             return pointerQueue;

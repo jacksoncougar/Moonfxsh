@@ -26,10 +26,10 @@ namespace Moonfish
         }
 
         public const int NullPtr = 0;
-        private static CacheStream mapStream;
-        private static CacheStream resourceShared;
-        private static CacheStream resourceSinglePlayer;
-        private static CacheStream resourceMainMenu;
+        private static Map mapStream;
+        private static Map resourceShared;
+        private static Map resourceSinglePlayer;
+        private static Map resourceMainMenu;
         private static readonly TagGroupLookup tagGroups = new TagGroupLookup();
         private static readonly GlobalStrings strings = new GlobalStrings();
         private static readonly Dictionary<TagClass, Type> definedTagGroupsDictionary;
@@ -94,12 +94,12 @@ namespace Moonfish
             return definedTagGroupsDictionary.TryGetValue(className, out type) ? type : null;
         }
 
-        internal static void SetActiveMap(CacheStream mapstream)
+        internal static void SetActiveMap(Map mapstream)
         {
             mapStream = mapstream;
         }
 
-        public static CacheStream ActiveMap => mapStream;
+        public static Map ActiveMap => mapStream;
         
         
     }

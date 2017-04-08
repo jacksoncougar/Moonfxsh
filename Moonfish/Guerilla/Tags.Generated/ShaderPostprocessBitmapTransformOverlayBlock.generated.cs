@@ -45,8 +45,8 @@ namespace Moonfish.Guerilla.Tags
             this.ParameterIndex = binaryReader.ReadByte();
             this.TransformIndex = binaryReader.ReadByte();
             this.AnimationPropertyType = binaryReader.ReadByte();
-            this.InputName = binaryReader.ReadStringID();
-            this.RangeName = binaryReader.ReadStringID();
+            this.InputName = binaryReader.ReadStringIdent();
+            this.RangeName = binaryReader.ReadStringIdent();
             this.TimePeriodInSeconds = binaryReader.ReadSingle();
             pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(pointerQueue.Concat(this.Function.ReadFields(binaryReader)));
             return pointerQueue;

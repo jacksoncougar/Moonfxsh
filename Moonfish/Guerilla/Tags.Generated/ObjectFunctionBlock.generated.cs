@@ -43,12 +43,12 @@ namespace Moonfish.Guerilla.Tags
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.ObjectFunctionFlags = ((Flags)(binaryReader.ReadInt32()));
-            this.ImportName = binaryReader.ReadStringID();
-            this.ExportName = binaryReader.ReadStringID();
-            this.TurnOffWith = binaryReader.ReadStringID();
+            this.ImportName = binaryReader.ReadStringIdent();
+            this.ExportName = binaryReader.ReadStringIdent();
+            this.TurnOffWith = binaryReader.ReadStringIdent();
             this.MinValue = binaryReader.ReadSingle();
             pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(pointerQueue.Concat(this.DefaultFunction.ReadFields(binaryReader)));
-            this.ScaleBy = binaryReader.ReadStringID();
+            this.ScaleBy = binaryReader.ReadStringIdent();
             return pointerQueue;
         }
         public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)

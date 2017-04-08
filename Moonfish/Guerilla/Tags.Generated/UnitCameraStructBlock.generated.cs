@@ -40,8 +40,8 @@ namespace Moonfish.Guerilla.Tags
         public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(System.IO.BinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
-            this.CameraMarkerName = binaryReader.ReadStringID();
-            this.CameraSubmergedMarkerName = binaryReader.ReadStringID();
+            this.CameraMarkerName = binaryReader.ReadStringIdent();
+            this.CameraSubmergedMarkerName = binaryReader.ReadStringIdent();
             this.PitchAutolevel = binaryReader.ReadSingle();
             this.PitchRange = binaryReader.ReadRange();
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(8));

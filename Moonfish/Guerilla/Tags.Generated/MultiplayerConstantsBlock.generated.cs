@@ -85,8 +85,8 @@ namespace Moonfish.Guerilla.Tags
             this.BombExplodeEffect = binaryReader.ReadTagReference();
             this.BombExplodeDmgEffect = binaryReader.ReadTagReference();
             this.BombDefuseEffect = binaryReader.ReadTagReference();
-            this.BombDefusalString = binaryReader.ReadStringID();
-            this.BlockedTeleporterString = binaryReader.ReadStringID();
+            this.BombDefusalString = binaryReader.ReadStringIdent();
+            this.BlockedTeleporterString = binaryReader.ReadStringIdent();
             this.fieldpad3 = binaryReader.ReadBytes(4);
             this.fieldpad4 = binaryReader.ReadBytes(32);
             this.fieldpad5 = binaryReader.ReadBytes(32);

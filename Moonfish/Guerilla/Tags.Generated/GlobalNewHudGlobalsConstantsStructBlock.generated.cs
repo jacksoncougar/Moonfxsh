@@ -61,8 +61,8 @@ namespace Moonfish.Guerilla.Tags
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.PrimaryMessageSound = binaryReader.ReadTagReference();
             this.SecondaryMessageSound = binaryReader.ReadTagReference();
-            this.BootGrieferString = binaryReader.ReadStringID();
-            this.CannotBootGrieferString = binaryReader.ReadStringID();
+            this.BootGrieferString = binaryReader.ReadStringIdent();
+            this.CannotBootGrieferString = binaryReader.ReadStringIdent();
             this.TrainingShader = binaryReader.ReadTagReference();
             this.HumanTrainingTopRight = binaryReader.ReadTagReference();
             this.HumanTrainingTopCenter = binaryReader.ReadTagReference();

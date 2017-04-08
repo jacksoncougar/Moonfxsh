@@ -49,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
             this.fieldpad = binaryReader.ReadBytes(2);
             this.BitmapTopleft = binaryReader.ReadPoint();
             this.BitmapTag = binaryReader.ReadTagReference();
-            this.StringId = binaryReader.ReadStringID();
+            this.StringId = binaryReader.ReadStringIdent();
             this.RenderDepthBias = binaryReader.ReadInt16();
             this.fieldpad0 = binaryReader.ReadBytes(2);
             return pointerQueue;

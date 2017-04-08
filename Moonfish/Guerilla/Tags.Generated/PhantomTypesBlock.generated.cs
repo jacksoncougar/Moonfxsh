@@ -70,8 +70,8 @@ namespace Moonfish.Guerilla.Tags
             this.MinimumSize = ((MinimumSizeEnum)(binaryReader.ReadByte()));
             this.MaximumSize = ((MaximumSizeEnum)(binaryReader.ReadByte()));
             this.fieldpad = binaryReader.ReadBytes(2);
-            this.MarkerName = binaryReader.ReadStringID();
-            this.AlignmentMarkerName = binaryReader.ReadStringID();
+            this.MarkerName = binaryReader.ReadStringIdent();
+            this.AlignmentMarkerName = binaryReader.ReadStringIdent();
             this.fieldpad0 = binaryReader.ReadBytes(8);
             this.HookesLawE = binaryReader.ReadSingle();
             this.LinearDeadRadius = binaryReader.ReadSingle();

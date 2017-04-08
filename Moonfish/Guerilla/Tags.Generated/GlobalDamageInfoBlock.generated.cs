@@ -79,7 +79,7 @@ namespace Moonfish.Guerilla.Tags
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.GlobalDamageInfoFlags = ((Flags)(binaryReader.ReadInt32()));
-            this.GlobalIndirectMaterialName = binaryReader.ReadStringID();
+            this.GlobalIndirectMaterialName = binaryReader.ReadStringIdent();
             this.IndirectDamageSection = binaryReader.ReadShortBlockIndex2();
             this.fieldpad = binaryReader.ReadBytes(2);
             this.fieldpad0 = binaryReader.ReadBytes(4);
@@ -96,7 +96,7 @@ namespace Moonfish.Guerilla.Tags
             this.ShieldDamagedFirstPersonShader = binaryReader.ReadTagReference();
             this.ShieldDamagedShader = binaryReader.ReadTagReference();
             this.MaximumShieldVitality = binaryReader.ReadSingle();
-            this.GlobalShieldMaterialName = binaryReader.ReadStringID();
+            this.GlobalShieldMaterialName = binaryReader.ReadStringIdent();
             this.MinimumStunDamage0 = binaryReader.ReadSingle();
             this.StunTime0 = binaryReader.ReadSingle();
             this.RechargeTime0 = binaryReader.ReadSingle();

@@ -18,7 +18,7 @@ namespace Moonfish.Forms.ShaderForm
             InitializeComponent( );
         }
 
-        public void DisplayVertexConstants( TagDatum vertexTag, CacheStream cache )
+        public void DisplayVertexConstants( TagDatum vertexTag, Map cache )
         {
             var items = GetVertexConstants( vertexTag, cache );
             items.Sort((u,v)=>u.bytes[0].CompareTo( v.bytes[0] ));
@@ -26,7 +26,7 @@ namespace Moonfish.Forms.ShaderForm
             dataGridView1.DataSource = source;
         }
 
-        private List<VertexConstantInfo> GetVertexConstants( TagDatum vertexTag, CacheStream cache )
+        private List<VertexConstantInfo> GetVertexConstants( TagDatum vertexTag, Map cache )
         {
             if ( !cache.Index.Contains( vertexTag ) ) return new List<VertexConstantInfo>( );
 
@@ -66,7 +66,7 @@ namespace Moonfish.Forms.ShaderForm
         private List<VertexConstantInfo> GetVertexConstants( ShaderBlock shaderBlock,
             ShaderTemplateBlock shaderTemplateBlock,
             ShaderPassBlock shaderPassBlock, TagDatum vrtxDatum, TagDatum spasDatum, TagDatum stemDatum,
-            TagDatum shaderDatum, CacheStream cache )
+            TagDatum shaderDatum, Map cache )
         {
             var vertexConstantInfos = new List<VertexConstantInfo>( );
             var passes =

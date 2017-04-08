@@ -48,8 +48,8 @@ namespace Moonfish.Guerilla.Tags
             this.fieldpad = binaryReader.ReadBytes(2);
             this.State = ((StateEnum)(binaryReader.ReadInt16()));
             this.fieldpad0 = binaryReader.ReadBytes(2);
-            this.FfaMessage = binaryReader.ReadStringID();
-            this.TeamMessage = binaryReader.ReadStringID();
+            this.FfaMessage = binaryReader.ReadStringIdent();
+            this.TeamMessage = binaryReader.ReadStringIdent();
             this.TagReference = binaryReader.ReadTagReference();
             this.fieldpad1 = binaryReader.ReadBytes(4);
             return pointerQueue;

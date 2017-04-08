@@ -76,7 +76,7 @@ namespace Moonfish.Guerilla.Tags
             this.Height0 = binaryReader.ReadSingle();
             this.Velocity = binaryReader.ReadVector2();
             this.fieldpad1 = binaryReader.ReadBytes(28);
-            this.Marker = binaryReader.ReadStringID();
+            this.Marker = binaryReader.ReadStringIdent();
             this.CellularAutomata2dInterpolationFlags = ((InterpolationFlags)(binaryReader.ReadInt32()));
             this.BaseColor = binaryReader.ReadColorR8G8B8();
             this.PeakColor = binaryReader.ReadColorR8G8B8();
@@ -86,7 +86,7 @@ namespace Moonfish.Guerilla.Tags
             this.CellWidth0 = binaryReader.ReadSingle();
             this.Velocity0 = binaryReader.ReadVector2();
             this.fieldpad3 = binaryReader.ReadBytes(48);
-            this.Marker0 = binaryReader.ReadStringID();
+            this.Marker0 = binaryReader.ReadStringIdent();
             this.TextureWidth = binaryReader.ReadInt16();
             this.fieldpad4 = binaryReader.ReadBytes(2);
             this.fieldpad5 = binaryReader.ReadBytes(48);

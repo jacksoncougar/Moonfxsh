@@ -44,7 +44,7 @@ namespace Moonfish.Guerilla.Tags
             this.GlobalDialogueInfo = binaryReader.ReadTagReference();
             this.DialogueFlags = ((Flags)(binaryReader.ReadInt32()));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(16));
-            this.MissionDialogueDesignator = binaryReader.ReadStringID();
+            this.MissionDialogueDesignator = binaryReader.ReadStringIdent();
             return pointerQueue;
         }
         public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)

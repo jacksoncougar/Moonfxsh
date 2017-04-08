@@ -63,8 +63,8 @@ namespace Moonfish.Guerilla.Tags
             this.SpawnType1 = ((SpawnType1Enum)(binaryReader.ReadInt16()));
             this.SpawnType2 = ((SpawnType2Enum)(binaryReader.ReadInt16()));
             this.SpawnType3 = ((SpawnType3Enum)(binaryReader.ReadInt16()));
-            this.EMPTYSTRING = binaryReader.ReadStringID();
-            this.EMPTYSTRING0 = binaryReader.ReadStringID();
+            this.EMPTYSTRING = binaryReader.ReadStringIdent();
+            this.EMPTYSTRING0 = binaryReader.ReadStringIdent();
             this.CampaignPlayerType = ((CampaignPlayerTypeEnum)(binaryReader.ReadInt16()));
             this.fieldpad = binaryReader.ReadBytes(6);
             return pointerQueue;

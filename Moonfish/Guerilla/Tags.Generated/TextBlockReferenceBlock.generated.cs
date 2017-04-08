@@ -52,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
             this.CustomFont = ((CustomFontEnum)(binaryReader.ReadInt16()));
             this.TextColor = binaryReader.ReadVector4();
             this.TextBounds = binaryReader.ReadVector2();
-            this.StringId = binaryReader.ReadStringID();
+            this.StringId = binaryReader.ReadStringIdent();
             this.RenderDepthBias = binaryReader.ReadInt16();
             this.fieldpad0 = binaryReader.ReadBytes(2);
             return pointerQueue;

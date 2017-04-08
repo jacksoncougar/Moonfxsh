@@ -55,8 +55,8 @@ namespace Moonfish.Guerilla.Tags
             this.HeightCrouching = binaryReader.ReadSingle();
             this.Radius = binaryReader.ReadSingle();
             this.Mass = binaryReader.ReadSingle();
-            this.LivingMaterialName = binaryReader.ReadStringID();
-            this.DeadMaterialName = binaryReader.ReadStringID();
+            this.LivingMaterialName = binaryReader.ReadStringIdent();
+            this.DeadMaterialName = binaryReader.ReadStringIdent();
             this.fieldpad = binaryReader.ReadBytes(4);
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(128));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(80));

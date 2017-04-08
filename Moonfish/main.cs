@@ -16,7 +16,7 @@ namespace Moonfish
 		public static void Main(string[] args)
 		{
 			Validator validator;
-			CacheStream stream;
+			Map stream;
 
 			bool rebuild = false;
 			bool sign = false;
@@ -50,7 +50,7 @@ namespace Moonfish
 				Console.WriteLine("Bad File Argument");
 				return;
 			}
-			stream = new CacheStream(extra[0]);
+			stream = new Map(extra[0]);
 			stream.Seek(stream[3].Identifier);
 
 			if (validate)

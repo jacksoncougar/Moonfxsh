@@ -57,7 +57,7 @@ namespace Moonfish.Guerilla.Tags
         public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(System.IO.BinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
-            this.Name = binaryReader.ReadStringID();
+            this.Name = binaryReader.ReadStringIdent();
             this.Position = binaryReader.ReadVector3();
             this.ReferenceFrame = binaryReader.ReadInt16();
             this.fieldpad = binaryReader.ReadBytes(2);
@@ -71,8 +71,8 @@ namespace Moonfish.Guerilla.Tags
             this.SeatType = ((SeatTypeEnum)(binaryReader.ReadInt16()));
             this.GrenadeType = ((GrenadeTypeEnum)(binaryReader.ReadInt16()));
             this.SwarmCount = binaryReader.ReadInt16();
-            this.ActorVariantName = binaryReader.ReadStringID();
-            this.VehicleVariantName = binaryReader.ReadStringID();
+            this.ActorVariantName = binaryReader.ReadStringIdent();
+            this.VehicleVariantName = binaryReader.ReadStringIdent();
             this.InitialMovementDistance = binaryReader.ReadSingle();
             this.EmitterVehicle = binaryReader.ReadShortBlockIndex1();
             this.InitialMovementMode = ((InitialMovementModeEnum)(binaryReader.ReadInt16()));

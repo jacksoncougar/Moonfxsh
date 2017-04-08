@@ -9,14 +9,14 @@ using Moonfish.Tags;
 
 namespace Moonfish.Cache
 {
-    partial class CacheStream
+    partial class Map
     {
         private const int VirtualBaseAddress = -2147086368;
 
         private static readonly Dictionary<ResourcePointer, ResourcePointer> ShiftData =
             new Dictionary<ResourcePointer, ResourcePointer>( 1000 );
 
-        public static CacheStream Save( CacheStream map )
+        public static Map Save( Map map )
         {
             // var filename = Path.Combine( Local.MapsDirectory, @"temp.map" );
             // var copyStream = new FileStream( filename, FileMode.Create,
@@ -130,7 +130,7 @@ namespace Moonfish.Cache
 			return outputStream;
         }
 
-        internal static CacheStream SaveAs( CacheStream map, string destFileName )
+        internal static Map SaveAs( Map map, string destFileName )
         {
             var filename = Path.Combine( Local.MapsDirectory, @"temp.map" );
             var copyStream = new FileStream( filename, FileMode.Create,
@@ -144,7 +144,7 @@ namespace Moonfish.Cache
             }
             if ( File.Exists( destFileName ) ) File.Delete( destFileName );
             File.Move( filename, destFileName );
-            return new CacheStream( destFileName );
+            return new Map( destFileName );
         }
 
         private void CopyAnimationResources( Stream outputStream )
@@ -531,7 +531,7 @@ namespace Moonfish.Cache
         {
             outputStream.Align( 512 );
             var buffer = new byte[128];
-            foreach ( var value in Strings )
+            foreach ( var value in Strings.Values )
             {
                 //  zero out the buffer, the convert the string into ASII encoding and get the bytes,
                 //  compute the length truncated to the length of the buffer to avoid overrunning the buffer
@@ -549,15 +549,15 @@ namespace Moonfish.Cache
         {
             var info = new StringsInfoStruct
             {
-                StringCount = Strings.Length,
+                StringCount = Strings.Count,
                 Strings128TableAddress = outputStream.Align( 512 )
             };
 
             GenerateStrings128( outputStream );
             info.StringIndexAddress = outputStream.Align( 512 );
-            GenerateTableIndex( outputStream, Strings );
+            GenerateTableIndex( outputStream, Strings.Values );
             info.StringTableAddress = outputStream.Align( 512 );
-            GenerateStringEntries( outputStream, Strings );
+            GenerateStringEntries( outputStream, Strings.Values );
             info.StringTableLength = ( int ) outputStream.Position - info.StringTableAddress;
 
             outputStream.Align( 512 );
@@ -565,7 +565,7 @@ namespace Moonfish.Cache
             return info;
         }
 
-        private void GenerateTableIndex( Stream outputStream, IReadOnlyList<string> values )
+        private void GenerateTableIndex( Stream outputStream, ICollection<string> values )
         {
             //  the buffer size is calculated for writing an offset to each string
             var bufferSize = values.Count * sizeof ( int );
@@ -573,13 +573,13 @@ namespace Moonfish.Cache
             using ( var binaryWriter = new BinaryWriter( new MemoryStream( indexBuffer ) ) )
             {
                 var offset = 0;
-                for ( var i = 0; i < values.Count; ++i )
+                foreach(var value in values)
                 {
                     //  strings are encoded using ASCII
                     //  first write the offset from the start of the strings table to the start of this string
                     //  finally add the length of the string to the offset to get the offset to the next string
                     //  —the strings are null terminated so add one extra byte for the null char
-                    var length = Encoding.ASCII.GetByteCount( values[ i ] );
+                    var length = Encoding.ASCII.GetByteCount( value );
                     binaryWriter.Write( offset );
                     offset += length + 1;
                 }

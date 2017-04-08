@@ -49,7 +49,7 @@ namespace Moonfish.Forms
                 };
         }
 
-        public void LoadScenarioPallet( CacheStream cacheStream )
+        public void LoadScenarioPallet( Map cacheStream )
         {
             var scenery = cacheStream.Index.Where( TagClass.Scen );
             var crates = cacheStream.Index.Where( TagClass.Bloc );

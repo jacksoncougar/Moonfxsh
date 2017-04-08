@@ -16,7 +16,7 @@ namespace Moonfish.Cache
         public int datumArrayCount;
         private readonly TagClass fourCC;
 
-        protected TagIndexBase(CacheStream cache)
+        protected TagIndexBase(Map cache)
         {
             var binaryReader = new BinaryReader(cache.BaseStream);
             classArrayAddress = binaryReader.ReadInt32();

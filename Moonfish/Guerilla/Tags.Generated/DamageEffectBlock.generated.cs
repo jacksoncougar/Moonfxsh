@@ -129,8 +129,8 @@ namespace Moonfish.Guerilla.Tags
             this.RiderDirectDamageScale = binaryReader.ReadSingle();
             this.RiderMaximumTransferDamageScale = binaryReader.ReadSingle();
             this.RiderMinimumTransferDamageScale = binaryReader.ReadSingle();
-            this.GeneralDamage = binaryReader.ReadStringID();
-            this.SpecificDamage = binaryReader.ReadStringID();
+            this.GeneralDamage = binaryReader.ReadStringIdent();
+            this.SpecificDamage = binaryReader.ReadStringIdent();
             this.AIStunRadius = binaryReader.ReadSingle();
             this.AIStunBounds = binaryReader.ReadRange();
             this.ShakeRadius = binaryReader.ReadSingle();

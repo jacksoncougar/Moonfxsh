@@ -14,14 +14,14 @@ namespace Moonfish.Forms
 {
     public partial class ShaderProperties : Form
     {
-        private readonly CacheStream _cache;
+        private readonly Map _cache;
         readonly List<DockContent> documentsDockContents = new List<DockContent>(); 
 
         public ShaderProperties( )
         {
             InitializeComponent( );
 
-            using ( _cache = new CacheStream( Path.Combine( Local.MapsDirectory, "ascension.map" ) ) )
+            using ( _cache = new Map( Path.Combine( Local.MapsDirectory, "ascension.map" ) ) )
             {
 
                 dockPanel1.Theme = new VS2013BlueTheme( );
@@ -35,7 +35,7 @@ namespace Moonfish.Forms
                         var node = e.Node as TagTreeNode;
                         if ( node != null )
                         {
-                            using ( var cache = new CacheStream( Path.Combine( Local.MapsDirectory, "ascension.map" ) )
+                            using ( var cache = new Map( Path.Combine( Local.MapsDirectory, "ascension.map" ) )
                                 )
                             {
                                 shaderPropertyGrid.DisplayVertexConstants( node.Info, cache );
@@ -49,7 +49,7 @@ namespace Moonfish.Forms
             }
         }
 
-        private void DisplayVertexInstructions( TagDatum vertexDatum, CacheStream cache )
+        private void DisplayVertexInstructions( TagDatum vertexDatum, Map cache )
         {
             foreach ( var documentsDockContent in documentsDockContents )
             {

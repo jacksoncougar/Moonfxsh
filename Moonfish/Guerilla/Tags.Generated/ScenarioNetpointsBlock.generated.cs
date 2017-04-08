@@ -49,8 +49,8 @@ namespace Moonfish.Guerilla.Tags
             this.TeamDesignator = ((TeamDesignatorEnum)(binaryReader.ReadInt16()));
             this.Identifier = binaryReader.ReadInt16();
             this.ScenarioNetpointsFlags = ((Flags)(binaryReader.ReadInt16()));
-            this.EMPTYSTRING = binaryReader.ReadStringID();
-            this.EMPTYSTRING0 = binaryReader.ReadStringID();
+            this.EMPTYSTRING = binaryReader.ReadStringIdent();
+            this.EMPTYSTRING0 = binaryReader.ReadStringIdent();
             return pointerQueue;
         }
         public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)

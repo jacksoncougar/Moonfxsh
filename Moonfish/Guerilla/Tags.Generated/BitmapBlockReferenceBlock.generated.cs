@@ -64,7 +64,7 @@ namespace Moonfish.Guerilla.Tags
             this.fieldpad = binaryReader.ReadBytes(2);
             this.SpriteAnimationSpeedFps = binaryReader.ReadSingle();
             this.ProgressBottomleft = binaryReader.ReadPoint();
-            this.StringIdentifier = binaryReader.ReadStringID();
+            this.StringIdentifier = binaryReader.ReadStringIdent();
             this.ProgressScale = binaryReader.ReadVector2();
             return pointerQueue;
         }

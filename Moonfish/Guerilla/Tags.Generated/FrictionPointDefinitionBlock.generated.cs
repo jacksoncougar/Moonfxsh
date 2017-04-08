@@ -52,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
         public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(System.IO.BinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
-            this.MarkerName = binaryReader.ReadStringID();
+            this.MarkerName = binaryReader.ReadStringIdent();
             this.FrictionPointDefinitionFlags = ((Flags)(binaryReader.ReadInt32()));
             this.FractionOfTotalMass = binaryReader.ReadSingle();
             this.Radius = binaryReader.ReadSingle();
@@ -64,10 +64,10 @@ namespace Moonfish.Guerilla.Tags
             this.EbrakeFriction = binaryReader.ReadSingle();
             this.EbrakeMovingFrictionVelDiff = binaryReader.ReadSingle();
             this.fieldpad0 = binaryReader.ReadBytes(20);
-            this.CollisionGlobalMaterialName = binaryReader.ReadStringID();
+            this.CollisionGlobalMaterialName = binaryReader.ReadStringIdent();
             this.fieldpad1 = binaryReader.ReadBytes(2);
             this.ModelStateDestroyed = ((ModelStateDestroyedEnum)(binaryReader.ReadInt16()));
-            this.RegionName = binaryReader.ReadStringID();
+            this.RegionName = binaryReader.ReadStringIdent();
             this.fieldpad2 = binaryReader.ReadBytes(4);
             return pointerQueue;
         }

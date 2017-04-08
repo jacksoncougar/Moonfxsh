@@ -42,7 +42,7 @@ namespace Moonfish.Guerilla.Tags
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.SoundReferencesFlags = ((Flags)(binaryReader.ReadInt16()));
             this.fieldpad = binaryReader.ReadBytes(2);
-            this.Vocalization = binaryReader.ReadStringID();
+            this.Vocalization = binaryReader.ReadStringIdent();
             this.Sound = binaryReader.ReadTagReference();
             return pointerQueue;
         }

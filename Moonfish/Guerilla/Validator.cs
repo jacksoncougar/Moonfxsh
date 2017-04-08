@@ -68,7 +68,7 @@ namespace Moonfish.Guerilla
 
             foreach (var file in filenames)
             {
-                using (var map = new CacheStream(file))
+                using (var map = new Map(file))
                 {
                     var binaryReader = new BinaryReader(map.BaseStream);
 

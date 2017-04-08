@@ -97,7 +97,7 @@ namespace Moonfish.Guerilla.Tags
             this.RoundsPerShot = binaryReader.ReadInt16();
             this.MinimumRoundsLoaded = binaryReader.ReadInt16();
             this.RoundsBetweenTracers = binaryReader.ReadInt16();
-            this.OptionalBarrelMarkerName = binaryReader.ReadStringID();
+            this.OptionalBarrelMarkerName = binaryReader.ReadStringIdent();
             this.PredictionType = ((PredictionTypeEnum)(binaryReader.ReadInt16()));
             this.FiringNoise = ((FiringNoiseEnum)(binaryReader.ReadInt16()));
             this.AccelerationTime0 = binaryReader.ReadSingle();

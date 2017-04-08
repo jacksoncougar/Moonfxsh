@@ -74,7 +74,7 @@ namespace Moonfish.Guerilla.Tags
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(76));
             this.ShapeGroup = ((ShapeGroupEnum)(binaryReader.ReadInt16()));
             this.fieldpad = binaryReader.ReadBytes(2);
-            this.HeaderStringId = binaryReader.ReadStringID();
+            this.HeaderStringId = binaryReader.ReadStringIdent();
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(12));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(8));
             this.SourceColor = binaryReader.ReadColorR8G8B8();

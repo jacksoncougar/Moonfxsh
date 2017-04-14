@@ -14,10 +14,10 @@ using Moonfish.Tags;
 namespace Moonfish.Cache
 {
 
-    /// <summary>
-    /// Represents the 
-    /// </summary>
-    public partial class Map : IDisposable
+	/// <summary>
+	/// Represents the data in a map
+	/// </summary>
+	public partial class Map : IDisposable
     {
         public CacheStreamWrapper<Stream> BaseStream { get; private set; }
 
@@ -25,6 +25,7 @@ namespace Moonfish.Cache
         private readonly Dictionary<TagIdent, string> tagHashs;
 
         public readonly Dictionary<StringIdent, string> Strings;
+
         public readonly Dictionary<TagIdent, int> StructureMemoryBlockBindings;
         public readonly CacheHeader Header;
 
@@ -50,10 +51,15 @@ namespace Moonfish.Cache
 
             BaseStream.Seek(Header.StringsInfo.StringIndexAddress, SeekOrigin.Begin);
 
-            var stringKeys = new StringIdent[Header.StringsInfo.StringCount];
-            for(var sub = 0; sub < Header.StringsInfo.StringCount; ++sub)
+			var stringKeys = new StringIdent[Header.StringsInfo.StringCount];
+			int previousOffset = 0, currentOffset = 0;
+			sbyte length;
+            for(short sub = 0; sub < Header.StringsInfo.StringCount; ++sub)
             {
-                stringKeys[sub] = binaryReader.ReadStringIdent();
+				currentOffset = binaryReader.ReadInt32();
+				length = (sbyte)(currentOffset - previousOffset);
+				stringKeys[sub] = new StringIdent(sub, length);
+				previousOffset = currentOffset;
             }
 
             BaseStream.Seek(Header.StringsInfo.StringTableAddress, SeekOrigin.Begin);
@@ -155,7 +161,7 @@ namespace Moonfish.Cache
             get { return Index.Count; }
         }
 
-        public TagDatum this[int index]
+		public TagDatum this[int index]
         {
             get { return Index[index]; }
         }
@@ -395,6 +401,6 @@ namespace Moonfish.Cache
             // TODO: uncomment the following line if the finalizer is overridden above.
             // GC.SuppressFinalize(this);
         }
-        #endregion
-    }
+		#endregion
+	}
 }

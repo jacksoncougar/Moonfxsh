@@ -3,76 +3,64 @@ using System.IO;
 using Moonfish.Guerilla;
 using Moonfish.Tags;
 using Moonfish.Cache;
+using System;
 
 namespace Moonfish.Cache
 {
-    public abstract class TestRepo
-    {
-        Repository repo;
-    };
+	/// <summary>
+	/// Creates a Package from a map file
+	/// </summary>
+	public class Packager
+	{
+		public Package CreatePackage(Map map)
+		{
+			Package package = new Package();
+
+			foreach (var item in map.Strings)
+			{
+				package.Manifest.Strings.Add(item.Key, item.Value);
+			}
+
+			foreach (var item in map.Index)
+			{
+				package.Manifest.Objects.Add(item.Identifier, item);
+			}
+
+			return null;
+		}
+	};
+
+	/// <summary>
+	/// A package of object data
+	/// </summary>
+	public class Package
+	{
+		List<Stream> DataStreams;
+		public Manifest Manifest { get; private set; }
+
+		public Package()
+		{
+			DataStreams = new List<Stream>();
+			Manifest = new Manifest();
+		}
+	};
 
     /// <summary>
-    /// Creates a map file from a Repository
+	/// Collection of Packages (this makes a map) that may inter-reference each other.
     /// </summary>
-    public abstract class Packager
+    public class Repository
     {
-        Repository Repository { get; }
+        // details: the map can be recreated from a scenario tag and all referenced tags to that. 
+		// As well as all the non-external raw data. Strings must be rebuilt and unicode tables.
 
-        public Map CreatePackage(Repository repository)
-        {
-            return null;
-        }
-    };
+		public Repository()
+		{
+		}
 
-    /// <summary>
-    /// Collection of Object Data required to build an output map.
-    /// </summary>
-    public abstract class Repository
-    {
-        // details: the map can be recreated from a scenario tag and all referenced tags to that. As well as all the non-external raw data. Strings must be rebuilt and unicode tables.
-        public StringManifest Strings { get; }
-        public ObjectManifest Objects { get; }
-
-        public UnicodeManifest Unicode { get; }
-
-        public void Add(Map cache)
-        {
-            {
-            var invalids = Strings.AddTable(cache);
-            }
-        }
-    };
-
-    public enum Language
-    {
-        English,
-    };
-
-    /// <summary>
-    /// Collection of localized unicode values 
-    /// </summary>
-    public class UnicodeLocals
-    {
-        Dictionary<Language, string> Values;
-    };
-    public abstract class StringManifest : Manifest<StringIdent, string>
-    {
-        public StringManifest(int count) : base(count)
+		public void Add(Map cache)
         {
         }
     };
 
-    public abstract class UnicodeManifest : Manifest<StringIdent, UnicodeLocals>
-    {
-        public UnicodeManifest(int count) : base(count)
-        {
-        }
-    }
-
-    public abstract class ObjectManifest : Manifest<TagIdent, GuerillaBlock>
-    {
-        public ObjectManifest(int count) : base(count)
-        {
-        }
-    };
+    
 }

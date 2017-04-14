@@ -1445,6 +1445,10 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Cache\AddressModifier.cs" />
     <Compile Include="Cache\CacheStreamWrapper.cs" />
+    <Compile Include="Cache\Cache.cs" />
+    <Compile Include="Cache\Manifest.cs" />
+    <Compile Include="Cache\StringManifest.cs" />
+    <Compile Include="Cache\ObjectManifest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\CacheStream.StringsInfo.cs" />

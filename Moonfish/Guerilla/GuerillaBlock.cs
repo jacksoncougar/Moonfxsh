@@ -66,6 +66,14 @@ namespace Moonfish.Guerilla
             return compiled;
         }
 
+		public virtual GuerillaBlock CreateInstance(TagClass @class)
+		{
+			var type = @class.GetClassType();
+			var ctor = GetObjectActivator<GuerillaBlock>(type);
+
+			return ctor();
+		}
+
         public virtual T[] ReadBlockArrayData<T>(BinaryReader binaryReader, BlamPointer blamPointer)
             where T : GuerillaBlock
         {

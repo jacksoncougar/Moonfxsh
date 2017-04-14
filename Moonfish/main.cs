@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Moonfish.Cache;
 using Moonfish.Guerilla;
+using Moonfish.Guerilla.Tags;
 using NDesk.Options;
 
 namespace Moonfish
@@ -51,7 +52,6 @@ namespace Moonfish
 				return;
 			}
 			stream = new Map(extra[0]);
-			stream.Seek(stream[3].Identifier);
 
 			if (validate)
 			{
@@ -72,6 +72,9 @@ namespace Moonfish
 			if (rebuild)
 			{
 				Console.WriteLine("Rebuilding...");
+
+				Packager packager = new Packager();
+				packager.CreatePackage(stream);
 
 				Console.WriteLine("Done...");
 			}

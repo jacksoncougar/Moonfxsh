@@ -1,7 +1,20 @@
 ﻿<Properties StartupConfiguration="{DD0C713C-6119-4D6D-8F0A-CAA8F34763BF}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Moonfish/Cache/CacheStream.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Moonfxsh Status">
     <Files>
-      <File FileName="Moonfish/Cache/CacheStream.cs" Line="82" Column="21" />
+      <File FileName="Moonfish/Cache/CacheStream.cs" Line="1" Column="1" />
+      <File FileName="Moonfish/Cache/StringManifest.cs" Line="29" Column="2" />
+      <File FileName="Moonfish/Cache/Manifest.cs" Line="233" Column="2" />
+      <File FileName="Moonfish/Cache/TagIndex.cs" Line="20" Column="2" />
+      <File FileName="Moonfish/Cache/TagDatum.cs" Line="1" Column="1" />
+      <File FileName="Moonfish/main.cs" Line="88" Column="2" />
+      <File FileName="Moonfish/ValueTypes/BinaryReaderExtensions.cs" Line="139" Column="3" />
+      <File FileName="Moonfish/ValueTypes/StringIdent.cs" Line="30" Column="1" />
+      <File FileName="Moonfish/Documentation/halo_2_header.txt" Line="21" Column="22" />
+      <File FileName="Moonfish/Cache/ObjectManifest.cs" Line="9" Column="2" />
+      <File FileName="Moonfish/Guerilla/Tags.Generated/ScenarioBlock.generated.cs" Line="20" Column="46" />
+      <File FileName="Moonfish/Guerilla/GuerillaBlock.cs" Line="69" Column="4" />
+      <File FileName="Moonfish/Cache/CacheStream.Header.cs" Line="1" Column="1" />
+      <File FileName="Moonfxsh Status" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />
@@ -9,9 +22,13 @@
     <BreakpointStore>
       <Breakpoint file="/home/leaf/Moonfxsh/Moonfish/Forms/GuerillaBlockViewer.cs" relfile="Moonfish/Forms/GuerillaBlockViewer.cs" line="15" column="1" />
       <Breakpoint file="/home/leaf/Moonfxsh/Moonfish/Cache/AddressModifier.cs" relfile="Moonfish/Cache/AddressModifier.cs" line="21" column="4" />
+      <Breakpoint file="/home/leaf/Moonfxsh/Moonfish/main.cs" relfile="Moonfish/main.cs" line="79" column="1" />
+      <Breakpoint file="/home/leaf/Moonfxsh/Moonfish/Cache/StringManifest.cs" relfile="Moonfish/Cache/StringManifest.cs" line="29" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
+    <Watch file="Moonfish/main.cs" line="79" offsetX="641" offsetY="1172" expression="scnr" liveUpdate="False" />
+  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
   <MonoDevelop.Ide.ItemProperties.Moonfish PreferredExecutionTarget="MonoDevelop.Default" />
   <MultiItemStartupConfigurations />
   <MonoDevelop.Ide.ItemProperties.Sunfish PreferredExecutionTarget="MonoDevelop.Default" />

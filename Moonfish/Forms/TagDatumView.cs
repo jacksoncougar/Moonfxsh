@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
-using Moonfish.Cache;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Moonfish.Forms

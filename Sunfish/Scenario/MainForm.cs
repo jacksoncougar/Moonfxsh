@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Moonfish.Cache;
 using Moonfish.Guerilla;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;

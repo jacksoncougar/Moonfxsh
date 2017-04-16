@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Moonfish.Cache;
 using Moonfish.Forms.ShaderForm;
 using Moonfish.Graphics;
 using Moonfish.Guerilla.Tags;

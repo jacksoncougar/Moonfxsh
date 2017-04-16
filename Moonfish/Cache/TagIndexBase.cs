@@ -1,46 +1,47 @@
 using System.IO;
 using Moonfish.Tags;
 
-namespace Moonfish.Cache
+namespace Moonfish
 {
     public class TagIndexBase
     {
         protected internal const int HeaderSize = 32;
-
-        public int classArrayAddress;
-        public int classArrayCount;
-        public int datumArrayAddress;
-        public TagIdent ScenarioIdent { get; set; }
-        public TagIdent GlobalsIdent { get; set; }
-        public int _noodleValue;
-        public int datumArrayCount;
         private readonly TagClass fourCC;
+        public int NoodleValue;
+        public int ClassArrayAddress;
+        public int ClassArrayCount;
+        public int DatumArrayAddress;
+        public int DatumArrayCount;
 
         protected TagIndexBase(Map cache)
         {
             var binaryReader = new BinaryReader(cache.BaseStream);
-            classArrayAddress = binaryReader.ReadInt32();
-            classArrayCount = binaryReader.ReadInt32();
-            datumArrayAddress = binaryReader.ReadInt32();
+            ClassArrayAddress = binaryReader.ReadInt32();
+            ClassArrayCount = binaryReader.ReadInt32();
+            DatumArrayAddress = binaryReader.ReadInt32();
             ScenarioIdent = binaryReader.ReadTagIdent();
             GlobalsIdent = binaryReader.ReadTagIdent();
-            _noodleValue = binaryReader.ReadInt32();
-            datumArrayCount = binaryReader.ReadInt32();
+            NoodleValue = binaryReader.ReadInt32();
+            DatumArrayCount = binaryReader.ReadInt32();
             fourCC = binaryReader.ReadTagClass();
-            if (fourCC != new TagClass("tags")) throw new InvalidDataException();
+            if (fourCC != new TagClass("tags"))
+                throw new InvalidDataException();
         }
+
+        public TagIdent ScenarioIdent { get; set; }
+        public TagIdent GlobalsIdent { get; set; }
 
         protected byte[] SerializeHeader()
         {
-            MemoryStream stream = new MemoryStream(HeaderSize);
-            BinaryWriter binaryWriter = new BinaryWriter(stream);
-            binaryWriter.Write(classArrayAddress);
-            binaryWriter.Write(classArrayCount);
-            binaryWriter.Write(datumArrayAddress);
+            var stream = new MemoryStream(HeaderSize);
+            var binaryWriter = new BinaryWriter(stream);
+            binaryWriter.Write(ClassArrayAddress);
+            binaryWriter.Write(ClassArrayCount);
+            binaryWriter.Write(DatumArrayAddress);
             binaryWriter.Write(ScenarioIdent);
             binaryWriter.Write(GlobalsIdent);
-            binaryWriter.Write((int)0);
-            binaryWriter.Write(datumArrayCount);
+            binaryWriter.Write(0);
+            binaryWriter.Write(DatumArrayCount);
             binaryWriter.Write(fourCC);
             return stream.GetBuffer();
         }

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Moonfish.Cache;
 using Moonfish.Graphics.RenderingEngine;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;

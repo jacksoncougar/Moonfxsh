@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Moonfish.Cache;
 using Moonfish.Graphics.RenderingEngine;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
@@ -10,7 +9,7 @@ namespace Moonfish.Graphics
 {
     public class BillboardObject : ObjectBlock
     {
-        public BillboardObject( TagIdent bitmap, ICache destination )
+        public BillboardObject( TagIdent bitmap, IReadOnlyList<TagDatum> destination )
         {
             Model = ( TagReference ) new ModelBlock( );
             var modelBlock = ( ModelBlock ) Model.Get();

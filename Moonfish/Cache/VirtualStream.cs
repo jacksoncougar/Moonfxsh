@@ -1,53 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Moonfish.Guerilla.Tags;
+﻿using System.IO;
 
-namespace Moonfish.Cache
+namespace Moonfish
 {
-    public class VirtualStream : MemoryStream
+    public sealed class VirtualStream : VirtualStreamWrapper<MemoryStream>
     {
-        public int VirtualOrigin { get; private set; }
-
-        public VirtualStream(byte[] buffer, int virtualOrigin)
-            : base(
-                buffer)
+        public VirtualStream(byte[] buffer, int virtualOrigin) : base(new MemoryStream(buffer))
         {
-            VirtualOrigin = virtualOrigin;
+            CreateVirtualSection(virtualOrigin, (int)Length, 0, true);
         }
 
-        public VirtualStream(byte[] buffer, uint virtualOrigin)
-            : base(
-                buffer)
+        public VirtualStream(int virtualOrigin) :base(new MemoryStream())
         {
-            VirtualOrigin = (int)virtualOrigin;
+            CreateVirtualSection(virtualOrigin, (int)Length, 0, true);
         }
-
-        public VirtualStream(int virtualOrigin)
+        
+        public byte[] ToArray()
         {
-            VirtualOrigin = virtualOrigin;
-        }
-
-        public override long Seek(long offset, SeekOrigin loc)
-        {
-            return IsPointer(offset) && loc == SeekOrigin.Begin
-                ? base.Seek(offset - VirtualOrigin, loc) + VirtualOrigin
-                : base.Seek(offset, loc) + VirtualOrigin;
-        }
-
-        public override long Position
-        {
-            get { return (int) base.Position + VirtualOrigin; }
-            set { base.Position = IsPointer(value) ? value - VirtualOrigin : value; }
-        }
-
-        private bool IsPointer(long value)
-        {
-            // if 'value' is a Pointer
-            return (value < 0 || value > Length);
+            return BaseStream.ToArray();
         }
     }
 }

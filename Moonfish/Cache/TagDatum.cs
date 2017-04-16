@@ -1,4 +1,3 @@
-using System;
 using Moonfish.Tags;
 
 namespace Moonfish
@@ -16,7 +15,7 @@ namespace Moonfish
         public override bool Equals(object obj)
         {
             if (obj is TagDatum)
-                return (TagDatum) (obj) == this;
+                return (TagDatum) obj == this;
             return base.Equals(obj);
         }
 
@@ -27,11 +26,11 @@ namespace Moonfish
 
         public static bool operator ==(TagDatum first, TagDatum second)
         {
-            return first.Class == second.Class
-                   && first.Identifier == second.Identifier
-                   && first.Length == second.Length
-                   && first.VirtualAddress == second.VirtualAddress
-                   && first.Path == second.Path;
+            return first.Class == second.Class &&
+                   first.Identifier == second.Identifier &&
+                   first.Length == second.Length &&
+                   first.VirtualAddress == second.VirtualAddress &&
+                   first.Path == second.Path;
         }
 
         public static bool operator !=(TagDatum first, TagDatum second)
@@ -41,9 +40,9 @@ namespace Moonfish
 
         internal static bool IsNull(TagDatum data)
         {
-            return
-                TagClass.IsNullOrZero(data.Class) && data.Identifier == TagIdent.NullIdentifier && data.Length == 0 &&
-                data.VirtualAddress == 0;
+            return TagClass.IsNullOrZero(data.Class) &&
+                   data.Identifier == TagIdent.NullIdentifier &&
+                   data.Length == 0 && data.VirtualAddress == 0;
         }
     }
 }

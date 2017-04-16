@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Moonfish.Cache
+namespace Moonfish
 {
     public partial class Map
     {
@@ -19,7 +15,9 @@ namespace Moonfish.Cache
 
             private StringsInfoStruct(Stream sourceStream)
             {
-                using (var binaryReader = new BinaryReader(sourceStream, Encoding.Default, true))
+                using (
+                    var binaryReader = new BinaryReader(sourceStream,
+                        Encoding.Default, true))
                 {
                     Strings128TableAddress = binaryReader.ReadInt32();
                     StringCount = binaryReader.ReadInt32();
@@ -36,15 +34,17 @@ namespace Moonfish.Cache
 
             public void SerializeTo(Stream source)
             {
-                using (var binaryWriter = new BinaryWriter(source, Encoding.Default, true))
+                using (
+                    var binaryWriter = new BinaryWriter(source, Encoding.Default,
+                        true))
                 {
                     binaryWriter.Write(Strings128TableAddress);
-					binaryWriter.Write(StringCount);
-					binaryWriter.Write(StringTableLength);
+                    binaryWriter.Write(StringCount);
+                    binaryWriter.Write(StringTableLength);
                     binaryWriter.Write(StringIndexAddress);
                     binaryWriter.Write(StringTableAddress);
                 }
             }
-        };
-    };
+        }
+    }
 }

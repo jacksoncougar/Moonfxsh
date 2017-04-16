@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using Moonfish.Cache;
 using Moonfish.Graphics;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;

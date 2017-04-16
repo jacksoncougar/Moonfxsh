@@ -3,47 +3,42 @@ using System.IO;
 using System.Text;
 using Moonfish.Tags;
 
-namespace Moonfish.Cache
+namespace Moonfish
 {
     partial class Map
     {
         public class CacheHeader
         {
             public const int HeaderSize = 2048;
+            public readonly TagClass FootFourCC;
 
             public readonly TagClass HeadFourCC;
+            public string BuildString;
+            public int Checksum;
             public int EngineVersion;
             public int FileSize;
             public IndexInfoStruct IndexInfo;
-            public SharedInfoStruct SharedInfo;
-            public string BuildString;
-            public MapType Type;
-            public StringsInfoStruct StringsInfo;
-            public string Scenario;
-            public string Name; 
+            public string Name;
             public PathsInfoStruct PathsInfo;
+            public string Scenario;
+            public SharedInfoStruct SharedInfo;
+            public StringsInfoStruct StringsInfo;
+            public MapType Type;
             public UnknownInfoStruct UnknownInfo;
-            public int Checksum;
-            public readonly TagClass FootFourCC;
-            public HaloVersion Version { get; private set; }
 
-            public CacheHeader CreateShallowCopy()
+            public CacheHeader()
             {
-                return (CacheHeader)MemberwiseClone();
             }
 
-            public CacheHeader( )
-            {
-                
-            }
-            
             private CacheHeader(Stream stream)
             {
-                using (var binaryReader = new BinaryReader(stream, Encoding.Default, true))
+                using (
+                    var binaryReader = new BinaryReader(stream, Encoding.Default,
+                        true))
                 {
                     //  read the fourcc tag and throw on incorrect value
-                        HeadFourCC = binaryReader.ReadTagClass();
-                    if (HeadFourCC != (TagClass)"head")
+                    HeadFourCC = binaryReader.ReadTagClass();
+                    if (HeadFourCC != (TagClass) "head")
                     {
                         throw new InvalidDataException();
                     }
@@ -54,19 +49,25 @@ namespace Moonfish.Cache
 
                     //  Check the BuildVersion then return to the last stream position
                     stream.Seek(0x11C, SeekOrigin.Current);
-                    var test = Encoding.ASCII.GetString(binaryReader.ReadBytes(32)).Trim(Char.MinValue);
-                    Version = test == @"11081.07.04.30.0934.main" ? HaloVersion.PC_RETAIL : HaloVersion.XBOX_RETAIL;
+                    var test =
+                        Encoding.ASCII.GetString(binaryReader.ReadBytes(32))
+                            .Trim(char.MinValue);
+                    Version = test == @"11081.07.04.30.0934.main"
+                        ? Moonfish.EngineVersion.PCRetail
+                        : Moonfish.EngineVersion.XboxRetail;
                     stream.Seek(-0x13C, SeekOrigin.Current);
-                    
+
                     IndexInfo = IndexInfoStruct.DeserializeFrom(stream);
 
                     //  move the stream past some unused/zeroed bytes
-                    if (Version == HaloVersion.PC_RETAIL) 
+                    if (Version == Moonfish.EngineVersion.PCRetail)
                         SharedInfoStruct.DeserializeFrom(stream);
                     stream.Seek(32 + 224, SeekOrigin.Current);
 
                     //  read the build string and remove the trailing null bytes
-                    BuildString = Encoding.ASCII.GetString(binaryReader.ReadBytes(32)).Trim(Char.MinValue);
+                    BuildString =
+                        Encoding.ASCII.GetString(binaryReader.ReadBytes(32))
+                            .Trim(char.MinValue);
 
                     //  read the map type (ie: singleplayer, multiplayer, shared, singleplayershared, mainmenu).
                     Type = (MapType) binaryReader.ReadInt32();
@@ -76,15 +77,19 @@ namespace Moonfish.Cache
                     stream.Seek(36, SeekOrigin.Current);
 
                     //  read the name string and remove the trailing null bytes
-                    Name = Encoding.ASCII.GetString(binaryReader.ReadBytes(32)).Trim(Char.MinValue);
+                    Name =
+                        Encoding.ASCII.GetString(binaryReader.ReadBytes(32))
+                            .Trim(char.MinValue);
                     stream.Seek(4, SeekOrigin.Current);
 
                     //  read the scenario string and remove the trailing null bytes
-                    Scenario = Encoding.ASCII.GetString(binaryReader.ReadBytes(128)).Trim(Char.MinValue);
+                    Scenario =
+                        Encoding.ASCII.GetString(binaryReader.ReadBytes(128))
+                            .Trim(char.MinValue);
                     stream.Seek(128, SeekOrigin.Current);
                     stream.Seek(4, SeekOrigin.Current);
                     PathsInfo = PathsInfoStruct.DeserializeFrom(stream);
-                    if (Version == HaloVersion.PC_RETAIL)
+                    if (Version == Moonfish.EngineVersion.PCRetail)
                     {
                         UnknownInfo = UnknownInfoStruct.DeserializeFrom(stream);
                     }
@@ -94,7 +99,13 @@ namespace Moonfish.Cache
                     stream.Seek(2044 - (int) stream.Position, SeekOrigin.Current);
                     FootFourCC = binaryReader.ReadTagClass();
                 }
-                
+            }
+
+            public EngineVersion Version { get; }
+
+            public CacheHeader CreateShallowCopy()
+            {
+                return (CacheHeader) MemberwiseClone();
             }
 
             public static CacheHeader DeserializeFrom(Stream stream)
@@ -104,7 +115,9 @@ namespace Moonfish.Cache
 
             public void SerializeTo(Stream stream)
             {
-                using (var binaryWriter = new BinaryWriter(stream, Encoding.Default, true))
+                using (
+                    var binaryWriter = new BinaryWriter(stream, Encoding.Default,
+                        true))
                 {
                     //  read the fourcc tag and throw on incorrect value
                     binaryWriter.Write(HeadFourCC);
@@ -115,18 +128,20 @@ namespace Moonfish.Cache
                     IndexInfo.SerializeTo(stream);
 
                     //  move the stream past some unused/zeroed bytes
-                    if (Version == HaloVersion.PC_RETAIL) SharedInfo.SerializeTo(stream);
+                    if (Version == Moonfish.EngineVersion.PCRetail)
+                        SharedInfo.SerializeTo(stream);
                     stream.Seek(32 + 224, SeekOrigin.Current);
 
                     //  
                     var buffer = new byte[128];
                     Encoding.ASCII.GetBytes(BuildString, 0,
-                        Math.Min(buffer.Length, Encoding.ASCII.GetByteCount(BuildString)), buffer, 0);
+                        Math.Min(buffer.Length,
+                            Encoding.ASCII.GetByteCount(BuildString)), buffer, 0);
                     binaryWriter.Write(buffer, 0, 32);
 
                     //  read the map type (ie: singleplayer, multiplayer, shared, singleplayershared, mainmenu).
 
-                    binaryWriter.Write((int)Type);
+                    binaryWriter.Write((int) Type);
 
                     stream.Seek(28, SeekOrigin.Current);
                     StringsInfo.SerializeTo(stream);
@@ -134,7 +149,8 @@ namespace Moonfish.Cache
 
                     Array.Clear(buffer, 0, 32);
                     Encoding.ASCII.GetBytes(Name, 0,
-                        Math.Min(buffer.Length, Encoding.ASCII.GetByteCount(Name)), buffer, 0);
+                        Math.Min(buffer.Length,
+                            Encoding.ASCII.GetByteCount(Name)), buffer, 0);
                     binaryWriter.Write(buffer, 0, 32);
 
                     stream.Seek(4, SeekOrigin.Current);
@@ -143,13 +159,14 @@ namespace Moonfish.Cache
 
                     Array.Clear(buffer, 0, 32);
                     Encoding.ASCII.GetBytes(Scenario, 0,
-                        Math.Min(buffer.Length, Encoding.ASCII.GetByteCount(Scenario)), buffer, 0);
+                        Math.Min(buffer.Length,
+                            Encoding.ASCII.GetByteCount(Scenario)), buffer, 0);
                     binaryWriter.Write(buffer, 0, buffer.Length);
 
                     stream.Seek(128, SeekOrigin.Current);
                     stream.Seek(4, SeekOrigin.Current);
                     PathsInfo.SerializeTo(stream);
-                    if (Version == HaloVersion.PC_RETAIL)
+                    if (Version == Moonfish.EngineVersion.PCRetail)
                     {
                         UnknownInfo.SerializeTo(stream);
                     }

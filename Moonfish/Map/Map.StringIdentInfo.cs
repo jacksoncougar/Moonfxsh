@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Moonfish.Cache
+namespace Moonfish
 {
     partial class Map
     {
-
         /// <summary>
-        /// A struct containing an address and byte-length to a resource in halo 2 vista
+        ///     A struct containing an address and byte-length to a resource in halo 2 vista
         /// </summary>
         public struct UnknownInfoStruct
         {
@@ -20,7 +15,9 @@ namespace Moonfish.Cache
 
             private UnknownInfoStruct(Stream sourceStream)
             {
-                using (var binaryReader = new BinaryReader(sourceStream, Encoding.Default, true))
+                using (
+                    var binaryReader = new BinaryReader(sourceStream,
+                        Encoding.Default, true))
                 {
                     Address = binaryReader.ReadInt32();
                     Length = binaryReader.ReadInt32();
@@ -34,11 +31,12 @@ namespace Moonfish.Cache
 
             public void SerializeTo(Stream source)
             {
-                using (var binaryWriter = new BinaryWriter(source, Encoding.Default, true))
+                using (
+                    var binaryWriter = new BinaryWriter(source, Encoding.Default,
+                        true))
                 {
                     binaryWriter.Write(Address);
                     binaryWriter.Write(Length);
-
                 }
             }
         }

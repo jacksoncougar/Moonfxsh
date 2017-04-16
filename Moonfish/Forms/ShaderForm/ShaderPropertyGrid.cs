@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
-using Moonfish.Cache;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 using OpenTK;

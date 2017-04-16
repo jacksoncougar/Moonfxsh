@@ -125,15 +125,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cache\CacheStream.cs" />
-    <Compile Include="Cache\CacheStream.Header.cs" />
-    <Compile Include="Cache\CacheStream.PathsInfo.cs" />
-    <Compile Include="Cache\CacheStream.StringIdentInfo.cs" />
+    <Compile Include="Map\Map.cs" />
+    <Compile Include="Map\Map.Header.cs" />
+    <Compile Include="Map\Map.PathsInfo.cs" />
+    <Compile Include="Map\Map.StringIdentInfo.cs" />
     <Compile Include="Cache\CacheWriter.cs" />
-    <Compile Include="Cache\CacheStream.IndexInfo.cs" />
-    <Compile Include="Cache\ICache.cs" />
+    <Compile Include="Map\Map.IndexInfo.cs" />
     <Compile Include="Cache\StructureAllocationHeader.cs" />
-    <Compile Include="Cache\VirtualMemorySectionID.cs" />
+    <Compile Include="Cache\VirtualStreamIndex.cs" />
     <Compile Include="Cache\TagClassHeirarchy.cs" />
     <Compile Include="Cache\TagDatum.cs" />
     <Compile Include="Cache\TagIndex.cs" />
@@ -330,7 +329,7 @@
     <Compile Include="Guerilla\CodeDom\GuerillaCodeDom.cs" />
     <Compile Include="Guerilla\CodeDom\GuerillaCommentCollection.cs" />
     <Compile Include="Guerilla\CodeDom\GuerillaEnumBlockClass.cs" />
-    <Compile Include="Cache\CacheStream.CopyTo.cs" />
+    <Compile Include="Map\Map.CopyTo.cs" />
     <Compile Include="Guerilla\GeometryExtensions.cs" />
     <Compile Include="Guerilla\IReadQueueable.cs" />
     <Compile Include="Guerilla\Preprocess\Bsp3dNodesBlock.cs" />
@@ -1377,7 +1376,7 @@
     <Compile Include="Guerilla\VirtualMemoryStream.cs" />
     <Compile Include="Local.cs" />
     <Compile Include="main.cs" />
-    <Compile Include="Cache\MapType.cs" />
+    <Compile Include="Map\MapType.cs" />
     <Compile Include="Graphics\OpenTKExtensions.cs" />
     <Compile Include="Padding.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1428,19 +1427,17 @@
     <Compile Include="ValueTypes\TagReference.cs" />
     <Compile Include="ValueTypes\TagReferenceAttribute.cs" />
     <Compile Include="ValueTypes\Point.cs" />
-    <Compile Include="Cache\TagIndexElement.cs" />
     <Compile Include="ValueTypes\Range.cs" />
-    <Compile Include="Cache\HaloVersion.cs" />
+    <Compile Include="Cache\EngineVersion.cs" />
     <Compile Include="ValueTypes\VertexBuffer.cs" />
     <Compile Include="Cache\AddressModifier.cs" />
-    <Compile Include="Cache\CacheStreamWrapper.cs" />
-    <Compile Include="Cache\Cache.cs" />
+    <Compile Include="Cache\VirtualStreamWrapper.cs" />
     <Compile Include="Cache\Manifest.cs" />
     <Compile Include="Cache\StringManifest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cache\CacheStream.StringsInfo.cs" />
-    <Compile Include="Cache\CacheStream.SharedInfoStruct.cs" />
+    <Compile Include="Map\Map.StringsInfo.cs" />
+    <Compile Include="Map\Map.SharedInfoStruct.cs" />
     <EmbeddedResource Include="data\fragment.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>

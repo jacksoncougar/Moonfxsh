@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Moonfish.Cache;
 using Moonfish.Guerilla;
 using NDesk.Options;
 

@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Text;
-using Moonfish.Cache;
 using Moonfish.Graphics;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Model;

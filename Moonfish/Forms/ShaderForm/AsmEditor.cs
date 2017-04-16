@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ICSharpCode.TextEditor.Actions;
-using Moonfish.Cache;
 using Moonfish.Graphics;
 using Moonfish.Guerilla.Tags;
 using WeifenLuo.WinFormsUI.Docking;

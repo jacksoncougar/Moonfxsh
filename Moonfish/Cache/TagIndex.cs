@@ -1,136 +1,129 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Moonfish.Tags;
-using OpenTK;
 
-namespace Moonfish.Cache
+namespace Moonfish
 {
     public class TagIndex : TagIndexBase, IReadOnlyList<TagDatum>
     {
-        private readonly List<TagClassHeirarchy> _classes;
-        private readonly List<TagDatum> _data;
+        private const uint VirtualBaseAddress = 0x80061000;
+        private readonly List<TagDatum> data;
 
-        public List<TagClassHeirarchy> ClassHeirarchies
-        {
-            get { return _classes; }
-        }
-
-        public TagIndex(Map cache, IReadOnlyList<string> paths)
-            : base(cache)
+        public TagIndex(Map cache, IReadOnlyList<string> paths) : base(cache)
         {
             var binaryReader = new BinaryReader(cache.BaseStream);
-            _classes = new List<TagClassHeirarchy>(new TagClassHeirarchy[classArrayCount]);
-            for (var i = 0; i < classArrayCount; i++)
+            ClassHeirarchies = new List<TagClassHeirarchy>(new TagClassHeirarchy[ClassArrayCount]);
+            for (var i = 0; i < ClassArrayCount; i++)
             {
-                _classes[i] = new TagClassHeirarchy(binaryReader.ReadTagClass(), binaryReader.ReadTagClass(),
+                ClassHeirarchies[i] = new TagClassHeirarchy(binaryReader.ReadTagClass(), binaryReader.ReadTagClass(),
                     binaryReader.ReadTagClass());
             }
 
-            _data = new List<TagDatum>(new TagDatum[datumArrayCount]);
-            for (var i = 0; i < datumArrayCount && i < paths.Count; i++)
+            data = new List<TagDatum>(new TagDatum[DatumArrayCount]);
+            for (var i = 0; i < DatumArrayCount && i < paths.Count; i++)
             {
-                TagDatum data;
+                TagDatum datum;
                 do
                 {
-                    data = new TagDatum
+                    datum = new TagDatum
                     {
-                        Class = binaryReader.ReadTagClass( ),
-                        Identifier = binaryReader.ReadTagIdent( ),
-                        VirtualAddress = binaryReader.ReadInt32( ),
-                        Length = binaryReader.ReadInt32( ),
+                        Class = binaryReader.ReadTagClass(),
+                        Identifier = binaryReader.ReadTagIdent(),
+                        VirtualAddress = binaryReader.ReadInt32(),
+                        Length = binaryReader.ReadInt32()
                     };
-                } while ( TagDatum.IsNull( data ) );
-                data.Path = paths[i];
-                _data[i] = data;
+                } while (TagDatum.IsNull(datum));
+                datum.Path = paths[i];
+                this.data[i] = datum;
             }
         }
 
-		internal void Remove(int i)
-		{
-			_data.RemoveAt(i);
-		}
-
-		public IEnumerable<TagDatum> GetTags( string path )
-        {
-            return _data.Where( u => u.Path.StartsWith( path ) );
-        }
+        public List<TagClassHeirarchy> ClassHeirarchies { get; }
 
         public TagDatum this[TagIdent ident]
         {
-            get { return this[ident.Index % 10000]; }
+            get { return this[ident.Index%10000]; }
         }
 
         public TagDatum this[int index]
         {
-            get { return _data[index]; }
-        }
-
-        public void Update(TagIdent ident, TagDatum item)
-        {
-			_data[ident.Index] = item;
-        }
-
-        public int IndexOf(TagDatum item)
-        {
-            return _data[item.Identifier.Index] == item ? item.Identifier.Index : _data.IndexOf(item);
+            get { return data[index]; }
         }
 
         public int Count
         {
-            get { return _data.Count; }
+            get { return data.Count; }
         }
 
         public IEnumerator<TagDatum> GetEnumerator()
         {
-            return _data.GetEnumerator();
+            return data.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _data.GetEnumerator();
+            return data.GetEnumerator();
+        }
+
+        internal void Remove(int i)
+        {
+            data.RemoveAt(i);
+        }
+
+        public IEnumerable<TagDatum> GetTags(string path)
+        {
+            return data.Where(u => u.Path.StartsWith(path));
+        }
+
+        public void Update(TagIdent ident, TagDatum item)
+        {
+            data[ident.Index] = item;
+        }
+
+        public int IndexOf(TagDatum item)
+        {
+            return data[item.Identifier.Index] == item
+                ? item.Identifier.Index
+                : data.IndexOf(item);
         }
 
         public IEnumerable<TagDatum> Where(TagClass tagClass)
         {
-            return from item in _data
-                   where item.Class == tagClass
-                   select item;
+            return from item in data where item.Class == tagClass select item;
         }
-
-        public const uint VirtualBaseAddress = 0x80061000;
 
         public void SerializeTo(Stream outputStream)
         {
             // Calculate size of arrays
-            var sizeOfTagClassHeirarchyArray = _classes.Count * TagClassHeirarchy.SizeInBytes;
+            var sizeOfTagClassHeirarchyArray = ClassHeirarchies.Count*
+                                               TagClassHeirarchy.SizeInBytes;
             const int sizeOfTagDatum = 16;
-            var sizeOfTagDatumArray = _data.Count * sizeOfTagDatum;
+            var sizeOfTagDatumArray = data.Count*sizeOfTagDatum;
 
             // Create buffer and writer
             var buffer = new byte[GetSize() + HeaderSize];
-            var stream =
-                new VirtualStream(buffer, VirtualBaseAddress);
+            var stream = new VirtualStream(buffer,
+                unchecked ((int) VirtualBaseAddress));
             var binaryWriter = new BinaryWriter(stream);
 
             // move past the header
             stream.Seek(HeaderSize, SeekOrigin.Begin);
 
             // write tag-class array
-            classArrayAddress = (int) stream.Position;
-            classArrayCount = _classes.Count;
-            foreach (var tagClassHeirarchy in _classes)
+            ClassArrayAddress = (int) stream.Position;
+            ClassArrayCount = ClassHeirarchies.Count;
+            foreach (var tagClassHeirarchy in ClassHeirarchies)
             {
                 WriteTagHeirarchy(binaryWriter, tagClassHeirarchy);
             }
 
             // write tag-data array
-            datumArrayAddress = (int) stream.Position;
-            datumArrayCount = _data.Count;
-            foreach (var tagDatum in _data)
+            DatumArrayAddress = (int) stream.Position;
+            DatumArrayCount = data.Count;
+            foreach (var tagDatum in data)
             {
                 WriteTagDatum(binaryWriter, tagDatum);
             }
@@ -146,19 +139,19 @@ namespace Moonfish.Cache
 
         public byte[] SerializePaths()
         {
-            var length = _data.Sum(x => Encoding.UTF8.GetByteCount(x.Path) + 1);
+            var length = data.Sum(x => Encoding.UTF8.GetByteCount(x.Path) + 1);
             var stream = new MemoryStream(new byte[length]);
             var binaryWriter = new BinaryWriter(stream);
-            _data.ForEach(x =>
+            data.ForEach(x =>
             {
                 binaryWriter.Write(Encoding.UTF8.GetBytes(x.Path));
                 binaryWriter.Write((byte) 0);
-            }
-                );
+            });
             return stream.GetBuffer();
         }
 
-        private static void WriteTagDatum(BinaryWriter binaryWriter, TagDatum tagDatum)
+        private static void WriteTagDatum(BinaryWriter binaryWriter,
+            TagDatum tagDatum)
         {
             binaryWriter.Write(tagDatum.Class);
             binaryWriter.Write(tagDatum.Identifier);
@@ -166,16 +159,18 @@ namespace Moonfish.Cache
             binaryWriter.Write(tagDatum.Length);
         }
 
-        private static void WriteTagHeirarchy(BinaryWriter binaryWriter, TagClassHeirarchy tagClassHeirarchy)
+        private static void WriteTagHeirarchy(BinaryWriter binaryWriter,
+            TagClassHeirarchy tagClassHeirarchy)
         {
             binaryWriter.Write(tagClassHeirarchy.Class);
             binaryWriter.Write(tagClassHeirarchy.Parent);
             binaryWriter.Write(tagClassHeirarchy.Root);
         }
 
-        public TagDatum Add(TagClass tagClass, string newPath, int length, int virtualAddress)
+        public TagDatum Add(TagClass tagClass, string newPath, int length,
+            int virtualAddress)
         {
-            var last = _data.Last();
+            var last = data.Last();
             var newDatum = new TagDatum
             {
                 Class = tagClass,
@@ -184,19 +179,18 @@ namespace Moonfish.Cache
                 Path = newPath,
                 VirtualAddress = virtualAddress
             };
-            _data.Insert(IndexOf(last), newDatum);
+            data.Insert(IndexOf(last), newDatum);
             last.Identifier++;
             Update(last.Identifier, last);
             return newDatum;
         }
 
-        public int GetSize( )
+        public int GetSize()
         {
             return
                 Padding.Align(
-                    _classes.Count * TagClassHeirarchy.SizeInBytes
-                    + _data.Count * TagDatum.SizeInBytes,
-                    512 );
+                    ClassHeirarchies.Count*TagClassHeirarchy.SizeInBytes +
+                    data.Count*TagDatum.SizeInBytes, 512);
         }
     }
 }

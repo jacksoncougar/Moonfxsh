@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 
-namespace Moonfish.Cache
+namespace Moonfish
 {
     internal class CacheWriter : BinaryWriter
     {
-        public Map cacheStream;
+        public Map CacheStream;
 
         public CacheWriter(Map stream)
         {
-            cacheStream = stream;
+            CacheStream = stream;
         }
     }
 }

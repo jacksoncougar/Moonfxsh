@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using Fasterflect;
-using Moonfish.Cache;
 using Moonfish.Graphics.RenderingEngine;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
@@ -26,15 +25,10 @@ namespace Moonfish.Graphics
         /// </summary>
         private readonly DrawManager _drawManager;
 
-        private readonly MaterialManager _materialManager;
-
-        private readonly TagCache _moonfishCache = new TagCache( );
-
         private InstanceDataBuffer InstancesBuffer { get; } = new InstanceDataBuffer( );
 
         public ScenarioManager( )
         {
-            _materialManager = new MaterialManager( );
             _drawManager = new DrawManager( );
             _bucketManager = new BucketManager( );
         }

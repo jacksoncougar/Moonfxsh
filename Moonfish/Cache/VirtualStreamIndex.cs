@@ -1,9 +1,8 @@
-namespace Moonfish.Cache
+namespace Moonfish
 {
     /// <summary>
-    /// 
     /// </summary>
-    public enum EVirtualStream
+    public enum VirtualStreamIndex
     {
         VirtualStream0 = 0,
         VirtualStream1,
@@ -20,6 +19,6 @@ namespace Moonfish.Cache
         VirtualStream12,
         VirtualStream13,
         VirtualStream14,
-        VirtualStream15,
+        VirtualStream15
     }
 }

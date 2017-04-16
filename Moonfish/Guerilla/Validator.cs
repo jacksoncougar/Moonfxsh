@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Moonfish.Cache;
 using Moonfish.Tags;
 
 
@@ -36,7 +35,7 @@ namespace Moonfish.Guerilla
 
             var binaryReader = new BinaryReader(dataStream);
 
-			var virtualTagMemory = new VirtualStreamSection(datum.VirtualAddress, datum.Length, 0, dataStream);
+			var virtualTagMemory = new VirtualStreamSectionDescription(datum.VirtualAddress, datum.Length, 0);
 
             _isValidDelegate = virtualTagMemory.Contains;
             _isPointerOwnedByTagDelegate = virtualTagMemory.Contains;

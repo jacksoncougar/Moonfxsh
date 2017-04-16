@@ -5,12 +5,12 @@ namespace Moonfish.Guerilla
 {
     internal class VirtualMemoryStream : MemoryStream
     {
-		private VirtualStreamSection map;
+		private VirtualStreamSectionDescription map;
 
         public VirtualMemoryStream(string path, int virtualAddress)
             : base(File.ReadAllBytes(path))
         {
-			map = new VirtualStreamSection(virtualAddress, (int)Length, virtualAddress, this);
+			map = new VirtualStreamSectionDescription(virtualAddress, (int)Length, virtualAddress);
         }
 
         public sealed override long Length => base.Length;

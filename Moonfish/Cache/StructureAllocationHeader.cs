@@ -1,27 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using Moonfish.Tags;
 
-namespace Moonfish.Cache
+namespace Moonfish
 {
     public struct StructureAllocationHeader
     {
         public int BlockLength;
-        public int StructureBSPAddress;
+        public int StructureBspAddress;
         public int LightmapAddress;
         public TagClass FourCC;
         public const int SizeInBytes = 16;
 
         public void SerializeTo(Stream stream)
         {
-            using (var binaryWriter = new BinaryWriter(stream, Encoding.Default, true))
+            using (
+                var binaryWriter = new BinaryWriter(stream, Encoding.Default,
+                    true))
             {
                 binaryWriter.Write(BlockLength);
-                binaryWriter.Write(StructureBSPAddress);
+                binaryWriter.Write(StructureBspAddress);
                 binaryWriter.Write(LightmapAddress);
                 binaryWriter.Write(FourCC);
             }

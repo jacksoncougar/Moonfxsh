@@ -10,7 +10,6 @@ using Moonfish.Tags;
 using System.Linq.Expressions;
 using System.Reflection;
 using Fasterflect;
-using Moonfish.Cache;
 
 namespace Moonfish.Guerilla
 {

@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Moonfish.Cache;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 using OpenTK;
@@ -127,13 +126,12 @@ namespace Moonfish.Graphics
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBox1.SelectedIndex < 0) return;
-            var selectedShaderTag = (listBox1.SelectedItem as TagInfo);
-            LoadShader(selectedShaderTag);
+            LoadShader();
         }
 
         private MaterialShader material;
 
-        private void LoadShader(TagInfo selectedShaderTag)
+        private void LoadShader()
         {
             //var shader = Map.Deserialize(selectedShaderTag.tagDatum.Identifier) as ShaderBlock;
 

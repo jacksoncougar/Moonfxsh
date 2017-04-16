@@ -16,8 +16,6 @@ namespace Moonfish.Graphics
         }
 
 
-
-        public TagGlobalKey ShaderKey { get; set; }
         public InstanceData Data { get; }
         public GlobalGeometryPartBlockNew Part { get; }
     }

@@ -143,7 +143,6 @@
     <Compile Include="Collision\DebugDrawer.cs" />
     <Compile Include="Collision\Shapes.cs" />
     <Compile Include="Collision\TriangleRayIntersection.cs" />
-    <Compile Include="Debug\Memory.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Debug\BitArray.cs" />
     <Compile Include="Forms\DataMapper.cs">
@@ -271,8 +270,6 @@
       <DependentUpon>TagDatumView.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Blam!\TextureState.cs" />
-    <Compile Include="Globals.cs" />
-    <Compile Include="GlobalStrings.cs" />
     <Compile Include="Graphics\RenderingEngine\Bucket.cs" />
     <Compile Include="Graphics\RenderingEngine\BucketManager.cs" />
     <Compile Include="Graphics\Input\ClosestNotMeConvexResultCallback.cs" />
@@ -1312,8 +1309,6 @@
     <Compile Include="Guerilla\GuerillaAttributes.cs" />
     <Compile Include="Guerilla\GuerillaBase.cs" />
     <Compile Include="Guerilla\GuerillaExtensions.cs" />
-    <Compile Include="Guerilla\GuerillaToCs.cs" />
-    <Compile Include="Guerilla\GuerillaToEnt.cs" />
     <Compile Include="Guerilla\Reflection\EnumInfo.cs" />
     <Compile Include="Guerilla\Reflection\FieldInfo.cs" />
     <Compile Include="Guerilla\Reflection\GuerillaName.cs" />
@@ -1373,11 +1368,6 @@
     <Compile Include="Guerilla\Tags\SoundPermutationChunkBlock.cs" />
     <Compile Include="Guerilla\Tags\StructureBspClusterBlock.cs" />
     <Compile Include="Guerilla\Tags\StructureLightmapPaletteColorBlock.cs" />
-    <Compile Include="Solution\DynamicContent.cs" />
-    <Compile Include="Solution\Index.cs" />
-    <Compile Include="Solution\Resource.cs" />
-    <Compile Include="Solution\Solution.cs" />
-    <Compile Include="Solution\StaticContent.cs" />
     <Compile Include="ValueTypes\BinaryWriterExtensions.cs" />
     <Compile Include="ValueTypes\LayoutAttribute.cs" />
     <Compile Include="ValueTypes\TagBlockFieldAttribute.cs" />
@@ -1442,13 +1432,11 @@
     <Compile Include="ValueTypes\Range.cs" />
     <Compile Include="Cache\HaloVersion.cs" />
     <Compile Include="ValueTypes\VertexBuffer.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Cache\AddressModifier.cs" />
     <Compile Include="Cache\CacheStreamWrapper.cs" />
     <Compile Include="Cache\Cache.cs" />
     <Compile Include="Cache\Manifest.cs" />
     <Compile Include="Cache\StringManifest.cs" />
-    <Compile Include="Cache\ObjectManifest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\CacheStream.StringsInfo.cs" />
@@ -1605,7 +1593,6 @@
     <Folder Include="bin\Debug\" />
     <Folder Include="bin\Release\" />
     <Folder Include="bin\x86\Release\" />
-    <Folder Include="Compiler\" />
     <Folder Include="obj\Debug\TempPE\" />
   </ItemGroup>
   <ItemGroup>

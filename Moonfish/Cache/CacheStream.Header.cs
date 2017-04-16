@@ -9,6 +9,8 @@ namespace Moonfish.Cache
     {
         public class CacheHeader
         {
+            public const int HeaderSize = 2048;
+
             public readonly TagClass HeadFourCC;
             public int EngineVersion;
             public int FileSize;

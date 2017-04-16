@@ -12,11 +12,9 @@ namespace Moonfish.Graphics
     {
         public BillboardObject( TagIdent bitmap, ICache destination )
         {
-            var key = CacheKey.Create( destination );
-            // dear god.
             Model = ( TagReference ) new ModelBlock( );
-            var modelBlock = ( ModelBlock ) Model.Get(key);
-            var block = ( BitmapBlock ) bitmap.Get(key);
+            var modelBlock = ( ModelBlock ) Model.Get();
+            var block = ( BitmapBlock ) bitmap.Get();
 
             var w = block.Bitmaps[0].Width * 0.5f;
             var h = block.Bitmaps[ 0 ].Height * 0.5f;

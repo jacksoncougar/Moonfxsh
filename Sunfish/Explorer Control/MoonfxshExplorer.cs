@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Moonfish.Tags;
 using WeifenLuo.WinFormsUI.Docking; 
 using Moonfish;
 
@@ -169,41 +168,6 @@ namespace Sunfish.Forms
         }
 
         /// <summary>
-        ///     Lists search results returned by <paramref name="searchTerm" />
-        /// </summary>
-        /// <param name="searchTerm">The path fragment or tag-class to search for</param>
-        /// <remarks>
-        ///     Class searching takes presedence.
-        ///     Searching for a class can be done by passing the string representation of that class: i.e "stem", "bitm"
-        ///     Searching for a path can be done by passing the string that the path should contain
-        /// </remarks>
-        private void Search( string searchTerm )
-        {
-            if ( searchTerm == string.Empty ) return;
-            scenarioView1.SelectedNode = null;
-            //navigationBar1.AddressBox.Text = "Search Results in Cache";
-
-            listView1.Items.Clear();
-
-            IEnumerable<TagDatum> references;
-            var isClass = Halo2.Classes.Any( u => u == searchTerm );
-            if ( isClass )
-            {
-                var searchClass = new TagClass( searchTerm );
-                references = scenarioView1.References.Where( u => u.Class == searchClass );
-            }
-            else
-            {
-                references = scenarioView1.References.Where( u => u.Identifier.GetPath( u.CacheKey ).Contains( searchTerm ) );
-            }
-            foreach ( var reference in references )
-            {
-                // This item is a tag
-                listView1.Items.Add( new TagReferenceListViewItem( reference ) );
-            }
-        }
-
-        /// <summary>
         ///     Configures <see cref="listView1" /> to display details of items
         /// </summary>
         private void SetupDetailsView( )
@@ -240,9 +204,6 @@ namespace Sunfish.Forms
             public TagReferenceListViewItem( TagDatum datum, int imageIndex = 0 )
             {
                 Reference = datum;
-                Name = Path.ChangeExtension(datum.Identifier.GetPath(datum.CacheKey), datum.Class.ToString());
-                Text = Path.ChangeExtension( Path.GetFileName( datum.Identifier.GetPath( datum.CacheKey) ),
-                    datum.Class.ToString( ) );
                 ImageIndex = imageIndex;
                 SubItems.AddRange( new[]
                 {

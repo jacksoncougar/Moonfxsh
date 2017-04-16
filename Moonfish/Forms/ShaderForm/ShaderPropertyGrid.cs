@@ -91,7 +91,7 @@ namespace Moonfish.Forms.ShaderForm
                             source = sourceIndex,
                             bytes = bytes,
                             value = new Vector4( vertexConstant.Vector3, vertexConstant.W ),
-                            stringId = Halo2.Strings[new StringIdent(BitConverter.ToInt16( bytes, 0 ), 0)]
+                            //stringId = Halo2.Strings[new StringIdent(BitConverter.ToInt16( bytes, 0 ), 0)]
                         };
                         vertexConstantInfos.Add( info );
                     }

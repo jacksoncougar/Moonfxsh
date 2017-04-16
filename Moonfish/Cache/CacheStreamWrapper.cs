@@ -17,12 +17,12 @@ namespace Moonfish.Cache
 		/// <summary>
 		/// The virtual addressed sections within the stream.
 		/// </summary>
-		protected List<VirtualStreamSection> memorySections = new List<VirtualStreamSection>();
+		protected List<VirtualStreamSection> MemorySections = new List<VirtualStreamSection>();
 
 		/// <summary>
 		/// The active sections within the stream.
 		/// </summary>
-		protected HashSet<int> activeSections = new HashSet<int>();
+		protected HashSet<EVirtualStream> ActiveSections = new HashSet<EVirtualStream>();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Moonfish.Cache.CacheStreamWrapper`1"/> class to encapsulate the given stream
@@ -44,7 +44,7 @@ namespace Moonfish.Cache
 		/// When a section is active is will be checked during calls that change the 
 		/// position. If the section contains the value the streams position will be changed.
 		/// </remarks>
-		public int CreateVirtualSection(int address, int length, int start, bool active)
+		public EVirtualStream CreateVirtualSection(int address, int length, int start, bool active)
 		{
 			VirtualStreamSection section;
 
@@ -60,7 +60,7 @@ namespace Moonfish.Cache
 		/// <param name="length">The length of the virtual section.</param>
 		/// <param name="magic">The AddressModifier of the virtual section</param>
 		/// <param name="active">If set to <c>true</c> the created virtual section will be active.</param>
-		public int CreateVirtualSection(int address, int length, AddressModifier magic, bool active)
+		public EVirtualStream CreateVirtualSection(int address, int length, AddressModifier magic, bool active)
 		{
 			VirtualStreamSection section;
 
@@ -69,23 +69,23 @@ namespace Moonfish.Cache
 			return AddVirtualSection(section, active);
 		}
 
-		private int AddVirtualSection(VirtualStreamSection section, bool active)
+		private EVirtualStream AddVirtualSection(VirtualStreamSection section, bool active)
 		{
-			int sub;
+			EVirtualStream sub;
 			
-			memorySections.Add(section);
-			sub = memorySections.IndexOf(section);
+			MemorySections.Add(section);
+			sub = (EVirtualStream) MemorySections.IndexOf(section);
 
 			if (active)
 			{
-				activeSections.Add(sub);
+				ActiveSections.Add(sub);
 			}
 
 			return sub;
 		}
 
-		public void EnableVirtualSection(int index) => activeSections.Add(index);
-		public void DisableVirtualSection(int index) => activeSections.Remove(index);
+		public void EnableVirtualSection(EVirtualStream ident) => ActiveSections.Add(ident);
+		public void DisableVirtualSection(EVirtualStream ident) => ActiveSections.Remove(ident);
 
 		/// <summary>
 		/// Gets or sets the position of the stream
@@ -97,11 +97,11 @@ namespace Moonfish.Cache
 			{
 				var position = BaseStream.Position;
 
-				foreach (var sub in activeSections)
+				foreach (var sub in ActiveSections)
 				{
-					if (memorySections[sub].Contains(position, false))
+					if (MemorySections[(int)sub].Contains(position, false))
 					{
-						position = memorySections[sub].ConvertPosition(position, false, true);
+						position = MemorySections[(int)sub].ConvertPosition(position, false, true);
 						break;
 					}
 				}
@@ -127,11 +127,11 @@ namespace Moonfish.Cache
 			// if this is an absolute position and not contained in the stream it could be an address.
 			if (origin == SeekOrigin.Begin && !(0 <= offset && offset < Length))
 			{
-				foreach (var sub in activeSections)
+				foreach (var sub in ActiveSections)
 				{
-					if (memorySections[sub].Contains(offset, true))
+					if (MemorySections[(int)sub].Contains(offset, true))
 					{
-						offset = memorySections[sub].ConvertPosition(offset, true, false);
+						offset = MemorySections[(int)sub].ConvertPosition(offset, true, false);
 						break;
 					}
 				}

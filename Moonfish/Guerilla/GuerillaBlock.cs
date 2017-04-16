@@ -162,7 +162,7 @@ namespace Moonfish.Guerilla
 
         public virtual void Read(BinaryReader binaryReader)
         {
-            Solution.CreateLink(this, binaryReader.BaseStream as ICache);
+           // Solution.CreateLink(this, binaryReader.BaseStream as ICache);
             var pointers = ReadFields(binaryReader);
             ReadInstances(binaryReader, pointers);
         }

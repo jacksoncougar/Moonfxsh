@@ -8,7 +8,6 @@ using Moonfish.Cache;
 using Moonfish.Graphics.RenderingEngine;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
-using OpenTK.Graphics.OpenGL4;
 
 namespace Moonfish.Graphics
 {
@@ -52,14 +51,13 @@ namespace Moonfish.Graphics
         /// </summary>
         /// <param name="eye">The viewer camera</param>
         /// <param name="programManager"></param>
-        /// <param name="scenario"></param>
-        public void DrawScenario( Camera eye, ProgramManager programManager, ScenarioBlock scenario )
+        public void DrawScenario( Camera eye, ProgramManager programManager )
         {
             var program = programManager.DebugShader;
             program.Assign( );
 
             _drawManager.Clear( );
-            TraverseScenario( eye, scenario );
+            TraverseScenario( eye );
             _drawManager.Sort( eye );
 
             CurrentBucketVao = 0;
@@ -88,11 +86,10 @@ namespace Moonfish.Graphics
         private void Dispatch( Camera eye, ObjectBlock objectBlock,
             IH2ObjectInstance instance )
         {
-            CacheKey cacheKey;
-            if ( !objectBlock.TryGetCacheKey( out cacheKey ) ) return;
+            throw new NotImplementedException();
 
-            var modelBlock = objectBlock.Model.Get<ModelBlock>( cacheKey );
-            var renderBlock = modelBlock?.RenderModel.Get<RenderModelBlock>( cacheKey );
+            var modelBlock = objectBlock.Model.Get<ModelBlock>(  );
+            var renderBlock = modelBlock?.RenderModel.Get<RenderModelBlock>( );
 
             if ( renderBlock == null ) return;
 
@@ -156,7 +153,7 @@ namespace Moonfish.Graphics
 
                     //  Create an instance for this part and assign a shader for it
                     _drawManager.CreateInstance( part, instance, supportsPermutation );
-                    _drawManager.AssignShader( part, cacheKey, materialBlock.Shader.Ident );
+                    _drawManager.AssignShader( part, materialBlock.Shader.Ident );
                 }
             }
         }
@@ -166,7 +163,7 @@ namespace Moonfish.Graphics
         /// </summary>
         /// <param name="eye">Viewer camera used to select detail level</param>
         /// <param name="objectBlock">Object to draw</param>
-        private void Dispatch( Camera eye, ScenarioStructureBspBlock scenarioStructure, CacheKey cacheKey )
+        private void Dispatch( Camera eye, ScenarioStructureBspBlock scenarioStructure )
         {
             if (scenarioStructure == null ) return;
 
@@ -185,117 +182,10 @@ namespace Moonfish.Graphics
 
                     //  Create an instance for this part and assign a shader for it
                     _drawManager.CreateInstance( part, new ScenarioInstanceBlock( ), false );
-                    _drawManager.AssignShader(part, cacheKey, materialBlock.Shader.Ident);
+                    _drawManager.AssignShader(part, materialBlock.Shader.Ident);
                 }
             }
 
-        }
-
-        private void DispatchDeletion( ObjectBlock objectBlock, dynamic instance )
-        {
-            if ( objectBlock == null ) return;
-            CacheKey cacheKey;
-            if ( !objectBlock.TryGetCacheKey( out cacheKey ) ) return;
-
-            var modelBlock = objectBlock?.Model.Get<ModelBlock>( cacheKey );
-            var renderBlock = modelBlock?.RenderModel.Get<RenderModelBlock>( cacheKey );
-
-            if ( renderBlock == null ) return;
-
-            var sections = renderBlock.Sections;
-
-            foreach ( var renderModelSection in sections )
-            {
-                foreach ( var part in renderModelSection.SectionData.SelectMany( u => u.Section.Parts ) )
-                {
-                    //_drawManager.RemoveShader( part );
-                    _drawManager.RemoveInstance( part, instance );
-                }
-            }
-        }
-
-        private Dictionary<PrimitiveType, IndirectDrawCommandBuffer> PrimitiveIndirectDrawBuffer { get; }=new Dictionary<PrimitiveType, IndirectDrawCommandBuffer>(); 
-
-        /// <summary>
-        ///     Draws each patch with an individual call.
-        /// </summary>
-        private void DrawPatchElements( IEnumerable<GlobalGeometryPartBlockNew> patches, TagGlobalKey shaderKey )
-        {
-            //var patchDatas = patches as GlobalGeometryPartBlockNew[] ?? patches.ToArray( );
-            //var patchData = patchDatas.FirstOrDefault( );
-            //if ( patchData == null ) return;
-            //MaterialShader material = null;
-            //if ( shaderKey.TagKey != TagIdent.NullIdentifier )
-            //{
-            //    material = _materialManager.GetMaterial( shaderKey );
-            //}
-
-            //Bucket bucket = null;
-            //var cmdBuffer = new byte[DrawIndirectCmd.CmdSize * patchDatas.Length];
-            //using (var binaryWriter = new BinaryWriter(new MemoryStream(cmdBuffer)))
-            //    foreach ( var item in patchDatas )
-            //    {
-            //        if (
-            //            !item.GlobalGeometryPartNewFlags.HasFlag( GlobalGeometryPartBlockNew.Flags.OverrideTriangleList ) )
-            //        {
-            //        }
-            //        int vertexBaseIndex;
-            //        int indexBaseOffset;
-            //        var instanceInfo = InstancesBuffer[ item ];
-            //        bucket = _bucketManager.GetBucketResource( item, out indexBaseOffset, out vertexBaseIndex );
-            //        DrawIndirectCmd indirectCmd = new DrawIndirectCmd( item.StripLength, instanceInfo.Count,
-            //           indexBaseOffset/2 + item.StripStartIndex, vertexBaseIndex, instanceInfo.BaseInstance );
-            //        indirectCmd.Write( binaryWriter );
-            //    }
-            //if ( bucket == null ) return;
-
-            //using ( material == null ? null : _materialManager.Bind( material ) )
-            //{
-            //    using (CurrentBucketVao == bucket.VertexArrayObject ? null : bucket.Bind())
-            //    using (CurrentBucketVao == bucket.VertexArrayObject ? null : InstancesBuffer.Bind())
-            //        GL.MultiDrawElementsIndirect( All.Triangles, All.UnsignedShort, IntPtr.Zero, patchDatas.Length,
-            //        0 );
-                //foreach ( var item in patchDatas )
-                //{
-                //    int vertexBaseIndex;
-                //    int indexBaseOffset;
-                //    var bucket = _bucketManager.GetBucketResource( item, out indexBaseOffset, out vertexBaseIndex );
-                //    using ( CurrentBucketVao == bucket.VertexArrayObject ? null : bucket.Bind( ) )
-                //    using ( CurrentBucketVao == bucket.VertexArrayObject ? null : InstancesBuffer.Bind( ) )
-                //    {
-                //        var primitiveType =
-                //            item.GlobalGeometryPartNewFlags.HasFlag(
-                //                GlobalGeometryPartBlockNew.Flags.OverrideTriangleList )
-                //                ? PrimitiveType.Triangles
-                //                : PrimitiveType.TriangleStrip;
-                //        CurrentBucketVao = bucket.VertexArrayObject;
-                //        GL.DrawElementsInstancedBaseVertexBaseInstance(
-                //            primitiveType, item.StripLength, DrawElementsType.UnsignedShort,
-                //            ( IntPtr ) ( indexBaseOffset + item.StripStartIndex * 2 ),
-                //            InstancesBuffer[ item ].Count, vertexBaseIndex, InstancesBuffer[ item ].BaseInstance );
-                //    }
-                //}}
-            //}
-        }
-
-        private void ForceItem( Camera eye, ObjectBlock @object, ScenarioInstanceBlock instance )
-        {
-            DrawManager.ClearVisible( );
-            using ( _bucketManager.Begin( ) )
-            {
-                CacheKey key;
-                if ( !@object.TryGetCacheKey( out key ) ) return;
-
-                var modelBlock = @object?.Model.Get<ModelBlock>( key );
-                var renderModel = modelBlock?.RenderModel.Get<RenderModelBlock>( key );
-
-                if ( renderModel == null ) return;
-
-                if ( eye.CanSee( instance, @object ) )
-                {
-                    Dispatch( eye, @object, instance );
-                }
-            }
         }
 
         /// <summary>
@@ -343,16 +233,16 @@ namespace Moonfish.Graphics
         /// <summary>
         ///     Loops through each instance and dispatches them for processing
         /// </summary>
-        private void ProcessPalette( Camera eye, CacheKey key, IEnumerable<IH2ObjectInstance> instanceCollection,
+        private void ProcessPalette( Camera eye, IEnumerable<IH2ObjectInstance> instanceCollection,
             IReadOnlyList<IH2ObjectPalette> paletteCollection )
         {
             foreach ( var instance in instanceCollection )
             {
                 var paletteIndex = instance.PaletteIndex;
 
-                var objectBlock = paletteCollection[ paletteIndex ].ObjectReference.Get<ObjectBlock>( key );
-                var modelBlock = objectBlock?.Model.Get<ModelBlock>( key );
-                var renderModel = modelBlock?.RenderModel.Get<RenderModelBlock>( key );
+                var objectBlock = paletteCollection[ paletteIndex ].ObjectReference.Get<ObjectBlock>();
+                var modelBlock = objectBlock?.Model.Get<ModelBlock>();
+                var renderModel = modelBlock?.RenderModel.Get<RenderModelBlock>();
 
                 if ( renderModel == null ) continue;
 
@@ -427,29 +317,28 @@ namespace Moonfish.Graphics
         /// <summary>
         ///     Walks the scenario tree and render all renderable parts
         /// </summary>
-        private void TraverseScenario( Camera eyeCamera, ScenarioBlock scenarioBlock )
+        private void TraverseScenario( Camera eyeCamera )
         {
-            if ( scenarioBlock == null ) return;
-            CacheKey cachekey;
-            if ( !scenarioBlock.TryGetCacheKey( out cachekey ) ) return;
-            DrawManager.ClearVisible( );
-            using ( _bucketManager.Begin( ) )
-            {
-                ProcessPalette(eyeCamera, cachekey, scenarioBlock.Scenery, scenarioBlock.SceneryPalette);
-                ProcessPalette(eyeCamera, cachekey, scenarioBlock.Crates, scenarioBlock.CratesPalette);
-                ProcessPalette(eyeCamera, cachekey, scenarioBlock.Vehicles, scenarioBlock.VehiclePalette);
-                ProcessPalette(eyeCamera, cachekey, scenarioBlock.Weapons, scenarioBlock.WeaponPalette);
+            throw new NotImplementedException();
+            //if ( scenarioBlock == null ) return;
+            //DrawManager.ClearVisible( );
+            //using ( _bucketManager.Begin( ) )
+            //{
+            //    ProcessPalette(eyeCamera, scenarioBlock.Scenery, scenarioBlock.SceneryPalette);
+            //    ProcessPalette(eyeCamera, scenarioBlock.Crates, scenarioBlock.CratesPalette);
+            //    ProcessPalette(eyeCamera, scenarioBlock.Vehicles, scenarioBlock.VehiclePalette);
+            //    ProcessPalette(eyeCamera, scenarioBlock.Weapons, scenarioBlock.WeaponPalette);
 
-                ProcessStructure( eyeCamera, cachekey, scenarioBlock.StructureBSPs[ 0 ] );
-            }
+            //    ProcessStructure( eyeCamera, cachekey, scenarioBlock.StructureBSPs[ 0 ] );
+            //}
         }
 
-        private void ProcessStructure( Camera eyeCamera, CacheKey cachekey, ScenarioStructureBspReferenceBlock structureBsP )
+        private void ProcessStructure( Camera eyeCamera, ScenarioStructureBspReferenceBlock structureBsP )
         {
-            var levelData = (ScenarioStructureBspBlock)structureBsP.StructureBSP.Get( cachekey );
+            var levelData = (ScenarioStructureBspBlock)structureBsP.StructureBSP.Get();
             if ( levelData == null ) return;
 
-            Dispatch( eyeCamera, levelData, cachekey );
+            Dispatch( eyeCamera, levelData );
 
         }
     };

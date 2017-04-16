@@ -3,24 +3,23 @@ namespace Moonfish.Cache
     /// <summary>
     /// 
     /// </summary>
-    public enum VirtualMemorySectionID
+    public enum EVirtualStream
     {
-		ObjectCache = 0,
-        VirtualStructureCache0 = 1,
-        VirtualStructureCache1,
-        VirtualStructureCache2,
-        VirtualStructureCache3,
-        VirtualStructureCache4,
-        VirtualStructureCache5,
-        VirtualStructureCache6,
-        VirtualStructureCache7,
-        VirtualStructureCache8,
-        VirtualStructureCache9,
-        VirtualStructureCache10,
-        VirtualStructureCache11,
-        VirtualStructureCache12,
-        VirtualStructureCache13,
-        VirtualStructureCache14,
-        VirtualStructureCache15,
+        VirtualStream0 = 0,
+        VirtualStream1,
+        VirtualStream2,
+        VirtualStream3,
+        VirtualStream4,
+        VirtualStream5,
+        VirtualStream6,
+        VirtualStream7,
+        VirtualStream8,
+        VirtualStream9,
+        VirtualStream10,
+        VirtualStream11,
+        VirtualStream12,
+        VirtualStream13,
+        VirtualStream14,
+        VirtualStream15,
     }
 }

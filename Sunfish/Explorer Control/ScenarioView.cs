@@ -19,15 +19,14 @@ namespace Sunfish.Forms
 
         public readonly List<TagDatum>  References = new List<TagDatum>();
 
-        private static readonly Comparer<TagDatum> PathComparer = Comparer<TagDatum>.Create(
-            ( u, v ) =>
-                string.Compare( u.Identifier.GetPath( u.CacheKey ), v.Identifier.GetPath( v.CacheKey ), StringComparison.Ordinal ) );
+        private static readonly Comparer<TagDatum> PathComparer =
+            Comparer<TagDatum>.Create((u, v) => 0);
 
         private static readonly Comparer<TagDatum> ClassComparer = Comparer<TagDatum>.Create(
             ( u, v ) =>
             {
                 var result = string.Compare( u.Class.ToString( ), v.Class.ToString( ), StringComparison.Ordinal );
-                return result == 0 ? PathComparer.Compare( u, v ) : result;
+                return result == 0 ? PathComparer1.Compare( u, v ) : result;
             } );
 
         private DisplayMode _displayMode;
@@ -45,6 +44,14 @@ namespace Sunfish.Forms
                 if ( _displayMode == value ) return;
                 _displayMode = value;
                 OnDisplayModeChanged( );
+            }
+        }
+
+        public static Comparer<TagDatum> PathComparer1
+        {
+            get
+            {
+                return PathComparer;
             }
         }
 

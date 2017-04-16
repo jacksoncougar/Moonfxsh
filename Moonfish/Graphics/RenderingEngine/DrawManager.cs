@@ -15,22 +15,16 @@ namespace Moonfish.Graphics
     internal class DrawManager
     {
         private static readonly Comparer<float> DistanceComparer = Comparer<float>.Create( ( a, b ) => a <= b ? 1 : -1 );
-
-        private readonly Dictionary<GlobalGeometryPartBlockNew, TagGlobalKey> _shaderDictionary =
-            new Dictionary<GlobalGeometryPartBlockNew, TagGlobalKey>( );
+        
 
         public InstanceManager InstanceManager { get; } = new InstanceManager( );
-
-        private Dictionary<TagGlobalKey, List<GlobalGeometryPartBlockNew>> OpaquePatches { get; } =
-            new Dictionary<TagGlobalKey, List<GlobalGeometryPartBlockNew>>( );
+       
 
         private List<PatchData> TransparentPatches { get; set; } = new List<PatchData>( );
 
-        public void AssignShader( GlobalGeometryPartBlockNew part, CacheKey cacheKey, TagIdent shaderIdent )
+        public void AssignShader( GlobalGeometryPartBlockNew part, TagIdent shaderIdent )
         {
-            var glocalKey = new TagGlobalKey( cacheKey, shaderIdent );
-            //  Does this work now?
-            _shaderDictionary[ part ] = glocalKey;
+            throw new NotImplementedException();
         }
 
         public void Clear( )
@@ -58,18 +52,6 @@ namespace Moonfish.Graphics
             InstanceManager.CreateInstance( part, instance, supportsPermutations );
         }
 
-        public IEnumerable<GlobalGeometryPartBlockNew> GetOpaqueParts( TagGlobalKey shaderKey )
-        {
-            return OpaquePatches.ContainsKey( shaderKey )
-                ? OpaquePatches[ shaderKey ]
-                : Enumerable.Empty<GlobalGeometryPartBlockNew>( );
-        }
-
-        public IEnumerable<TagGlobalKey> GetShaders( )
-        {
-            return _shaderDictionary.Values;
-        }
-
         /// <summary>
         ///     Returns all Transparent type parts
         /// </summary>
@@ -87,24 +69,6 @@ namespace Moonfish.Graphics
 
         public void Sort( Camera eye )
         {
-            OpaquePatches.Clear( );
-            TransparentPatches.Clear( );
-            var opaqueParts = InstanceManager.Parts.Where(
-                e => e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueShadowCasting ||
-                     e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueShadowOnly ||
-                     e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueNonshadowing );
-            var globalGeometryPartBlockNews = opaqueParts as GlobalGeometryPartBlockNew[] ?? opaqueParts.ToArray( );
-            foreach ( var part in globalGeometryPartBlockNews )
-            {
-                var key = _shaderDictionary[ part ];
-                if ( !OpaquePatches.ContainsKey( key ) ) OpaquePatches[ key ] = new List<GlobalGeometryPartBlockNew>( );
-                OpaquePatches[ key ].Add( part );
-            }
-
-            var transparentParts =
-                InstanceManager.Parts.Where( e => e.Type == GlobalGeometryPartBlockNew.TypeEnum.Transparent )
-                    .ToList( );
-            TransparentPatches = new List<PatchData>( SortTransparentParts( transparentParts, eye ) );
         }
 
         /// <summary>
@@ -132,7 +96,6 @@ namespace Moonfish.Graphics
 
                     transparentDrawsSortedList.Add( distance, new PatchData( part, instance )
                     {
-                        ShaderKey = _shaderDictionary[ part ]
                     } );
                 }
             }

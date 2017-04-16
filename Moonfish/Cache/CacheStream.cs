@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows.Forms.VisualStyles;
 using Fasterflect;
 using Moonfish.Guerilla;
 using Moonfish.Guerilla.Tags;
@@ -26,10 +27,13 @@ namespace Moonfish.Cache
 
         public readonly Dictionary<StringIdent, string> Strings;
 
-        public readonly Dictionary<TagIdent, int> StructureMemoryBlockBindings;
+	    public readonly Dictionary<StringIdent, ICollection<string>>
+	        StringLocalizations;
+
+        public readonly Dictionary<TagIdent, EVirtualStream> StructureMemoryBlockBindings;
         public readonly CacheHeader Header;
 
-        private VirtualMemorySectionID activeAllocation = VirtualMemorySectionID.VirtualStructureCache0;
+        private EVirtualStream activeAllocation = EVirtualStream.VirtualStream1;
 
         /// <summary>
         /// Initializes a Map object from a .map file
@@ -80,7 +84,6 @@ namespace Moonfish.Cache
                                  Header.IndexInfo.MetaAllocationLength,
                                  new AddressModifier(secondaryMagic), true);
 
-
             /* Intent: read the sbsp and lightmap address and lengths from the scenario tag 
              * and store them in the Tags array.
              */
@@ -89,7 +92,7 @@ namespace Moonfish.Cache
             var count = binaryReader.ReadInt32();
             var address = binaryReader.ReadInt32();
 
-            StructureMemoryBlockBindings = new Dictionary<TagIdent, int>(count * 2);
+            StructureMemoryBlockBindings = new Dictionary<TagIdent, EVirtualStream>(count * 2);
             for (var i = 0; i < count; ++i)
             {
                 var destination = address - secondaryMagic + i * 68;
@@ -139,19 +142,92 @@ namespace Moonfish.Cache
                     StructureMemoryBlockBindings[ltmpIdentifier] = index;
                 }
 
-                SwitchActiveAllocation(VirtualMemorySectionID.VirtualStructureCache0);
+                SwitchActiveAllocation(EVirtualStream.VirtualStream1);
             }
 
 
             tagCache = new Dictionary<TagIdent, GuerillaBlock>(Index.Count);
             tagHashs = new Dictionary<TagIdent, string>(Index.Count);
 
+            // UNICODE
+
+            using (BaseStream.Pin())
+            {
+                var globals =
+                    Deserialize<GlobalsBlock>(Index.GlobalsIdent);
+
+                StringLocalizations =
+                    new Dictionary<StringIdent, ICollection<string>>();
+
+                if (null != globals)
+                {
+                    LoadUnicode(binaryReader,
+                        globals.UnicodeBlockInfo.EnglishStringIndexAddress,
+                        globals.UnicodeBlockInfo.EnglishStringCount,
+                        globals.UnicodeBlockInfo.EnglishStringTableAddress,
+                        globals.UnicodeBlockInfo.EnglishStringTableLength);
+
+
+                    LoadUnicode(binaryReader,
+                        globals.UnicodeBlockInfo.FrenchStringIndexAddress,
+                        globals.UnicodeBlockInfo.FrenchStringCount,
+                        globals.UnicodeBlockInfo.FrenchStringTableAddress,
+                        globals.UnicodeBlockInfo.FrenchStringTableLength);
+
+
+                    LoadUnicode(binaryReader,
+                        globals.UnicodeBlockInfo.ChineseStringIndexAddress,
+                        globals.UnicodeBlockInfo.ChineseStringCount,
+                        globals.UnicodeBlockInfo.ChineseStringTableAddress,
+                        globals.UnicodeBlockInfo.ChineseStringTableLength);
+                }
+            }
+
             Initialize();
         }
 
-        private void Initialize()
+	    private void LoadUnicode(BinaryReader binaryReader, 
+            int stringIndexAddress, int stringCount, int stringTableAddress, int stringTableLength)
+	    {
+	        BaseStream.Seek(stringIndexAddress,
+	            SeekOrigin.Begin);
+
+	        int unicodeCount = stringCount;
+	        List<Tuple<StringIdent, int>> info =
+	            new List<Tuple<StringIdent, int>>(unicodeCount);
+
+	        for (; unicodeCount > 0; --unicodeCount)
+	        {
+	            var key = binaryReader.ReadStringIdent();
+	            var start = binaryReader.ReadInt32();
+	            info.Add(new Tuple<StringIdent, int>(key, start));
+	        }
+
+	        BaseStream.Seek(stringTableAddress,
+	            SeekOrigin.Begin);
+	        byte[] buffer = new byte[stringTableLength];
+
+	        BaseStream.Read(buffer, 0, buffer.Length);
+
+	        int end = stringTableLength;
+	        for (int index = info.Count - 1; index > 0; --index)
+	        {
+	            int start = info[index].Item2;
+	            int len = end - start - 1; //trim the '\0'
+
+	            var value = Encoding.UTF8.GetString(buffer, start, len);
+	            if (!StringLocalizations.ContainsKey(info[index].Item1))
+	            {
+	                StringLocalizations.Add(info[index].Item1, new List<string>(8));
+	            }
+	            StringLocalizations[info[index].Item1].Add(value);
+
+	            end = start;
+	        }
+	    }
+
+	    private void Initialize()
         {
-            // Unicode
         }
 
         public TagIndex Index { get; private set; }
@@ -208,10 +284,10 @@ namespace Moonfish.Cache
             //Allocate(tagDatum.Identifier, serializedTagData.Length);
         }
 
-        public void SwitchActiveAllocation(VirtualMemorySectionID allocation)
+        public void SwitchActiveAllocation(EVirtualStream allocation)
         {
-            BaseStream.DisableVirtualSection((int)activeAllocation);
-            BaseStream.EnableVirtualSection((int)allocation);
+            BaseStream.DisableVirtualSection(activeAllocation);
+            BaseStream.EnableVirtualSection(allocation);
         }
 
         public string CalculateHash(TagIdent ident)
@@ -265,7 +341,7 @@ namespace Moonfish.Cache
             if (Index[tagident].Class == TagClass.Sbsp || Index[tagident].Class == TagClass.Ltmp)
             {
                 var index = StructureMemoryBlockBindings[tagident];
-                SwitchActiveAllocation(VirtualMemorySectionID.VirtualStructureCache0 + index);
+                SwitchActiveAllocation(index);
             }
             var offset = Header.Version == HaloVersion.XBOX_RETAIL
                 ? Index[tagident].VirtualAddress

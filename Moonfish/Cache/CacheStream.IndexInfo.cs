@@ -12,9 +12,24 @@ namespace Moonfish.Cache
     {
         public struct IndexInfoStruct
         {
+            /// <summary>
+            /// Offset to start of Index from beginning of file.
+            /// </summary>
             public int IndexOffset;
+            /// <summary>
+            /// Length of Index.
+            /// </summary>
             public int IndexLength;
+            /// <summary>
+            /// Length of primary meta data allocation.
+            /// </summary>
+            /// <remarks>
+            /// This is typically the length from the end of the index data to the end of the file.
+            /// </remarks>
             public int MetaAllocationLength;
+            /// <summary>
+            /// IndexLength + MetaAllocationLength (I think).
+            /// </summary>
             public int TotalAllocationLength;
 
             private IndexInfoStruct(Stream stream)

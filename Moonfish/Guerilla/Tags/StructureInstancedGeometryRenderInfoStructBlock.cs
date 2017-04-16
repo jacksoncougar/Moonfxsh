@@ -1,4 +1,5 @@
-﻿using Moonfish.ResourceManagement;
+﻿using System;
+using Moonfish.ResourceManagement;
 using System.IO;
 using System.Linq;
 
@@ -30,7 +31,8 @@ namespace Moonfish.Guerilla.Tags
 
         public void LoadRenderData()
         {
-            var resourceStream = GeometryBlockInfo.GetResourceFromCache();
+            throw new NotImplementedException();
+            ResourceStream resourceStream = null; //GeometryBlockInfo.GetResourceFromCache();
             if (resourceStream == null) return;
 
             var clusterBlock = new StructureBspClusterDataBlockNew();

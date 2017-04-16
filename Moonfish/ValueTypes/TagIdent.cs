@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.InteropServices;
-using JetBrains.Annotations;
 using Moonfish.Guerilla;
 
 namespace Moonfish.Tags
@@ -27,14 +26,14 @@ namespace Moonfish.Tags
             Salt = salt;
         }
 
-        public T Get<T>(CacheKey key) where T : GuerillaBlock
+        public T Get<T>() where T : GuerillaBlock
         {
-            return this.GetFromCache<T>(key );
+            throw new NotImplementedException();
         }
 
-        public object Get(CacheKey key)
+        public object Get()
         {
-            return this.GetFromCache(key);
+            throw new NotImplementedException();
         }
 
         public static explicit operator int(TagIdent item)
@@ -88,12 +87,6 @@ namespace Moonfish.Tags
         public bool Equals(TagIdent other)
         {
             return Index.Equals(other.Index) && Salt.Equals(other.Salt);
-        }
-
-        [Pure]
-        public string GetPath( CacheKey key )
-        {
-            return Solution.Index[ key ][ Index ].Path;
         }
     }
 }

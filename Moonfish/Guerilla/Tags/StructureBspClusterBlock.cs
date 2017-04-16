@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
+using Moonfish.ResourceManagement;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -29,7 +31,8 @@ namespace Moonfish.Guerilla.Tags
 
         public void LoadClusterData()
         {
-            var resourceStream = GeometryBlockInfo.GetResourceFromCache();
+            throw new NotImplementedException();
+            ResourceStream resourceStream = null; //GeometryBlockInfo.GetResourceFromCache();
             if (resourceStream == null) return;
 
             var clusterBlock = new StructureBspClusterDataBlockNew();

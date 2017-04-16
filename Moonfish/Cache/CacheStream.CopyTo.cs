@@ -178,20 +178,7 @@ namespace Moonfish.Cache
 
         private void CopyIndexedResource( Stream outputStream, IResourceBlock resourceBlock, int resourceCount )
         {
-            for ( var i = 0; i < resourceCount; i++ )
-            {
-                var address = resourceBlock.GetResourcePointer( i );
-                var length = resourceBlock.GetResourceLength( i );
-                switch ( address.Source )
-                {
-                    case Halo2.ResourceSource.Local:
-                        CopyLocalResource( outputStream, resourceBlock, address, length, i );
-                        break;
-                    default:
-                        //  we don't need to do anything with external resources
-                        continue;
-                }
-            }
+            throw new NotImplementedException();
         }
 
         private void CopyLipsyncResources( Stream outputStream )

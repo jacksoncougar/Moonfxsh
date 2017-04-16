@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -18,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
 
     public static byte[] GetResourceData(this IResourceBlock resourceInfoBlock, int index = 0)
     {
-        return resourceInfoBlock.GetResourceFromCache( index );
+            throw new NotImplementedException();
     }
 }
 

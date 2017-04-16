@@ -5,7 +5,6 @@ using Moonfish.Graphics;
 
 namespace Moonfish.Debug
 {
-    [SuppressMessage( "ReSharper", "UnusedMember.Global" )]
     public class DataTypes
     {
         public int shift;

@@ -16,17 +16,18 @@ namespace Moonfish.Guerilla.Tags
     {
         public void LoadResourceData( )
         {
-            var resourceStream = GeometryBlockInfo.GetResourceFromCache();
+            throw new NotImplementedException();
+            ResourceStream resourceStream = null; //GeometryBlockInfo.GetResourceFromCache();
             if ( resourceStream == null ) return;
 
-            var sectionBlock = new RenderModelSectionDataBlock( );
-            using ( var binaryReader = new BinaryReader( resourceStream ) )
+            RenderModelSectionDataBlock sectionBlock = new RenderModelSectionDataBlock( );
+            using ( BinaryReader binaryReader = new BinaryReader( resourceStream ) )
             {
                 sectionBlock.Read( binaryReader );
 
-                var vertexBufferResources = GeometryBlockInfo.Resources.Where(
+                GlobalGeometryBlockResourceBlock[] vertexBufferResources = GeometryBlockInfo.Resources.Where(
                     x => x.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer ).ToArray( );
-                for ( var i = 0;
+                for ( int i = 0;
                     i < sectionBlock.Section.VertexBuffers.Length && i < vertexBufferResources.Length;
                     ++i )
                 {
@@ -61,17 +62,18 @@ namespace Moonfish.Guerilla.Tags
         {
             if ( SectionData.Length > 0 ) return;
 
-            var resourceStream = GeometryBlockInfo.GetResourceFromCache();
+            throw new NotImplementedException();
+            ResourceStream resourceStream = null; //GeometryBlockInfo.GetResourceFromCache();
             if ( resourceStream == null ) return;
 
-            var sectionBlock = new RenderModelSectionDataBlock( );
-            using ( var binaryReader = new BinaryReader( resourceStream ) )
+            RenderModelSectionDataBlock sectionBlock = new RenderModelSectionDataBlock( );
+            using ( BinaryReader binaryReader = new BinaryReader( resourceStream ) )
             {
                 sectionBlock.Read( binaryReader );
 
-                var vertexBufferResources = GeometryBlockInfo.Resources.Where(
+                GlobalGeometryBlockResourceBlock[] vertexBufferResources = GeometryBlockInfo.Resources.Where(
                     x => x.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer ).ToArray( );
-                for ( var i = 0;
+                for ( int i = 0;
                     i < sectionBlock.Section.VertexBuffers.Length && i < vertexBufferResources.Length;
                     ++i )
                 {
@@ -120,9 +122,9 @@ namespace Moonfish.Guerilla.Tags
         {
             get
             {
-                var translationMatrix = Matrix4.CreateTranslation(Translation);
-                var rotationMatrix = Matrix4.CreateFromQuaternion(Rotation);
-                var scaleMatrix = Matrix4.CreateScale(Scale);
+                Matrix4 translationMatrix = Matrix4.CreateTranslation(Translation);
+                Matrix4 rotationMatrix = Matrix4.CreateFromQuaternion(Rotation);
+                Matrix4 scaleMatrix = Matrix4.CreateScale(Scale);
                 return scaleMatrix*rotationMatrix*translationMatrix;
             }
         }
@@ -140,7 +142,7 @@ namespace Moonfish.Guerilla.Tags
         {
             if (destinationType == typeof (string) && value is RenderModelNodeBlock)
             {
-                var markerGroup = ((RenderModelNodeBlock) value);
+                RenderModelNodeBlock markerGroup = ((RenderModelNodeBlock) value);
                 return markerGroup.Name.ToString();
             }
             return base.ConvertTo(context, culture, value, destinationType);

@@ -20,31 +20,9 @@ namespace Moonfish.Graphics.RenderingEngine
         public static Dictionary<TagIdent, TextureHandle> TextureDictionary { get; } =
             new Dictionary<TagIdent, TextureHandle>( );
 
-        public MaterialShader GetMaterial( TagGlobalKey key )
+        public MaterialShader GetMaterial()
         {
-            if ( _materialDictionary.ContainsKey( key.TagKey ) ) return _materialDictionary[ key.TagKey ];
-
-            var shaderBlock = ( ShaderBlock ) key.Get( );
-            ShaderPostprocessBitmapNewBlock[] bitmaps;
-            _materialDictionary[ key.TagKey ] = new MaterialShader( shaderBlock, out bitmaps );
-
-            foreach ( var bitmap in bitmaps )
-            {
-                var bitmapKey = GetBitmapKey( bitmap );
-                if ( TextureDictionary.ContainsKey( bitmapKey ) ) continue;
-
-                var layer = bitmap.BitmapIndex;
-                var bitmapBlock = ( BitmapBlock ) bitmap.BitmapGroup.Get( key.CacheKey );
-                if ( bitmapBlock == null )
-                {
-                    continue;
-                }
-                var texture = new TextureHandle( );
-                texture.Load( bitmapBlock.Bitmaps[ layer ] );
-                TextureDictionary.Add( bitmapKey, texture );
-            }
-
-            return _materialDictionary[ key.TagKey ];
+            throw new NotImplementedException();
         }
 
         private static TagIdent GetBitmapKey( ShaderPostprocessBitmapNewBlock bitmap )

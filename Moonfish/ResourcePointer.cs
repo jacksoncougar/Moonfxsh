@@ -19,14 +19,6 @@
             return pointer._value;
         }
 
-        public Halo2.ResourceSource Source
-        {
-            get
-            {
-                return (Halo2.ResourceSource) ((_value & 0xE0000000) >> 30);
-            }
-        }
-
         public int Address
         {
             get { return (int) (_value & ~0xC0000000); }

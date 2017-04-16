@@ -28,9 +28,7 @@ namespace Sunfish.Forms
 
 			//if (!File.Exists(fileName)) //return;
 
-				CacheKey key;
-
-				var directory = Path.GetDirectoryName(fileName);
+            var directory = Path.GetDirectoryName(fileName);
 				if (!string.IsNullOrEmpty(directory))
 				{
 					//var maps = Directory.GetFiles(directory, "*.map", SearchOption.TopDirectoryOnly);
@@ -91,8 +89,7 @@ namespace Sunfish.Forms
             var filename = dialog.FileName;
             if ( filename.EndsWith( ".map" ) )
             {
-                CacheKey key;
-               // Solution.Index.AddCache( filename, out key );
+                // Solution.Index.AddCache( filename, out key );
             }
         }
     }

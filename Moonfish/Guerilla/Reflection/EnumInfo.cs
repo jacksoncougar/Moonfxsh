@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Reflection
             var tokenDictionary = new TokenDictionary();
             for (int i = 0; i < ValueNames.Count; i++)
             {
-                ValueNames[i] = tokenDictionary.GenerateValidToken(GuerillaCs.ToTypeName(ValueNames[i]));
+                ValueNames[i] = tokenDictionary.GenerateValidToken(Guerilla.ToTypeName(ValueNames[i]));
             }
         }
 
@@ -52,7 +52,7 @@ namespace Moonfish.Guerilla.Reflection
             foreach (var item in ValueNames)
             {
                 if (item.HasDescription) stringBuilder.AppendSummary(item.Description);
-                stringBuilder.AppendLine(string.Format("{0} = {1},", GuerillaCs.ToTypeName(item.Name), value));
+                stringBuilder.AppendLine(string.Format("{0} = {1},", Guerilla.ToTypeName(item.Name), value));
                 value = isFlags ? value << 1 : ++value;
             }
             stringBuilder.AppendLine("};");

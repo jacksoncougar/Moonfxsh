@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.InteropServices;
 using JetBrains.Annotations;
 using Moonfish.Guerilla;
@@ -22,21 +23,19 @@ namespace Moonfish.Tags
             return string.Format("{0}, {1}", Class, Ident);
         }
 
-        public T Get<T>(CacheKey key ) where T : GuerillaBlock
+        public T Get<T>() where T : GuerillaBlock
         {
-            return ( T ) this.GetFromCache(key );
+            throw new NotImplementedException();
         }
 
-        public object Get(CacheKey key)
+        public object Get()
         {
-            return this.GetFromCache(key );
+            throw new NotImplementedException();
         }
 
         public static explicit operator TagReference( GuerillaBlock block )
         {
-            var cache = Halo2.ActiveMap;
-            var datum = cache.Add( block, string.Empty );
-            return  new TagReference(datum.Class, datum.Identifier);
+            throw new NotImplementedException();
         }
     }
 }

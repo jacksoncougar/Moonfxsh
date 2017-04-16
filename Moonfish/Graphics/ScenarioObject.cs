@@ -26,7 +26,6 @@ namespace Moonfish.Graphics
         private readonly VertexArrayObject _markersBatch;
         private readonly VertexArrayObject _nodesBatch;
         private Matrix4 _worldMatrix;
-        private CacheKey _key;
 
         private ScenarioObject( )
         {
@@ -58,9 +57,10 @@ namespace Moonfish.Graphics
             : this(  )
         {
             Model = model;
-            if ( !model.TryGetCacheKey( out _key ) ) return;
 
-            RenderModel = ( RenderModelBlock ) model.RenderModel.Get(_key);
+            throw new NotImplementedException();
+
+            RenderModel = ( RenderModelBlock ) model.RenderModel.Get();
 
             if ( RenderModel == null )
             {
@@ -154,7 +154,7 @@ namespace Moonfish.Graphics
         private Matrix4 CalculateWorldMatrix( RenderModelMarkerBlock markerBlock )
         {
             if (
-                !( ( RenderModelBlock ) Model.RenderModel.Get(_key) ).MarkerGroups.SelectMany( x => x.Markers )
+                !( ( RenderModelBlock ) Model.RenderModel.Get() ).MarkerGroups.SelectMany( x => x.Markers )
                     .Contains( markerBlock ) )
                 throw new ArgumentOutOfRangeException( );
 
@@ -163,7 +163,7 @@ namespace Moonfish.Graphics
 
         private Matrix4 CalculateWorldMatrix( RenderModelNodeBlock nodeBlock )
         {
-            if ( !( ( RenderModelBlock ) Model.RenderModel.Get(_key) ).Nodes.Contains( nodeBlock ) )
+            if ( !( ( RenderModelBlock ) Model.RenderModel.Get() ).Nodes.Contains( nodeBlock ) )
                 throw new ArgumentOutOfRangeException( );
 
             return Nodes.GetWorldMatrix( nodeBlock );

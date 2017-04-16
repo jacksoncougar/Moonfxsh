@@ -34,6 +34,8 @@ namespace Moonfish.Guerilla
         /// </summary>
         private const string H2LanguageLibrary = Local.LanguageLibraryPath;
 
+        protected static List<string> Namespaces { get; set; }
+
         #region Imports
 
         [DllImport("kernel32")]
@@ -335,7 +337,7 @@ namespace Moonfish.Guerilla
             return field.type.ToString();
         }
 
-        protected static string ToTypeName(string value)
+        public static string ToTypeName(string value)
         {
             var textInfo = new CultureInfo("en-US", false).TextInfo;
             var indices = new List<int>();
@@ -388,6 +390,47 @@ namespace Moonfish.Guerilla
 
             // Return the string buffer.
             return _str.ToString();
+        }
+
+        protected static void InitializeNamespaceDictionary()
+        {
+            const string globalNamespace = "global";
+            const string globalGeometryNamespace = "global_geometry";
+            const string structureNamespace = "structure";
+            const string structureBspNamespace = "structure_bsp";
+
+            Namespaces = new List<string>(new[]
+            {
+                globalNamespace,
+                globalGeometryNamespace,
+                structureNamespace,
+                structureBspNamespace
+            });
+
+            Namespaces.Sort();
+            Namespaces.Reverse();
+        }
+
+        public static string[] SplitNameDescription(string fieldName)
+        {
+            var items = fieldName.Split('#');
+            return new[] {items.Length > 0 ? items[0] : null, items.Length > 1 ? items[1] : null};
+        }
+
+        public static bool SplitNamespaceFromFieldName(string longFieldName, out string name, out string @namespace)
+        {
+            foreach (var item in Namespaces)
+            {
+                if (longFieldName.StartsWith(item))
+                {
+                    name = longFieldName.Remove(0, item.Length);
+                    @namespace = item;
+                    return true;
+                }
+            }
+            name = longFieldName;
+            @namespace = string.Empty;
+            return false;
         }
     }
 }

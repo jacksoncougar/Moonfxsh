@@ -1,6 +1,8 @@
+using System;
 using System.IO;
 using System.Linq;
 using Moonfish.Guerilla.Tags;
+using Moonfish.ResourceManagement;
 
 namespace Moonfish.Guerilla
 {
@@ -9,17 +11,18 @@ namespace Moonfish.Guerilla
         public static GlobalGeometrySectionStructBlock LoadSectionData(
             this GlobalGeometryBlockInfoStructBlock geometryInfo )
         {
-            var resourceStream = geometryInfo.GetResourceFromCache( );
+            throw new NotImplementedException();
+            ResourceStream resourceStream = null;
             if ( resourceStream == null ) return default(GlobalGeometrySectionStructBlock);
 
-            var sectionBlock = new GlobalGeometrySectionStructBlock( );
-            using ( var binaryReader = new BinaryReader( resourceStream ) )
+            GlobalGeometrySectionStructBlock sectionBlock = new GlobalGeometrySectionStructBlock( );
+            using ( BinaryReader binaryReader = new BinaryReader( resourceStream ) )
             {
                 sectionBlock.Read( binaryReader );
 
-                var vertexBufferResources = geometryInfo.Resources.Where(
+                GlobalGeometryBlockResourceBlock[] vertexBufferResources = geometryInfo.Resources.Where(
                     x => x.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer ).ToArray( );
-                for ( var i = 0;
+                for ( int i = 0;
                     i < sectionBlock.VertexBuffers.Length && i < vertexBufferResources.Length;
                     ++i )
                 {

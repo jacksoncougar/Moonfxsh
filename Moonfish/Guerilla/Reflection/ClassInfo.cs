@@ -109,14 +109,14 @@ namespace Moonfish.Guerilla.Reflection
             var tokenDictionary = HasBaseClass ? new TokenDictionary(BaseClass.Format()) : new TokenDictionary();
 
             string name, @namespace;
-            if (GuerillaCs.SplitNamespaceFromFieldName(_value.Name, out name, out @namespace))
+            if (Guerilla.SplitNamespaceFromFieldName(_value.Name, out name, out @namespace))
             {
-                Name = tokenDictionary.GenerateValidToken(GuerillaCs.ToTypeName(name));
-                Namespace = new NamespaceInfo(GuerillaCs.ToTypeName(@namespace));
+                Name = tokenDictionary.GenerateValidToken(Guerilla.ToTypeName(name));
+                Namespace = new NamespaceInfo(Guerilla.ToTypeName(@namespace));
             }
             else
             {
-                Name = tokenDictionary.GenerateValidToken(GuerillaCs.ToTypeName(_value.Name));
+                Name = tokenDictionary.GenerateValidToken(Guerilla.ToTypeName(_value.Name));
             }
 
             FormatFieldNames(tokenDictionary);
@@ -269,19 +269,19 @@ namespace Moonfish.Guerilla.Reflection
         {
             foreach (var item in Fields)
             {
-                var token = tokenDictionary.GenerateValidToken(GuerillaCs.ToMemberName(item.Value.Name));
+                var token = tokenDictionary.GenerateValidToken(Guerilla.ToMemberName(item.Value.Name));
                 item.Value.Name = token;
             }
 
             foreach (var item in Methods)
             {
-                var token = tokenDictionary.GenerateValidToken(GuerillaCs.ToMemberName(item.ClassName));
+                var token = tokenDictionary.GenerateValidToken(Guerilla.ToMemberName(item.ClassName));
                 item.ClassName = token;
             }
 
             foreach (var item in EnumDefinitions)
             {
-                var token = tokenDictionary.GenerateValidToken(GuerillaCs.ToTypeName(item.Value.Name));
+                var token = tokenDictionary.GenerateValidToken(Guerilla.ToTypeName(item.Value.Name));
                 item.Value.Name = token;
             }
         }

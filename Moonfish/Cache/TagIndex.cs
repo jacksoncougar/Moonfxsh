@@ -31,7 +31,6 @@ namespace Moonfish.Cache
             }
 
             _data = new List<TagDatum>(new TagDatum[datumArrayCount]);
-            var cacheKey = default(CacheKey);// CacheKey.Create(cache);
             for (var i = 0; i < datumArrayCount && i < paths.Count; i++)
             {
                 TagDatum data;
@@ -43,7 +42,6 @@ namespace Moonfish.Cache
                         Identifier = binaryReader.ReadTagIdent( ),
                         VirtualAddress = binaryReader.ReadInt32( ),
                         Length = binaryReader.ReadInt32( ),
-                        CacheKey = cacheKey
                     };
                 } while ( TagDatum.IsNull( data ) );
                 data.Path = paths[i];

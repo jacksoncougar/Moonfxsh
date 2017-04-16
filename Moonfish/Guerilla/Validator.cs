@@ -83,8 +83,7 @@ namespace Moonfish.Guerilla
                         if (tag.Class == (TagClass)"sbsp" || tag.Class == (TagClass)"ltmp")
                         {
                         //        map.StructureMemoryBlocks[map.StructureMemoryBlockBindings[tag.Identifier]];
-                            map.SwitchActiveAllocation(VirtualMemorySectionID.VirtualStructureCache0 +
-                                                 map.StructureMemoryBlockBindings[tag.Identifier]);
+                            map.SwitchActiveAllocation(map.StructureMemoryBlockBindings[tag.Identifier]);
                         }
 						//var virtualTagMemory = new VirtualMappedStreamSection(tag.VirtualAddress, tag.Length, 0, map);
 

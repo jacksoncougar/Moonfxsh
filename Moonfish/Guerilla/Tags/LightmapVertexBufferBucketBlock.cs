@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Moonfish.ResourceManagement;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -31,17 +32,18 @@ namespace Moonfish.Guerilla.Tags
 
         public void LoadCacheData()
         {
-            var resourceStream = GeometryBlockInfo.GetResourceFromCache();
+            throw new NotImplementedException();
+            ResourceStream resourceStream = null; //GeometryBlockInfo.GetResourceFromCache();
             if (resourceStream == null) return;
 
-            var sectionBlock = new LightmapVertexBufferBucketCacheDataBlock();
-            using (var binaryReader = new BinaryReader(resourceStream))
+            LightmapVertexBufferBucketCacheDataBlock sectionBlock = new LightmapVertexBufferBucketCacheDataBlock();
+            using (BinaryReader binaryReader = new BinaryReader(resourceStream))
             {
                 sectionBlock.Read(binaryReader);
 
-                var vertexBufferResources = GeometryBlockInfo.Resources.Where(
+                GlobalGeometryBlockResourceBlock[] vertexBufferResources = GeometryBlockInfo.Resources.Where(
                     x => x.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer).ToArray();
-                for (var i = 0;
+                for (int i = 0;
                     i < sectionBlock.VertexBuffers.Length && i < vertexBufferResources.Length;
                     ++i)
                 {

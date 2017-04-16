@@ -74,9 +74,9 @@ namespace Moonfish.Tags
             return $@"{Index}:{Length}";
         }
 
-        public string Get( CacheKey cacheKey )
+        public string Get()
         {
-            return Solution.Index[ cacheKey ].GetStringValue( this );
+            throw new NotImplementedException();
         }
     }
 }

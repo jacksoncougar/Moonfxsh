@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Moonfish.Graphics.RenderingEngine;
 using Moonfish.Guerilla.Tags;
@@ -18,12 +19,7 @@ namespace Moonfish.Graphics
 
         public MaterialShader( ShaderBlock shader, out ShaderPostprocessBitmapNewBlock[] bitmapBlocks )
         {
-            CacheKey cacheKey;
-            if ( !shader.TryGetCacheKey( out cacheKey ) )
-            {
-                bitmapBlocks = new ShaderPostprocessBitmapNewBlock[0];
-                return;
-            }
+            throw new NotImplementedException();
 
             this.shader = shader;
 
@@ -31,14 +27,14 @@ namespace Moonfish.Graphics
             bitmapBlocks = shader.PostprocessDefinition[ 0 ].Bitmaps;
 
             var shaderTemplateIdent = ( TagIdent ) shader.PostprocessDefinition[ 0 ].ShaderTemplateIndex;
-            shaderTemplate = ( ShaderTemplateBlock ) shaderTemplateIdent.Get(cacheKey);
+            shaderTemplate = ( ShaderTemplateBlock ) shaderTemplateIdent.Get();
 
             shaderPasses = new ShaderPassBlock[shaderTemplate.PostprocessDefinition[ 0 ].Passes.Length];
             shaderPassPaths = new string[shaderTemplate.PostprocessDefinition[ 0 ].Passes.Length];
             for ( var i = 0; i < shaderPasses.Length; ++i )
             {
                 var item = shaderTemplate.PostprocessDefinition[ 0 ].Passes[ i ];
-                shaderPasses[ i ] = ( ShaderPassBlock ) item.Pass.Get(cacheKey);
+                shaderPasses[ i ] = ( ShaderPassBlock ) item.Pass.Get();
                 shaderPassPaths[ i ] = item.Pass.ToString( );
             }
         }

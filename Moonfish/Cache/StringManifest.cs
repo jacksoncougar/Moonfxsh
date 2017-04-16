@@ -1,48 +1,38 @@
-using System.Collections.Generic;
-using System.IO;
-using Moonfish.Guerilla;
-using Moonfish.Tags;
-using Moonfish.Cache;
-using System;
+using Fasterflect;
+using Moonfish.Guerilla.Tags;
 
 namespace Moonfish.Cache
 {
 	/// <summary>
-	/// Creates a Package from a map file
-	/// </summary>
-	public class Packager
-	{
-		public Package CreatePackage(Map map)
-		{
-			Package package = new Package();
-
-			foreach (var item in map.Strings)
-			{
-				package.Manifest.Strings.Add(item.Key, item.Value);
-			}
-
-			foreach (var item in map.Index)
-			{
-				package.Manifest.Objects.Add(item.Identifier, item);
-			}
-
-			return null;
-		}
-	};
-
-	/// <summary>
-	/// A package of object data
+	/// A package of objects
 	/// </summary>
 	public class Package
 	{
-		List<Stream> DataStreams;
-		public Manifest Manifest { get; private set; }
+	    public Manifest Manifest { get; }
 
 		public Package()
 		{
-			DataStreams = new List<Stream>();
-			Manifest = new Manifest();
+		    Manifest = new Manifest();
 		}
+
+	    public Package(Map map)
+	    {
+            foreach (var item in map.Strings)
+            {
+                Manifest.Strings.Add(item.Key, item.Value);
+            }
+
+            foreach (var item in map.Index)
+            {
+                var @object = map.Deserialize(item.Identifier);
+                Manifest.Objects.Add(item.Identifier, @object);
+            }
+
+	        foreach (var localization in map.StringLocalizations)
+	        {
+	            Manifest.Localizations.Add(localization.Key, localization.Value);
+	        }
+	    }
 	};
 
     /// <summary>
@@ -53,11 +43,7 @@ namespace Moonfish.Cache
         // details: the map can be recreated from a scenario tag and all referenced tags to that. 
 		// As well as all the non-external raw data. Strings must be rebuilt and unicode tables.
 
-		public Repository()
-		{
-		}
-
-		public void Add(Map cache)
+        public void Add(Map cache)
         {
         }
     };

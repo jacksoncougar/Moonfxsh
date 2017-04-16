@@ -234,7 +234,7 @@ namespace Moonfish
                 System.Diagnostics.Debug.WriteLineIf(
                     address < GetFilePosition(),
                     "Warning: address < GetFilePosition()");
-                BaseStream.Seek(address);
+                BaseStream.Seek(address, SeekOrigin.Begin);
             }
             //  this is not strictly an error but it should be treated as such
             if (address > GetFilePosition())
@@ -242,7 +242,7 @@ namespace Moonfish
                 System.Diagnostics.Debug.WriteLineIf(
                     address > GetFilePosition(),
                     "Warning: address > GetFilePosition()");
-                BaseStream.Seek(address);
+                BaseStream.Seek(address, SeekOrigin.Begin);
             }
             System.Diagnostics.Debug.WriteLineIf(address%512 != 0,
                 "Warning: address % 512 != 0");

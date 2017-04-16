@@ -1,6 +1,4 @@
-﻿using Moonfish.Tags;
-
-namespace Moonfish.Guerilla.Tags
+﻿namespace Moonfish.Guerilla.Tags
 {
     public partial class SceneryBlock //: SceneryBlockBase
     {

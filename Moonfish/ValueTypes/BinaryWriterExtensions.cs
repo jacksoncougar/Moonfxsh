@@ -1,14 +1,43 @@
 using System;
-using System.ComponentModel;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text;
+using Moonfish.Model;
 using OpenTK;
 
 namespace Moonfish.Tags
 {
     internal static class BinaryWriterExtensions
     {
+        public static void WriteFourCC(this BinaryWriter writer, string code)
+        {
+            byte[] buffer = new byte[4];
+            byte[] charbytes = Encoding.UTF8.GetBytes(code);
+            Array.Copy(charbytes, buffer, charbytes.Length % 5);
+            Array.Reverse(buffer);
+            writer.Write(buffer);
+        }
+
+        public static void WritePadding(this BinaryWriter writer, int alignment)
+        {
+            writer.Write(new byte[Padding.GetCount(writer.BaseStream.Position, alignment)]);
+        }
+
+        public static void Write(this BinaryWriter binaryWriter, TagClass tclass)
+        {
+            binaryWriter.Write((int)tclass);
+        }
+
+        public static void Write(this BinaryWriter binaryWriter, Range range)
+        {
+            binaryWriter.Write(range.Min);
+            binaryWriter.Write(range.Max);
+        }
+
+        public static double[] ToArray(this Vector3 vector3)
+        {
+            return new double[] { vector3.X, vector3.Y, vector3.Z };
+        }
+
         public static void Write(this BinaryWriter binaryWriter, VertexBuffer value)
         {
             binaryWriter.Write((int) value.Type);

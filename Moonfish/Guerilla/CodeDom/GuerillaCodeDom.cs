@@ -51,9 +51,10 @@ namespace Moonfish.Guerilla.CodeDom
                 Console.WriteLine(@"{0}:({2}){1}", item.Key, item.Value, (float)item.Value / (float)totalHits);
             }
         }
+
         public static void GenerateGuerillaCode()
         {
-            var tags = Guerilla.h2Tags.Select(x => new MoonfishTagGroup(x)).ToList();
+            var tags = Guerilla.H2Tags.Select(x => new MoonfishTagGroup(x)).ToList();
             foreach (var blockClass in tags.Select(tag => new GuerillaBlockClass(tag, tags)))
             {
                 blockClass.GenerateCSharpCode(Path.Combine(Local.ProjectDirectory, @"Guerilla\Tags.Generated\"));
@@ -130,7 +131,7 @@ namespace Moonfish.Guerilla.CodeDom
 
         public static void GenerateGuerillaCode(params TagClass[] classes)
         {
-            var tags = Guerilla.h2Tags.Select(x => new MoonfishTagGroup(x)).ToList();
+            var tags = Guerilla.H2Tags.Select(x => new MoonfishTagGroup(x)).ToList();
             foreach (
                 var blockClass in
                     tags.Where(x => classes.Any(y => y == x.Class)).Select(tag => new GuerillaBlockClass(tag, tags)))

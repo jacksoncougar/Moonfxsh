@@ -142,7 +142,6 @@
     <Compile Include="Collision\DebugDrawer.cs" />
     <Compile Include="Collision\Shapes.cs" />
     <Compile Include="Collision\TriangleRayIntersection.cs" />
-    <Compile Include="Extensions.cs" />
     <Compile Include="Debug\BitArray.cs" />
     <Compile Include="Forms\DataMapper.cs">
       <SubType>UserControl</SubType>
@@ -331,7 +330,6 @@
     <Compile Include="Guerilla\CodeDom\GuerillaEnumBlockClass.cs" />
     <Compile Include="Map\Map.CopyTo.cs" />
     <Compile Include="Guerilla\GeometryExtensions.cs" />
-    <Compile Include="Guerilla\IReadQueueable.cs" />
     <Compile Include="Guerilla\Preprocess\Bsp3dNodesBlock.cs" />
     <Compile Include="Guerilla\Preprocess\ScenarioStructureBspReferenceBlock.cs" />
     <Compile Include="Guerilla\QueueableBinaryReader.cs" />
@@ -1373,7 +1371,6 @@
     <Compile Include="ValueTypes\TagClassAttribute.cs" />
     <Compile Include="ValueTypes\TagStructFieldAttribute.cs" />
     <Compile Include="Guerilla\Validator.cs" />
-    <Compile Include="Guerilla\VirtualMemoryStream.cs" />
     <Compile Include="Local.cs" />
     <Compile Include="main.cs" />
     <Compile Include="Map\MapType.cs" />
@@ -1385,7 +1382,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="PropertyGridExtensions.cs" />
     <Compile Include="ResourcePointer.cs" />
     <Compile Include="ResourceStream.cs" />
     <Compile Include="StreamExtensions.cs" />

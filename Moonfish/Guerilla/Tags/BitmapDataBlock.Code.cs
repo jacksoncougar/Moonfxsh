@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Remoting.Messaging;
+using JetBrains.Annotations;
 
 namespace Moonfish.Guerilla.Tags
 {
+    [UsedImplicitly]
     partial class BitmapDataBlock : IResourceBlock
     {
         public ResourcePointer GetResourcePointer(int index = 0)
@@ -17,8 +16,8 @@ namespace Moonfish.Guerilla.Tags
                     return LOD2TextureDataOffset;
                 case 2:
                     return LOD3TextureDataOffset;
+                default: throw new ArgumentOutOfRangeException(nameof(index));
             }
-            return 0;
         }
 
         public int GetResourceLength(int index = 0)
@@ -31,8 +30,8 @@ namespace Moonfish.Guerilla.Tags
                     return LOD2TextureDataLength;
                 case 2:
                     return LOD3TextureDataLength;
+                default: throw new ArgumentOutOfRangeException(nameof(index));
             }
-            return 0;
         }
 
         public void SetResourcePointer(ResourcePointer pointer, int index = 0)
@@ -48,6 +47,7 @@ namespace Moonfish.Guerilla.Tags
                 case 2:
                     LOD3TextureDataOffset = pointer;
                     break;
+                default: throw new ArgumentOutOfRangeException(nameof(index));
             }
         }
 
@@ -64,6 +64,7 @@ namespace Moonfish.Guerilla.Tags
                 case 2:
                     LOD3TextureDataLength = length;
                     break;
+                default: throw new ArgumentOutOfRangeException(nameof(index));
             }
         }
 

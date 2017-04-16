@@ -1,18 +1,14 @@
 using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using Fasterflect;
-using JetBrains.Annotations;
-using Microsoft.CSharp;
 using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Reflection
 {
-    public class MethodInfoFactory
+    public static class MethodInfoFactory
     {
         public static MethodInfo GenerateReadPointersMethod(ClassInfo classInfo)
         {
@@ -83,24 +79,6 @@ namespace Moonfish.Guerilla.Reflection
 
         public static MethodInfo GenerateReadFieldsMethod(ClassInfo classInfo)
         {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             var method = new MethodInfo
             {
                 ClassName = "ReadFields",
@@ -122,8 +100,7 @@ namespace Moonfish.Guerilla.Reflection
                     // fixed byte array like padding or skip arrays
                     if (item.ArraySize > 0 && Type.GetType(item.FieldTypeName) == typeof(byte))
                     {
-                        body.AppendLine(string.Format("{0} = binaryReader.ReadBytes({1});", item.Value.Name,
-                            item.ArraySize));
+                        body.AppendLine($"{item.Value.Name} = binaryReader.ReadBytes({item.ArraySize});");
                     }
                     // variable byte array (data)
                     else if (Type.GetType(item.FieldTypeName) == typeof(byte))
@@ -143,10 +120,9 @@ namespace Moonfish.Guerilla.Reflection
                         var initializer = "";
                         for (var i = 0; i < item.ArraySize; i++)
                         {
-                            initializer += string.Format("new {0}(){1}", item.FieldTypeName,
-                                i == item.ArraySize - 1 ? "" : ", ");
+                            initializer += $"new {item.FieldTypeName}(){(i == item.ArraySize - 1 ? "" : ", ")}";
                         }
-                        body.AppendLine(string.Format("{0} = new []{{ {1} }};", item.Value.Name, initializer));
+                        body.AppendLine($"{item.Value.Name} = new []{{ {initializer} }};");
 
                         for (var i = 0; i < item.ArraySize; i++)
                         {
@@ -170,8 +146,7 @@ namespace Moonfish.Guerilla.Reflection
                         var type = enumDefinition.BaseType == EnumInfo.Type.Byte
                             ? "Byte"
                             : enumDefinition.BaseType == EnumInfo.Type.Short ? "Int16" : "Int32";
-                        body.AppendLine(string.Format("{0} = ({1})binaryReader.Read{2}();", item.Value.Name,
-                            item.FieldTypeName, type));
+                        body.AppendLine($"{item.Value.Name} = ({item.FieldTypeName})binaryReader.Read{type}();");
                     }
                     else if (Type.GetType(item.FieldTypeName) == null)
                     {
@@ -184,7 +159,7 @@ namespace Moonfish.Guerilla.Reflection
                     else
                     {
                         var value = BinaryIOReflection.GetBinaryReaderMethodName(Type.GetType(item.FieldTypeName));
-                        body.AppendLine(string.Format("{0} = binaryReader.{1}();", item.Value.Name, value));
+                        body.AppendLine($"{item.Value.Name} = binaryReader.{value}();");
                     }
                 }
             }

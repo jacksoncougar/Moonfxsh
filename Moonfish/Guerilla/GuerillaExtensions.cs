@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla
 {
@@ -18,7 +19,6 @@ namespace Moonfish.Guerilla
         public static void Write(this BinaryWriter binaryWriter, GuerillaBlock block)
         {
             binaryWriter.WritePadding(block.Alignment);
-            block.Write(binaryWriter, (int)binaryWriter.BaseStream.Position + block.SerializedSize);
         }
 
         public delegate void PreProcessFieldSet(BinaryReader reader, List<tag_field> fieldSet);

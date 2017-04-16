@@ -321,10 +321,10 @@ namespace Moonfish
             return hash;
         }
 
-        private GuerillaBlock Deserialize(Type tagType)
+        private GuerillaBlock Deserialize(TagClass @class)
         {
             var sourceReader = new BinaryReader(BaseStream);
-            var instance = (GuerillaBlock) Activator.CreateInstance(tagType);
+            var instance = GuerillaBlock.CreateInstance(@class);
 
             instance.Read(sourceReader);
 
@@ -343,10 +343,7 @@ namespace Moonfish
             if (tagCache.TryGetValue(ident, out deserializedTag))
                 return (T) deserializedTag;
 
-            var type = Index[ident].Class.GetClassType();
-
-            if (type == null)
-                return null;
+            var type = Index[ident].Class;
 
             Seek(ident);
             tagCache[ident] = Deserialize(type);

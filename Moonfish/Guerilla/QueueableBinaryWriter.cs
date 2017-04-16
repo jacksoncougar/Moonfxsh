@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Moonfish.Tags;
@@ -73,7 +72,7 @@ namespace Moonfish.Guerilla
                         throw new Exception( "That breaks the maps" );
                     }
 #endif
-                    BaseStream.Seek( item.Pointer.StartAddress );
+                    BaseStream.Seek( item.Pointer.StartAddress, SeekOrigin.Begin );
                 }
 
 				item.Write(this);

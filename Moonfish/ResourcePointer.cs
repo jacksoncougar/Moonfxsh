@@ -1,12 +1,15 @@
 ﻿namespace Moonfish
 {
+    /// <summary>
+    /// An address to a raw resource stream.
+    /// </summary>
     public struct ResourcePointer
     {
-        private readonly int _value;
+        private readonly int value;
 
         private ResourcePointer(int value)
         {
-            _value = value;
+            this.value = value;
         }
 
         public static implicit operator ResourcePointer(int value)
@@ -16,17 +19,17 @@
 
         public static implicit operator int(ResourcePointer pointer)
         {
-            return pointer._value;
+            return pointer.value;
         }
 
         public int Address
         {
-            get { return (int) (_value & ~0xC0000000); }
+            get { return (int) (value & ~0xC0000000); }
         }
 
         public override string ToString()
         {
-            return _value.ToString();
+            return value.ToString();
         }
     }
 }

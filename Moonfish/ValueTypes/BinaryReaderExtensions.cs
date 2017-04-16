@@ -5,6 +5,7 @@ using Moonfish.Graphics;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Model;
 using Moonfish.ResourceManagement;
+using Moonfish.Tags;
 using OpenTK;
 
 namespace Moonfish.Tags

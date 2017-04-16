@@ -26,8 +26,8 @@ namespace Moonfish.Guerilla
             var offset = 0;
 
             var definition =
-                new MoonfishTagGroup(Guerilla.h2Tags.First(x => x.Class == datum.Class));
-            var definitionPool = Guerilla.h2Tags.Select(x => new MoonfishTagGroup(x));
+                new MoonfishTagGroup(Guerilla.H2Tags.First(x => x.Class == datum.Class));
+            var definitionPool = Guerilla.H2Tags.Select(x => new MoonfishTagGroup(x));
 
             var elementArray = CompileElementArray(definition, definitionPool, offset);
 

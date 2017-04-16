@@ -13,7 +13,7 @@ namespace Moonfish.Tags
     [StructLayout(LayoutKind.Sequential, Size = 4)]
     public partial struct TagClass : IEquatable<TagClass>, IEquatable<string>
     {
-        private static Dictionary<TagClass, Type> classTypes;
+        private static readonly Dictionary<TagClass, Type> classTypes;
 
         private readonly byte a;
         private readonly byte b;
@@ -60,9 +60,7 @@ namespace Moonfish.Tags
         static TagClass()
         {
             Type[] types;
-            Assembly assembly = typeof (TagClass).Assembly;
-
-            if (assembly == null) throw new ArgumentNullException("assembly");
+            var assembly = typeof (TagClass).Assembly;
 
             try
             {
@@ -154,7 +152,7 @@ namespace Moonfish.Tags
         /// <returns>the System.Type type</returns>
         public Type GetClassType()
         {
-            Type type = classTypes[this];
+            var type = classTypes[this];
 
             return type;    
         }

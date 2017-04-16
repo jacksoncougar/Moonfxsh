@@ -1,38 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Moonfish.Guerilla.Tags;
-using Moonfish.Tags;
 
 namespace Moonfish.ResourceManagement
 {
     using Moonfish.Guerilla.Tags;
 
-    public static class ResourceStreamStaticMethods
-    {
-        public static BlamPointer ReadBlamPointer(this BinaryReader binaryReader, int elementSize)
-        {
-            if (binaryReader.BaseStream is ResourceStream)
-            {
-                var stream = binaryReader.BaseStream as ResourceStream;
-                var offset = stream.Position;
-                binaryReader.BaseStream.Seek(8, SeekOrigin.Current);
-                var resource =
-                    stream.Resources
-                        .SingleOrDefault(x => x.PrimaryLocator == offset &&
-                                              x.Type != GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer);
-                if (resource == null)
-                {
-                    return new BlamPointer(0, 0, elementSize);
-                }
-                var count = resource.ResourceDataSize/resource.SecondaryLocator;
-                var address = resource.ResourceDataOffset + stream.HeaderSize;
-                return new BlamPointer(count, address, elementSize);
-            }
-            return new BlamPointer(binaryReader.ReadInt32(), binaryReader.ReadInt32(), elementSize);
-        }
-    }
-
+    //TODO remove this 
     public class ResourceStream : MemoryStream
     {
         private Guerilla.Tags.GlobalGeometryBlockInfoStructBlock blockInfo;

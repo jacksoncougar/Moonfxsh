@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -49,14 +48,14 @@ namespace Moonfish.Guerilla
         private delegate IList<MoonfishTagField> ProcessFieldsDelegate(IList<MoonfishTagField> fields);
 
         private static readonly IntPtr H2LangLib;
-        public static List<GuerillaTagGroup> h2Tags;
+        public static List<GuerillaTagGroup> H2Tags;
         public static Dictionary<string, Action<BinaryReader, IList<tag_field>>> PostprocessFunctions;
 
-        private static Dictionary<string, ProcessFieldsDelegate> PreProcessFieldsFunctions;
+        private static Dictionary<string, ProcessFieldsDelegate> preProcessFieldsFunctions;
 
         static Guerilla()
         {
-            h2Tags = new List<GuerillaTagGroup>();
+            H2Tags = new List<GuerillaTagGroup>();
             H2LangLib = LoadLibrary(H2LanguageLibrary);
             LoadPostProcessFunctionsObsolete();
             LoadPostProcessFunctions();
@@ -65,7 +64,7 @@ namespace Moonfish.Guerilla
 
         private static void LoadPostProcessFunctions()
         {
-            PreProcessFieldsFunctions = new Dictionary<string, ProcessFieldsDelegate>();
+            preProcessFieldsFunctions = new Dictionary<string, ProcessFieldsDelegate>();
             var methods = (from method in Assembly.GetExecutingAssembly().GetTypes().SelectMany(
                 x => x.GetMethods(BindingFlags.NonPublic | BindingFlags.Static))
                 where method.IsDefined(typeof (GuerillaPreProcessFieldsMethodAttribute), false)
@@ -76,7 +75,7 @@ namespace Moonfish.Guerilla
 
                 foreach (GuerillaPreProcessFieldsMethodAttribute attribute in attributes)
                 {
-                    PreProcessFieldsFunctions[attribute.BlockName] =
+                    preProcessFieldsFunctions[attribute.BlockName] =
                         (ProcessFieldsDelegate)
                             Delegate.CreateDelegate(typeof (ProcessFieldsDelegate), (method));
                 }
@@ -110,16 +109,15 @@ namespace Moonfish.Guerilla
 
         public static void LoadGuerillaExecutable(string guerillaExecutablePath)
         {
-            // Open the guerilla executable.
-            using (var reader = new BinaryReader(new VirtualMemoryStream(guerillaExecutablePath, BaseAddress)))
+            using (var reader = new BinaryReader(VirtualStream.CreateFromFile(guerillaExecutablePath, BaseAddress)))
             {
-                h2Tags = new List<GuerillaTagGroup>(NumberOfTagLayouts);
+                H2Tags = new List<GuerillaTagGroup>(NumberOfTagLayouts);
 
                 // Loop through all the tag layouts and extract each one.
                 for (var i = 0; i < NumberOfTagLayouts; i++)
                 {
                     // Go to the tag layout table.
-                    reader.BaseStream.Position = TagLayoutTableAddress + (i*4);
+                    reader.BaseStream.Position = TagLayoutTableAddress + i*4;
 
                     // Read the tag layout pointer.
                     var layoutAddress = reader.ReadInt32();
@@ -127,7 +125,7 @@ namespace Moonfish.Guerilla
                     // Go to the tag layout and read it.
                     reader.BaseStream.Position = layoutAddress;
                     var tag = new GuerillaTagGroup(reader);
-                    h2Tags.Add(tag);
+                    H2Tags.Add(tag);
                 }
             }
         }

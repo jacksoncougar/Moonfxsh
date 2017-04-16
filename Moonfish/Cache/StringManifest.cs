@@ -1,16 +1,16 @@
 namespace Moonfish
 {
     /// <summary>
-    ///     A package of objects
+    ///     A package of object data.
     /// </summary>
     public class Package
     {
-        public Package()
+        private Package()
         {
             Manifest = new Manifest();
         }
 
-        public Package(Map map)
+        public Package(Map map) : this()
         {
             foreach (var item in map.Strings)
             {

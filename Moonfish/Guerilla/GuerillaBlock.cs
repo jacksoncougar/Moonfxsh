@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Moonfish.Tags;
-
 using System.Linq.Expressions;
 using System.Reflection;
-using Fasterflect;
 
 namespace Moonfish.Guerilla
 {
@@ -65,7 +59,7 @@ namespace Moonfish.Guerilla
             return compiled;
         }
 
-		public virtual GuerillaBlock CreateInstance(TagClass @class)
+		public static GuerillaBlock CreateInstance(TagClass @class)
 		{
 			var type = @class.GetClassType();
 			var ctor = GetObjectActivator<GuerillaBlock>(type);
@@ -73,7 +67,7 @@ namespace Moonfish.Guerilla
 			return ctor();
 		}
 
-        public virtual T[] ReadBlockArrayData<T>(BinaryReader binaryReader, BlamPointer blamPointer)
+        public T[] ReadBlockArrayData<T>(BinaryReader binaryReader, BlamPointer blamPointer)
             where T : GuerillaBlock
         {
 			var blocks = new T[blamPointer.ElementCount];
@@ -111,7 +105,7 @@ namespace Moonfish.Guerilla
             return ctor;
         }
 
-        public virtual byte[] ReadDataByteArray(BinaryReader binaryReader, BlamPointer blamPointer)
+        public byte[] ReadDataByteArray(BinaryReader binaryReader, BlamPointer blamPointer)
         {
 			byte[] data;
 
@@ -129,12 +123,11 @@ namespace Moonfish.Guerilla
 			return data;
         }
 
-        public virtual short[] ReadDataShortArray(BinaryReader binaryReader, BlamPointer blamPointer)
+        public short[] ReadDataShortArray(BinaryReader binaryReader, BlamPointer blamPointer)
         {
 			short[] data;
-			byte[] temp;
 
-			if (BlamPointer.IsNull(blamPointer))
+            if (BlamPointer.IsNull(blamPointer))
 			{
 				data = new short[0];
 			}
@@ -143,7 +136,7 @@ namespace Moonfish.Guerilla
 				binaryReader.BaseStream.Position = blamPointer.StartAddress;
 
 				data = new short[blamPointer.ElementCount];
-				temp = binaryReader.ReadBytes(blamPointer.ElementCount * 2);
+				byte[] temp = binaryReader.ReadBytes(blamPointer.ElementCount * sizeof(short));
 
 				Buffer.BlockCopy(temp, 0, data, 0, temp.Length);
 			}
@@ -157,28 +150,13 @@ namespace Moonfish.Guerilla
 
         public virtual void ReadInstances(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-        }
-
-        public virtual void Read(BinaryReader binaryReader)
-        {
-           // Solution.CreateLink(this, binaryReader.BaseStream as ICache);
-            var pointers = ReadFields(binaryReader);
-            ReadInstances(binaryReader, pointers);
-        }
-
-        public virtual int Write(BinaryWriter binaryWriter, int nextAddress)
-        {
-            return nextAddress;
-        }
-
-        internal void Read_(QueueableBinaryReader queueableBinaryReader)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void QueueReads(QueueableBinaryReader queueableBinaryReader)
-        {
             return;
+        }
+
+        public void Read(BinaryReader binaryReader)
+        {
+            Queue<BlamPointer> pointers = ReadFields(binaryReader);
+            ReadInstances(binaryReader, pointers);
         }
 
         public virtual void Write_(QueueableBinaryWriter queueableBinaryWriter)
@@ -188,8 +166,7 @@ namespace Moonfish.Guerilla
 
         public virtual void QueueWrites(QueueableBinaryWriter binaryWriter)
         {
-            //  call QueueableBinaryWriter.QueueWrite on each instance field
-            //  ie; GuerillaBlock arrays, inline GuerillaBlock structs, data arrays
+            return;
         }
     }
 }

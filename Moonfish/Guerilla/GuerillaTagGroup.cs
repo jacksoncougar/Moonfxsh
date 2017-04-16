@@ -1,8 +1,6 @@
 using System.IO;
 using Moonfish.Guerilla.Reflection;
 using Moonfish.Tags;
-using OpenTK.Audio;
-using OpenTK.Graphics;
 
 namespace Moonfish.Guerilla
 {

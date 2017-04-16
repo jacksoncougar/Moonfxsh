@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using BulletSharp;
-using Moonfish.Graphics;
 using OpenTK;
 
 // ReSharper disable once CheckNamespace

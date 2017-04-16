@@ -541,7 +541,7 @@ namespace Moonfish.Guerilla.CodeDom
 		{
 			var method = new CodeMemberMethod
 			{
-				Name = "Write_",
+				Name = "Write",
 				Attributes = MemberAttributes.Override | MemberAttributes.Public,
 				ReturnType = new CodeTypeReference(typeof(void))
 			};

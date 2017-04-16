@@ -3,7 +3,6 @@ using OpenTK;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Fasterflect;
 using Moonfish.Graphics;
 using Moonfish.Tags;
 // ReSharper disable ClassNeverInstantiated.Global

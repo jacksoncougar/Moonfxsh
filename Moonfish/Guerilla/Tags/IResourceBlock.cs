@@ -1,10 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
+    /// <summary>
+    /// Exposes accessors for resource data pointers in implementing class.
+    /// </summary>
     public interface IResourceBlock
     {
         ResourcePointer GetResourcePointer(int index = 0);
@@ -12,6 +12,7 @@ namespace Moonfish.Guerilla.Tags
         void SetResourcePointer(ResourcePointer pointer, int index = 0);
         void SetResourceLength(int length, int index = 0);
     }
+
     public static class ResourceBlockExtensions
 
 {

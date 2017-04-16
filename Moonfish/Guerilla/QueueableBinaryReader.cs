@@ -1,23 +1,22 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Fasterflect;
 using Moonfish.Tags;
 
 namespace Moonfish.Guerilla
 {
     public class QueueableBinaryReader : BinaryReader
     {
-        private readonly Dictionary<object, QueueItem> _lookupDictionary;
-        private readonly Queue<QueueItem> _queue;
-        private int _queueAddress;
+        private readonly Dictionary<object, QueueItem> lookupDictionary;
+        private readonly Queue<QueueItem> queue;
+        private int queueAddress;
 
         public QueueableBinaryReader( Stream input, int serializedSize )
             : base( input, Encoding.Default, true )
         {
-            _queueAddress = serializedSize;
-            _queue = new Queue<QueueItem>( 100 );
-            _lookupDictionary = new Dictionary<object, QueueItem>( 100 );
+            queueAddress = serializedSize;
+            queue = new Queue<QueueItem>( 100 );
+            lookupDictionary = new Dictionary<object, QueueItem>( 100 );
         }
 
         public void QueueRead( GuerillaBlock[] dataBlocks, BlamPointer dataPointer )
@@ -46,7 +45,7 @@ namespace Moonfish.Guerilla
 
         public void ReadQueue( )
         {
-            while ( _queue.Count > 0 )
+            while ( queue.Count > 0 )
             {
                 var item = Dequeue( );
                 //  if the pointer has data, and the stream is not already at the data start address
@@ -86,30 +85,30 @@ namespace Moonfish.Guerilla
 
         private QueueItem Dequeue( )
         {
-            var queueItem = _queue.Dequeue( );
-            _lookupDictionary.Remove( queueItem.ReferenceField );
+            var queueItem = queue.Dequeue( );
+            lookupDictionary.Remove( queueItem.ReferenceField );
             return queueItem;
         }
 
         private void Enqueue( byte[] data, BlamPointer dataPointer )
         {
             var dataQueueItem = new ByteDataQueueItem( data ) {Pointer = dataPointer};
-            _lookupDictionary[ data ] = dataQueueItem;
-            _queue.Enqueue( dataQueueItem );
+            lookupDictionary[ data ] = dataQueueItem;
+            queue.Enqueue( dataQueueItem );
         }
 
         private void Enqueue( short[] data, BlamPointer dataPointer )
         {
             var dataQueueItem = new ShortDataQueueItem( data ) {Pointer = dataPointer};
-            _lookupDictionary[ data ] = dataQueueItem;
-            _queue.Enqueue( dataQueueItem );
+            lookupDictionary[ data ] = dataQueueItem;
+            queue.Enqueue( dataQueueItem );
         }
 
         private void Enqueue( GuerillaBlock[] dataBlocks, BlamPointer dataPointer )
         {
             var guerillaQueueItem = new GuerillaQueueItem( dataBlocks ) {Pointer = dataPointer};
-            _lookupDictionary[ dataBlocks ] = guerillaQueueItem;
-            _queue.Enqueue( guerillaQueueItem );
+            lookupDictionary[ dataBlocks ] = guerillaQueueItem;
+            queue.Enqueue( guerillaQueueItem );
         }
 
         private abstract class QueueItem

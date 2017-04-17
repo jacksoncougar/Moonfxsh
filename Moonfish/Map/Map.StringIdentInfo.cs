@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Moonfish
 {
-    partial class Map
+    sealed partial class Map
     {
         /// <summary>
         ///     A struct containing an address and byte-length to a resource in halo 2 vista

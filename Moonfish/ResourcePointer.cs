@@ -5,6 +5,7 @@
     /// </summary>
     public struct ResourcePointer
     {
+        private const uint Mask = 0xC0000000;
         private readonly int value;
 
         private ResourcePointer(int value)
@@ -22,10 +23,9 @@
             return pointer.value;
         }
 
-        public int Address
-        {
-            get { return (int) (value & ~0xC0000000); }
-        }
+        public int Location => (int)(value & Mask);
+
+        public int Address => (int) (value & ~Mask);
 
         public override string ToString()
         {

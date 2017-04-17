@@ -15,7 +15,7 @@ namespace Moonfish
     /// <summary>
     ///     Represents the data in a map
     /// </summary>
-    public partial class Map : IDisposable
+    public sealed partial class Map : IDisposable
     {
         public readonly CacheHeader Header;
 
@@ -60,19 +60,19 @@ namespace Moonfish
                 SeekOrigin.Begin);
 
             var stringKeys = new StringIdent[Header.StringsInfo.StringCount];
-            int previousOffset = 0, currentOffset = 0;
-            sbyte length;
+            var previousOffset = 0;
             for (short sub = 0; sub < Header.StringsInfo.StringCount; ++sub)
             {
-                currentOffset = binaryReader.ReadInt32();
-                length = (sbyte) (currentOffset - previousOffset);
+                var currentOffset = binaryReader.ReadInt32();
+                var length = (sbyte) (currentOffset - previousOffset);
                 stringKeys[sub] = new StringIdent(sub, length);
                 previousOffset = currentOffset;
             }
 
             BaseStream.Seek(Header.StringsInfo.StringTableAddress,
                 SeekOrigin.Begin);
-            var stringValues =
+
+            string[] stringValues =
                 Encoding.UTF8.GetString(
                     binaryReader.ReadBytes(
                         Header.StringsInfo.StringTableLength - 1))
@@ -327,8 +327,35 @@ namespace Moonfish
             var instance = GuerillaBlock.CreateInstance(@class);
 
             instance.Read(sourceReader);
+            var container = instance as IResourceContainer<object>;
+            if (container != null)
+                foreach (IResourceBlock<object> block in container)
+                {
+                    block.LoadResource(GetResourceData);
+                }
 
             return instance;
+        }
+
+        private Stream GetResourceData(IResourceBlock sender, int index)
+        {
+            var block = sender;
+            if (block == null)
+                return Stream.Null;
+
+            var resourcePointer = block.GetResourcePointer(index);
+            var resourceLength = block.GetResourceLength(index);
+            var buffer = new byte[resourceLength];
+
+            using (BaseStream.Pin())
+            {
+                if (resourcePointer.Location != 0)
+                    return Stream.Null;
+
+                BaseStream.Seek(resourcePointer.Address, SeekOrigin.Begin);
+                BaseStream.Read(buffer, 0, buffer.Length);
+                return new MemoryStream(buffer);
+            }
         }
 
         public GuerillaBlock Deserialize(TagIdent ident)
@@ -478,7 +505,7 @@ namespace Moonfish
 
         private bool disposedValue; // To detect redundant calls
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!disposedValue)
             {

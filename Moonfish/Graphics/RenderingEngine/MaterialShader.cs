@@ -10,33 +10,14 @@ namespace Moonfish.Graphics
 {
     public class MaterialShader
     {
-        private readonly ShaderBlock shader;
-        private readonly ShaderTemplateBlock shaderTemplate;
+        private readonly ShaderBlock shader = null;
+        private readonly ShaderTemplateBlock shaderTemplate = null;
         private int _activeShaderPass;
-        private bool disposed = false;
         public ShaderPassBlock[] shaderPasses;
-        public string[] shaderPassPaths;
 
         public MaterialShader( ShaderBlock shader, out ShaderPostprocessBitmapNewBlock[] bitmapBlocks )
         {
             throw new NotImplementedException();
-
-            this.shader = shader;
-
-            //  Load shader template class and load shader passes
-            bitmapBlocks = shader.PostprocessDefinition[ 0 ].Bitmaps;
-
-            var shaderTemplateIdent = ( TagIdent ) shader.PostprocessDefinition[ 0 ].ShaderTemplateIndex;
-            shaderTemplate = ( ShaderTemplateBlock ) shaderTemplateIdent.Get();
-
-            shaderPasses = new ShaderPassBlock[shaderTemplate.PostprocessDefinition[ 0 ].Passes.Length];
-            shaderPassPaths = new string[shaderTemplate.PostprocessDefinition[ 0 ].Passes.Length];
-            for ( var i = 0; i < shaderPasses.Length; ++i )
-            {
-                var item = shaderTemplate.PostprocessDefinition[ 0 ].Passes[ i ];
-                shaderPasses[ i ] = ( ShaderPassBlock ) item.Pass.Get();
-                shaderPassPaths[ i ] = item.Pass.ToString( );
-            }
         }
 
         private int ActiveShaderPassIndex

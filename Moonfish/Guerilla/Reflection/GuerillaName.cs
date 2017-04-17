@@ -2,9 +2,9 @@ namespace Moonfish.Guerilla.Reflection
 {
     public class GuerillaName
     {
-        private string _description;
-        private string _name;
-        private string _range;
+        private string description;
+        private string name;
+        private string range;
 
         public GuerillaName(string value, bool trimParentheticalStatements = true)
         {

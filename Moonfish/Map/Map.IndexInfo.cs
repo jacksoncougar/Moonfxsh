@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Moonfish
 {
-    public partial class Map
+    public sealed partial class Map
     {
         public struct IndexInfoStruct
         {

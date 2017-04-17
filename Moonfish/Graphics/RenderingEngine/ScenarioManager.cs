@@ -82,6 +82,7 @@ namespace Moonfish.Graphics
         {
             throw new NotImplementedException();
 
+/*
             var modelBlock = objectBlock.Model.Get<ModelBlock>(  );
             var renderBlock = modelBlock?.RenderModel.Get<RenderModelBlock>( );
 
@@ -150,6 +151,7 @@ namespace Moonfish.Graphics
                     _drawManager.AssignShader( part, materialBlock.Shader.Ident );
                 }
             }
+*/
         }
 
         /// <summary>

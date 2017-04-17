@@ -125,6 +125,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Guerilla\Tags\GlobalGeometryBlockInfoStructBlock.cs" />
     <Compile Include="Map\Map.cs" />
     <Compile Include="Map\Map.Header.cs" />
     <Compile Include="Map\Map.PathsInfo.cs" />
@@ -267,7 +268,6 @@
     <Compile Include="Forms\TagDatumView.Designer.cs">
       <DependentUpon>TagDatumView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Blam!\TextureState.cs" />
     <Compile Include="Graphics\RenderingEngine\Bucket.cs" />
     <Compile Include="Graphics\RenderingEngine\BucketManager.cs" />
     <Compile Include="Graphics\Input\ClosestNotMeConvexResultCallback.cs" />

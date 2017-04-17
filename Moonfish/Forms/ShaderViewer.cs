@@ -41,8 +41,9 @@ namespace Moonfish.Graphics
             return PeekMessage(out result, IntPtr.Zero, (uint) 0, (uint) 0, (uint) 0) == 0;
         }
 
-        public ShaderViewer()
+        public ShaderViewer(MaterialShader material)
         {
+            this.material = material;
             InitializeComponent();
             glControl1.Load += glControl1_Load;
         }

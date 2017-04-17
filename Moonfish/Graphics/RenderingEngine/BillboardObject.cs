@@ -81,7 +81,6 @@ namespace Moonfish.Graphics
     {
         public MoonfishScreenSpaceShader(TagIdent bitmap )
         {
-            TagReference renderPass = new TagReference();
             var shaderPass = new ShaderPassBlock
             {
                 PostprocessDefinition = new[]

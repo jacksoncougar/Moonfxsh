@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using JetBrains.Annotations;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -7,30 +10,23 @@ namespace Moonfish.Guerilla.Tags
     /// </summary>
     public interface IResourceBlock
     {
+        [UsedImplicitly]
         ResourcePointer GetResourcePointer(int index = 0);
+        [UsedImplicitly]
         int GetResourceLength(int index = 0);
         void SetResourcePointer(ResourcePointer pointer, int index = 0);
+        [UsedImplicitly]
         void SetResourceLength(int length, int index = 0);
     }
 
-    public static class ResourceBlockExtensions
-
-{
-
-    public static byte[] GetResourceData(this IResourceBlock resourceInfoBlock, int index = 0)
+    public interface IResourceBlock<out T> : IResourceBlock
     {
-            throw new NotImplementedException();
+        T GetResource(int index = 0);
+
+        void LoadResource(Func<IResourceBlock, int, Stream> @delegate);
     }
-}
 
-    public struct ResourceReference
+    public interface IResourceContainer<out T> : IEnumerable<IResourceBlock<T>>
     {
-        public ResourceReference(int address, int length)
-        {
-            Address = address;
-            Length = length;
-        }
-        public int Address;
-        public int Length;
     }
 }

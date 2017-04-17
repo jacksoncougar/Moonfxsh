@@ -361,13 +361,9 @@ namespace Moonfish.Graphics
 
     class ScenarioObjectAxisAlignedWrapper
     {
-        private readonly ScenarioObject _scenarioObject;
-        private float _axisAlignedRotation;
-
         public void SetAxisAlignedRotation(int instance, float value)
         {
-                _axisAlignedRotation = value;
-               // var upAxis = _scenarioObject.InstanceBasisMatrices[instance].Row2.Xyz.Normalized();
+            // var upAxis = _scenarioObject.InstanceBasisMatrices[instance].Row2.Xyz.Normalized();
                 //_scenarioObject.InstanceRotations[instance] = Quaternion.FromAxisAngle(upAxis, _axisAlignedRotation);
         }
 

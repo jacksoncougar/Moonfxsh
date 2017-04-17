@@ -9,7 +9,7 @@ using Moonfish.Tags;
 
 namespace Moonfish
 {
-    partial class Map
+    sealed partial class Map
     {
         private const int VirtualBaseAddress = -2147086368;
 
@@ -244,8 +244,7 @@ namespace Moonfish
                     "Warning: address > GetFilePosition()");
                 BaseStream.Seek(address, SeekOrigin.Begin);
             }
-            System.Diagnostics.Debug.WriteLineIf(address%512 != 0,
-                "Warning: address % 512 != 0");
+            System.Diagnostics.Debug.WriteLineIf(address%512 != 0, "Warning: address % 512 != 0");
             if (outputStream.Position%512 != 0)
                 System.Diagnostics.Debug.WriteLineIf(
                     outputStream.Position%512 != 0,
@@ -338,7 +337,7 @@ namespace Moonfish
 
         private void CopySoundResources(Stream outputStream)
         {
-            if (!Index.Any(x => x.Class == TagClass.Ugh))
+            if (Index.All(x => x.Class != TagClass.Ugh))
                 return;
 
             var ughData = Index.First(x => x.Class == TagClass.Ugh);

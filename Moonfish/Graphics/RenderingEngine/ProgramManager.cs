@@ -14,7 +14,6 @@ namespace Moonfish.Graphics
     {
         private Program _activeProgram;
         private bool _changedProgram;
-        private int _normalMapPaletteTexture;
 
         public ProgramManager( )
         {

@@ -17,31 +17,6 @@ namespace Moonfish.Graphics
         private CollisionObject selectedCollisionObject;
         private ScenarioObjectAxisAlignedWrapper selectedScenarioObject;
 
-        public event EventHandler<SceneMouseEventArgs> MouseCaptureChanged;
-
-        public event EventHandler<SceneMouseEventArgs> MouseClick;
-
-        public event EventHandler<SceneMouseEventArgs> MouseDown;
-
-        public event EventHandler<SceneMouseEventArgs> MouseMove;
-
-        public event EventHandler<SceneMouseEventArgs> MouseUp;
-
-        public void OnMouseCaptureChanged( object sender, SceneMouseEventArgs e )
-        {
-            throw new NotImplementedException( );
-        }
-
-        public void OnMouseClick( object sender, SceneMouseEventArgs e )
-        {
-            throw new NotImplementedException( );
-        }
-
-        public void OnMouseDown( object sender, SceneMouseEventArgs e )
-        {
-            throw new NotImplementedException( );
-        }
-
         public async void OnMouseMove( object sender, SceneMouseEventArgs e )
         {
             //var state = Mouse.GetState( );

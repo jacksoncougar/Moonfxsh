@@ -116,7 +116,7 @@ namespace Moonfish.Graphics
             TextureMagFilter textureMagFilter = TextureMagFilter.Linear,
             TextureMinFilter textureMinFilter = TextureMinFilter.Linear )
         {
-            var buffer = bitmapBlock.GetResourceData( );
+            var buffer = bitmapBlock.GetResource();
             if ( buffer == null ) return;
             var width = bitmapBlock.Width;
             var height = bitmapBlock.Height;
@@ -186,7 +186,7 @@ namespace Moonfish.Graphics
             GL.TexStorage2D( ( TextureTarget2d ) _textureTarget, 1, SizedInternalFormat.Rgba8, bitmapBlock.Width,
                 bitmapBlock.Height );
 
-            var indexData = bitmapBlock.GetResourceData( 0 );
+            var indexData = bitmapBlock.GetResource();
             var texelData = new byte[indexData.Length * 4];
 
             for ( var i = 0; i < indexData.Length; ++i )

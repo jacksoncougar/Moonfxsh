@@ -21,13 +21,10 @@ namespace Moonfish.Graphics.RenderingEngine
             {
                 case D3DCULL.NONE:
                     return CullFaceMode.FrontAndBack;
-                    break;
                 case D3DCULL.CW:
                     return CullFaceMode.Back;
-                    break;
                 case D3DCULL.CCW:
                     return CullFaceMode.Front;
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException( nameof( cull ), cull, null );
             }

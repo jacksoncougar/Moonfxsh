@@ -4,6 +4,7 @@ using System.IO;
 using Moonfish.Tags;
 using System.Linq.Expressions;
 using System.Reflection;
+using Moonfish.Guerilla.Tags;
 
 namespace Moonfish.Guerilla
 {

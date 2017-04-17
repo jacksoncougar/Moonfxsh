@@ -1,86 +1,22 @@
-﻿using Moonfish.ResourceManagement;
-using OpenTK;
+﻿using OpenTK;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class RenderModelBlock
+    public partial class RenderModelBlock : IResourceContainer<RenderModelSectionDataBlock>
     {
-    }
-
-    partial class RenderModelSectionBlock : IResourceBlock
-    {
-        public void LoadResourceData( )
+        IEnumerator<IResourceBlock<RenderModelSectionDataBlock>> IEnumerable<IResourceBlock<RenderModelSectionDataBlock>>.GetEnumerator()
         {
-            throw new NotImplementedException();
-            ResourceStream resourceStream = null; //GeometryBlockInfo.GetResourceFromCache();
-            if ( resourceStream == null ) return;
-
-            RenderModelSectionDataBlock sectionBlock = new RenderModelSectionDataBlock( );
-            using ( BinaryReader binaryReader = new BinaryReader( resourceStream ) )
-            {
-                sectionBlock.Read( binaryReader );
-
-                GlobalGeometryBlockResourceBlock[] vertexBufferResources = GeometryBlockInfo.Resources.Where(
-                    x => x.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer ).ToArray( );
-                for ( int i = 0;
-                    i < sectionBlock.Section.VertexBuffers.Length && i < vertexBufferResources.Length;
-                    ++i )
-                {
-                    sectionBlock.Section.VertexBuffers[ i ].VertexBuffer.Data =
-                        resourceStream.GetResourceData( vertexBufferResources[ i ] );
-                }
-            }
-            SectionData = new[] {sectionBlock};
+            return Sections.Cast<IResourceBlock<RenderModelSectionDataBlock>>().GetEnumerator();
         }
 
-        public ResourcePointer GetResourcePointer( int index = 0 )
+        public IEnumerator GetEnumerator()
         {
-            return GeometryBlockInfo.BlockOffset;
-        }
-
-        public int GetResourceLength( int index = 0 )
-        {
-            return GeometryBlockInfo.BlockSize;
-        }
-
-        public void SetResourcePointer( ResourcePointer pointer, int index = 0 )
-        {
-            GeometryBlockInfo.BlockOffset = pointer;
-        }
-
-        public void SetResourceLength( int length, int index = 0 )
-        {
-            GeometryBlockInfo.BlockSize = length;
-        }
-
-        public void LoadSectionDataIfEmpty( )
-        {
-            if ( SectionData.Length > 0 ) return;
-
-            throw new NotImplementedException();
-            ResourceStream resourceStream = null; //GeometryBlockInfo.GetResourceFromCache();
-            if ( resourceStream == null ) return;
-
-            RenderModelSectionDataBlock sectionBlock = new RenderModelSectionDataBlock( );
-            using ( BinaryReader binaryReader = new BinaryReader( resourceStream ) )
-            {
-                sectionBlock.Read( binaryReader );
-
-                GlobalGeometryBlockResourceBlock[] vertexBufferResources = GeometryBlockInfo.Resources.Where(
-                    x => x.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer ).ToArray( );
-                for ( int i = 0;
-                    i < sectionBlock.Section.VertexBuffers.Length && i < vertexBufferResources.Length;
-                    ++i )
-                {
-                    sectionBlock.Section.VertexBuffers[ i ].VertexBuffer.Data =
-                        resourceStream.GetResourceData( vertexBufferResources[ i ] );
-                }
-            }
-            SectionData = new[] {sectionBlock};
+            return Sections.GetEnumerator();
         }
     }
 

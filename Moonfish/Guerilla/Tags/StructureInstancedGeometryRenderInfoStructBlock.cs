@@ -32,11 +32,11 @@ namespace Moonfish.Guerilla.Tags
         public void LoadRenderData()
         {
             throw new NotImplementedException();
-            ResourceStream resourceStream = null; //GeometryBlockInfo.GetResourceFromCache();
-            if (resourceStream == null) return;
+            ResourceStreamWrapper resourceStreamWrapper = null; //GeometryBlockInfo.GetResourceFromCache();
+            if (resourceStreamWrapper == null) return;
 
             var clusterBlock = new StructureBspClusterDataBlockNew();
-            using (var binaryReader = new BinaryReader(resourceStream))
+            using (var binaryReader = new BinaryReader(resourceStreamWrapper))
             {
                 clusterBlock.Read(binaryReader);
 
@@ -47,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
                     ++i)
                 {
                     clusterBlock.Section.VertexBuffers[i].VertexBuffer.Data =
-                        resourceStream.GetResourceData(vertexBufferResources[i]);
+                        resourceStreamWrapper.GetResourceData(vertexBufferResources[i]);
                 }
             }
             RenderData = new[] { clusterBlock };

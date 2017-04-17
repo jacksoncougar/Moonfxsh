@@ -23,7 +23,7 @@
             return pointer.value;
         }
 
-        public int Location => (int)(value & Mask);
+        public int Location => (int)(value & Mask) >> 30;
 
         public int Address => (int) (value & ~Mask);
 

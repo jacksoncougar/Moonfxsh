@@ -12,10 +12,9 @@ namespace Moonfish.Guerilla.Tags
 {
     using Moonfish.Tags;
     using Moonfish.Model;
-    using System.IO;
     using System.Collections.Generic;
     using System.Linq;
-    
+
     public partial class GlobalGeometryBlockResourceBlock : GuerillaBlock, IWriteQueueable
     {
         public TypeEnum Type;

@@ -94,7 +94,7 @@ namespace Moonfish.Guerilla.Tags
 
         public void LoadResource(Func<IResourceBlock, int, Stream> @delegate)
         {
-            data0 = new byte[GetResourceLength(0)];
+            data0 = new byte[GetResourceLength()];
             @delegate(this, 0).Read(data0, 0, data0.Length);
             data1 = new byte[GetResourceLength(1)];
             @delegate(this, 1).Read(data1, 0, data1.Length);

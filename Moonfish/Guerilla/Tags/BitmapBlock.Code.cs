@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace Moonfish.Guerilla.Tags
 {
+    [UsedImplicitly]
     public partial class BitmapBlock : IResourceContainer<byte[]>
     {
         IEnumerator<IResourceBlock<byte[]>> IEnumerable<IResourceBlock<byte[]>>.GetEnumerator()

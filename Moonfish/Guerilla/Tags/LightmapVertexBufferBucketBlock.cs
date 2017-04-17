@@ -30,11 +30,11 @@ namespace Moonfish.Guerilla.Tags
         public void LoadCacheData()
         {
             throw new NotImplementedException();
-            ResourceStream resourceStream = null; //GeometryBlockInfo.GetResourceFromCache();
-            if (resourceStream == null) return;
+            ResourceStreamWrapper resourceStreamWrapper = null; //GeometryBlockInfo.GetResourceFromCache();
+            if (resourceStreamWrapper == null) return;
 
             LightmapVertexBufferBucketCacheDataBlock sectionBlock = new LightmapVertexBufferBucketCacheDataBlock();
-            using (BinaryReader binaryReader = new BinaryReader(resourceStream))
+            using (BinaryReader binaryReader = new BinaryReader(resourceStreamWrapper))
             {
                 sectionBlock.Read(binaryReader);
 
@@ -45,7 +45,7 @@ namespace Moonfish.Guerilla.Tags
                     ++i)
                 {
                     sectionBlock.VertexBuffers[i].VertexBuffer.Data =
-                        resourceStream.GetResourceData(vertexBufferResources[i]);
+                        resourceStreamWrapper.GetResourceData(vertexBufferResources[i]);
                 }
             }
             CacheData = new[] { sectionBlock };

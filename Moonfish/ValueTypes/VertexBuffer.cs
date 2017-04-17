@@ -8,9 +8,9 @@ namespace Moonfish.Tags
     [StructLayout(LayoutKind.Sequential, Size = 32)]
     public struct VertexBuffer
     {
-        public VertexAttributeType Type; //?
+        public VertexAttributeType Type;
         public byte[] Data;
 
-        public int VertexElementCount => Data.Length / Type.GetSize( );
+        public int VertexElementCount => Data?.Length ?? 0 / Type.GetSize( );
     }
 }

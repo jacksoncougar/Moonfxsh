@@ -18,20 +18,20 @@ namespace Moonfish
         {
             const int blockSize = 1024*4;
 
-            var buffer0 = new byte[blockSize];
+            var buffer = new byte[blockSize];
 
             var blockCount = size/blockSize;
             var remainder = size%blockSize;
 
             for (var index = 0; index < blockCount; ++index)
             {
-                if (stream.Read(buffer0, 0, buffer0.Length) < buffer0.Length)
+                if (stream.Read(buffer, 0, buffer.Length) < buffer.Length)
                     throw new IOException();
-                output.Write(buffer0, 0, buffer0.Length);
+                output.Write(buffer, 0, buffer.Length);
             }
-            if (stream.Read(buffer0, 0, remainder) < remainder)
+            if (stream.Read(buffer, 0, remainder) < remainder)
                 throw new IOException();
-            output.Write(buffer0, 0, remainder);
+            output.Write(buffer, 0, remainder);
         }
 
         private class StreamPositionHandle : IDisposable

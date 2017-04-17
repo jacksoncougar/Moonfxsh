@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-using Fasterflect;
 using Moonfish.Guerilla;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
@@ -85,7 +83,7 @@ namespace Moonfish
             //  INDEX
             BaseStream.Seek(Header.IndexInfo.IndexOffset, SeekOrigin.Begin);
 
-            Index = new TagIndex(this, paths);
+            Index = new TagIndex(this, paths);  
 
             // Calculate File-pointer magic
             var secondaryMagic = Index[Index.GlobalsIdent].VirtualAddress -
@@ -182,13 +180,17 @@ namespace Moonfish
                         globals.UnicodeBlockInfo.EnglishStringTableAddress,
                         globals.UnicodeBlockInfo.EnglishStringTableLength);
 
-
                     LoadUnicode(binaryReader,
                         globals.UnicodeBlockInfo.FrenchStringIndexAddress,
                         globals.UnicodeBlockInfo.FrenchStringCount,
                         globals.UnicodeBlockInfo.FrenchStringTableAddress,
                         globals.UnicodeBlockInfo.FrenchStringTableLength);
 
+                    LoadUnicode(binaryReader,
+                        globals.UnicodeBlockInfo.SpanishStringIndexAddress,
+                        globals.UnicodeBlockInfo.SpanishStringCount,
+                        globals.UnicodeBlockInfo.SpanishStringTableAddress,
+                        globals.UnicodeBlockInfo.SpanishStringTableLength);
 
                     LoadUnicode(binaryReader,
                         globals.UnicodeBlockInfo.ChineseStringIndexAddress,
@@ -197,23 +199,11 @@ namespace Moonfish
                         globals.UnicodeBlockInfo.ChineseStringTableLength);
                 }
             }
-
-            Initialize();
         }
 
         public VirtualStreamWrapper<Stream> BaseStream { get; }
 
         public TagIndex Index { get; }
-
-        public int Count
-        {
-            get { return Index.Count; }
-        }
-
-        public TagDatum this[int index]
-        {
-            get { return Index[index]; }
-        }
 
         private void LoadUnicode(BinaryReader binaryReader,
             int stringIndexAddress, int stringCount, int stringTableAddress,
@@ -254,65 +244,13 @@ namespace Moonfish
             }
         }
 
-        private void Initialize()
-        {
-        }
-
-        public TagDatum GetOwner(int address)
-        {
-            //TODO fix this bad code.
-            //foreach (var data in from data in Index
-            //    let start = VirtualAddressToFileOffset(data.VirtualAddress)
-            //    let length = data.Length
-            //    where address >= start && address < start + length
-            //    select data)
-            //{
-            //    return data;
-            //}
-            return new TagDatum();
-        }
-
-        public TagDatum Add<T>(T item, string tagName) where T : GuerillaBlock
-        {
-            var lastDatum = Index.Last();
-
-            var stream = new VirtualStream(lastDatum.VirtualAddress);
-            var binaryWriter = new BinaryWriter(stream);
-
-            binaryWriter.Write(item);
-            var serializedTagData = stream.ToArray();
-
-            var attribute =
-                (TagClassAttribute)
-                    item.GetType().Attribute(typeof (TagClassAttribute)) ??
-                (TagClassAttribute)
-                    item.GetType()
-                        .BaseType?.GetCustomAttributes(
-                            typeof (TagClassAttribute))
-                        .FirstOrDefault();
-            var tagDatum = Index.Add(attribute.TagClass, tagName,
-                serializedTagData.Length, lastDatum.VirtualAddress);
-
-            tagCache.Add(tagDatum.Identifier, item);
-
-            var paths = Index.Select(x => x.Path);
-
-
-#if DEBUG
-            //new Validator().Validate(tagDatum, stream);
-#endif
-            return tagDatum;
-
-            //Allocate(tagDatum.Identifier, serializedTagData.Length);
-        }
-
         public void SwitchActiveAllocation(VirtualStreamIndex allocation)
         {
             BaseStream.DisableVirtualSection(activeAllocation);
             BaseStream.EnableVirtualSection(allocation);
         }
 
-        public string CalculateHash(TagIdent ident)
+        private string CalculateHash(TagIdent ident)
         {
             var sha1 = new SHA1CryptoServiceProvider();
             var buffer = sha1.ComputeHash(ReadTagMeta(ident));
@@ -328,11 +266,18 @@ namespace Moonfish
 
             instance.Read(sourceReader);
             var container = instance as IResourceContainer<object>;
-            if (container != null)
-                foreach (IResourceBlock<object> block in container)
-                {
-                    block.LoadResource(GetResourceData);
-                }
+
+            try
+            {
+                if (container != null)
+                    foreach (IResourceBlock<object> block in container)
+                    {
+                        block.LoadResource(GetResourceData);
+                    }
+            }
+            catch (NotImplementedException)
+            {
+            }
 
             return instance;
         }
@@ -340,8 +285,6 @@ namespace Moonfish
         private Stream GetResourceData(IResourceBlock sender, int index)
         {
             var block = sender;
-            if (block == null)
-                return Stream.Null;
 
             var resourcePointer = block.GetResourcePointer(index);
             var resourceLength = block.GetResourceLength(index);
@@ -350,7 +293,7 @@ namespace Moonfish
             using (BaseStream.Pin())
             {
                 if (resourcePointer.Location != 0)
-                    return Stream.Null;
+                    throw new NotImplementedException("Can't get resource from external sources.");
 
                 BaseStream.Seek(resourcePointer.Address, SeekOrigin.Begin);
                 BaseStream.Read(buffer, 0, buffer.Length);
@@ -456,44 +399,19 @@ namespace Moonfish
         /// </summary>
         /// <param name="ident"></param>
         /// <returns></returns>
-        public byte[] ReadTagMeta(TagIdent ident)
+        private byte[] ReadTagMeta(TagIdent ident)
         {
-            TagDatum datum;
             byte[] buffer;
 
             using (BaseStream.Pin())
             {
                 Seek(ident);
-                datum = Index[ident];
+                var datum = Index[ident];
                 buffer = new byte[datum.Length];
                 BaseStream.Read(buffer, 0, datum.Length);
             }
 
             return buffer;
-        }
-
-        /// <summary>
-        ///     TODO optimize
-        /// </summary>
-        /// <param name="guerillaBlock"></param>
-        /// <returns></returns>
-        public bool Contains<T>(T guerillaBlock) where T : GuerillaBlock
-        {
-            foreach (var block in tagCache)
-            {
-                if (block.Value == guerillaBlock)
-                    return true;
-                var children = block.Value.Children().ToList();
-                foreach (var child in children)
-                {
-                    if (child is GlobalGeometryPartBlockNew)
-                    {
-                    }
-                    if (child == guerillaBlock)
-                        return true;
-                }
-            }
-            return false;
         }
 
         public IEnumerator<TagDatum> GetEnumerator()

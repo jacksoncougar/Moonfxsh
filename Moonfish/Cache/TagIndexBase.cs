@@ -6,6 +6,7 @@ namespace Moonfish
     public class TagIndexBase
     {
         protected internal const int HeaderSize = 32;
+
         private readonly TagClass fourCC;
         public int NoodleValue;
         public int ClassArrayAddress;

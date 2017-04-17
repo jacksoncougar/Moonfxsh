@@ -12,11 +12,11 @@ namespace Moonfish.Guerilla
             this GlobalGeometryBlockInfoStructBlock geometryInfo )
         {
             throw new NotImplementedException();
-            ResourceStream resourceStream = null;
-            if ( resourceStream == null ) return default(GlobalGeometrySectionStructBlock);
+            ResourceStreamWrapper resourceStreamWrapper = null;
+            if ( resourceStreamWrapper == null ) return default(GlobalGeometrySectionStructBlock);
 
             GlobalGeometrySectionStructBlock sectionBlock = new GlobalGeometrySectionStructBlock( );
-            using ( BinaryReader binaryReader = new BinaryReader( resourceStream ) )
+            using ( BinaryReader binaryReader = new BinaryReader( resourceStreamWrapper ) )
             {
                 sectionBlock.Read( binaryReader );
 
@@ -27,7 +27,7 @@ namespace Moonfish.Guerilla
                     ++i )
                 {
                     sectionBlock.VertexBuffers[ i ].VertexBuffer.Data =
-                        resourceStream.GetResourceData( vertexBufferResources[ i ] );
+                        resourceStreamWrapper.GetResourceData( vertexBufferResources[ i ] );
                 }
             }
             return sectionBlock;

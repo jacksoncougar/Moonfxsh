@@ -14,7 +14,7 @@ namespace Moonfish.Tags
     {
         public static BlamPointer ReadBlamPointer( this BinaryReader binaryReader, int elementSize )
         {
-            var resourceStream = binaryReader.BaseStream as ResourceStream;
+            var resourceStream = binaryReader.BaseStream as ResourceStreamWrapper;
             if ( resourceStream == null )
             {
                 return new BlamPointer( binaryReader.ReadInt32( ), binaryReader.ReadInt32( ), elementSize );

@@ -126,6 +126,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Guerilla\Tags\GlobalGeometryBlockInfoStructBlock.cs" />
+    <Compile Include="Guerilla\Tags\GlobalGeometryBlockResourceBlock.code.cs" />
+    <Compile Include="Guerilla\Tags\RenderModelSectionBlock.code.cs" />
     <Compile Include="Map\Map.cs" />
     <Compile Include="Map\Map.Header.cs" />
     <Compile Include="Map\Map.PathsInfo.cs" />

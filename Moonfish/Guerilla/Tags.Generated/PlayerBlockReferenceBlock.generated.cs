@@ -60,22 +60,22 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Skin);
-            queueableBinaryWriter.Write(this.Bottomleft);
-            queueableBinaryWriter.Write(((byte)(this.TableOrder)));
-            queueableBinaryWriter.Write(this.MaximumPlayerCount);
-            queueableBinaryWriter.Write(this.RowCount);
-            queueableBinaryWriter.Write(this.ColumnCount);
-            queueableBinaryWriter.Write(this.RowHeight);
-            queueableBinaryWriter.Write(this.ColumnWidth);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.Skin);
+            queueableBlamBinaryWriter.Write(this.Bottomleft);
+            queueableBlamBinaryWriter.Write(((byte)(this.TableOrder)));
+            queueableBlamBinaryWriter.Write(this.MaximumPlayerCount);
+            queueableBlamBinaryWriter.Write(this.RowCount);
+            queueableBlamBinaryWriter.Write(this.ColumnCount);
+            queueableBlamBinaryWriter.Write(this.RowHeight);
+            queueableBlamBinaryWriter.Write(this.ColumnWidth);
         }
         public enum TableOrderEnum : byte
         {

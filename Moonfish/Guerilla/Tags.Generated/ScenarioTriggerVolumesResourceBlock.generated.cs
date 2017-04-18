@@ -48,17 +48,17 @@ namespace Moonfish.Guerilla.Tags
             this.KillTriggerVolumes = base.ReadBlockArrayData<ScenarioTriggerVolumeBlock>(binaryReader, pointerQueue.Dequeue());
             this.ObjectNames = base.ReadBlockArrayData<ScenarioObjectNamesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.KillTriggerVolumes);
-            queueableBinaryWriter.QueueWrite(this.ObjectNames);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.KillTriggerVolumes);
+            queueableBlamBinaryWriter.QueueWrite(this.ObjectNames);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.KillTriggerVolumes);
-            queueableBinaryWriter.WritePointer(this.ObjectNames);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.KillTriggerVolumes);
+            queueableBlamBinaryWriter.WritePointer(this.ObjectNames);
         }
     }
 }

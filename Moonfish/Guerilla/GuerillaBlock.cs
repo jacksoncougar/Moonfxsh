@@ -159,12 +159,12 @@ namespace Moonfish.Guerilla
             ReadInstances(binaryReader, pointers);
         }
 
-        public virtual void Write_(QueueableBinaryWriter queueableBinaryWriter)
+        public virtual void Write_(QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
             return;
         }
 
-        public virtual void QueueWrites(QueueableBinaryWriter binaryWriter)
+        public virtual void QueueWrites(QueueableBlamBinaryWriter blamBinaryWriter)
         {
             return;
         }

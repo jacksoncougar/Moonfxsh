@@ -60,23 +60,23 @@ namespace Moonfish.Guerilla.Tags
             this.AmbientLight.ReadInstances(binaryReader, pointerQueue);
             this.LightmapShadows.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.PrimaryLight.QueueWrites(queueableBinaryWriter);
-            this.SecondaryLight.QueueWrites(queueableBinaryWriter);
-            this.AmbientLight.QueueWrites(queueableBinaryWriter);
-            this.LightmapShadows.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.PrimaryLight.QueueWrites(queueableBlamBinaryWriter);
+            this.SecondaryLight.QueueWrites(queueableBlamBinaryWriter);
+            this.AmbientLight.QueueWrites(queueableBlamBinaryWriter);
+            this.LightmapShadows.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.LightingVariablesObjectAffected)));
-            queueableBinaryWriter.Write(this.LightmapBrightnessOffset);
-            this.PrimaryLight.Write_(queueableBinaryWriter);
-            this.SecondaryLight.Write_(queueableBinaryWriter);
-            this.AmbientLight.Write_(queueableBinaryWriter);
-            this.LightmapShadows.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.LightingVariablesObjectAffected)));
+            queueableBlamBinaryWriter.Write(this.LightmapBrightnessOffset);
+            this.PrimaryLight.Write_(queueableBlamBinaryWriter);
+            this.SecondaryLight.Write_(queueableBlamBinaryWriter);
+            this.AmbientLight.Write_(queueableBlamBinaryWriter);
+            this.LightmapShadows.Write_(queueableBlamBinaryWriter);
         }
         [System.FlagsAttribute()]
         public enum ObjectAffected : int

@@ -11,7 +11,7 @@ namespace Moonfish.Tags
     partial class StructureBinarySeperationPlane
     {
         [GuerillaPreProcessMethod(BlockName = "scenario_structure_bsp_block")]
-        protected static void GuerillaPreProcessMethod(BinaryReader binaryReader, IList<tag_field> fields)
+        protected static void GuerillaPreProcessMethod(BlamBinaryReader blamBinaryReader, IList<tag_field> fields)
         {
             //fields.Insert( 0, new tag_field( ) { type = field_type._field_long_integer, Name = "Block Length" } );
             //fields.Insert( 1, new tag_field( ) { type = field_type._field_long_integer, Name = "SBSP virtual start address" } );
@@ -23,7 +23,7 @@ namespace Moonfish.Tags
     public partial class CollisionBSPPhysicsBlock
     {
         [GuerillaPreProcessMethod(BlockName = "collision_bsp_physics_block")]
-        protected static void GuerillaPreProcessMethod(BinaryReader binaryReader, IList<tag_field> fields)
+        protected static void GuerillaPreProcessMethod(BlamBinaryReader blamBinaryReader, IList<tag_field> fields)
         {
             var field = fields.Last(x => x.type != field_type._field_terminator);
             fields.Remove(field);

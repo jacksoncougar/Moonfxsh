@@ -48,17 +48,17 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.LowFrequencySound.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.LowFrequencySound.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.LowFrequencySound.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DspEffect);
-            this.LowFrequencySound.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.TimePeriod);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.DspEffect);
+            this.LowFrequencySound.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.TimePeriod);
         }
     }
 }

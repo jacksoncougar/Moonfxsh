@@ -47,17 +47,17 @@ namespace Moonfish.Guerilla.Tags
             this.Grenades = base.ReadBlockArrayData<GrenadeBlock>(binaryReader, pointerQueue.Dequeue());
             this.Powerups = base.ReadBlockArrayData<PowerupBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Grenades);
-            queueableBinaryWriter.QueueWrite(this.Powerups);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Grenades);
+            queueableBlamBinaryWriter.QueueWrite(this.Powerups);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Grenades);
-            queueableBinaryWriter.WritePointer(this.Powerups);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Grenades);
+            queueableBlamBinaryWriter.WritePointer(this.Powerups);
         }
     }
 }

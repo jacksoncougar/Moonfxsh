@@ -55,20 +55,20 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.AutoaimAngle);
-            queueableBinaryWriter.Write(this.AutoaimRange);
-            queueableBinaryWriter.Write(this.MagnetismAngle);
-            queueableBinaryWriter.Write(this.MagnetismRange);
-            queueableBinaryWriter.Write(this.DeviationAngle);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.AutoaimAngle);
+            queueableBlamBinaryWriter.Write(this.AutoaimRange);
+            queueableBlamBinaryWriter.Write(this.MagnetismAngle);
+            queueableBlamBinaryWriter.Write(this.MagnetismRange);
+            queueableBlamBinaryWriter.Write(this.DeviationAngle);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
         }
     }
 }

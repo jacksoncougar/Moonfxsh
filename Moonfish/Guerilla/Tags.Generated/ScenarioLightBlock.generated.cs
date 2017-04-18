@@ -54,21 +54,21 @@ namespace Moonfish.Guerilla.Tags
             this.DeviceData.ReadInstances(binaryReader, pointerQueue);
             this.LightData.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.ObjectData.QueueWrites(queueableBinaryWriter);
-            this.DeviceData.QueueWrites(queueableBinaryWriter);
-            this.LightData.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.ObjectData.QueueWrites(queueableBlamBinaryWriter);
+            this.DeviceData.QueueWrites(queueableBlamBinaryWriter);
+            this.LightData.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Type);
-            queueableBinaryWriter.Write(this.Name);
-            this.ObjectData.Write_(queueableBinaryWriter);
-            this.DeviceData.Write_(queueableBinaryWriter);
-            this.LightData.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Type);
+            queueableBlamBinaryWriter.Write(this.Name);
+            this.ObjectData.Write_(queueableBlamBinaryWriter);
+            this.DeviceData.Write_(queueableBlamBinaryWriter);
+            this.LightData.Write_(queueableBlamBinaryWriter);
         }
     }
 }

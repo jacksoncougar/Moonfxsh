@@ -55,21 +55,21 @@ namespace Moonfish.Guerilla.Tags
             this.FiringPositions = base.ReadBlockArrayData<FiringPositionsBlock>(binaryReader, pointerQueue.Dequeue());
             this.Areas = base.ReadBlockArrayData<AreasBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.FiringPositions);
-            queueableBinaryWriter.QueueWrite(this.Areas);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.FiringPositions);
+            queueableBlamBinaryWriter.QueueWrite(this.Areas);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((int)(this.ZoneFlags)));
-            queueableBinaryWriter.Write(this.ManualBsp);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.FiringPositions);
-            queueableBinaryWriter.WritePointer(this.Areas);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(((int)(this.ZoneFlags)));
+            queueableBlamBinaryWriter.Write(this.ManualBsp);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.WritePointer(this.FiringPositions);
+            queueableBlamBinaryWriter.WritePointer(this.Areas);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

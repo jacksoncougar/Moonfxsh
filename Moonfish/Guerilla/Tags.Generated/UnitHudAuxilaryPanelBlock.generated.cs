@@ -143,64 +143,64 @@ namespace Moonfish.Guerilla.Tags
             this.MultitexOverlay = base.ReadBlockArrayData<GlobalHudMultitextureOverlayDefinition>(binaryReader, pointerQueue.Dequeue());
             this.GNullBlock = base.ReadBlockArrayData<GNullBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.MultitexOverlay);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.MultitexOverlay);
+            queueableBlamBinaryWriter.QueueWrite(this.GNullBlock);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.AnchorOffset);
-            queueableBinaryWriter.Write(this.WidthScale);
-            queueableBinaryWriter.Write(this.HeightScale);
-            queueableBinaryWriter.Write(((short)(this.UnitHudAuxilaryPanelScalingFlags)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.InterfaceBitmap);
-            queueableBinaryWriter.Write(this.DefaultColor);
-            queueableBinaryWriter.Write(this.FlashingColor);
-            queueableBinaryWriter.Write(this.FlashPeriod);
-            queueableBinaryWriter.Write(this.FlashDelay);
-            queueableBinaryWriter.Write(this.NumberOfFlashes);
-            queueableBinaryWriter.Write(((short)(this.UnitHudAuxilaryPanelFlashFlags)));
-            queueableBinaryWriter.Write(this.FlashLength);
-            queueableBinaryWriter.Write(this.DisabledColor);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.SequenceIndex);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.WritePointer(this.MultitexOverlay);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(this.AnchorOffset0);
-            queueableBinaryWriter.Write(this.WidthScale0);
-            queueableBinaryWriter.Write(this.HeightScale0);
-            queueableBinaryWriter.Write(((short)(this.UnitHudAuxilaryPanelUnitHudAuxilaryPanelScalingFlags0)));
-            queueableBinaryWriter.Write(this.fieldpad6);
-            queueableBinaryWriter.Write(this.fieldpad7);
-            queueableBinaryWriter.Write(this.MeterBitmap);
-            queueableBinaryWriter.Write(this.ColorAtMeterMinimum);
-            queueableBinaryWriter.Write(this.ColorAtMeterMaximum);
-            queueableBinaryWriter.Write(this.FlashColor);
-            queueableBinaryWriter.Write(this.EmptyColor);
-            queueableBinaryWriter.Write(((byte)(this.UnitHudAuxilaryPanelFlags)));
-            queueableBinaryWriter.Write(this.MinumumMeterValue);
-            queueableBinaryWriter.Write(this.SequenceIndex0);
-            queueableBinaryWriter.Write(this.AlphaMultiplier);
-            queueableBinaryWriter.Write(this.AlphaBias);
-            queueableBinaryWriter.Write(this.ValueScale);
-            queueableBinaryWriter.Write(this.Opacity);
-            queueableBinaryWriter.Write(this.Translucency);
-            queueableBinaryWriter.Write(this.DisabledColor0);
-            queueableBinaryWriter.WritePointer(this.GNullBlock);
-            queueableBinaryWriter.Write(this.fieldpad8);
-            queueableBinaryWriter.Write(this.MinimumFractionCutoff);
-            queueableBinaryWriter.Write(((int)(this.UnitHudAuxilaryPanelUnitHudAuxilaryPanelFlags0)));
-            queueableBinaryWriter.Write(this.fieldpad9);
-            queueableBinaryWriter.Write(this.fieldpad10);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.Type)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.AnchorOffset);
+            queueableBlamBinaryWriter.Write(this.WidthScale);
+            queueableBlamBinaryWriter.Write(this.HeightScale);
+            queueableBlamBinaryWriter.Write(((short)(this.UnitHudAuxilaryPanelScalingFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.InterfaceBitmap);
+            queueableBlamBinaryWriter.Write(this.DefaultColor);
+            queueableBlamBinaryWriter.Write(this.FlashingColor);
+            queueableBlamBinaryWriter.Write(this.FlashPeriod);
+            queueableBlamBinaryWriter.Write(this.FlashDelay);
+            queueableBlamBinaryWriter.Write(this.NumberOfFlashes);
+            queueableBlamBinaryWriter.Write(((short)(this.UnitHudAuxilaryPanelFlashFlags)));
+            queueableBlamBinaryWriter.Write(this.FlashLength);
+            queueableBlamBinaryWriter.Write(this.DisabledColor);
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
+            queueableBlamBinaryWriter.Write(this.SequenceIndex);
+            queueableBlamBinaryWriter.Write(this.fieldpad4);
+            queueableBlamBinaryWriter.WritePointer(this.MultitexOverlay);
+            queueableBlamBinaryWriter.Write(this.fieldpad5);
+            queueableBlamBinaryWriter.Write(this.AnchorOffset0);
+            queueableBlamBinaryWriter.Write(this.WidthScale0);
+            queueableBlamBinaryWriter.Write(this.HeightScale0);
+            queueableBlamBinaryWriter.Write(((short)(this.UnitHudAuxilaryPanelUnitHudAuxilaryPanelScalingFlags0)));
+            queueableBlamBinaryWriter.Write(this.fieldpad6);
+            queueableBlamBinaryWriter.Write(this.fieldpad7);
+            queueableBlamBinaryWriter.Write(this.MeterBitmap);
+            queueableBlamBinaryWriter.Write(this.ColorAtMeterMinimum);
+            queueableBlamBinaryWriter.Write(this.ColorAtMeterMaximum);
+            queueableBlamBinaryWriter.Write(this.FlashColor);
+            queueableBlamBinaryWriter.Write(this.EmptyColor);
+            queueableBlamBinaryWriter.Write(((byte)(this.UnitHudAuxilaryPanelFlags)));
+            queueableBlamBinaryWriter.Write(this.MinumumMeterValue);
+            queueableBlamBinaryWriter.Write(this.SequenceIndex0);
+            queueableBlamBinaryWriter.Write(this.AlphaMultiplier);
+            queueableBlamBinaryWriter.Write(this.AlphaBias);
+            queueableBlamBinaryWriter.Write(this.ValueScale);
+            queueableBlamBinaryWriter.Write(this.Opacity);
+            queueableBlamBinaryWriter.Write(this.Translucency);
+            queueableBlamBinaryWriter.Write(this.DisabledColor0);
+            queueableBlamBinaryWriter.WritePointer(this.GNullBlock);
+            queueableBlamBinaryWriter.Write(this.fieldpad8);
+            queueableBlamBinaryWriter.Write(this.MinimumFractionCutoff);
+            queueableBlamBinaryWriter.Write(((int)(this.UnitHudAuxilaryPanelUnitHudAuxilaryPanelFlags0)));
+            queueableBlamBinaryWriter.Write(this.fieldpad9);
+            queueableBlamBinaryWriter.Write(this.fieldpad10);
         }
         public enum TypeEnum : short
         {

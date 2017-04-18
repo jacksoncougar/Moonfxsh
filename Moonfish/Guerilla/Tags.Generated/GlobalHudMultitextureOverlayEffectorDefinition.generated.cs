@@ -77,28 +77,28 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.DestinationType)));
-            queueableBinaryWriter.Write(((short)(this.Destination)));
-            queueableBinaryWriter.Write(((short)(this.Source)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.InBounds);
-            queueableBinaryWriter.Write(this.OutBounds);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.TintColorLowerBound);
-            queueableBinaryWriter.Write(this.TintColorUpperBound);
-            queueableBinaryWriter.Write(((short)(this.PeriodicFunction)));
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.FunctionPeriod);
-            queueableBinaryWriter.Write(this.FunctionPhase);
-            queueableBinaryWriter.Write(this.fieldpad3);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(((short)(this.DestinationType)));
+            queueableBlamBinaryWriter.Write(((short)(this.Destination)));
+            queueableBlamBinaryWriter.Write(((short)(this.Source)));
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.InBounds);
+            queueableBlamBinaryWriter.Write(this.OutBounds);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.TintColorLowerBound);
+            queueableBlamBinaryWriter.Write(this.TintColorUpperBound);
+            queueableBlamBinaryWriter.Write(((short)(this.PeriodicFunction)));
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.FunctionPeriod);
+            queueableBlamBinaryWriter.Write(this.FunctionPhase);
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
         }
         /// <summary>
         /// These describe the relationship that causes the effect.

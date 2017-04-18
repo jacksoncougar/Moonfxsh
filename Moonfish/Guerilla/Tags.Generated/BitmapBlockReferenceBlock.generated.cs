@@ -72,28 +72,28 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.BitmapReferenceFlags)));
-            queueableBinaryWriter.Write(((short)(this.AnimationIndex)));
-            queueableBinaryWriter.Write(this.IntroAnimationDelayMilliseconds);
-            queueableBinaryWriter.Write(((short)(this.BitmapBlendMethod)));
-            queueableBinaryWriter.Write(this.InitialSpriteFrame);
-            queueableBinaryWriter.Write(this.Topleft);
-            queueableBinaryWriter.Write(this.HorizTextureWrapssecond);
-            queueableBinaryWriter.Write(this.VertTextureWrapssecond);
-            queueableBinaryWriter.Write(this.BitmapTag);
-            queueableBinaryWriter.Write(this.RenderDepthBias);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.SpriteAnimationSpeedFps);
-            queueableBinaryWriter.Write(this.ProgressBottomleft);
-            queueableBinaryWriter.Write(this.StringIdentifier);
-            queueableBinaryWriter.Write(this.ProgressScale);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.BitmapReferenceFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.AnimationIndex)));
+            queueableBlamBinaryWriter.Write(this.IntroAnimationDelayMilliseconds);
+            queueableBlamBinaryWriter.Write(((short)(this.BitmapBlendMethod)));
+            queueableBlamBinaryWriter.Write(this.InitialSpriteFrame);
+            queueableBlamBinaryWriter.Write(this.Topleft);
+            queueableBlamBinaryWriter.Write(this.HorizTextureWrapssecond);
+            queueableBlamBinaryWriter.Write(this.VertTextureWrapssecond);
+            queueableBlamBinaryWriter.Write(this.BitmapTag);
+            queueableBlamBinaryWriter.Write(this.RenderDepthBias);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.SpriteAnimationSpeedFps);
+            queueableBlamBinaryWriter.Write(this.ProgressBottomleft);
+            queueableBlamBinaryWriter.Write(this.StringIdentifier);
+            queueableBlamBinaryWriter.Write(this.ProgressScale);
         }
         /// <summary>
         /// Specify more flavor bitmaps here

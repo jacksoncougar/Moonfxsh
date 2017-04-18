@@ -70,27 +70,27 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.StructureBlockInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.StructureBlockInfo.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.StructureBlockInfo.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            this.StructureBlockInfo.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.StructureBSP);
-            queueableBinaryWriter.Write(this.StructureLightmap);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.UNUSEDRadianceEstSearchDistance);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.UNUSEDLuminelsPerWorldUnit);
-            queueableBinaryWriter.Write(this.UNUSEDOutputWhiteReference);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(((short)(this.ScenarioStructureBspReferenceFlags)));
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.DefaultSky);
-            queueableBinaryWriter.Write(this.fieldpad3);
+            base.Write_(queueableBlamBinaryWriter);
+            this.StructureBlockInfo.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.StructureBSP);
+            queueableBlamBinaryWriter.Write(this.StructureLightmap);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.UNUSEDRadianceEstSearchDistance);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.UNUSEDLuminelsPerWorldUnit);
+            queueableBlamBinaryWriter.Write(this.UNUSEDOutputWhiteReference);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(((short)(this.ScenarioStructureBspReferenceFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.DefaultSky);
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

@@ -90,43 +90,43 @@ namespace Moonfish.Guerilla.Tags
                 this.NodeWeights00[i].ReadInstances(binaryReader, pointerQueue);
             }
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
             int i;
             for (i = 0; (i < 4); i = (i + 1))
             {
-                this.NodeIndices00[i].QueueWrites(queueableBinaryWriter);
+                this.NodeIndices00[i].QueueWrites(queueableBlamBinaryWriter);
             }
             for (i = 0; (i < 3); i = (i + 1))
             {
-                this.NodeWeights00[i].QueueWrites(queueableBinaryWriter);
+                this.NodeWeights00[i].QueueWrites(queueableBlamBinaryWriter);
             }
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(((short)(this.GlobalGeometryPartNewFlags)));
-            queueableBinaryWriter.Write(this.Material);
-            queueableBinaryWriter.Write(this.StripStartIndex);
-            queueableBinaryWriter.Write(this.StripLength);
-            queueableBinaryWriter.Write(this.FirstSubpartIndex);
-            queueableBinaryWriter.Write(this.SubpartCount);
-            queueableBinaryWriter.Write(this.MaxNodesVertex);
-            queueableBinaryWriter.Write(this.ContributingCompoundNodeCount);
-            queueableBinaryWriter.Write(this.Position);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.Type)));
+            queueableBlamBinaryWriter.Write(((short)(this.GlobalGeometryPartNewFlags)));
+            queueableBlamBinaryWriter.Write(this.Material);
+            queueableBlamBinaryWriter.Write(this.StripStartIndex);
+            queueableBlamBinaryWriter.Write(this.StripLength);
+            queueableBlamBinaryWriter.Write(this.FirstSubpartIndex);
+            queueableBlamBinaryWriter.Write(this.SubpartCount);
+            queueableBlamBinaryWriter.Write(this.MaxNodesVertex);
+            queueableBlamBinaryWriter.Write(this.ContributingCompoundNodeCount);
+            queueableBlamBinaryWriter.Write(this.Position);
             int i;
             for (i = 0; (i < 4); i = (i + 1))
             {
-                this.NodeIndices00[i].Write_(queueableBinaryWriter);
+                this.NodeIndices00[i].Write_(queueableBlamBinaryWriter);
             }
             for (i = 0; (i < 3); i = (i + 1))
             {
-                this.NodeWeights00[i].Write_(queueableBinaryWriter);
+                this.NodeWeights00[i].Write_(queueableBlamBinaryWriter);
             }
-            queueableBinaryWriter.Write(this.LodMipmapMagicNumber);
-            queueableBinaryWriter.Write(this.fieldskip);
+            queueableBlamBinaryWriter.Write(this.LodMipmapMagicNumber);
+            queueableBlamBinaryWriter.Write(this.fieldskip);
         }
         public enum TypeEnum : short
         {
@@ -174,14 +174,14 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.QueueWrites(queueableBinaryWriter);
+                base.QueueWrites(queueableBlamBinaryWriter);
             }
-            public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.Write_(queueableBinaryWriter);
-                queueableBinaryWriter.Write(this.NodeIndex);
+                base.Write_(queueableBlamBinaryWriter);
+                queueableBlamBinaryWriter.Write(this.NodeIndex);
             }
         }
         public class NodeWeightsBlock : GuerillaBlock, IWriteQueueable
@@ -211,14 +211,14 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.QueueWrites(queueableBinaryWriter);
+                base.QueueWrites(queueableBlamBinaryWriter);
             }
-            public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.Write_(queueableBinaryWriter);
-                queueableBinaryWriter.Write(this.NodeWeight);
+                base.Write_(queueableBlamBinaryWriter);
+                queueableBlamBinaryWriter.Write(this.NodeWeight);
             }
         }
     }

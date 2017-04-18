@@ -83,37 +83,37 @@ namespace Moonfish.Guerilla.Tags
                 this.FourVectorsStorage00[i].ReadInstances(binaryReader, pointerQueue);
             }
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
             int i;
             for (i = 0; (i < 8); i = (i + 1))
             {
-                this.FourVectorsStorage00[i].QueueWrites(queueableBinaryWriter);
+                this.FourVectorsStorage00[i].QueueWrites(queueableBlamBinaryWriter);
             }
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.Material);
-            queueableBinaryWriter.Write(((short)(this.MultiSpheresFlags)));
-            queueableBinaryWriter.Write(this.RelativeMassScale);
-            queueableBinaryWriter.Write(this.Friction);
-            queueableBinaryWriter.Write(this.Restitution);
-            queueableBinaryWriter.Write(this.Volume);
-            queueableBinaryWriter.Write(this.Mass);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.Phantom);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.Write(this.Size);
-            queueableBinaryWriter.Write(this.Count);
-            queueableBinaryWriter.Write(this.fieldskip1);
-            queueableBinaryWriter.Write(this.NumSpheres);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(this.Material);
+            queueableBlamBinaryWriter.Write(((short)(this.MultiSpheresFlags)));
+            queueableBlamBinaryWriter.Write(this.RelativeMassScale);
+            queueableBlamBinaryWriter.Write(this.Friction);
+            queueableBlamBinaryWriter.Write(this.Restitution);
+            queueableBlamBinaryWriter.Write(this.Volume);
+            queueableBlamBinaryWriter.Write(this.Mass);
+            queueableBlamBinaryWriter.Write(this.fieldskip);
+            queueableBlamBinaryWriter.Write(this.Phantom);
+            queueableBlamBinaryWriter.Write(this.fieldskip0);
+            queueableBlamBinaryWriter.Write(this.Size);
+            queueableBlamBinaryWriter.Write(this.Count);
+            queueableBlamBinaryWriter.Write(this.fieldskip1);
+            queueableBlamBinaryWriter.Write(this.NumSpheres);
             int i;
             for (i = 0; (i < 8); i = (i + 1))
             {
-                this.FourVectorsStorage00[i].Write_(queueableBinaryWriter);
+                this.FourVectorsStorage00[i].Write_(queueableBlamBinaryWriter);
             }
         }
         [System.FlagsAttribute()]
@@ -151,15 +151,15 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.QueueWrites(queueableBinaryWriter);
+                base.QueueWrites(queueableBlamBinaryWriter);
             }
-            public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.Write_(queueableBinaryWriter);
-                queueableBinaryWriter.Write(this.Sphere);
-                queueableBinaryWriter.Write(this.fieldskip);
+                base.Write_(queueableBlamBinaryWriter);
+                queueableBlamBinaryWriter.Write(this.Sphere);
+                queueableBlamBinaryWriter.Write(this.fieldskip);
             }
         }
     }

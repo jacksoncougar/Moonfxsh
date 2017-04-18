@@ -24,7 +24,7 @@ namespace Moonfish.Guerilla.Tags
         T[] GetDescriptors();
         void SetDescriptors(T[] descriptors);
     }
-
+    
     public interface IResourceBlock<out T> : IResourceBlock
     {
         /// <summary>Returns the resource object contained by this block if it is loaded.</summary>

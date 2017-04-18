@@ -50,18 +50,18 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.RowCells = base.ReadBlockArrayData<TableViewListItemReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.RowCells);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.RowCells);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.TableViewListRowReferenceFlags)));
-            queueableBinaryWriter.Write(this.RowHeight);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.RowCells);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.TableViewListRowReferenceFlags)));
+            queueableBlamBinaryWriter.Write(this.RowHeight);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.WritePointer(this.RowCells);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

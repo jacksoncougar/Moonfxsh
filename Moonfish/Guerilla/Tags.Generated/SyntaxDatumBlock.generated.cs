@@ -55,20 +55,20 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DatumHeader);
-            queueableBinaryWriter.Write(this.ScriptIndexFunctionIndexConstantTypeUnion);
-            queueableBinaryWriter.Write(this.Type);
-            queueableBinaryWriter.Write(this.Flags);
-            queueableBinaryWriter.Write(this.NextNodeIndex);
-            queueableBinaryWriter.Write(this.Data);
-            queueableBinaryWriter.Write(this.SourceOffset);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.DatumHeader);
+            queueableBlamBinaryWriter.Write(this.ScriptIndexFunctionIndexConstantTypeUnion);
+            queueableBlamBinaryWriter.Write(this.Type);
+            queueableBlamBinaryWriter.Write(this.Flags);
+            queueableBlamBinaryWriter.Write(this.NextNodeIndex);
+            queueableBlamBinaryWriter.Write(this.Data);
+            queueableBlamBinaryWriter.Write(this.SourceOffset);
         }
     }
 }

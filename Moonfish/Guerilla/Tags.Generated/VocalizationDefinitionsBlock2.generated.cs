@@ -97,42 +97,42 @@ namespace Moonfish.Guerilla.Tags
             this.Reponses = base.ReadBlockArrayData<ResponseBlock>(binaryReader, pointerQueue.Dequeue());
             this.Children = base.ReadBlockArrayData<VocalizationDefinitionsBlock3>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Reponses);
-            queueableBinaryWriter.QueueWrite(this.Children);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Reponses);
+            queueableBlamBinaryWriter.QueueWrite(this.Children);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Vocalization);
-            queueableBinaryWriter.Write(this.ParentVocalization);
-            queueableBinaryWriter.Write(this.ParentIndex);
-            queueableBinaryWriter.Write(((short)(this.Priority)));
-            queueableBinaryWriter.Write(((int)(this.VocalizationDefinitions2Flags)));
-            queueableBinaryWriter.Write(((short)(this.GlanceBehavior)));
-            queueableBinaryWriter.Write(((short)(this.GlanceRecipientBehavior)));
-            queueableBinaryWriter.Write(((short)(this.PerceptionType)));
-            queueableBinaryWriter.Write(((short)(this.MaxCombatStatus)));
-            queueableBinaryWriter.Write(((short)(this.AnimationImpulse)));
-            queueableBinaryWriter.Write(((short)(this.OverlapPriority)));
-            queueableBinaryWriter.Write(this.SoundRepetitionDelay);
-            queueableBinaryWriter.Write(this.AllowableQueueDelay);
-            queueableBinaryWriter.Write(this.PreVocDelay);
-            queueableBinaryWriter.Write(this.NotificationDelay);
-            queueableBinaryWriter.Write(this.PostVocDelay);
-            queueableBinaryWriter.Write(this.RepeatDelay);
-            queueableBinaryWriter.Write(this.Weight);
-            queueableBinaryWriter.Write(this.SpeakerFreezeTime);
-            queueableBinaryWriter.Write(this.ListenerFreezeTime);
-            queueableBinaryWriter.Write(((short)(this.SpeakerEmotion)));
-            queueableBinaryWriter.Write(((short)(this.ListenerEmotion)));
-            queueableBinaryWriter.Write(this.PlayerSkipFraction);
-            queueableBinaryWriter.Write(this.SkipFraction);
-            queueableBinaryWriter.Write(this.SampleLine);
-            queueableBinaryWriter.WritePointer(this.Reponses);
-            queueableBinaryWriter.WritePointer(this.Children);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Vocalization);
+            queueableBlamBinaryWriter.Write(this.ParentVocalization);
+            queueableBlamBinaryWriter.Write(this.ParentIndex);
+            queueableBlamBinaryWriter.Write(((short)(this.Priority)));
+            queueableBlamBinaryWriter.Write(((int)(this.VocalizationDefinitions2Flags)));
+            queueableBlamBinaryWriter.Write(((short)(this.GlanceBehavior)));
+            queueableBlamBinaryWriter.Write(((short)(this.GlanceRecipientBehavior)));
+            queueableBlamBinaryWriter.Write(((short)(this.PerceptionType)));
+            queueableBlamBinaryWriter.Write(((short)(this.MaxCombatStatus)));
+            queueableBlamBinaryWriter.Write(((short)(this.AnimationImpulse)));
+            queueableBlamBinaryWriter.Write(((short)(this.OverlapPriority)));
+            queueableBlamBinaryWriter.Write(this.SoundRepetitionDelay);
+            queueableBlamBinaryWriter.Write(this.AllowableQueueDelay);
+            queueableBlamBinaryWriter.Write(this.PreVocDelay);
+            queueableBlamBinaryWriter.Write(this.NotificationDelay);
+            queueableBlamBinaryWriter.Write(this.PostVocDelay);
+            queueableBlamBinaryWriter.Write(this.RepeatDelay);
+            queueableBlamBinaryWriter.Write(this.Weight);
+            queueableBlamBinaryWriter.Write(this.SpeakerFreezeTime);
+            queueableBlamBinaryWriter.Write(this.ListenerFreezeTime);
+            queueableBlamBinaryWriter.Write(((short)(this.SpeakerEmotion)));
+            queueableBlamBinaryWriter.Write(((short)(this.ListenerEmotion)));
+            queueableBlamBinaryWriter.Write(this.PlayerSkipFraction);
+            queueableBlamBinaryWriter.Write(this.SkipFraction);
+            queueableBlamBinaryWriter.Write(this.SampleLine);
+            queueableBlamBinaryWriter.WritePointer(this.Reponses);
+            queueableBlamBinaryWriter.WritePointer(this.Children);
         }
         public enum PriorityEnum : short
         {

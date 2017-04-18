@@ -67,26 +67,26 @@ namespace Moonfish.Guerilla.Tags
             this.Locations = base.ReadBlockArrayData<EffectLocationsBlock>(binaryReader, pointerQueue.Dequeue());
             this.Events = base.ReadBlockArrayData<EffectEventBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Locations);
-            queueableBinaryWriter.QueueWrite(this.Events);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Locations);
+            queueableBlamBinaryWriter.QueueWrite(this.Events);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.EffectFlags)));
-            queueableBinaryWriter.Write(this.LoopStartEvent);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.Locations);
-            queueableBinaryWriter.WritePointer(this.Events);
-            queueableBinaryWriter.Write(this.LoopingSound);
-            queueableBinaryWriter.Write(this.Location);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.Write(this.AlwaysPlayDistance);
-            queueableBinaryWriter.Write(this.NeverPlayDistance);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.EffectFlags)));
+            queueableBlamBinaryWriter.Write(this.LoopStartEvent);
+            queueableBlamBinaryWriter.Write(this.fieldskip);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.WritePointer(this.Locations);
+            queueableBlamBinaryWriter.WritePointer(this.Events);
+            queueableBlamBinaryWriter.Write(this.LoopingSound);
+            queueableBlamBinaryWriter.Write(this.Location);
+            queueableBlamBinaryWriter.Write(this.fieldskip0);
+            queueableBlamBinaryWriter.Write(this.AlwaysPlayDistance);
+            queueableBlamBinaryWriter.Write(this.NeverPlayDistance);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

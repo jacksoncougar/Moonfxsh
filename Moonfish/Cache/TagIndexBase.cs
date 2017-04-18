@@ -1,4 +1,5 @@
 using System.IO;
+using Moonfish.Guerilla;
 using Moonfish.Tags;
 
 namespace Moonfish
@@ -16,7 +17,7 @@ namespace Moonfish
 
         protected TagIndexBase(Map cache)
         {
-            var binaryReader = new BinaryReader(cache.BaseStream);
+            var binaryReader = new BlamBinaryReader(cache.BaseStream);
             ClassArrayAddress = binaryReader.ReadInt32();
             ClassArrayCount = binaryReader.ReadInt32();
             DatumArrayAddress = binaryReader.ReadInt32();

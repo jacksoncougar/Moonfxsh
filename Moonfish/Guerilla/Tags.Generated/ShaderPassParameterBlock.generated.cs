@@ -61,23 +61,23 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Explanation = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Explanation);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Explanation);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.WritePointer(this.Explanation);
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(((short)(this.ShaderPassParameterFlags)));
-            queueableBinaryWriter.Write(this.DefaultBitmap);
-            queueableBinaryWriter.Write(this.DefaultConstValue);
-            queueableBinaryWriter.Write(this.DefaultConstColor);
-            queueableBinaryWriter.Write(((short)(this.SourceExtern)));
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.WritePointer(this.Explanation);
+            queueableBlamBinaryWriter.Write(((short)(this.Type)));
+            queueableBlamBinaryWriter.Write(((short)(this.ShaderPassParameterFlags)));
+            queueableBlamBinaryWriter.Write(this.DefaultBitmap);
+            queueableBlamBinaryWriter.Write(this.DefaultConstValue);
+            queueableBlamBinaryWriter.Write(this.DefaultConstColor);
+            queueableBlamBinaryWriter.Write(((short)(this.SourceExtern)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
         }
         public enum TypeEnum : short
         {

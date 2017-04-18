@@ -50,18 +50,18 @@ namespace Moonfish.Guerilla.Tags
             this.SharedInterface.ReadInstances(binaryReader, pointerQueue);
             this.FirstPerson = base.ReadBlockArrayData<WeaponFirstPersonInterfaceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.SharedInterface.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.FirstPerson);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.SharedInterface.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.FirstPerson);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            this.SharedInterface.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.FirstPerson);
-            queueableBinaryWriter.Write(this.NewHudInterface);
+            base.Write_(queueableBlamBinaryWriter);
+            this.SharedInterface.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.FirstPerson);
+            queueableBlamBinaryWriter.Write(this.NewHudInterface);
         }
     }
 }

@@ -61,23 +61,23 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ScatterKilledCount);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.ScatterRadius);
-            queueableBinaryWriter.Write(this.ScatterTime);
-            queueableBinaryWriter.Write(this.HoundMinDistance);
-            queueableBinaryWriter.Write(this.HoundMaxDistance);
-            queueableBinaryWriter.Write(this.PerlinOffsetScale);
-            queueableBinaryWriter.Write(this.OffsetPeriod);
-            queueableBinaryWriter.Write(this.PerlinIdleMovementThreshold);
-            queueableBinaryWriter.Write(this.PerlinCombatMovementThreshold);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.ScatterKilledCount);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.ScatterRadius);
+            queueableBlamBinaryWriter.Write(this.ScatterTime);
+            queueableBlamBinaryWriter.Write(this.HoundMinDistance);
+            queueableBlamBinaryWriter.Write(this.HoundMaxDistance);
+            queueableBlamBinaryWriter.Write(this.PerlinOffsetScale);
+            queueableBlamBinaryWriter.Write(this.OffsetPeriod);
+            queueableBlamBinaryWriter.Write(this.PerlinIdleMovementThreshold);
+            queueableBlamBinaryWriter.Write(this.PerlinCombatMovementThreshold);
         }
     }
 }

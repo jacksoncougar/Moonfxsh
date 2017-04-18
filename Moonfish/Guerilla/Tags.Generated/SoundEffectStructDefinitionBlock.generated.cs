@@ -56,22 +56,22 @@ namespace Moonfish.Guerilla.Tags
             this.SoundEffectHardwareFormatDataDefinition = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
             this.PlatformSoundEffectCollectionBlock = base.ReadBlockArrayData<PlatformSoundEffectCollectionBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Components);
-            queueableBinaryWriter.QueueWrite(this.SoundEffectOverridesBlock);
-            queueableBinaryWriter.QueueWrite(this.SoundEffectHardwareFormatDataDefinition);
-            queueableBinaryWriter.QueueWrite(this.PlatformSoundEffectCollectionBlock);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Components);
+            queueableBlamBinaryWriter.QueueWrite(this.SoundEffectOverridesBlock);
+            queueableBlamBinaryWriter.QueueWrite(this.SoundEffectHardwareFormatDataDefinition);
+            queueableBlamBinaryWriter.QueueWrite(this.PlatformSoundEffectCollectionBlock);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.TagReference);
-            queueableBinaryWriter.WritePointer(this.Components);
-            queueableBinaryWriter.WritePointer(this.SoundEffectOverridesBlock);
-            queueableBinaryWriter.WritePointer(this.SoundEffectHardwareFormatDataDefinition);
-            queueableBinaryWriter.WritePointer(this.PlatformSoundEffectCollectionBlock);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.TagReference);
+            queueableBlamBinaryWriter.WritePointer(this.Components);
+            queueableBlamBinaryWriter.WritePointer(this.SoundEffectOverridesBlock);
+            queueableBlamBinaryWriter.WritePointer(this.SoundEffectHardwareFormatDataDefinition);
+            queueableBlamBinaryWriter.WritePointer(this.PlatformSoundEffectCollectionBlock);
         }
     }
 }

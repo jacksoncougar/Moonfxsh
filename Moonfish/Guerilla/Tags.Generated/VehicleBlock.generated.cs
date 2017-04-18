@@ -147,61 +147,61 @@ namespace Moonfish.Guerilla.Tags
             this.Gears = base.ReadBlockArrayData<GearBlock>(binaryReader, pointerQueue.Dequeue());
             this.HavokVehiclePhysics.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Gears);
-            this.HavokVehiclePhysics.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Gears);
+            this.HavokVehiclePhysics.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.VehicleVehicleFlags)));
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(((short)(this.Control)));
-            queueableBinaryWriter.Write(this.MaximumForwardSpeed);
-            queueableBinaryWriter.Write(this.MaximumReverseSpeed);
-            queueableBinaryWriter.Write(this.SpeedAcceleration);
-            queueableBinaryWriter.Write(this.SpeedDeceleration);
-            queueableBinaryWriter.Write(this.MaximumLeftTurn);
-            queueableBinaryWriter.Write(this.MaximumRightTurn);
-            queueableBinaryWriter.Write(this.WheelCircumference);
-            queueableBinaryWriter.Write(this.TurnRate);
-            queueableBinaryWriter.Write(this.BlurSpeed);
-            queueableBinaryWriter.Write(((short)(this.SpecificType)));
-            queueableBinaryWriter.Write(((short)(this.PlayerTrainingVehicleType)));
-            queueableBinaryWriter.Write(this.FlipMessage);
-            queueableBinaryWriter.Write(this.TurnScale);
-            queueableBinaryWriter.Write(this.SpeedTurnPenaltyPower);
-            queueableBinaryWriter.Write(this.SpeedTurnPenalty);
-            queueableBinaryWriter.Write(this.MaximumLeftSlide);
-            queueableBinaryWriter.Write(this.MaximumRightSlide);
-            queueableBinaryWriter.Write(this.SlideAcceleration);
-            queueableBinaryWriter.Write(this.SlideDeceleration);
-            queueableBinaryWriter.Write(this.MinimumFlippingAngularVelocity);
-            queueableBinaryWriter.Write(this.MaximumFlippingAngularVelocity);
-            queueableBinaryWriter.Write(((short)(this.VehicleSize)));
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.FixedGunYaw);
-            queueableBinaryWriter.Write(this.FixedGunPitch);
-            queueableBinaryWriter.Write(this.OverdampenCuspAngle);
-            queueableBinaryWriter.Write(this.OverdampenExponent);
-            queueableBinaryWriter.Write(this.CrouchTransitionTime);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(this.EngineMoment);
-            queueableBinaryWriter.Write(this.EngineMaxAngularVelocity);
-            queueableBinaryWriter.WritePointer(this.Gears);
-            queueableBinaryWriter.Write(this.FlyingTorqueScale);
-            queueableBinaryWriter.Write(this.SeatEnteranceAccelerationScale);
-            queueableBinaryWriter.Write(this.SeatExitAccelersationScale);
-            queueableBinaryWriter.Write(this.AirFrictionDeceleration);
-            queueableBinaryWriter.Write(this.ThrustScale);
-            queueableBinaryWriter.Write(this.SuspensionSound);
-            queueableBinaryWriter.Write(this.CrashSound);
-            queueableBinaryWriter.Write(this.UNUSED);
-            queueableBinaryWriter.Write(this.SpecialEffect);
-            queueableBinaryWriter.Write(this.UnusedEffect);
-            this.HavokVehiclePhysics.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.VehicleVehicleFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.Type)));
+            queueableBlamBinaryWriter.Write(((short)(this.Control)));
+            queueableBlamBinaryWriter.Write(this.MaximumForwardSpeed);
+            queueableBlamBinaryWriter.Write(this.MaximumReverseSpeed);
+            queueableBlamBinaryWriter.Write(this.SpeedAcceleration);
+            queueableBlamBinaryWriter.Write(this.SpeedDeceleration);
+            queueableBlamBinaryWriter.Write(this.MaximumLeftTurn);
+            queueableBlamBinaryWriter.Write(this.MaximumRightTurn);
+            queueableBlamBinaryWriter.Write(this.WheelCircumference);
+            queueableBlamBinaryWriter.Write(this.TurnRate);
+            queueableBlamBinaryWriter.Write(this.BlurSpeed);
+            queueableBlamBinaryWriter.Write(((short)(this.SpecificType)));
+            queueableBlamBinaryWriter.Write(((short)(this.PlayerTrainingVehicleType)));
+            queueableBlamBinaryWriter.Write(this.FlipMessage);
+            queueableBlamBinaryWriter.Write(this.TurnScale);
+            queueableBlamBinaryWriter.Write(this.SpeedTurnPenaltyPower);
+            queueableBlamBinaryWriter.Write(this.SpeedTurnPenalty);
+            queueableBlamBinaryWriter.Write(this.MaximumLeftSlide);
+            queueableBlamBinaryWriter.Write(this.MaximumRightSlide);
+            queueableBlamBinaryWriter.Write(this.SlideAcceleration);
+            queueableBlamBinaryWriter.Write(this.SlideDeceleration);
+            queueableBlamBinaryWriter.Write(this.MinimumFlippingAngularVelocity);
+            queueableBlamBinaryWriter.Write(this.MaximumFlippingAngularVelocity);
+            queueableBlamBinaryWriter.Write(((short)(this.VehicleSize)));
+            queueableBlamBinaryWriter.Write(this.fieldpad4);
+            queueableBlamBinaryWriter.Write(this.FixedGunYaw);
+            queueableBlamBinaryWriter.Write(this.FixedGunPitch);
+            queueableBlamBinaryWriter.Write(this.OverdampenCuspAngle);
+            queueableBlamBinaryWriter.Write(this.OverdampenExponent);
+            queueableBlamBinaryWriter.Write(this.CrouchTransitionTime);
+            queueableBlamBinaryWriter.Write(this.fieldpad5);
+            queueableBlamBinaryWriter.Write(this.EngineMoment);
+            queueableBlamBinaryWriter.Write(this.EngineMaxAngularVelocity);
+            queueableBlamBinaryWriter.WritePointer(this.Gears);
+            queueableBlamBinaryWriter.Write(this.FlyingTorqueScale);
+            queueableBlamBinaryWriter.Write(this.SeatEnteranceAccelerationScale);
+            queueableBlamBinaryWriter.Write(this.SeatExitAccelersationScale);
+            queueableBlamBinaryWriter.Write(this.AirFrictionDeceleration);
+            queueableBlamBinaryWriter.Write(this.ThrustScale);
+            queueableBlamBinaryWriter.Write(this.SuspensionSound);
+            queueableBlamBinaryWriter.Write(this.CrashSound);
+            queueableBlamBinaryWriter.Write(this.UNUSED);
+            queueableBlamBinaryWriter.Write(this.SpecialEffect);
+            queueableBlamBinaryWriter.Write(this.UnusedEffect);
+            this.HavokVehiclePhysics.Write_(queueableBlamBinaryWriter);
         }
         [System.FlagsAttribute()]
         public enum VehicleFlags : int

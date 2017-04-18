@@ -79,31 +79,31 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.EncodedStencil = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.EncodedStencil);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.EncodedStencil);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.MeterFlags)));
-            queueableBinaryWriter.Write(this.StencilBitmaps);
-            queueableBinaryWriter.Write(this.SourceBitmap);
-            queueableBinaryWriter.Write(this.StencilSequenceIndex);
-            queueableBinaryWriter.Write(this.SourceSequenceIndex);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(((short)(this.InterpolateColors)));
-            queueableBinaryWriter.Write(((short)(this.AnchorColors)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.EmptyColor);
-            queueableBinaryWriter.Write(this.FullColor);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.UnmaskDistance);
-            queueableBinaryWriter.Write(this.MaskDistance);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.WritePointer(this.EncodedStencil);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.MeterFlags)));
+            queueableBlamBinaryWriter.Write(this.StencilBitmaps);
+            queueableBlamBinaryWriter.Write(this.SourceBitmap);
+            queueableBlamBinaryWriter.Write(this.StencilSequenceIndex);
+            queueableBlamBinaryWriter.Write(this.SourceSequenceIndex);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(((short)(this.InterpolateColors)));
+            queueableBlamBinaryWriter.Write(((short)(this.AnchorColors)));
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.EmptyColor);
+            queueableBlamBinaryWriter.Write(this.FullColor);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.UnmaskDistance);
+            queueableBlamBinaryWriter.Write(this.MaskDistance);
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
+            queueableBlamBinaryWriter.WritePointer(this.EncodedStencil);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

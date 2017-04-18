@@ -96,41 +96,41 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.LookFunction = base.ReadBlockArrayData<LookFunctionBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.LookFunction);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.LookFunction);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MagnetismFriction);
-            queueableBinaryWriter.Write(this.MagnetismAdhesion);
-            queueableBinaryWriter.Write(this.InconsequentialTargetScale);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.CrosshairLocation);
-            queueableBinaryWriter.Write(this.SecondsToStart);
-            queueableBinaryWriter.Write(this.SecondsToFullSpeed);
-            queueableBinaryWriter.Write(this.DecayRate);
-            queueableBinaryWriter.Write(this.FullSpeedMultiplier);
-            queueableBinaryWriter.Write(this.PeggedMagnitude);
-            queueableBinaryWriter.Write(this.PeggedAngularThreshold);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.LookDefaultPitchRate);
-            queueableBinaryWriter.Write(this.LookDefaultYawRate);
-            queueableBinaryWriter.Write(this.LookPegThreshold01);
-            queueableBinaryWriter.Write(this.LookYawAccelerationTime);
-            queueableBinaryWriter.Write(this.LookYawAccelerationScale);
-            queueableBinaryWriter.Write(this.LookPitchAccelerationTime);
-            queueableBinaryWriter.Write(this.LookPitchAccelerationScale);
-            queueableBinaryWriter.Write(this.LookAutolevellingScale);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.GravityScale);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.MinimumAutolevellingTicks);
-            queueableBinaryWriter.Write(this.MinimumAngleForVehicleFlipping);
-            queueableBinaryWriter.WritePointer(this.LookFunction);
-            queueableBinaryWriter.Write(this.MinimumActionHoldTime);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.MagnetismFriction);
+            queueableBlamBinaryWriter.Write(this.MagnetismAdhesion);
+            queueableBlamBinaryWriter.Write(this.InconsequentialTargetScale);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.CrosshairLocation);
+            queueableBlamBinaryWriter.Write(this.SecondsToStart);
+            queueableBlamBinaryWriter.Write(this.SecondsToFullSpeed);
+            queueableBlamBinaryWriter.Write(this.DecayRate);
+            queueableBlamBinaryWriter.Write(this.FullSpeedMultiplier);
+            queueableBlamBinaryWriter.Write(this.PeggedMagnitude);
+            queueableBlamBinaryWriter.Write(this.PeggedAngularThreshold);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.LookDefaultPitchRate);
+            queueableBlamBinaryWriter.Write(this.LookDefaultYawRate);
+            queueableBlamBinaryWriter.Write(this.LookPegThreshold01);
+            queueableBlamBinaryWriter.Write(this.LookYawAccelerationTime);
+            queueableBlamBinaryWriter.Write(this.LookYawAccelerationScale);
+            queueableBlamBinaryWriter.Write(this.LookPitchAccelerationTime);
+            queueableBlamBinaryWriter.Write(this.LookPitchAccelerationScale);
+            queueableBlamBinaryWriter.Write(this.LookAutolevellingScale);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.GravityScale);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.MinimumAutolevellingTicks);
+            queueableBlamBinaryWriter.Write(this.MinimumAngleForVehicleFlipping);
+            queueableBlamBinaryWriter.WritePointer(this.LookFunction);
+            queueableBlamBinaryWriter.Write(this.MinimumActionHoldTime);
         }
     }
 }

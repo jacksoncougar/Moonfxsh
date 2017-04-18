@@ -85,35 +85,35 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.ScenarioFunctionFlags)));
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.Period);
-            queueableBinaryWriter.Write(this.ScalePeriodBy);
-            queueableBinaryWriter.Write(((short)(this.Function)));
-            queueableBinaryWriter.Write(this.ScaleFunctionBy);
-            queueableBinaryWriter.Write(((short)(this.WobbleFunction)));
-            queueableBinaryWriter.Write(this.WobblePeriod);
-            queueableBinaryWriter.Write(this.WobbleMagnitude);
-            queueableBinaryWriter.Write(this.SquareWaveThreshold);
-            queueableBinaryWriter.Write(this.StepCount);
-            queueableBinaryWriter.Write(((short)(this.MapTo)));
-            queueableBinaryWriter.Write(this.SawtoothCount);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.ScaleResultBy);
-            queueableBinaryWriter.Write(((short)(this.BoundsMode)));
-            queueableBinaryWriter.Write(this.Bounds);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.TurnOffWith);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.fieldpad3);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.ScenarioFunctionFlags)));
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(this.Period);
+            queueableBlamBinaryWriter.Write(this.ScalePeriodBy);
+            queueableBlamBinaryWriter.Write(((short)(this.Function)));
+            queueableBlamBinaryWriter.Write(this.ScaleFunctionBy);
+            queueableBlamBinaryWriter.Write(((short)(this.WobbleFunction)));
+            queueableBlamBinaryWriter.Write(this.WobblePeriod);
+            queueableBlamBinaryWriter.Write(this.WobbleMagnitude);
+            queueableBlamBinaryWriter.Write(this.SquareWaveThreshold);
+            queueableBlamBinaryWriter.Write(this.StepCount);
+            queueableBlamBinaryWriter.Write(((short)(this.MapTo)));
+            queueableBlamBinaryWriter.Write(this.SawtoothCount);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.ScaleResultBy);
+            queueableBlamBinaryWriter.Write(((short)(this.BoundsMode)));
+            queueableBlamBinaryWriter.Write(this.Bounds);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.TurnOffWith);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

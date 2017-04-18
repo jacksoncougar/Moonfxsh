@@ -53,19 +53,19 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((byte)(this.ParameterType)));
-            queueableBinaryWriter.Write(this.CombinerIndex);
-            queueableBinaryWriter.Write(this.RegisterIndex);
-            queueableBinaryWriter.Write(((byte)(this.ComponentMask)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((byte)(this.ParameterType)));
+            queueableBlamBinaryWriter.Write(this.CombinerIndex);
+            queueableBlamBinaryWriter.Write(this.RegisterIndex);
+            queueableBlamBinaryWriter.Write(((byte)(this.ComponentMask)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
         }
         public enum ParameterTypeEnum : byte
         {

@@ -142,45 +142,45 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.GlobalVertexShaders = base.ReadBlockArrayData<VertexShaderReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.GlobalVertexShaders);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.GlobalVertexShaders);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DistanceAttenuation);
-            queueableBinaryWriter.Write(this.VectorNormalization);
-            queueableBinaryWriter.Write(this.Gradients);
-            queueableBinaryWriter.Write(this.UNUSED);
-            queueableBinaryWriter.Write(this.UNUSED0);
-            queueableBinaryWriter.Write(this.UNUSED1);
-            queueableBinaryWriter.Write(this.Glow);
-            queueableBinaryWriter.Write(this.UNUSED2);
-            queueableBinaryWriter.Write(this.UNUSED3);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.GlobalVertexShaders);
-            queueableBinaryWriter.Write(this.Default2D);
-            queueableBinaryWriter.Write(this.Default3D);
-            queueableBinaryWriter.Write(this.DefaultCubeMap);
-            queueableBinaryWriter.Write(this.UNUSED4);
-            queueableBinaryWriter.Write(this.UNUSED5);
-            queueableBinaryWriter.Write(this.UNUSED6);
-            queueableBinaryWriter.Write(this.UNUSED7);
-            queueableBinaryWriter.Write(this.UNUSED8);
-            queueableBinaryWriter.Write(this.UNUSED9);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.GlobalShader);
-            queueableBinaryWriter.Write(((short)(this.RasterizerDataFlags)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.RefractionAmount);
-            queueableBinaryWriter.Write(this.DistanceFalloff);
-            queueableBinaryWriter.Write(this.TintColor);
-            queueableBinaryWriter.Write(this.HyperstealthRefraction);
-            queueableBinaryWriter.Write(this.HyperstealthDistanceFalloff);
-            queueableBinaryWriter.Write(this.HyperstealthTintColor);
-            queueableBinaryWriter.Write(this.UNUSED10);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.DistanceAttenuation);
+            queueableBlamBinaryWriter.Write(this.VectorNormalization);
+            queueableBlamBinaryWriter.Write(this.Gradients);
+            queueableBlamBinaryWriter.Write(this.UNUSED);
+            queueableBlamBinaryWriter.Write(this.UNUSED0);
+            queueableBlamBinaryWriter.Write(this.UNUSED1);
+            queueableBlamBinaryWriter.Write(this.Glow);
+            queueableBlamBinaryWriter.Write(this.UNUSED2);
+            queueableBlamBinaryWriter.Write(this.UNUSED3);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.WritePointer(this.GlobalVertexShaders);
+            queueableBlamBinaryWriter.Write(this.Default2D);
+            queueableBlamBinaryWriter.Write(this.Default3D);
+            queueableBlamBinaryWriter.Write(this.DefaultCubeMap);
+            queueableBlamBinaryWriter.Write(this.UNUSED4);
+            queueableBlamBinaryWriter.Write(this.UNUSED5);
+            queueableBlamBinaryWriter.Write(this.UNUSED6);
+            queueableBlamBinaryWriter.Write(this.UNUSED7);
+            queueableBlamBinaryWriter.Write(this.UNUSED8);
+            queueableBlamBinaryWriter.Write(this.UNUSED9);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.GlobalShader);
+            queueableBlamBinaryWriter.Write(((short)(this.RasterizerDataFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.RefractionAmount);
+            queueableBlamBinaryWriter.Write(this.DistanceFalloff);
+            queueableBlamBinaryWriter.Write(this.TintColor);
+            queueableBlamBinaryWriter.Write(this.HyperstealthRefraction);
+            queueableBlamBinaryWriter.Write(this.HyperstealthDistanceFalloff);
+            queueableBlamBinaryWriter.Write(this.HyperstealthTintColor);
+            queueableBlamBinaryWriter.Write(this.UNUSED10);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

@@ -87,36 +87,36 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.DialogueType)));
-            queueableBinaryWriter.Write(this.VocalizationIndex);
-            queueableBinaryWriter.Write(this.VocalizationName);
-            queueableBinaryWriter.Write(((short)(this.SpeakerType)));
-            queueableBinaryWriter.Write(((short)(this.VocalizationPatternsFlags)));
-            queueableBinaryWriter.Write(((short)(this.Listenertarget)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(((short)(this.Hostility)));
-            queueableBinaryWriter.Write(((short)(this.DamageType)));
-            queueableBinaryWriter.Write(((short)(this.DangerLevel)));
-            queueableBinaryWriter.Write(((short)(this.Attitude)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(((short)(this.SubjectActorType)));
-            queueableBinaryWriter.Write(((short)(this.CauseActorType)));
-            queueableBinaryWriter.Write(((short)(this.CauseType)));
-            queueableBinaryWriter.Write(((short)(this.SubjectType)));
-            queueableBinaryWriter.Write(this.CauseAiTypeName);
-            queueableBinaryWriter.Write(((short)(this.SpatialRelation)));
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.SubjectAiTypeName);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(((int)(this.VocalizationPatternsConditions)));
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.DialogueType)));
+            queueableBlamBinaryWriter.Write(this.VocalizationIndex);
+            queueableBlamBinaryWriter.Write(this.VocalizationName);
+            queueableBlamBinaryWriter.Write(((short)(this.SpeakerType)));
+            queueableBlamBinaryWriter.Write(((short)(this.VocalizationPatternsFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.Listenertarget)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(((short)(this.Hostility)));
+            queueableBlamBinaryWriter.Write(((short)(this.DamageType)));
+            queueableBlamBinaryWriter.Write(((short)(this.DangerLevel)));
+            queueableBlamBinaryWriter.Write(((short)(this.Attitude)));
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(((short)(this.SubjectActorType)));
+            queueableBlamBinaryWriter.Write(((short)(this.CauseActorType)));
+            queueableBlamBinaryWriter.Write(((short)(this.CauseType)));
+            queueableBlamBinaryWriter.Write(((short)(this.SubjectType)));
+            queueableBlamBinaryWriter.Write(this.CauseAiTypeName);
+            queueableBlamBinaryWriter.Write(((short)(this.SpatialRelation)));
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.SubjectAiTypeName);
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
+            queueableBlamBinaryWriter.Write(((int)(this.VocalizationPatternsConditions)));
         }
         public enum DialogueTypeEnum : short
         {

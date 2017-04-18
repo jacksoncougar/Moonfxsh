@@ -61,23 +61,23 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.StringId);
-            queueableBinaryWriter.Write(this.EnglishOffset);
-            queueableBinaryWriter.Write(this.JapaneseOffset);
-            queueableBinaryWriter.Write(this.GermanOffset);
-            queueableBinaryWriter.Write(this.FrenchOffset);
-            queueableBinaryWriter.Write(this.SpanishOffset);
-            queueableBinaryWriter.Write(this.ItalianOffset);
-            queueableBinaryWriter.Write(this.KoreanOffset);
-            queueableBinaryWriter.Write(this.ChineseOffset);
-            queueableBinaryWriter.Write(this.PortugueseOffset);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.StringId);
+            queueableBlamBinaryWriter.Write(this.EnglishOffset);
+            queueableBlamBinaryWriter.Write(this.JapaneseOffset);
+            queueableBlamBinaryWriter.Write(this.GermanOffset);
+            queueableBlamBinaryWriter.Write(this.FrenchOffset);
+            queueableBlamBinaryWriter.Write(this.SpanishOffset);
+            queueableBlamBinaryWriter.Write(this.ItalianOffset);
+            queueableBlamBinaryWriter.Write(this.KoreanOffset);
+            queueableBlamBinaryWriter.Write(this.ChineseOffset);
+            queueableBlamBinaryWriter.Write(this.PortugueseOffset);
         }
     }
 }

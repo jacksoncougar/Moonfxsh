@@ -50,19 +50,19 @@ namespace Moonfish.Guerilla.Tags
             this.VehicleSuspensionCCAABB = base.ReadBlockArrayData<VehicleSuspensionBlock>(binaryReader, pointerQueue.Dequeue());
             this.ObjectOverlaysCCAABB = base.ReadBlockArrayData<ObjectAnimationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ModesAABBCC);
-            queueableBinaryWriter.QueueWrite(this.VehicleSuspensionCCAABB);
-            queueableBinaryWriter.QueueWrite(this.ObjectOverlaysCCAABB);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.ModesAABBCC);
+            queueableBlamBinaryWriter.QueueWrite(this.VehicleSuspensionCCAABB);
+            queueableBlamBinaryWriter.QueueWrite(this.ObjectOverlaysCCAABB);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.ModesAABBCC);
-            queueableBinaryWriter.WritePointer(this.VehicleSuspensionCCAABB);
-            queueableBinaryWriter.WritePointer(this.ObjectOverlaysCCAABB);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.ModesAABBCC);
+            queueableBlamBinaryWriter.WritePointer(this.VehicleSuspensionCCAABB);
+            queueableBlamBinaryWriter.WritePointer(this.ObjectOverlaysCCAABB);
         }
     }
 }

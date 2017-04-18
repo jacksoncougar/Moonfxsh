@@ -54,21 +54,21 @@ namespace Moonfish.Guerilla.Tags
             this.Vibration.ReadInstances(binaryReader, pointerQueue);
             this.SoundEffect.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.ScreenFlash.QueueWrites(queueableBinaryWriter);
-            this.Vibration.QueueWrites(queueableBinaryWriter);
-            this.SoundEffect.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.ScreenFlash.QueueWrites(queueableBlamBinaryWriter);
+            this.Vibration.QueueWrites(queueableBlamBinaryWriter);
+            this.SoundEffect.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.ResponseType)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            this.ScreenFlash.Write_(queueableBinaryWriter);
-            this.Vibration.Write_(queueableBinaryWriter);
-            this.SoundEffect.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.ResponseType)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            this.ScreenFlash.Write_(queueableBlamBinaryWriter);
+            this.Vibration.Write_(queueableBlamBinaryWriter);
+            this.SoundEffect.Write_(queueableBlamBinaryWriter);
         }
         public enum ResponseTypeEnum : short
         {

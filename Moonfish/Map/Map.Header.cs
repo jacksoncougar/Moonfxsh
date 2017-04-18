@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using Moonfish.Guerilla;
 using Moonfish.Tags;
 
 namespace Moonfish
@@ -33,7 +34,7 @@ namespace Moonfish
             private CacheHeader(Stream stream)
             {
                 using (
-                    var binaryReader = new BinaryReader(stream, Encoding.Default,
+                    var binaryReader = new BlamBinaryReader(stream, Encoding.Default,
                         true))
                 {
                     //  read the fourcc tag and throw on incorrect value

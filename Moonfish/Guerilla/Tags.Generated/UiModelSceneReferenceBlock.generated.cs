@@ -71,29 +71,29 @@ namespace Moonfish.Guerilla.Tags
             this.Objects = base.ReadBlockArrayData<UiObjectReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.Lights = base.ReadBlockArrayData<UiLightReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Objects);
-            queueableBinaryWriter.QueueWrite(this.Lights);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Objects);
+            queueableBlamBinaryWriter.QueueWrite(this.Lights);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.UiModelSceneReferenceFlags)));
-            queueableBinaryWriter.Write(((short)(this.AnimationIndex)));
-            queueableBinaryWriter.Write(this.IntroAnimationDelayMilliseconds);
-            queueableBinaryWriter.Write(this.RenderDepthBias);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.Objects);
-            queueableBinaryWriter.WritePointer(this.Lights);
-            queueableBinaryWriter.Write(this.AnimationScaleFactor);
-            queueableBinaryWriter.Write(this.CameraPosition);
-            queueableBinaryWriter.Write(this.FovDegress);
-            queueableBinaryWriter.Write(this.UiViewport);
-            queueableBinaryWriter.Write(this.UNUSEDIntroAnim);
-            queueableBinaryWriter.Write(this.UNUSEDOutroAnim);
-            queueableBinaryWriter.Write(this.UNUSEDAmbientAnim);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.UiModelSceneReferenceFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.AnimationIndex)));
+            queueableBlamBinaryWriter.Write(this.IntroAnimationDelayMilliseconds);
+            queueableBlamBinaryWriter.Write(this.RenderDepthBias);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.WritePointer(this.Objects);
+            queueableBlamBinaryWriter.WritePointer(this.Lights);
+            queueableBlamBinaryWriter.Write(this.AnimationScaleFactor);
+            queueableBlamBinaryWriter.Write(this.CameraPosition);
+            queueableBlamBinaryWriter.Write(this.FovDegress);
+            queueableBlamBinaryWriter.Write(this.UiViewport);
+            queueableBlamBinaryWriter.Write(this.UNUSEDIntroAnim);
+            queueableBlamBinaryWriter.Write(this.UNUSEDOutroAnim);
+            queueableBlamBinaryWriter.Write(this.UNUSEDAmbientAnim);
         }
         /// <summary>
         /// Halo y-axis=ui z-axis, and Halo z-axis=ui y-axis.

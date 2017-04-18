@@ -58,23 +58,23 @@ namespace Moonfish.Guerilla.Tags
             this.SectionData = base.ReadBlockArrayData<RenderModelSectionDataBlock>(binaryReader, pointerQueue.Dequeue());
             this.GeometryBlockInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.SectionInfo.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.SectionData);
-            this.GeometryBlockInfo.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.SectionInfo.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.SectionData);
+            this.GeometryBlockInfo.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.GlobalGeometryClassificationEnumDefinition)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            this.SectionInfo.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.RigidNode);
-            queueableBinaryWriter.Write(((short)(this.RenderModelSectionFlags)));
-            queueableBinaryWriter.WritePointer(this.SectionData);
-            this.GeometryBlockInfo.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.GlobalGeometryClassificationEnumDefinition)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            this.SectionInfo.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.RigidNode);
+            queueableBlamBinaryWriter.Write(((short)(this.RenderModelSectionFlags)));
+            queueableBlamBinaryWriter.WritePointer(this.SectionData);
+            this.GeometryBlockInfo.Write_(queueableBlamBinaryWriter);
         }
         public enum GlobalGeometryClassificationEnumDefinitionEnum : short
         {

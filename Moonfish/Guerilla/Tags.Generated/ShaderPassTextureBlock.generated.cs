@@ -74,32 +74,32 @@ namespace Moonfish.Guerilla.Tags
             this.MiscState = base.ReadBlockArrayData<ShaderTextureStateMiscStateBlock>(binaryReader, pointerQueue.Dequeue());
             this.Constants = base.ReadBlockArrayData<ShaderTextureStateConstantBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.AddressState);
-            queueableBinaryWriter.QueueWrite(this.FilterState);
-            queueableBinaryWriter.QueueWrite(this.KillState);
-            queueableBinaryWriter.QueueWrite(this.MiscState);
-            queueableBinaryWriter.QueueWrite(this.Constants);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.AddressState);
+            queueableBlamBinaryWriter.QueueWrite(this.FilterState);
+            queueableBlamBinaryWriter.QueueWrite(this.KillState);
+            queueableBlamBinaryWriter.QueueWrite(this.MiscState);
+            queueableBlamBinaryWriter.QueueWrite(this.Constants);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.SourceParameter);
-            queueableBinaryWriter.Write(((short)(this.SourceExtern)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(((short)(this.Mode)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(((short)(this.DotMapping)));
-            queueableBinaryWriter.Write(this.InputStage);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.WritePointer(this.AddressState);
-            queueableBinaryWriter.WritePointer(this.FilterState);
-            queueableBinaryWriter.WritePointer(this.KillState);
-            queueableBinaryWriter.WritePointer(this.MiscState);
-            queueableBinaryWriter.WritePointer(this.Constants);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.SourceParameter);
+            queueableBlamBinaryWriter.Write(((short)(this.SourceExtern)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.fieldskip);
+            queueableBlamBinaryWriter.Write(((short)(this.Mode)));
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(((short)(this.DotMapping)));
+            queueableBlamBinaryWriter.Write(this.InputStage);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.WritePointer(this.AddressState);
+            queueableBlamBinaryWriter.WritePointer(this.FilterState);
+            queueableBlamBinaryWriter.WritePointer(this.KillState);
+            queueableBlamBinaryWriter.WritePointer(this.MiscState);
+            queueableBlamBinaryWriter.WritePointer(this.Constants);
         }
         public enum SourceExternEnum : short
         {

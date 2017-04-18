@@ -67,30 +67,30 @@ namespace Moonfish.Guerilla.Tags
             this.MoppReorderTable = base.ReadBlockArrayData<GlobalGeometrySectionStripIndexBlock>(binaryReader, pointerQueue.Dequeue());
             this.VertexBuffers = base.ReadBlockArrayData<GlobalGeometrySectionVertexBufferBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Parts);
-            queueableBinaryWriter.QueueWrite(this.Subparts);
-            queueableBinaryWriter.QueueWrite(VisibilityBounds);
-            queueableBinaryWriter.QueueWrite(this.RawVertices);
-            queueableBinaryWriter.QueueWrite(this.StripIndices);
-            queueableBinaryWriter.QueueWrite(this.VisibilityMoppCode);
-            queueableBinaryWriter.QueueWrite(this.MoppReorderTable);
-            queueableBinaryWriter.QueueWrite(this.VertexBuffers);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Parts);
+            queueableBlamBinaryWriter.QueueWrite(this.Subparts);
+            queueableBlamBinaryWriter.QueueWrite(VisibilityBounds);
+            queueableBlamBinaryWriter.QueueWrite(this.RawVertices);
+            queueableBlamBinaryWriter.QueueWrite(this.StripIndices);
+            queueableBlamBinaryWriter.QueueWrite(this.VisibilityMoppCode);
+            queueableBlamBinaryWriter.QueueWrite(this.MoppReorderTable);
+            queueableBlamBinaryWriter.QueueWrite(this.VertexBuffers);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Parts);
-            queueableBinaryWriter.WritePointer(this.Subparts);
-            queueableBinaryWriter.WritePointer(this.VisibilityBounds);
-            queueableBinaryWriter.WritePointer(this.RawVertices);
-            queueableBinaryWriter.WritePointer(this.StripIndices);
-            queueableBinaryWriter.WritePointer(this.VisibilityMoppCode);
-            queueableBinaryWriter.WritePointer(this.MoppReorderTable);
-            queueableBinaryWriter.WritePointer(this.VertexBuffers);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Parts);
+            queueableBlamBinaryWriter.WritePointer(this.Subparts);
+            queueableBlamBinaryWriter.WritePointer(this.VisibilityBounds);
+            queueableBlamBinaryWriter.WritePointer(this.RawVertices);
+            queueableBlamBinaryWriter.WritePointer(this.StripIndices);
+            queueableBlamBinaryWriter.WritePointer(this.VisibilityMoppCode);
+            queueableBlamBinaryWriter.WritePointer(this.MoppReorderTable);
+            queueableBlamBinaryWriter.WritePointer(this.VertexBuffers);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
         }
     }
 }

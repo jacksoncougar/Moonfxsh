@@ -131,67 +131,67 @@ namespace Moonfish.Guerilla.Tags
             this.GrenadesProperties = base.ReadBlockArrayData<CharacterGrenadesBlock>(binaryReader, pointerQueue.Dequeue());
             this.VehicleProperties = base.ReadBlockArrayData<CharacterVehicleBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Variants);
-            queueableBinaryWriter.QueueWrite(this.GeneralProperties);
-            queueableBinaryWriter.QueueWrite(this.VitalityProperties);
-            queueableBinaryWriter.QueueWrite(this.PlacementProperties);
-            queueableBinaryWriter.QueueWrite(this.PerceptionProperties);
-            queueableBinaryWriter.QueueWrite(this.LookProperties);
-            queueableBinaryWriter.QueueWrite(this.MovementProperties);
-            queueableBinaryWriter.QueueWrite(this.SwarmProperties);
-            queueableBinaryWriter.QueueWrite(this.ReadyProperties);
-            queueableBinaryWriter.QueueWrite(this.EngageProperties);
-            queueableBinaryWriter.QueueWrite(this.ChargeProperties);
-            queueableBinaryWriter.QueueWrite(this.EvasionProperties);
-            queueableBinaryWriter.QueueWrite(this.CoverProperties);
-            queueableBinaryWriter.QueueWrite(this.RetreatProperties);
-            queueableBinaryWriter.QueueWrite(this.SearchProperties);
-            queueableBinaryWriter.QueueWrite(this.PresearchProperties);
-            queueableBinaryWriter.QueueWrite(this.IdleProperties);
-            queueableBinaryWriter.QueueWrite(this.VocalizationProperties);
-            queueableBinaryWriter.QueueWrite(this.BoardingProperties);
-            queueableBinaryWriter.QueueWrite(this.BossProperties);
-            queueableBinaryWriter.QueueWrite(this.WeaponsProperties);
-            queueableBinaryWriter.QueueWrite(this.FiringPatternProperties);
-            queueableBinaryWriter.QueueWrite(this.GrenadesProperties);
-            queueableBinaryWriter.QueueWrite(this.VehicleProperties);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Variants);
+            queueableBlamBinaryWriter.QueueWrite(this.GeneralProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.VitalityProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.PlacementProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.PerceptionProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.LookProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.MovementProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.SwarmProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.ReadyProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.EngageProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.ChargeProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.EvasionProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.CoverProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.RetreatProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.SearchProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.PresearchProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.IdleProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.VocalizationProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.BoardingProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.BossProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.WeaponsProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.FiringPatternProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.GrenadesProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.VehicleProperties);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.CharacterCharacterFlags)));
-            queueableBinaryWriter.Write(this.ParentCharacter);
-            queueableBinaryWriter.Write(this.Unit);
-            queueableBinaryWriter.Write(this.Creature);
-            queueableBinaryWriter.Write(this.Style);
-            queueableBinaryWriter.Write(this.MajorCharacter);
-            queueableBinaryWriter.WritePointer(this.Variants);
-            queueableBinaryWriter.WritePointer(this.GeneralProperties);
-            queueableBinaryWriter.WritePointer(this.VitalityProperties);
-            queueableBinaryWriter.WritePointer(this.PlacementProperties);
-            queueableBinaryWriter.WritePointer(this.PerceptionProperties);
-            queueableBinaryWriter.WritePointer(this.LookProperties);
-            queueableBinaryWriter.WritePointer(this.MovementProperties);
-            queueableBinaryWriter.WritePointer(this.SwarmProperties);
-            queueableBinaryWriter.WritePointer(this.ReadyProperties);
-            queueableBinaryWriter.WritePointer(this.EngageProperties);
-            queueableBinaryWriter.WritePointer(this.ChargeProperties);
-            queueableBinaryWriter.WritePointer(this.EvasionProperties);
-            queueableBinaryWriter.WritePointer(this.CoverProperties);
-            queueableBinaryWriter.WritePointer(this.RetreatProperties);
-            queueableBinaryWriter.WritePointer(this.SearchProperties);
-            queueableBinaryWriter.WritePointer(this.PresearchProperties);
-            queueableBinaryWriter.WritePointer(this.IdleProperties);
-            queueableBinaryWriter.WritePointer(this.VocalizationProperties);
-            queueableBinaryWriter.WritePointer(this.BoardingProperties);
-            queueableBinaryWriter.WritePointer(this.BossProperties);
-            queueableBinaryWriter.WritePointer(this.WeaponsProperties);
-            queueableBinaryWriter.WritePointer(this.FiringPatternProperties);
-            queueableBinaryWriter.WritePointer(this.GrenadesProperties);
-            queueableBinaryWriter.WritePointer(this.VehicleProperties);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.CharacterCharacterFlags)));
+            queueableBlamBinaryWriter.Write(this.ParentCharacter);
+            queueableBlamBinaryWriter.Write(this.Unit);
+            queueableBlamBinaryWriter.Write(this.Creature);
+            queueableBlamBinaryWriter.Write(this.Style);
+            queueableBlamBinaryWriter.Write(this.MajorCharacter);
+            queueableBlamBinaryWriter.WritePointer(this.Variants);
+            queueableBlamBinaryWriter.WritePointer(this.GeneralProperties);
+            queueableBlamBinaryWriter.WritePointer(this.VitalityProperties);
+            queueableBlamBinaryWriter.WritePointer(this.PlacementProperties);
+            queueableBlamBinaryWriter.WritePointer(this.PerceptionProperties);
+            queueableBlamBinaryWriter.WritePointer(this.LookProperties);
+            queueableBlamBinaryWriter.WritePointer(this.MovementProperties);
+            queueableBlamBinaryWriter.WritePointer(this.SwarmProperties);
+            queueableBlamBinaryWriter.WritePointer(this.ReadyProperties);
+            queueableBlamBinaryWriter.WritePointer(this.EngageProperties);
+            queueableBlamBinaryWriter.WritePointer(this.ChargeProperties);
+            queueableBlamBinaryWriter.WritePointer(this.EvasionProperties);
+            queueableBlamBinaryWriter.WritePointer(this.CoverProperties);
+            queueableBlamBinaryWriter.WritePointer(this.RetreatProperties);
+            queueableBlamBinaryWriter.WritePointer(this.SearchProperties);
+            queueableBlamBinaryWriter.WritePointer(this.PresearchProperties);
+            queueableBlamBinaryWriter.WritePointer(this.IdleProperties);
+            queueableBlamBinaryWriter.WritePointer(this.VocalizationProperties);
+            queueableBlamBinaryWriter.WritePointer(this.BoardingProperties);
+            queueableBlamBinaryWriter.WritePointer(this.BossProperties);
+            queueableBlamBinaryWriter.WritePointer(this.WeaponsProperties);
+            queueableBlamBinaryWriter.WritePointer(this.FiringPatternProperties);
+            queueableBlamBinaryWriter.WritePointer(this.GrenadesProperties);
+            queueableBlamBinaryWriter.WritePointer(this.VehicleProperties);
         }
         [System.FlagsAttribute()]
         public enum CharacterFlags : int

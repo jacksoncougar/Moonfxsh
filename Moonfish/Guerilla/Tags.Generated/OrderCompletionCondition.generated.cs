@@ -63,24 +63,24 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.RuleType)));
-            queueableBinaryWriter.Write(this.Squad);
-            queueableBinaryWriter.Write(this.SquadGroup);
-            queueableBinaryWriter.Write(this.A);
-            queueableBinaryWriter.Write(this.X);
-            queueableBinaryWriter.Write(this.TriggerVolume);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.ExitConditionScript);
-            queueableBinaryWriter.Write(this.FieldShortInteger);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(((int)(this.OrderCompletionConditionFlags)));
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.RuleType)));
+            queueableBlamBinaryWriter.Write(this.Squad);
+            queueableBlamBinaryWriter.Write(this.SquadGroup);
+            queueableBlamBinaryWriter.Write(this.A);
+            queueableBlamBinaryWriter.Write(this.X);
+            queueableBlamBinaryWriter.Write(this.TriggerVolume);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.ExitConditionScript);
+            queueableBlamBinaryWriter.Write(this.FieldShortInteger);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(((int)(this.OrderCompletionConditionFlags)));
         }
         public enum RuleTypeEnum : short
         {

@@ -57,22 +57,22 @@ namespace Moonfish.Guerilla.Tags
             this.FogOpposite = base.ReadBlockArrayData<SkyLightFogBlock>(binaryReader, pointerQueue.Dequeue());
             this.Radiosity = base.ReadBlockArrayData<SkyRadiosityLightBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Fog);
-            queueableBinaryWriter.QueueWrite(this.FogOpposite);
-            queueableBinaryWriter.QueueWrite(this.Radiosity);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Fog);
+            queueableBlamBinaryWriter.QueueWrite(this.FogOpposite);
+            queueableBlamBinaryWriter.QueueWrite(this.Radiosity);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DirectionVector);
-            queueableBinaryWriter.Write(this.Direction);
-            queueableBinaryWriter.Write(this.LensFlare);
-            queueableBinaryWriter.WritePointer(this.Fog);
-            queueableBinaryWriter.WritePointer(this.FogOpposite);
-            queueableBinaryWriter.WritePointer(this.Radiosity);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.DirectionVector);
+            queueableBlamBinaryWriter.Write(this.Direction);
+            queueableBlamBinaryWriter.Write(this.LensFlare);
+            queueableBlamBinaryWriter.WritePointer(this.Fog);
+            queueableBlamBinaryWriter.WritePointer(this.FogOpposite);
+            queueableBlamBinaryWriter.WritePointer(this.Radiosity);
         }
     }
 }

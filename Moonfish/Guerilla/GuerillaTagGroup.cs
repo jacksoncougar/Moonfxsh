@@ -83,7 +83,7 @@ namespace Moonfish.Guerilla
         public int savePostprocessProc;
         public short version;
 
-        public GuerillaTagGroup(BinaryReader reader)
+        public GuerillaTagGroup(BlamBinaryReader reader)
         {
             Read(reader);
         }
@@ -102,7 +102,7 @@ namespace Moonfish.Guerilla
             get { return new TagClass(parentGroupTag); }
         }
 
-        private void Read(BinaryReader reader)
+        private void Read(BlamBinaryReader reader)
         {
             var stream = reader.BaseStream;
 
@@ -139,7 +139,7 @@ namespace Moonfish.Guerilla
             Definition = reader.ReadFieldDefinition<TagBlockDefinition>();
         }
 
-        void IReadDefinition.Read(BinaryReader reader)
+        void IReadDefinition.Read(BlamBinaryReader reader)
         {
             Read(reader);
         }

@@ -50,19 +50,19 @@ namespace Moonfish.Guerilla.Tags
             this.CampaignLevels = base.ReadBlockArrayData<GlobalUiCampaignLevelBlock>(binaryReader, pointerQueue.Dequeue());
             this.MultiplayerLevels = base.ReadBlockArrayData<GlobalUiMultiplayerLevelBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Campaigns);
-            queueableBinaryWriter.QueueWrite(this.CampaignLevels);
-            queueableBinaryWriter.QueueWrite(this.MultiplayerLevels);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Campaigns);
+            queueableBlamBinaryWriter.QueueWrite(this.CampaignLevels);
+            queueableBlamBinaryWriter.QueueWrite(this.MultiplayerLevels);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Campaigns);
-            queueableBinaryWriter.WritePointer(this.CampaignLevels);
-            queueableBinaryWriter.WritePointer(this.MultiplayerLevels);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Campaigns);
+            queueableBlamBinaryWriter.WritePointer(this.CampaignLevels);
+            queueableBlamBinaryWriter.WritePointer(this.MultiplayerLevels);
         }
     }
 }

@@ -95,15 +95,15 @@ namespace Moonfish.Forms
             hexBox1.Refresh();
 
             var strBuilder = new StringBuilder( );
-            using ( BinaryReader binaryReader = new BinaryReader( stream, Encoding.Default, true ) )
+            using ( BlamBinaryReader blamBinaryReader = new BlamBinaryReader( stream, Encoding.Default, true ) )
             {
                 stream.Seek( 0, SeekOrigin.Begin );
-                var version = binaryReader.ReadInt16( );
+                var version = blamBinaryReader.ReadInt16( );
                 strBuilder.AppendLine("#" + version);
-                var instructionCount = binaryReader.ReadInt16( );
+                var instructionCount = blamBinaryReader.ReadInt16( );
                 for ( int i = 0; i < instructionCount; i++ )
                 {
-                    var instructionBytes = binaryReader.ReadBytes( 16 );
+                    var instructionBytes = blamBinaryReader.ReadBytes( 16 );
                     var instruction = new VertexProgramInstruction( instructionBytes );
                     strBuilder.AppendLine( instruction.ToAsm );
                 }

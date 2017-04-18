@@ -69,27 +69,27 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.SequenceIndex);
-            queueableBinaryWriter.Write(((byte)(this.DetailObjectTypeTypeFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.ColorOverrideFactor);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.NearFadeDistance);
-            queueableBinaryWriter.Write(this.FarFadeDistance);
-            queueableBinaryWriter.Write(this.Size);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.MinimumColor);
-            queueableBinaryWriter.Write(this.MaximumColor);
-            queueableBinaryWriter.Write(this.AmbientColor);
-            queueableBinaryWriter.Write(this.fieldpad2);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(this.SequenceIndex);
+            queueableBlamBinaryWriter.Write(((byte)(this.DetailObjectTypeTypeFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.ColorOverrideFactor);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.NearFadeDistance);
+            queueableBlamBinaryWriter.Write(this.FarFadeDistance);
+            queueableBlamBinaryWriter.Write(this.Size);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.MinimumColor);
+            queueableBlamBinaryWriter.Write(this.MaximumColor);
+            queueableBlamBinaryWriter.Write(this.AmbientColor);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
         }
         [System.FlagsAttribute()]
         public enum TypeFlags : byte

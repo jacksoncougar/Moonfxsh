@@ -49,18 +49,18 @@ namespace Moonfish.Guerilla.Tags
             this.ParticlesRenderData = base.ReadBlockArrayData<ParticlesRenderDataBlock>(binaryReader, pointerQueue.Dequeue());
             this.ParticlesOtherData = base.ReadBlockArrayData<ParticlesUpdateDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ParticlesRenderData);
-            queueableBinaryWriter.QueueWrite(this.ParticlesOtherData);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.ParticlesRenderData);
+            queueableBlamBinaryWriter.QueueWrite(this.ParticlesOtherData);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.ParticlesRenderData);
-            queueableBinaryWriter.WritePointer(this.ParticlesOtherData);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.ParticlesRenderData);
+            queueableBlamBinaryWriter.WritePointer(this.ParticlesOtherData);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
         }
     }
 }

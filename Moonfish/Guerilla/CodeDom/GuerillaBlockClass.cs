@@ -75,12 +75,12 @@ namespace Moonfish.Guerilla.CodeDom
 
 		private GuerillaBlockClass(string className) : base(className)
 		{
-			filename = string.Format("{0}.generated.cs", className);
+			filename = $"{className}.generated.cs";
 			TargetClass.IsClass = true;
 			TargetClass.BaseTypes.Clear();
 			TargetClass.BaseTypes.AddRange(new[]
 			{
-				new CodeTypeReference(typeof (GuerillaBlock).Name()),
+				new CodeTypeReference(typeof (GuerillaBlock).Name),
 				new CodeTypeReference(typeof (IWriteQueueable).Name)
 			});
 		}
@@ -121,7 +121,7 @@ namespace Moonfish.Guerilla.CodeDom
 
 			//  BinaryReader binaryReader = new BinaryReader();
 			const string binaryReader = "binaryReader";
-			var binaryReaderReference = new CodeTypeReference(typeof(BinaryReader));
+			var binaryReaderReference = new CodeTypeReference(typeof(BlamBinaryReader));
 
 			var binaryReaderParameterExpression = new CodeParameterDeclarationExpression(binaryReaderReference,
 				binaryReader);
@@ -163,11 +163,11 @@ namespace Moonfish.Guerilla.CodeDom
 				if (field.Type.ArrayRank == 1)
 				{
 					var fieldInitializer = (CodeArrayCreateExpression)field.InitExpression;
-					var arraySize = fieldInitializer == null ? 0 : fieldInitializer.Size;
+					var arraySize = fieldInitializer?.Size ?? 0;
 					//  fixed byte array like padding or skip data
 					if (systemType == typeof(byte) && arraySize > 0)
 					{
-						var methodName = StaticReflection.GetMemberName((BinaryReader item) => item.ReadBytes(0));
+						var methodName = StaticReflection.GetMemberName((BlamBinaryReader item) => item.ReadBytes(0));
 						method.Statements.Add(new CodeAssignStatement(fieldReference,
 							new CodeMethodInvokeExpression(binaryReaderArgument, methodName,
 								new CodePrimitiveExpression(arraySize))));
@@ -177,7 +177,7 @@ namespace Moonfish.Guerilla.CodeDom
 					{
 						var methodName =
 							StaticReflection.GetMemberName(
-								(GuerillaBlock item) => item.ReadFields(default(BinaryReader)));
+								(GuerillaBlock item) => item.ReadFields(default(BlamBinaryReader)));
 
 						if (!method.Statements.Contains(loopVariableDeclaration))
 							method.Statements.Add(loopVariableDeclaration);
@@ -203,7 +203,7 @@ namespace Moonfish.Guerilla.CodeDom
 					{
 						var readBlamPointerMethodName =
 							StaticReflection.GetMemberName(
-								(BinaryReader @class) => @class.ReadBlamPointer(0));
+								(BlamBinaryReader @class) => @class.ReadBlamPointer(0));
 						var queueMethodName =
 							StaticReflection.GetMemberName(
 								(Queue<BlamPointer> item) => item.Enqueue(new BlamPointer()));
@@ -217,7 +217,7 @@ namespace Moonfish.Guerilla.CodeDom
 					{
 						var readBlamPointerMethodName =
 							StaticReflection.GetMemberName(
-								(BinaryReader @class) => @class.ReadBlamPointer(0));
+								(BlamBinaryReader @class) => @class.ReadBlamPointer(0));
 						var queueMethodName =
 							StaticReflection.GetMemberName(
 								(Queue<BlamPointer> item) => item.Enqueue(new BlamPointer()));
@@ -233,7 +233,7 @@ namespace Moonfish.Guerilla.CodeDom
 							StaticReflection.GetMemberName(
 								(Queue<BlamPointer> @class) => @class.Enqueue(new BlamPointer()));
 						var methodName =
-							StaticReflection.GetMemberName((BinaryReader item) => item.ReadBlamPointer(default(int)));
+							StaticReflection.GetMemberName((BlamBinaryReader item) => item.ReadBlamPointer(default(int)));
 						var elementSize = (int)field.UserData[0];
 
 						method.Statements.Add(new CodeMethodInvokeExpression(pointerQueueVariable, enqueueMethodName,
@@ -245,7 +245,7 @@ namespace Moonfish.Guerilla.CodeDom
 				else if (field.UserData.Contains("GuerillaBlock"))
 				{
 					var methodName =
-						StaticReflection.GetMemberName((GuerillaBlock item) => item.ReadFields(default(BinaryReader)));
+						StaticReflection.GetMemberName((GuerillaBlock item) => item.ReadFields(default(BlamBinaryReader)));
 
 					method.Statements.Add(new CodeAssignStatement(pointerQueueVariable,
 						new CodeObjectCreateExpression(pointerQueueReference,
@@ -297,7 +297,7 @@ namespace Moonfish.Guerilla.CodeDom
 			//  BinaryReader binaryReader = new BinaryReader();
 			const string binaryReader = "binaryReader";
 			var binaryReaderParameterExpression =
-				new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(BinaryReader)),
+				new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(BlamBinaryReader)),
 					binaryReader);
 			var binaryReaderArgument = new CodeArgumentReferenceExpression(binaryReader);
 			method.Parameters.Add(binaryReaderParameterExpression);
@@ -338,7 +338,7 @@ namespace Moonfish.Guerilla.CodeDom
 						var methodName =
 							StaticReflection.GetMemberName(
 								(GuerillaBlock item) =>
-									item.ReadInstances(default(BinaryReader), new Queue<BlamPointer>()));
+									item.ReadInstances(default(BlamBinaryReader), new Queue<BlamPointer>()));
 
 						//  add loop iterator variable if needed
 						if (!method.Statements.Contains(loopVariableDeclaration))
@@ -361,7 +361,7 @@ namespace Moonfish.Guerilla.CodeDom
 						var readDataMethodName =
 							StaticReflection.GetMemberName(
 								(GuerillaBlock @class) =>
-									@class.ReadDataByteArray(new BinaryReader(Stream.Null), new BlamPointer()));
+									@class.ReadDataByteArray(new BlamBinaryReader(Stream.Null), new BlamPointer()));
 
 						var dequeueMethodName =
 							StaticReflection.GetMemberName(
@@ -378,7 +378,7 @@ namespace Moonfish.Guerilla.CodeDom
 						var readDataMethodName =
 							StaticReflection.GetMemberName(
 								(GuerillaBlock @class) =>
-									@class.ReadDataShortArray(new BinaryReader(Stream.Null), new BlamPointer()));
+									@class.ReadDataShortArray(new BlamBinaryReader(Stream.Null), new BlamPointer()));
 
 						var dequeueMethodName =
 							StaticReflection.GetMemberName(
@@ -394,7 +394,7 @@ namespace Moonfish.Guerilla.CodeDom
 					{
 						var readDataMethodName =
 							StaticReflection.GetMemberName((GuerillaBlock item) =>
-								item.ReadBlockArrayData<GuerillaBlock>(new BinaryReader(Stream.Null), new BlamPointer())
+								item.ReadBlockArrayData<GuerillaBlock>(new BlamBinaryReader(Stream.Null), new BlamPointer())
 								);
 
 						var dequeueMethodName =
@@ -411,7 +411,7 @@ namespace Moonfish.Guerilla.CodeDom
 				else if (field.UserData.Contains("GuerillaBlock"))
 				{
 					var readInstancesMethodName = StaticReflection.GetMemberName((GuerillaBlock item) =>
-						item.ReadInstances(new BinaryReader(Stream.Null), new Queue<BlamPointer>()));
+						item.ReadInstances(new BlamBinaryReader(Stream.Null), new Queue<BlamPointer>()));
 
 					method.Statements.Add(new CodeMethodInvokeExpression(fieldReference, readInstancesMethodName,
 						binaryReaderArgument,
@@ -438,7 +438,7 @@ namespace Moonfish.Guerilla.CodeDom
 			//  add QueueableBinaryWriter parameter
 			const string queueableBinaryWriter = "queueableBinaryWriter";
 			var queueableBinaryWriterParameterDeclaration =
-				new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(QueueableBinaryWriter)),
+				new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(QueueableBlamBinaryWriter)),
 					queueableBinaryWriter);
 			var queueableBinaryWriterArgument = new CodeArgumentReferenceExpression(queueableBinaryWriter);
 
@@ -497,7 +497,7 @@ namespace Moonfish.Guerilla.CodeDom
 					{
 						var methodName =
 							StaticReflection.GetMemberName(
-								(QueueableBinaryWriter item) => item.QueueWrite(new byte[0]));
+								(QueueableBlamBinaryWriter item) => item.QueueWrite(new byte[0]));
 
 						method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
 							fieldReference));
@@ -507,7 +507,7 @@ namespace Moonfish.Guerilla.CodeDom
 					{
 						var methodName =
 							StaticReflection.GetMemberName(
-								(QueueableBinaryWriter item) => item.QueueWrite(new short[0]));
+								(QueueableBlamBinaryWriter item) => item.QueueWrite(new short[0]));
 
 						method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
 							fieldReference));
@@ -517,7 +517,7 @@ namespace Moonfish.Guerilla.CodeDom
 					{
 						var methodName =
 							StaticReflection.GetMemberName(
-								(QueueableBinaryWriter item) => item.QueueWrite(new GuerillaBlock[0]));
+								(QueueableBlamBinaryWriter item) => item.QueueWrite(new GuerillaBlock[0]));
 
 						method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
 								fieldReference));
@@ -554,7 +554,7 @@ namespace Moonfish.Guerilla.CodeDom
 			//  add QueueableBinaryWriter parameter
 			const string queueableBinaryWriter = "queueableBinaryWriter";
 			var queueableBinaryWriterParameterDeclaration =
-				new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(QueueableBinaryWriter)),
+				new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(QueueableBlamBinaryWriter)),
 					queueableBinaryWriter);
 			var queueableBinaryWriterArgument = new CodeArgumentReferenceExpression(queueableBinaryWriter);
 
@@ -584,7 +584,7 @@ namespace Moonfish.Guerilla.CodeDom
 					if (systemType == typeof(byte) && arraySize > 0)
 					{
 						var methodName =
-							StaticReflection.GetMemberName((QueueableBinaryWriter item) => item.Write(new byte[0]));
+							StaticReflection.GetMemberName((QueueableBlamBinaryWriter item) => item.Write(new byte[0]));
 
 						method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
 							fieldReference));
@@ -616,7 +616,7 @@ namespace Moonfish.Guerilla.CodeDom
 					{
 						var writePointerMethodName =
 							StaticReflection.GetMemberName(
-								(QueueableBinaryWriter item) => item.WritePointer(new byte[0]));
+								(QueueableBlamBinaryWriter item) => item.WritePointer(new byte[0]));
 
 						method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument,
 							writePointerMethodName,
@@ -627,7 +627,7 @@ namespace Moonfish.Guerilla.CodeDom
 					{
 						var writePointerMethodName =
 							StaticReflection.GetMemberName(
-								(QueueableBinaryWriter item) => item.WritePointer(new short[0]));
+								(QueueableBlamBinaryWriter item) => item.WritePointer(new short[0]));
 
 						method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument,
 							writePointerMethodName,
@@ -638,7 +638,7 @@ namespace Moonfish.Guerilla.CodeDom
 					{
 						var writePointerMethodName =
 							StaticReflection.GetMemberName(
-								(QueueableBinaryWriter item) => item.WritePointer(new GuerillaBlock[0]));
+								(QueueableBlamBinaryWriter item) => item.WritePointer(new GuerillaBlock[0]));
 
 						method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument,
 							writePointerMethodName,
@@ -955,6 +955,9 @@ namespace Moonfish.Guerilla.CodeDom
 			};
 			var filepath = Path.Combine(directory, filename);
 
+		    if (!Directory.Exists(directory))
+		        Directory.CreateDirectory(directory);
+		    
 			using (var streamWriter = new StreamWriter(File.Create(filepath)))
 			{
 				provider.GenerateCodeFromCompileUnit(TargetUnit, streamWriter, options);

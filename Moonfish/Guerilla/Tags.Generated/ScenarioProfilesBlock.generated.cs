@@ -69,26 +69,26 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.StartingHealthDamage);
-            queueableBinaryWriter.Write(this.StartingShieldDamage);
-            queueableBinaryWriter.Write(this.PrimaryWeapon);
-            queueableBinaryWriter.Write(this.RoundsLoaded);
-            queueableBinaryWriter.Write(this.RoundsTotal);
-            queueableBinaryWriter.Write(this.SecondaryWeapon);
-            queueableBinaryWriter.Write(this.RoundsLoaded0);
-            queueableBinaryWriter.Write(this.RoundsTotal0);
-            queueableBinaryWriter.Write(this.StartingFragmentationGrenadeCount);
-            queueableBinaryWriter.Write(this.StartingPlasmaGrenadeCount);
-            queueableBinaryWriter.Write(this.StartingunknownGrenadeCount);
-            queueableBinaryWriter.Write(this.StartingunknownGrenadeCount0);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(this.StartingHealthDamage);
+            queueableBlamBinaryWriter.Write(this.StartingShieldDamage);
+            queueableBlamBinaryWriter.Write(this.PrimaryWeapon);
+            queueableBlamBinaryWriter.Write(this.RoundsLoaded);
+            queueableBlamBinaryWriter.Write(this.RoundsTotal);
+            queueableBlamBinaryWriter.Write(this.SecondaryWeapon);
+            queueableBlamBinaryWriter.Write(this.RoundsLoaded0);
+            queueableBlamBinaryWriter.Write(this.RoundsTotal0);
+            queueableBlamBinaryWriter.Write(this.StartingFragmentationGrenadeCount);
+            queueableBlamBinaryWriter.Write(this.StartingPlasmaGrenadeCount);
+            queueableBlamBinaryWriter.Write(this.StartingunknownGrenadeCount);
+            queueableBlamBinaryWriter.Write(this.StartingunknownGrenadeCount0);
         }
     }
 }

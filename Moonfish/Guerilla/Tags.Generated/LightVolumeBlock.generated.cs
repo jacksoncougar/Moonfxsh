@@ -52,17 +52,17 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Volumes = base.ReadBlockArrayData<LightVolumeVolumeBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Volumes);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Volumes);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.FalloffDistanceFromCamera);
-            queueableBinaryWriter.Write(this.CutoffDistanceFromCamera);
-            queueableBinaryWriter.WritePointer(this.Volumes);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.FalloffDistanceFromCamera);
+            queueableBlamBinaryWriter.Write(this.CutoffDistanceFromCamera);
+            queueableBlamBinaryWriter.WritePointer(this.Volumes);
         }
     }
 }

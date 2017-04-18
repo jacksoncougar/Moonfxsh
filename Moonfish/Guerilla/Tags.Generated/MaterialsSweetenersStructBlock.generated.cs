@@ -85,28 +85,28 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.SoundSweetener);
-            queueableBinaryWriter.Write(this.SoundSweetener0);
-            queueableBinaryWriter.Write(this.SoundSweetener1);
-            queueableBinaryWriter.Write(this.SoundSweetenerRolling);
-            queueableBinaryWriter.Write(this.SoundSweetenerGrinding);
-            queueableBinaryWriter.Write(this.SoundSweetener2);
-            queueableBinaryWriter.Write(this.TagReference);
-            queueableBinaryWriter.Write(this.EffectSweetener);
-            queueableBinaryWriter.Write(this.EffectSweetener0);
-            queueableBinaryWriter.Write(this.EffectSweetener1);
-            queueableBinaryWriter.Write(this.EffectSweetenerRolling);
-            queueableBinaryWriter.Write(this.EffectSweetenerGrinding);
-            queueableBinaryWriter.Write(this.EffectSweetener2);
-            queueableBinaryWriter.Write(this.TagReference0);
-            queueableBinaryWriter.Write(((int)(this.MaterialsSweetenersStructSweetenerInheritanceFlags)));
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.SoundSweetener);
+            queueableBlamBinaryWriter.Write(this.SoundSweetener0);
+            queueableBlamBinaryWriter.Write(this.SoundSweetener1);
+            queueableBlamBinaryWriter.Write(this.SoundSweetenerRolling);
+            queueableBlamBinaryWriter.Write(this.SoundSweetenerGrinding);
+            queueableBlamBinaryWriter.Write(this.SoundSweetener2);
+            queueableBlamBinaryWriter.Write(this.TagReference);
+            queueableBlamBinaryWriter.Write(this.EffectSweetener);
+            queueableBlamBinaryWriter.Write(this.EffectSweetener0);
+            queueableBlamBinaryWriter.Write(this.EffectSweetener1);
+            queueableBlamBinaryWriter.Write(this.EffectSweetenerRolling);
+            queueableBlamBinaryWriter.Write(this.EffectSweetenerGrinding);
+            queueableBlamBinaryWriter.Write(this.EffectSweetener2);
+            queueableBlamBinaryWriter.Write(this.TagReference0);
+            queueableBlamBinaryWriter.Write(((int)(this.MaterialsSweetenersStructSweetenerInheritanceFlags)));
         }
         /// <summary>
         /// when a sweetener inheritance flag is set the sound\effect is not inherited from the parent material.  If you leave the sweetener blank and set the flag than no effect\sound will play

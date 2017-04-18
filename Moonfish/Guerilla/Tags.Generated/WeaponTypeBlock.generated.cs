@@ -61,26 +61,26 @@ namespace Moonfish.Guerilla.Tags
             this.HighPrecacheCCCCC = base.ReadBlockArrayData<PrecacheListBlock>(binaryReader, pointerQueue.Dequeue());
             this.LowPrecacheCCCCC = base.ReadBlockArrayData<PrecacheListBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ActionsAABBCC);
-            queueableBinaryWriter.QueueWrite(this.OverlaysAABBCC);
-            queueableBinaryWriter.QueueWrite(this.DeathAndDamageAABBCC);
-            queueableBinaryWriter.QueueWrite(this.TransitionsAABBCC);
-            queueableBinaryWriter.QueueWrite(this.HighPrecacheCCCCC);
-            queueableBinaryWriter.QueueWrite(this.LowPrecacheCCCCC);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.ActionsAABBCC);
+            queueableBlamBinaryWriter.QueueWrite(this.OverlaysAABBCC);
+            queueableBlamBinaryWriter.QueueWrite(this.DeathAndDamageAABBCC);
+            queueableBlamBinaryWriter.QueueWrite(this.TransitionsAABBCC);
+            queueableBlamBinaryWriter.QueueWrite(this.HighPrecacheCCCCC);
+            queueableBlamBinaryWriter.QueueWrite(this.LowPrecacheCCCCC);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Label);
-            queueableBinaryWriter.WritePointer(this.ActionsAABBCC);
-            queueableBinaryWriter.WritePointer(this.OverlaysAABBCC);
-            queueableBinaryWriter.WritePointer(this.DeathAndDamageAABBCC);
-            queueableBinaryWriter.WritePointer(this.TransitionsAABBCC);
-            queueableBinaryWriter.WritePointer(this.HighPrecacheCCCCC);
-            queueableBinaryWriter.WritePointer(this.LowPrecacheCCCCC);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Label);
+            queueableBlamBinaryWriter.WritePointer(this.ActionsAABBCC);
+            queueableBlamBinaryWriter.WritePointer(this.OverlaysAABBCC);
+            queueableBlamBinaryWriter.WritePointer(this.DeathAndDamageAABBCC);
+            queueableBlamBinaryWriter.WritePointer(this.TransitionsAABBCC);
+            queueableBlamBinaryWriter.WritePointer(this.HighPrecacheCCCCC);
+            queueableBlamBinaryWriter.WritePointer(this.LowPrecacheCCCCC);
         }
     }
 }

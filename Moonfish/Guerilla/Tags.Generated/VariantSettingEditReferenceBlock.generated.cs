@@ -51,19 +51,19 @@ namespace Moonfish.Guerilla.Tags
             this.Options = base.ReadBlockArrayData<TextValuePairBlock>(binaryReader, pointerQueue.Dequeue());
             this.NullBlock = base.ReadBlockArrayData<NullBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Options);
-            queueableBinaryWriter.QueueWrite(this.NullBlock);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Options);
+            queueableBlamBinaryWriter.QueueWrite(this.NullBlock);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.SettingCategory)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.Options);
-            queueableBinaryWriter.WritePointer(this.NullBlock);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.SettingCategory)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.WritePointer(this.Options);
+            queueableBlamBinaryWriter.WritePointer(this.NullBlock);
         }
         public enum SettingCategoryEnum : int
         {

@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text;
+using Moonfish.Guerilla;
 
 namespace Moonfish
 {
@@ -16,7 +17,7 @@ namespace Moonfish
             private UnknownInfoStruct(Stream sourceStream)
             {
                 using (
-                    var binaryReader = new BinaryReader(sourceStream,
+                    var binaryReader = new BlamBinaryReader(sourceStream,
                         Encoding.Default, true))
                 {
                     Address = binaryReader.ReadInt32();

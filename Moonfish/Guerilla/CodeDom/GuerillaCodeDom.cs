@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -139,6 +140,159 @@ namespace Moonfish.Guerilla.CodeDom
                 blockClass.GenerateCSharpCode(Path.Combine(Local.ProjectDirectory, @"Guerilla\Tags.Generated\"));
                 Console.WriteLine(@"Generated: {0}", blockClass.TargetClass.Name);
             }
+        }
+
+        public static TagGroupLookup TagClasses = new TagGroupLookup();
+
+        public class TagGroupLookup : IEnumerable, IEnumerable<string>
+        {
+            private static readonly List<string> classes = new List<string>
+            {
+                #region Class Strings
+                "$#!+",
+                "*cen",
+                "*eap",
+                "*ehi",
+                "*igh",
+                "*ipd",
+                "*qip",
+                "*rea",
+                "*sce",
+                "/**/",
+                "<fx>",
+                "BooM",
+                "DECP",
+                "DECR",
+                "MGS2",
+                "PRTM",
+                "adlg",
+                "ai**",
+                "ant!",
+                "bipd",
+                "bitm",
+                "bloc",
+                "bsdt",
+                "char",
+                "cin*",
+                "clu*",
+                "clwd",
+                "coll",
+                "coln",
+                "colo",
+                "cont",
+                "crea",
+                "ctrl",
+                "dc*s",
+                "dec*",
+                "deca",
+                "devi",
+                "devo",
+                "dgr*",
+                "dobc",
+                "effe",
+                "egor",
+                "eqip",
+                "fog ",
+                "foot",
+                "fpch",
+                "garb",
+                "gldf",
+                "goof",
+                "grhi",
+                "hlmt",
+                "hmt ",
+                "hsc*",
+                "hud#",
+                "hudg",
+                "item",
+                "itmc",
+                "jmad",
+                "jpt!",
+                "lens",
+                "lifi",
+                "ligh",
+                "lsnd",
+                "ltmp",
+                "mach",
+                "matg",
+                "mdlg",
+                "metr",
+                "mode",
+                "mpdt",
+                "mply",
+                "mulg",
+                "nhdt",
+                "obje",
+                "phmo",
+                "phys",
+                "pmov",
+                "pphy",
+                "proj",
+                "prt3",
+                "sbsp",
+                "scen",
+                "scnr",
+                "sfx+",
+                "shad",
+                "sily",
+                "skin",
+                "sky ",
+                "slit",
+                "sncl",
+                "snd!",
+                "snde",
+                "snmx",
+                "spas",
+                "spk!",
+                "ssce",
+                "sslt",
+                "stem",
+                "styl",
+                "tdtl",
+                "trak",
+                "trg*",
+                "udlg",
+                "ugh!",
+                "unhi",
+                "unic",
+                "unit",
+                "vehc",
+                "vehi",
+                "vrtx",
+                "weap",
+                "weat",
+                "wgit",
+                "wgtz",
+                "whip",
+                "wigl",
+                "wind",
+                "wphi"
+
+                #endregion
+            };
+
+            public string this[int index]
+            {
+                get { return classes[index]; }
+            }
+
+            #region IEnumerable Members
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return classes.GetEnumerator();
+            }
+
+            #endregion
+
+            #region IEnumerable<string> Members
+
+            IEnumerator<string> IEnumerable<string>.GetEnumerator()
+            {
+                return classes.GetEnumerator();
+            }
+
+            #endregion
         }
 
         public static IEnumerable<Map> GetAllMaps()

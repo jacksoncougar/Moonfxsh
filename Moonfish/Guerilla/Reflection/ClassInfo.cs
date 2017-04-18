@@ -175,7 +175,7 @@ namespace Moonfish.Guerilla.Reflection
                 AccessModifiers = AccessModifiers.Public | AccessModifiers.Override,
                 Arguments = new List<ParameterInfo>
                 {
-                    new ParameterInfo(typeof (BinaryWriter)),
+                    new ParameterInfo(typeof (BlamBinaryWriter)),
                     new ParameterInfo(typeof (int), "nextAddress")
                 },
                 ClassName = "Write",
@@ -185,7 +185,7 @@ namespace Moonfish.Guerilla.Reflection
             var addressParam = writeMethod.Arguments[1];
             var bodyBuilder = new StringBuilder();
             bodyBuilder.AppendLine(string.Format("using({0})",
-                StaticReflection.GetMemberName((BinaryWriter b) => b.BaseStream.Pin(), binaryWriter)));
+                StaticReflection.GetMemberName((BlamBinaryWriter b) => b.BaseStream.Pin(), binaryWriter)));
             bodyBuilder.AppendLine("{".Tab(ref tab));
             foreach (var item in Fields)
             {

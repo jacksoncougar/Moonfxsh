@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -49,7 +50,7 @@ namespace Moonfish.Guerilla
 
         private static readonly IntPtr H2LangLib;
         public static List<GuerillaTagGroup> H2Tags;
-        public static Dictionary<string, Action<BinaryReader, IList<tag_field>>> PostprocessFunctions;
+        public static Dictionary<string, Action<BlamBinaryReader, IList<tag_field>>> PostprocessFunctions;
 
         private static Dictionary<string, ProcessFieldsDelegate> preProcessFieldsFunctions;
 
@@ -57,7 +58,7 @@ namespace Moonfish.Guerilla
         {
             H2Tags = new List<GuerillaTagGroup>();
             H2LangLib = LoadLibrary(H2LanguageLibrary);
-            LoadPostProcessFunctionsObsolete();
+            //LoadPostProcessFunctionsObsolete();
             LoadPostProcessFunctions();
             LoadGuerillaExecutable(Local.GuerillaPath);
         }
@@ -65,10 +66,26 @@ namespace Moonfish.Guerilla
         private static void LoadPostProcessFunctions()
         {
             preProcessFieldsFunctions = new Dictionary<string, ProcessFieldsDelegate>();
-            var methods = (from method in Assembly.GetExecutingAssembly().GetTypes().SelectMany(
-                x => x.GetMethods(BindingFlags.NonPublic | BindingFlags.Static))
-                where method.IsDefined(typeof (GuerillaPreProcessFieldsMethodAttribute), false)
-                select method).ToArray();
+            MethodInfo[] methods;
+            try
+            {
+                methods =
+                    (from method in
+                        Assembly.GetExecutingAssembly()
+                            .GetTypes()
+                            .SelectMany(x => x.GetMethods(BindingFlags.NonPublic | BindingFlags.Static))
+                        where method.IsDefined(typeof (GuerillaPreProcessFieldsMethodAttribute), false)
+                        select method).ToArray();
+            }
+            catch (ReflectionTypeLoadException e)
+            {
+                methods =
+                    (from method in
+                        e.Types.Where(x => x != null)
+                            .SelectMany(x => x.GetMethods(BindingFlags.NonPublic | BindingFlags.Static))
+                        where method.IsDefined(typeof (GuerillaPreProcessFieldsMethodAttribute), false)
+                        select method).ToArray();
+            }
             foreach (var method in methods)
             {
                 var attributes = method.GetCustomAttributes(typeof (GuerillaPreProcessFieldsMethodAttribute), false);
@@ -84,7 +101,7 @@ namespace Moonfish.Guerilla
 
         private static void LoadPostProcessFunctionsObsolete()
         {
-            PostprocessFunctions = new Dictionary<string, Action<BinaryReader, IList<tag_field>>>();
+            PostprocessFunctions = new Dictionary<string, Action<BlamBinaryReader, IList<tag_field>>>();
             var methods = (from method in Assembly.GetExecutingAssembly().GetTypes().SelectMany(
                 x => x.GetMethods(BindingFlags.NonPublic | BindingFlags.Static))
                 where method.IsDefined(typeof (GuerillaPreProcessMethodAttribute), false)
@@ -96,8 +113,8 @@ namespace Moonfish.Guerilla
                 foreach (GuerillaPreProcessMethodAttribute attribute in attributes)
                 {
                     PostprocessFunctions[attribute.BlockName] =
-                        (Action<BinaryReader, IList<tag_field>>)
-                            Delegate.CreateDelegate(typeof (Action<BinaryReader, IList<tag_field>>), (method));
+                        (Action<BlamBinaryReader, IList<tag_field>>)
+                            Delegate.CreateDelegate(typeof (Action<BlamBinaryReader, IList<tag_field>>), (method));
                 }
             }
         }
@@ -109,7 +126,7 @@ namespace Moonfish.Guerilla
 
         public static void LoadGuerillaExecutable(string guerillaExecutablePath)
         {
-            using (var reader = new BinaryReader(VirtualStream.CreateFromFile(guerillaExecutablePath, BaseAddress)))
+            using (var reader = new BlamBinaryReader(VirtualStream.CreateFromFile(guerillaExecutablePath, BaseAddress)))
             {
                 H2Tags = new List<GuerillaTagGroup>(NumberOfTagLayouts);
 
@@ -366,7 +383,7 @@ namespace Moonfish.Guerilla
 
         private static StringBuilder _str = new StringBuilder(0x1000);
 
-        public static string ReadString(BinaryReader reader, int address)
+        public static string ReadString(BlamBinaryReader reader, int address)
         {
             _str.Clear();
             // Check if address is smaller than the base address of the executable.

@@ -8,13 +8,13 @@ using Moonfish.Tags;
 
 namespace Moonfish.Guerilla
 {
-    public class QueueableBinaryWriter : BinaryWriter
+    public class QueueableBlamBinaryWriter : BlamBinaryWriter
     {
         protected readonly Dictionary<object, QueueItem> lookupDictionary;
         protected readonly Queue<QueueItem> Queue;
         private int queueAddress;
 
-        public QueueableBinaryWriter( Stream output, int serializedSize ) : base( output, Encoding.Default, true )
+        public QueueableBlamBinaryWriter( Stream output, int serializedSize ) : base( output, Encoding.Default, true )
         {
             queueAddress = serializedSize;
             Queue = new Queue<QueueItem>( 100 );
@@ -154,7 +154,7 @@ namespace Moonfish.Guerilla
                 get { return Data; }
             }
 
-			public override void Write(BinaryWriter writer)
+			public override void Write(BlamBinaryWriter writer)
 			{
 				writer.Write(Data);
 			}
@@ -175,7 +175,7 @@ namespace Moonfish.Guerilla
                 get { return Data; }
             }
 
-			public override void Write(BinaryWriter writer)
+			public override void Write(BlamBinaryWriter writer)
 			{
 			    short[] buffer = Data;
 			    foreach (var item in buffer)
@@ -200,7 +200,7 @@ namespace Moonfish.Guerilla
                 get { return DataBlocks; }
             }
 
-			public override void Write(BinaryWriter writer)
+			public override void Write(BlamBinaryWriter writer)
 			{
 				foreach (var block in DataBlocks)
 				{
@@ -228,6 +228,6 @@ namespace Moonfish.Guerilla
         /// </remarks>
         /// <value>The reference field.</value>
         public abstract object ReferenceField { get; }
-        public abstract void Write(BinaryWriter writer); 
+        public abstract void Write(BlamBinaryWriter writer); 
     };
 }

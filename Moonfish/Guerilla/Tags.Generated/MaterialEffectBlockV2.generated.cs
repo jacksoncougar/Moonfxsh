@@ -50,19 +50,19 @@ namespace Moonfish.Guerilla.Tags
             this.Sounds = base.ReadBlockArrayData<MaterialEffectMaterialBlock>(binaryReader, pointerQueue.Dequeue());
             this.Effects = base.ReadBlockArrayData<MaterialEffectMaterialBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.OldMaterials);
-            queueableBinaryWriter.QueueWrite(this.Sounds);
-            queueableBinaryWriter.QueueWrite(this.Effects);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.OldMaterials);
+            queueableBlamBinaryWriter.QueueWrite(this.Sounds);
+            queueableBlamBinaryWriter.QueueWrite(this.Effects);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.OldMaterials);
-            queueableBinaryWriter.WritePointer(this.Sounds);
-            queueableBinaryWriter.WritePointer(this.Effects);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.OldMaterials);
+            queueableBlamBinaryWriter.WritePointer(this.Sounds);
+            queueableBlamBinaryWriter.WritePointer(this.Effects);
         }
     }
 }

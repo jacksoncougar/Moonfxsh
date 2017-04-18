@@ -48,17 +48,17 @@ namespace Moonfish.Guerilla.Tags
             this.Palette = base.ReadBlockArrayData<ScenarioDecalPaletteBlock>(binaryReader, pointerQueue.Dequeue());
             this.Decals = base.ReadBlockArrayData<ScenarioDecalsBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Palette);
-            queueableBinaryWriter.QueueWrite(this.Decals);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Palette);
+            queueableBlamBinaryWriter.QueueWrite(this.Decals);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Palette);
-            queueableBinaryWriter.WritePointer(this.Decals);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Palette);
+            queueableBlamBinaryWriter.WritePointer(this.Decals);
         }
     }
 }

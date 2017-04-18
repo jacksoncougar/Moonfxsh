@@ -74,29 +74,29 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.CharacterRetreatRetreatFlags)));
-            queueableBinaryWriter.Write(this.ShieldThreshold);
-            queueableBinaryWriter.Write(this.ScaryTargetThreshold);
-            queueableBinaryWriter.Write(this.DangerThreshold);
-            queueableBinaryWriter.Write(this.ProximityThreshold);
-            queueableBinaryWriter.Write(this.MinmaxForcedCowerTimeBounds);
-            queueableBinaryWriter.Write(this.MinmaxCowerTimeoutBounds);
-            queueableBinaryWriter.Write(this.ProximityAmbushThreshold);
-            queueableBinaryWriter.Write(this.AwarenessAmbushThreshold);
-            queueableBinaryWriter.Write(this.LeaderDeadRetreatChance);
-            queueableBinaryWriter.Write(this.PeerDeadRetreatChance);
-            queueableBinaryWriter.Write(this.SecondPeerDeadRetreatChance);
-            queueableBinaryWriter.Write(this.ZigzagAngle);
-            queueableBinaryWriter.Write(this.ZigzagPeriod);
-            queueableBinaryWriter.Write(this.RetreatGrenadeChance);
-            queueableBinaryWriter.Write(this.BackupWeapon);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.CharacterRetreatRetreatFlags)));
+            queueableBlamBinaryWriter.Write(this.ShieldThreshold);
+            queueableBlamBinaryWriter.Write(this.ScaryTargetThreshold);
+            queueableBlamBinaryWriter.Write(this.DangerThreshold);
+            queueableBlamBinaryWriter.Write(this.ProximityThreshold);
+            queueableBlamBinaryWriter.Write(this.MinmaxForcedCowerTimeBounds);
+            queueableBlamBinaryWriter.Write(this.MinmaxCowerTimeoutBounds);
+            queueableBlamBinaryWriter.Write(this.ProximityAmbushThreshold);
+            queueableBlamBinaryWriter.Write(this.AwarenessAmbushThreshold);
+            queueableBlamBinaryWriter.Write(this.LeaderDeadRetreatChance);
+            queueableBlamBinaryWriter.Write(this.PeerDeadRetreatChance);
+            queueableBlamBinaryWriter.Write(this.SecondPeerDeadRetreatChance);
+            queueableBlamBinaryWriter.Write(this.ZigzagAngle);
+            queueableBlamBinaryWriter.Write(this.ZigzagPeriod);
+            queueableBlamBinaryWriter.Write(this.RetreatGrenadeChance);
+            queueableBlamBinaryWriter.Write(this.BackupWeapon);
         }
         [System.FlagsAttribute()]
         public enum RetreatFlags : int

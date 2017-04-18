@@ -47,17 +47,17 @@ namespace Moonfish.Guerilla.Tags
             this.LowFrequencyVibration.ReadInstances(binaryReader, pointerQueue);
             this.HighFrequencyVibration.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.LowFrequencyVibration.QueueWrites(queueableBinaryWriter);
-            this.HighFrequencyVibration.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.LowFrequencyVibration.QueueWrites(queueableBlamBinaryWriter);
+            this.HighFrequencyVibration.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            this.LowFrequencyVibration.Write_(queueableBinaryWriter);
-            this.HighFrequencyVibration.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            this.LowFrequencyVibration.Write_(queueableBlamBinaryWriter);
+            this.HighFrequencyVibration.Write_(queueableBlamBinaryWriter);
         }
     }
 }

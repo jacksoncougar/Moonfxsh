@@ -78,26 +78,26 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.PrimaryMessageSound);
-            queueableBinaryWriter.Write(this.SecondaryMessageSound);
-            queueableBinaryWriter.Write(this.BootGrieferString);
-            queueableBinaryWriter.Write(this.CannotBootGrieferString);
-            queueableBinaryWriter.Write(this.TrainingShader);
-            queueableBinaryWriter.Write(this.HumanTrainingTopRight);
-            queueableBinaryWriter.Write(this.HumanTrainingTopCenter);
-            queueableBinaryWriter.Write(this.HumanTrainingTopLeft);
-            queueableBinaryWriter.Write(this.HumanTrainingMiddle);
-            queueableBinaryWriter.Write(this.EliteTrainingTopRight);
-            queueableBinaryWriter.Write(this.EliteTrainingTopCenter);
-            queueableBinaryWriter.Write(this.EliteTrainingTopLeft);
-            queueableBinaryWriter.Write(this.EliteTrainingMiddle);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.PrimaryMessageSound);
+            queueableBlamBinaryWriter.Write(this.SecondaryMessageSound);
+            queueableBlamBinaryWriter.Write(this.BootGrieferString);
+            queueableBlamBinaryWriter.Write(this.CannotBootGrieferString);
+            queueableBlamBinaryWriter.Write(this.TrainingShader);
+            queueableBlamBinaryWriter.Write(this.HumanTrainingTopRight);
+            queueableBlamBinaryWriter.Write(this.HumanTrainingTopCenter);
+            queueableBlamBinaryWriter.Write(this.HumanTrainingTopLeft);
+            queueableBlamBinaryWriter.Write(this.HumanTrainingMiddle);
+            queueableBlamBinaryWriter.Write(this.EliteTrainingTopRight);
+            queueableBlamBinaryWriter.Write(this.EliteTrainingTopCenter);
+            queueableBlamBinaryWriter.Write(this.EliteTrainingTopLeft);
+            queueableBlamBinaryWriter.Write(this.EliteTrainingMiddle);
         }
     }
 }

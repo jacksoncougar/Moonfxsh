@@ -51,18 +51,18 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.SourceParameter);
-            queueableBinaryWriter.Write(((short)(this.ScaleByTextureStage)));
-            queueableBinaryWriter.Write(((short)(this.RegisterBank)));
-            queueableBinaryWriter.Write(this.RegisterIndex);
-            queueableBinaryWriter.Write(((short)(this.ComponentMask)));
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.SourceParameter);
+            queueableBlamBinaryWriter.Write(((short)(this.ScaleByTextureStage)));
+            queueableBlamBinaryWriter.Write(((short)(this.RegisterBank)));
+            queueableBlamBinaryWriter.Write(this.RegisterIndex);
+            queueableBlamBinaryWriter.Write(((short)(this.ComponentMask)));
         }
         public enum ScaleByTextureStageEnum : short
         {

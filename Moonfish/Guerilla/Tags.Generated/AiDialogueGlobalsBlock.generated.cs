@@ -56,22 +56,22 @@ namespace Moonfish.Guerilla.Tags
             this.DialogueData = base.ReadBlockArrayData<DialogueDataBlock>(binaryReader, pointerQueue.Dequeue());
             this.InvoluntaryData = base.ReadBlockArrayData<InvoluntaryDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Vocalizations);
-            queueableBinaryWriter.QueueWrite(this.Patterns);
-            queueableBinaryWriter.QueueWrite(this.DialogueData);
-            queueableBinaryWriter.QueueWrite(this.InvoluntaryData);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Vocalizations);
+            queueableBlamBinaryWriter.QueueWrite(this.Patterns);
+            queueableBlamBinaryWriter.QueueWrite(this.DialogueData);
+            queueableBlamBinaryWriter.QueueWrite(this.InvoluntaryData);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Vocalizations);
-            queueableBinaryWriter.WritePointer(this.Patterns);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.DialogueData);
-            queueableBinaryWriter.WritePointer(this.InvoluntaryData);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Vocalizations);
+            queueableBlamBinaryWriter.WritePointer(this.Patterns);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.WritePointer(this.DialogueData);
+            queueableBlamBinaryWriter.WritePointer(this.InvoluntaryData);
         }
     }
 }

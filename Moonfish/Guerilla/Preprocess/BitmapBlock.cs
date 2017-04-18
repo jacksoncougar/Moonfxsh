@@ -7,7 +7,7 @@ namespace Moonfish.Guerilla.Preprocess
     internal class BitmapBlock
     {
         [GuerillaPreProcessMethod(BlockName = "bitmap_block")]
-        protected static void GuerillaPreProcessMethod(BinaryReader binaryReader, IList<tag_field> fields)
+        protected static void GuerillaPreProcessMethod(BlamBinaryReader blamBinaryReader, IList<tag_field> fields)
         {
             (fields[2].Definition as enum_definition).Options = new List<string>(new[]
             {

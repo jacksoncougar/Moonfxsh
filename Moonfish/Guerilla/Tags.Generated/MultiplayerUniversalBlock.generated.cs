@@ -53,18 +53,18 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.TeamColors = base.ReadBlockArrayData<MultiplayerColorBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.TeamColors);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.TeamColors);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.RandomPlayerNames);
-            queueableBinaryWriter.Write(this.TeamNames);
-            queueableBinaryWriter.WritePointer(this.TeamColors);
-            queueableBinaryWriter.Write(this.MultiplayerText);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.RandomPlayerNames);
+            queueableBlamBinaryWriter.Write(this.TeamNames);
+            queueableBlamBinaryWriter.WritePointer(this.TeamColors);
+            queueableBlamBinaryWriter.Write(this.MultiplayerText);
         }
     }
 }

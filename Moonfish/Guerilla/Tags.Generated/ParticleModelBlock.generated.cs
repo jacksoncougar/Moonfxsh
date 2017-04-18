@@ -97,43 +97,43 @@ namespace Moonfish.Guerilla.Tags
             this.CachedData = base.ReadBlockArrayData<CachedDataBlock>(binaryReader, pointerQueue.Dequeue());
             this.GeometrySectionInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.ScaleX.QueueWrites(queueableBinaryWriter);
-            this.ScaleY.QueueWrites(queueableBinaryWriter);
-            this.ScaleZ.QueueWrites(queueableBinaryWriter);
-            this.Rotation.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Locations);
-            queueableBinaryWriter.QueueWrite(this.AttachedParticleSystems);
-            queueableBinaryWriter.QueueWrite(this.Models);
-            queueableBinaryWriter.QueueWrite(this.RawVertices);
-            queueableBinaryWriter.QueueWrite(this.Indices);
-            queueableBinaryWriter.QueueWrite(this.CachedData);
-            this.GeometrySectionInfo.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.ScaleX.QueueWrites(queueableBlamBinaryWriter);
+            this.ScaleY.QueueWrites(queueableBlamBinaryWriter);
+            this.ScaleZ.QueueWrites(queueableBlamBinaryWriter);
+            this.Rotation.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Locations);
+            queueableBlamBinaryWriter.QueueWrite(this.AttachedParticleSystems);
+            queueableBlamBinaryWriter.QueueWrite(this.Models);
+            queueableBlamBinaryWriter.QueueWrite(this.RawVertices);
+            queueableBlamBinaryWriter.QueueWrite(this.Indices);
+            queueableBlamBinaryWriter.QueueWrite(this.CachedData);
+            this.GeometrySectionInfo.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.ParticleModelFlags)));
-            queueableBinaryWriter.Write(((int)(this.Orientation)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Shader);
-            this.ScaleX.Write_(queueableBinaryWriter);
-            this.ScaleY.Write_(queueableBinaryWriter);
-            this.ScaleZ.Write_(queueableBinaryWriter);
-            this.Rotation.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.CollisionEffect);
-            queueableBinaryWriter.Write(this.DeathEffect);
-            queueableBinaryWriter.WritePointer(this.Locations);
-            queueableBinaryWriter.WritePointer(this.AttachedParticleSystems);
-            queueableBinaryWriter.WritePointer(this.Models);
-            queueableBinaryWriter.WritePointer(this.RawVertices);
-            queueableBinaryWriter.WritePointer(this.Indices);
-            queueableBinaryWriter.WritePointer(this.CachedData);
-            this.GeometrySectionInfo.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.ParticleModelFlags)));
+            queueableBlamBinaryWriter.Write(((int)(this.Orientation)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.Shader);
+            this.ScaleX.Write_(queueableBlamBinaryWriter);
+            this.ScaleY.Write_(queueableBlamBinaryWriter);
+            this.ScaleZ.Write_(queueableBlamBinaryWriter);
+            this.Rotation.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.CollisionEffect);
+            queueableBlamBinaryWriter.Write(this.DeathEffect);
+            queueableBlamBinaryWriter.WritePointer(this.Locations);
+            queueableBlamBinaryWriter.WritePointer(this.AttachedParticleSystems);
+            queueableBlamBinaryWriter.WritePointer(this.Models);
+            queueableBlamBinaryWriter.WritePointer(this.RawVertices);
+            queueableBlamBinaryWriter.WritePointer(this.Indices);
+            queueableBlamBinaryWriter.WritePointer(this.CachedData);
+            this.GeometrySectionInfo.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

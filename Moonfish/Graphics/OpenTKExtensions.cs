@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using Moonfish.Guerilla;
 using OpenTK;
 
 namespace Moonfish
 {
-    public static class OpenTKExtensions
+    public static class OpenTkExtensions
     {
         [StructLayout(LayoutKind.Explicit)]
         public unsafe struct FloatByteUnion

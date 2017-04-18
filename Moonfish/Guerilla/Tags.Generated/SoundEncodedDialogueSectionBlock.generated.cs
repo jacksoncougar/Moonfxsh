@@ -47,17 +47,17 @@ namespace Moonfish.Guerilla.Tags
             this.EncodedData = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
             this.SoundDialogueInfo = base.ReadBlockArrayData<SoundPermutationDialogueInfoBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.EncodedData);
-            queueableBinaryWriter.QueueWrite(this.SoundDialogueInfo);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.EncodedData);
+            queueableBlamBinaryWriter.QueueWrite(this.SoundDialogueInfo);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.EncodedData);
-            queueableBinaryWriter.WritePointer(this.SoundDialogueInfo);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.EncodedData);
+            queueableBlamBinaryWriter.WritePointer(this.SoundDialogueInfo);
         }
     }
 }

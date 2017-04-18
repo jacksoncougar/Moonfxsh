@@ -65,25 +65,25 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.CharacterMovementMovementFlags)));
-            queueableBinaryWriter.Write(this.PathfindingRadius);
-            queueableBinaryWriter.Write(this.DestinationRadius);
-            queueableBinaryWriter.Write(this.DiveGrenadeChance);
-            queueableBinaryWriter.Write(((short)(this.ObstacleLeapMinSize)));
-            queueableBinaryWriter.Write(((short)(this.ObstacleLeapMaxSize)));
-            queueableBinaryWriter.Write(((short)(this.ObstacleIgnoreSize)));
-            queueableBinaryWriter.Write(((short)(this.ObstacleSmashableSize)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.JumpHeight)));
-            queueableBinaryWriter.Write(((int)(this.CharacterMovementMovementHints)));
-            queueableBinaryWriter.Write(this.ThrottleScale);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.CharacterMovementMovementFlags)));
+            queueableBlamBinaryWriter.Write(this.PathfindingRadius);
+            queueableBlamBinaryWriter.Write(this.DestinationRadius);
+            queueableBlamBinaryWriter.Write(this.DiveGrenadeChance);
+            queueableBlamBinaryWriter.Write(((short)(this.ObstacleLeapMinSize)));
+            queueableBlamBinaryWriter.Write(((short)(this.ObstacleLeapMaxSize)));
+            queueableBlamBinaryWriter.Write(((short)(this.ObstacleIgnoreSize)));
+            queueableBlamBinaryWriter.Write(((short)(this.ObstacleSmashableSize)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(((short)(this.JumpHeight)));
+            queueableBlamBinaryWriter.Write(((int)(this.CharacterMovementMovementHints)));
+            queueableBlamBinaryWriter.Write(this.ThrottleScale);
         }
         [System.FlagsAttribute()]
         public enum MovementFlags : int

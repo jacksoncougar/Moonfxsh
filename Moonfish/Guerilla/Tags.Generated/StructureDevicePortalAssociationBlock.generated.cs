@@ -48,17 +48,17 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.DeviceId.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.DeviceId.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.DeviceId.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            this.DeviceId.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.FirstGamePortalIndex);
-            queueableBinaryWriter.Write(this.GamePortalCount);
+            base.Write_(queueableBlamBinaryWriter);
+            this.DeviceId.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.FirstGamePortalIndex);
+            queueableBlamBinaryWriter.Write(this.GamePortalCount);
         }
     }
 }

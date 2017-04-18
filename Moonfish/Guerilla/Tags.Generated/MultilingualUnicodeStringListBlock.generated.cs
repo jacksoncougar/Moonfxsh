@@ -50,18 +50,18 @@ namespace Moonfish.Guerilla.Tags
             this.StringReferences = base.ReadBlockArrayData<MultilingualUnicodeStringReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.StringDataUtf8 = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.StringReferences);
-            queueableBinaryWriter.QueueWrite(this.StringDataUtf8);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.StringReferences);
+            queueableBlamBinaryWriter.QueueWrite(this.StringDataUtf8);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.StringReferences);
-            queueableBinaryWriter.WritePointer(this.StringDataUtf8);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.StringReferences);
+            queueableBlamBinaryWriter.WritePointer(this.StringDataUtf8);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
         }
     }
 }

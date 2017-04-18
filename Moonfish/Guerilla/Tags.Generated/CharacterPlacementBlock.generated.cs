@@ -67,26 +67,26 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.FewUpgradeChance);
-            queueableBinaryWriter.Write(this.FewUpgradeChance0);
-            queueableBinaryWriter.Write(this.FewUpgradeChance1);
-            queueableBinaryWriter.Write(this.FewUpgradeChance2);
-            queueableBinaryWriter.Write(this.NormalUpgradeChance);
-            queueableBinaryWriter.Write(this.NormalUpgradeChance0);
-            queueableBinaryWriter.Write(this.NormalUpgradeChance1);
-            queueableBinaryWriter.Write(this.NormalUpgradeChance2);
-            queueableBinaryWriter.Write(this.ManyUpgradeChance);
-            queueableBinaryWriter.Write(this.ManyUpgradeChance0);
-            queueableBinaryWriter.Write(this.ManyUpgradeChance1);
-            queueableBinaryWriter.Write(this.ManyUpgradeChance2);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.FewUpgradeChance);
+            queueableBlamBinaryWriter.Write(this.FewUpgradeChance0);
+            queueableBlamBinaryWriter.Write(this.FewUpgradeChance1);
+            queueableBlamBinaryWriter.Write(this.FewUpgradeChance2);
+            queueableBlamBinaryWriter.Write(this.NormalUpgradeChance);
+            queueableBlamBinaryWriter.Write(this.NormalUpgradeChance0);
+            queueableBlamBinaryWriter.Write(this.NormalUpgradeChance1);
+            queueableBlamBinaryWriter.Write(this.NormalUpgradeChance2);
+            queueableBlamBinaryWriter.Write(this.ManyUpgradeChance);
+            queueableBlamBinaryWriter.Write(this.ManyUpgradeChance0);
+            queueableBlamBinaryWriter.Write(this.ManyUpgradeChance1);
+            queueableBlamBinaryWriter.Write(this.ManyUpgradeChance2);
         }
     }
 }

@@ -63,23 +63,23 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Resources = base.ReadBlockArrayData<GlobalGeometryBlockResourceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Resources);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Resources);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.BlockOffset);
-            queueableBinaryWriter.Write(this.BlockSize);
-            queueableBinaryWriter.Write(this.SectionDataSize);
-            queueableBinaryWriter.Write(this.ResourceDataSize);
-            queueableBinaryWriter.WritePointer(this.Resources);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.OwnerTagSectionOffset);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.BlockOffset);
+            queueableBlamBinaryWriter.Write(this.BlockSize);
+            queueableBlamBinaryWriter.Write(this.SectionDataSize);
+            queueableBlamBinaryWriter.Write(this.ResourceDataSize);
+            queueableBlamBinaryWriter.WritePointer(this.Resources);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.OwnerTagSectionOffset);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
         }
     }
 }

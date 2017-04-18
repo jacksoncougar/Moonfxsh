@@ -74,25 +74,25 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.GlobalMix.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.GlobalMix.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.GlobalMix.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.LeftStereoGain);
-            queueableBinaryWriter.Write(this.RightStereoGain);
-            queueableBinaryWriter.Write(this.LeftStereoGain0);
-            queueableBinaryWriter.Write(this.RightStereoGain0);
-            queueableBinaryWriter.Write(this.LeftStereoGain1);
-            queueableBinaryWriter.Write(this.RightStereoGain1);
-            queueableBinaryWriter.Write(this.FrontSpeakerGain);
-            queueableBinaryWriter.Write(this.RearSpeakerGain);
-            queueableBinaryWriter.Write(this.FrontSpeakerGain0);
-            queueableBinaryWriter.Write(this.RearSpeakerGain0);
-            this.GlobalMix.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.LeftStereoGain);
+            queueableBlamBinaryWriter.Write(this.RightStereoGain);
+            queueableBlamBinaryWriter.Write(this.LeftStereoGain0);
+            queueableBlamBinaryWriter.Write(this.RightStereoGain0);
+            queueableBlamBinaryWriter.Write(this.LeftStereoGain1);
+            queueableBlamBinaryWriter.Write(this.RightStereoGain1);
+            queueableBlamBinaryWriter.Write(this.FrontSpeakerGain);
+            queueableBlamBinaryWriter.Write(this.RearSpeakerGain);
+            queueableBlamBinaryWriter.Write(this.FrontSpeakerGain0);
+            queueableBlamBinaryWriter.Write(this.RearSpeakerGain0);
+            this.GlobalMix.Write_(queueableBlamBinaryWriter);
         }
     }
 }

@@ -61,23 +61,23 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Ambient);
-            queueableBinaryWriter.Write(this.ShadowDirection);
-            queueableBinaryWriter.Write(this.LightingAccuracy);
-            queueableBinaryWriter.Write(this.ShadowOpacity);
-            queueableBinaryWriter.Write(this.PrimaryDirectionColor);
-            queueableBinaryWriter.Write(this.PrimaryDirection);
-            queueableBinaryWriter.Write(this.SecondaryDirectionColor);
-            queueableBinaryWriter.Write(this.SecondaryDirection);
-            queueableBinaryWriter.Write(this.ShIndex);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Ambient);
+            queueableBlamBinaryWriter.Write(this.ShadowDirection);
+            queueableBlamBinaryWriter.Write(this.LightingAccuracy);
+            queueableBlamBinaryWriter.Write(this.ShadowOpacity);
+            queueableBlamBinaryWriter.Write(this.PrimaryDirectionColor);
+            queueableBlamBinaryWriter.Write(this.PrimaryDirection);
+            queueableBlamBinaryWriter.Write(this.SecondaryDirectionColor);
+            queueableBlamBinaryWriter.Write(this.SecondaryDirection);
+            queueableBlamBinaryWriter.Write(this.ShIndex);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
         }
     }
 }

@@ -86,34 +86,34 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.DecalFlags)));
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(((short)(this.Layer)));
-            queueableBinaryWriter.Write(this.MaxOverlappingCount);
-            queueableBinaryWriter.Write(this.NextDecalInChain);
-            queueableBinaryWriter.Write(this.Radius);
-            queueableBinaryWriter.Write(this.RadiusOverlapRejection);
-            queueableBinaryWriter.Write(this.ColorLowerBounds);
-            queueableBinaryWriter.Write(this.ColorUpperBounds);
-            queueableBinaryWriter.Write(this.Lifetime);
-            queueableBinaryWriter.Write(this.DecayTime);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.Bitmap);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(this.MaximumSpriteExtent);
-            queueableBinaryWriter.Write(this.fieldpad6);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.DecalFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.Type)));
+            queueableBlamBinaryWriter.Write(((short)(this.Layer)));
+            queueableBlamBinaryWriter.Write(this.MaxOverlappingCount);
+            queueableBlamBinaryWriter.Write(this.NextDecalInChain);
+            queueableBlamBinaryWriter.Write(this.Radius);
+            queueableBlamBinaryWriter.Write(this.RadiusOverlapRejection);
+            queueableBlamBinaryWriter.Write(this.ColorLowerBounds);
+            queueableBlamBinaryWriter.Write(this.ColorUpperBounds);
+            queueableBlamBinaryWriter.Write(this.Lifetime);
+            queueableBlamBinaryWriter.Write(this.DecayTime);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
+            queueableBlamBinaryWriter.Write(this.fieldpad4);
+            queueableBlamBinaryWriter.Write(this.Bitmap);
+            queueableBlamBinaryWriter.Write(this.fieldpad5);
+            queueableBlamBinaryWriter.Write(this.MaximumSpriteExtent);
+            queueableBlamBinaryWriter.Write(this.fieldpad6);
         }
         /// <summary>
         /// There are several "layers" which decals can be placed into, these layers are drawn in a specific order relative to the shader layers and each layer has its own specific blending mode. In general, the decal bitmap's alpha channel will be used as an opacity mask if it exists.

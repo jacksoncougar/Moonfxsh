@@ -80,31 +80,31 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Magazines0 = base.ReadBlockArrayData<MagazineObjects>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Magazines0);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Magazines0);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.MagazinesFlags)));
-            queueableBinaryWriter.Write(this.RoundsRecharged);
-            queueableBinaryWriter.Write(this.RoundsTotalInitial);
-            queueableBinaryWriter.Write(this.RoundsTotalMaximum);
-            queueableBinaryWriter.Write(this.RoundsLoadedMaximum);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.ReloadTime);
-            queueableBinaryWriter.Write(this.RoundsReloaded);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.ChamberTime);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.ReloadingEffect);
-            queueableBinaryWriter.Write(this.ReloadingDamageEffect);
-            queueableBinaryWriter.Write(this.ChamberingEffect);
-            queueableBinaryWriter.Write(this.ChamberingDamageEffect);
-            queueableBinaryWriter.WritePointer(this.Magazines0);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.MagazinesFlags)));
+            queueableBlamBinaryWriter.Write(this.RoundsRecharged);
+            queueableBlamBinaryWriter.Write(this.RoundsTotalInitial);
+            queueableBlamBinaryWriter.Write(this.RoundsTotalMaximum);
+            queueableBlamBinaryWriter.Write(this.RoundsLoadedMaximum);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.ReloadTime);
+            queueableBlamBinaryWriter.Write(this.RoundsReloaded);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.ChamberTime);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.ReloadingEffect);
+            queueableBlamBinaryWriter.Write(this.ReloadingDamageEffect);
+            queueableBlamBinaryWriter.Write(this.ChamberingEffect);
+            queueableBlamBinaryWriter.Write(this.ChamberingDamageEffect);
+            queueableBlamBinaryWriter.WritePointer(this.Magazines0);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

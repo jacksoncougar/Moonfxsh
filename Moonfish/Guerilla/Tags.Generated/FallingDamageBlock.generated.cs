@@ -69,24 +69,24 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.HarmfulFallingDistance);
-            queueableBinaryWriter.Write(this.FallingDamage);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.MaximumFallingDistance);
-            queueableBinaryWriter.Write(this.DistanceDamage);
-            queueableBinaryWriter.Write(this.VehicleEnvironemtnCollisionDamageEffect);
-            queueableBinaryWriter.Write(this.VehicleKilledUnitDamageEffect);
-            queueableBinaryWriter.Write(this.VehicleCollisionDamage);
-            queueableBinaryWriter.Write(this.FlamingDeathDamage);
-            queueableBinaryWriter.Write(this.fieldpad1);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.HarmfulFallingDistance);
+            queueableBlamBinaryWriter.Write(this.FallingDamage);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.MaximumFallingDistance);
+            queueableBlamBinaryWriter.Write(this.DistanceDamage);
+            queueableBlamBinaryWriter.Write(this.VehicleEnvironemtnCollisionDamageEffect);
+            queueableBlamBinaryWriter.Write(this.VehicleKilledUnitDamageEffect);
+            queueableBlamBinaryWriter.Write(this.VehicleCollisionDamage);
+            queueableBlamBinaryWriter.Write(this.FlamingDeathDamage);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
         }
     }
 }

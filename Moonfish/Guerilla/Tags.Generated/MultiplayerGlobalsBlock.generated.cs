@@ -48,17 +48,17 @@ namespace Moonfish.Guerilla.Tags
             this.Universal = base.ReadBlockArrayData<MultiplayerUniversalBlock>(binaryReader, pointerQueue.Dequeue());
             this.Runtime = base.ReadBlockArrayData<MultiplayerRuntimeBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Universal);
-            queueableBinaryWriter.QueueWrite(this.Runtime);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Universal);
+            queueableBlamBinaryWriter.QueueWrite(this.Runtime);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Universal);
-            queueableBinaryWriter.WritePointer(this.Runtime);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Universal);
+            queueableBlamBinaryWriter.WritePointer(this.Runtime);
         }
     }
 }

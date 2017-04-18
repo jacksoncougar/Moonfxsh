@@ -99,42 +99,42 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.GNullBlock = base.ReadBlockArrayData<GNullBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.GNullBlock);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.StateAttachedTo)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.CanUseOnMapType)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.AnchorOffset);
-            queueableBinaryWriter.Write(this.WidthScale);
-            queueableBinaryWriter.Write(this.HeightScale);
-            queueableBinaryWriter.Write(((short)(this.WeaponHudMeterScalingFlags)));
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.MeterBitmap);
-            queueableBinaryWriter.Write(this.ColorAtMeterMinimum);
-            queueableBinaryWriter.Write(this.ColorAtMeterMaximum);
-            queueableBinaryWriter.Write(this.FlashColor);
-            queueableBinaryWriter.Write(this.EmptyColor);
-            queueableBinaryWriter.Write(((byte)(this.WeaponHudMeterFlags)));
-            queueableBinaryWriter.Write(this.MinumumMeterValue);
-            queueableBinaryWriter.Write(this.SequenceIndex);
-            queueableBinaryWriter.Write(this.AlphaMultiplier);
-            queueableBinaryWriter.Write(this.AlphaBias);
-            queueableBinaryWriter.Write(this.ValueScale);
-            queueableBinaryWriter.Write(this.Opacity);
-            queueableBinaryWriter.Write(this.Translucency);
-            queueableBinaryWriter.Write(this.DisabledColor);
-            queueableBinaryWriter.WritePointer(this.GNullBlock);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.fieldpad5);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.StateAttachedTo)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(((short)(this.CanUseOnMapType)));
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.AnchorOffset);
+            queueableBlamBinaryWriter.Write(this.WidthScale);
+            queueableBlamBinaryWriter.Write(this.HeightScale);
+            queueableBlamBinaryWriter.Write(((short)(this.WeaponHudMeterScalingFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
+            queueableBlamBinaryWriter.Write(this.MeterBitmap);
+            queueableBlamBinaryWriter.Write(this.ColorAtMeterMinimum);
+            queueableBlamBinaryWriter.Write(this.ColorAtMeterMaximum);
+            queueableBlamBinaryWriter.Write(this.FlashColor);
+            queueableBlamBinaryWriter.Write(this.EmptyColor);
+            queueableBlamBinaryWriter.Write(((byte)(this.WeaponHudMeterFlags)));
+            queueableBlamBinaryWriter.Write(this.MinumumMeterValue);
+            queueableBlamBinaryWriter.Write(this.SequenceIndex);
+            queueableBlamBinaryWriter.Write(this.AlphaMultiplier);
+            queueableBlamBinaryWriter.Write(this.AlphaBias);
+            queueableBlamBinaryWriter.Write(this.ValueScale);
+            queueableBlamBinaryWriter.Write(this.Opacity);
+            queueableBlamBinaryWriter.Write(this.Translucency);
+            queueableBlamBinaryWriter.Write(this.DisabledColor);
+            queueableBlamBinaryWriter.WritePointer(this.GNullBlock);
+            queueableBlamBinaryWriter.Write(this.fieldpad4);
+            queueableBlamBinaryWriter.Write(this.fieldpad5);
         }
         public enum StateAttachedToEnum : short
         {

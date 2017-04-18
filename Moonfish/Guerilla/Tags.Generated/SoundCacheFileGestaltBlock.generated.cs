@@ -75,35 +75,35 @@ namespace Moonfish.Guerilla.Tags
             this.Promotions = base.ReadBlockArrayData<SoundGestaltPromotionsBlock>(binaryReader, pointerQueue.Dequeue());
             this.ExtraInfos = base.ReadBlockArrayData<SoundGestaltExtraInfoBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Playbacks);
-            queueableBinaryWriter.QueueWrite(this.Scales);
-            queueableBinaryWriter.QueueWrite(this.ImportNames);
-            queueableBinaryWriter.QueueWrite(this.PitchRangeParameters);
-            queueableBinaryWriter.QueueWrite(this.PitchRanges);
-            queueableBinaryWriter.QueueWrite(this.Permutations);
-            queueableBinaryWriter.QueueWrite(this.CustomPlaybacks);
-            queueableBinaryWriter.QueueWrite(this.RuntimePermutationFlags);
-            queueableBinaryWriter.QueueWrite(this.Chunks);
-            queueableBinaryWriter.QueueWrite(this.Promotions);
-            queueableBinaryWriter.QueueWrite(this.ExtraInfos);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Playbacks);
+            queueableBlamBinaryWriter.QueueWrite(this.Scales);
+            queueableBlamBinaryWriter.QueueWrite(this.ImportNames);
+            queueableBlamBinaryWriter.QueueWrite(this.PitchRangeParameters);
+            queueableBlamBinaryWriter.QueueWrite(this.PitchRanges);
+            queueableBlamBinaryWriter.QueueWrite(this.Permutations);
+            queueableBlamBinaryWriter.QueueWrite(this.CustomPlaybacks);
+            queueableBlamBinaryWriter.QueueWrite(this.RuntimePermutationFlags);
+            queueableBlamBinaryWriter.QueueWrite(this.Chunks);
+            queueableBlamBinaryWriter.QueueWrite(this.Promotions);
+            queueableBlamBinaryWriter.QueueWrite(this.ExtraInfos);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Playbacks);
-            queueableBinaryWriter.WritePointer(this.Scales);
-            queueableBinaryWriter.WritePointer(this.ImportNames);
-            queueableBinaryWriter.WritePointer(this.PitchRangeParameters);
-            queueableBinaryWriter.WritePointer(this.PitchRanges);
-            queueableBinaryWriter.WritePointer(this.Permutations);
-            queueableBinaryWriter.WritePointer(this.CustomPlaybacks);
-            queueableBinaryWriter.WritePointer(this.RuntimePermutationFlags);
-            queueableBinaryWriter.WritePointer(this.Chunks);
-            queueableBinaryWriter.WritePointer(this.Promotions);
-            queueableBinaryWriter.WritePointer(this.ExtraInfos);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Playbacks);
+            queueableBlamBinaryWriter.WritePointer(this.Scales);
+            queueableBlamBinaryWriter.WritePointer(this.ImportNames);
+            queueableBlamBinaryWriter.WritePointer(this.PitchRangeParameters);
+            queueableBlamBinaryWriter.WritePointer(this.PitchRanges);
+            queueableBlamBinaryWriter.WritePointer(this.Permutations);
+            queueableBlamBinaryWriter.WritePointer(this.CustomPlaybacks);
+            queueableBlamBinaryWriter.WritePointer(this.RuntimePermutationFlags);
+            queueableBlamBinaryWriter.WritePointer(this.Chunks);
+            queueableBlamBinaryWriter.WritePointer(this.Promotions);
+            queueableBlamBinaryWriter.WritePointer(this.ExtraInfos);
         }
     }
 }

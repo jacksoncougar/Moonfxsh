@@ -57,21 +57,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.EncodedSkipFraction);
-            queueableBinaryWriter.Write(this.EncodedGain);
-            queueableBinaryWriter.Write(this.PermutationInfoIndex);
-            queueableBinaryWriter.Write(this.LanguageNeutralTime);
-            queueableBinaryWriter.Write(this.SampleSize);
-            queueableBinaryWriter.Write(this.FirstChunk);
-            queueableBinaryWriter.Write(this.ChunkCount);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(this.EncodedSkipFraction);
+            queueableBlamBinaryWriter.Write(this.EncodedGain);
+            queueableBlamBinaryWriter.Write(this.PermutationInfoIndex);
+            queueableBlamBinaryWriter.Write(this.LanguageNeutralTime);
+            queueableBlamBinaryWriter.Write(this.SampleSize);
+            queueableBlamBinaryWriter.Write(this.FirstChunk);
+            queueableBlamBinaryWriter.Write(this.ChunkCount);
         }
     }
 }

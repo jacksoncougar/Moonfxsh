@@ -59,21 +59,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ChargingTime);
-            queueableBinaryWriter.Write(this.ChargedTime);
-            queueableBinaryWriter.Write(((short)(this.OverchargedAction)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.ChargedIllumination);
-            queueableBinaryWriter.Write(this.SpewTime);
-            queueableBinaryWriter.Write(this.ChargingEffect);
-            queueableBinaryWriter.Write(this.ChargingDamageEffect);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.ChargingTime);
+            queueableBlamBinaryWriter.Write(this.ChargedTime);
+            queueableBlamBinaryWriter.Write(((short)(this.OverchargedAction)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.ChargedIllumination);
+            queueableBlamBinaryWriter.Write(this.SpewTime);
+            queueableBlamBinaryWriter.Write(this.ChargingEffect);
+            queueableBlamBinaryWriter.Write(this.ChargingDamageEffect);
         }
         public enum OverchargedActionEnum : short
         {

@@ -107,52 +107,52 @@ namespace Moonfish.Guerilla.Tags
             this.PRTInfo = base.ReadBlockArrayData<PrtInfoBlock>(binaryReader, pointerQueue.Dequeue());
             this.SectionRenderLeaves = base.ReadBlockArrayData<SectionRenderLeavesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ImportInfo);
-            queueableBinaryWriter.QueueWrite(this.CompressionInfo);
-            queueableBinaryWriter.QueueWrite(this.Regions);
-            queueableBinaryWriter.QueueWrite(this.Sections);
-            queueableBinaryWriter.QueueWrite(this.InvalidSectionPairBits);
-            queueableBinaryWriter.QueueWrite(this.SectionGroups);
-            queueableBinaryWriter.QueueWrite(this.Nodes);
-            queueableBinaryWriter.QueueWrite(this.NodeMap);
-            queueableBinaryWriter.QueueWrite(this.MarkerGroups);
-            queueableBinaryWriter.QueueWrite(this.Materials);
-            queueableBinaryWriter.QueueWrite(this.Errors);
-            queueableBinaryWriter.QueueWrite(this.PRTInfo);
-            queueableBinaryWriter.QueueWrite(this.SectionRenderLeaves);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.ImportInfo);
+            queueableBlamBinaryWriter.QueueWrite(this.CompressionInfo);
+            queueableBlamBinaryWriter.QueueWrite(this.Regions);
+            queueableBlamBinaryWriter.QueueWrite(this.Sections);
+            queueableBlamBinaryWriter.QueueWrite(this.InvalidSectionPairBits);
+            queueableBlamBinaryWriter.QueueWrite(this.SectionGroups);
+            queueableBlamBinaryWriter.QueueWrite(this.Nodes);
+            queueableBlamBinaryWriter.QueueWrite(this.NodeMap);
+            queueableBlamBinaryWriter.QueueWrite(this.MarkerGroups);
+            queueableBlamBinaryWriter.QueueWrite(this.Materials);
+            queueableBlamBinaryWriter.QueueWrite(this.Errors);
+            queueableBlamBinaryWriter.QueueWrite(this.PRTInfo);
+            queueableBlamBinaryWriter.QueueWrite(this.SectionRenderLeaves);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((short)(this.RenderModelFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.WritePointer(this.ImportInfo);
-            queueableBinaryWriter.WritePointer(this.CompressionInfo);
-            queueableBinaryWriter.WritePointer(this.Regions);
-            queueableBinaryWriter.WritePointer(this.Sections);
-            queueableBinaryWriter.WritePointer(this.InvalidSectionPairBits);
-            queueableBinaryWriter.WritePointer(this.SectionGroups);
-            queueableBinaryWriter.Write(this.L1SectionGroupIndex);
-            queueableBinaryWriter.Write(this.L2SectionGroupIndex);
-            queueableBinaryWriter.Write(this.L3SectionGroupIndex);
-            queueableBinaryWriter.Write(this.L4SectionGroupIndex);
-            queueableBinaryWriter.Write(this.L5SectionGroupIndex);
-            queueableBinaryWriter.Write(this.L6SectionGroupIndex);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.NodeListChecksum);
-            queueableBinaryWriter.WritePointer(this.Nodes);
-            queueableBinaryWriter.WritePointer(this.NodeMap);
-            queueableBinaryWriter.WritePointer(this.MarkerGroups);
-            queueableBinaryWriter.WritePointer(this.Materials);
-            queueableBinaryWriter.WritePointer(this.Errors);
-            queueableBinaryWriter.Write(this.DontDrawOverCameraCosineAngle);
-            queueableBinaryWriter.WritePointer(this.PRTInfo);
-            queueableBinaryWriter.WritePointer(this.SectionRenderLeaves);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(((short)(this.RenderModelFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.WritePointer(this.ImportInfo);
+            queueableBlamBinaryWriter.WritePointer(this.CompressionInfo);
+            queueableBlamBinaryWriter.WritePointer(this.Regions);
+            queueableBlamBinaryWriter.WritePointer(this.Sections);
+            queueableBlamBinaryWriter.WritePointer(this.InvalidSectionPairBits);
+            queueableBlamBinaryWriter.WritePointer(this.SectionGroups);
+            queueableBlamBinaryWriter.Write(this.L1SectionGroupIndex);
+            queueableBlamBinaryWriter.Write(this.L2SectionGroupIndex);
+            queueableBlamBinaryWriter.Write(this.L3SectionGroupIndex);
+            queueableBlamBinaryWriter.Write(this.L4SectionGroupIndex);
+            queueableBlamBinaryWriter.Write(this.L5SectionGroupIndex);
+            queueableBlamBinaryWriter.Write(this.L6SectionGroupIndex);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.NodeListChecksum);
+            queueableBlamBinaryWriter.WritePointer(this.Nodes);
+            queueableBlamBinaryWriter.WritePointer(this.NodeMap);
+            queueableBlamBinaryWriter.WritePointer(this.MarkerGroups);
+            queueableBlamBinaryWriter.WritePointer(this.Materials);
+            queueableBlamBinaryWriter.WritePointer(this.Errors);
+            queueableBlamBinaryWriter.Write(this.DontDrawOverCameraCosineAngle);
+            queueableBlamBinaryWriter.WritePointer(this.PRTInfo);
+            queueableBlamBinaryWriter.WritePointer(this.SectionRenderLeaves);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

@@ -62,26 +62,26 @@ namespace Moonfish.Guerilla.Tags
             this.PlayerTrainingData = base.ReadBlockArrayData<PlayerTrainingEntryDataBlock>(binaryReader, pointerQueue.Dequeue());
             this.Constants.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Dashlights);
-            queueableBinaryWriter.QueueWrite(this.WaypointArrows);
-            queueableBinaryWriter.QueueWrite(this.Waypoints);
-            queueableBinaryWriter.QueueWrite(this.HudSounds);
-            queueableBinaryWriter.QueueWrite(this.PlayerTrainingData);
-            this.Constants.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Dashlights);
+            queueableBlamBinaryWriter.QueueWrite(this.WaypointArrows);
+            queueableBlamBinaryWriter.QueueWrite(this.Waypoints);
+            queueableBlamBinaryWriter.QueueWrite(this.HudSounds);
+            queueableBlamBinaryWriter.QueueWrite(this.PlayerTrainingData);
+            this.Constants.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.HudText);
-            queueableBinaryWriter.WritePointer(this.Dashlights);
-            queueableBinaryWriter.WritePointer(this.WaypointArrows);
-            queueableBinaryWriter.WritePointer(this.Waypoints);
-            queueableBinaryWriter.WritePointer(this.HudSounds);
-            queueableBinaryWriter.WritePointer(this.PlayerTrainingData);
-            this.Constants.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.HudText);
+            queueableBlamBinaryWriter.WritePointer(this.Dashlights);
+            queueableBlamBinaryWriter.WritePointer(this.WaypointArrows);
+            queueableBlamBinaryWriter.WritePointer(this.Waypoints);
+            queueableBlamBinaryWriter.WritePointer(this.HudSounds);
+            queueableBlamBinaryWriter.WritePointer(this.PlayerTrainingData);
+            this.Constants.Write_(queueableBlamBinaryWriter);
         }
     }
 }

@@ -50,19 +50,19 @@ namespace Moonfish.Guerilla.Tags
             this.ScriptSource = base.ReadBlockArrayData<ScenarioHsSourceReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.AIResources = base.ReadBlockArrayData<ScenarioAiResourceReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.References);
-            queueableBinaryWriter.QueueWrite(this.ScriptSource);
-            queueableBinaryWriter.QueueWrite(this.AIResources);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.References);
+            queueableBlamBinaryWriter.QueueWrite(this.ScriptSource);
+            queueableBlamBinaryWriter.QueueWrite(this.AIResources);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.References);
-            queueableBinaryWriter.WritePointer(this.ScriptSource);
-            queueableBinaryWriter.WritePointer(this.AIResources);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.References);
+            queueableBlamBinaryWriter.WritePointer(this.ScriptSource);
+            queueableBlamBinaryWriter.WritePointer(this.AIResources);
         }
     }
 }

@@ -92,39 +92,39 @@ namespace Moonfish.Guerilla.Tags
             this.GeometryBlockInfo.ReadInstances(binaryReader, pointerQueue);
             this.ParticleSystemData = base.ReadBlockArrayData<ParticleSystemLiteDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.GeometryBlockInfo.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ParticleSystemData);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.GeometryBlockInfo.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.ParticleSystemData);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Sprites);
-            queueableBinaryWriter.Write(this.ViewBoxWidth);
-            queueableBinaryWriter.Write(this.ViewBoxHeight);
-            queueableBinaryWriter.Write(this.ViewBoxDepth);
-            queueableBinaryWriter.Write(this.ExclusionRadius);
-            queueableBinaryWriter.Write(this.MaxVelocity);
-            queueableBinaryWriter.Write(this.MinMass);
-            queueableBinaryWriter.Write(this.MaxMass);
-            queueableBinaryWriter.Write(this.MinSize);
-            queueableBinaryWriter.Write(this.MaxSize);
-            queueableBinaryWriter.Write(this.MaximumNumberOfParticles);
-            queueableBinaryWriter.Write(this.InitialVelocity);
-            queueableBinaryWriter.Write(this.BitmapAnimationSpeed);
-            this.GeometryBlockInfo.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.ParticleSystemData);
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.MininumOpacity);
-            queueableBinaryWriter.Write(this.MaxinumOpacity);
-            queueableBinaryWriter.Write(this.RainStreakScale);
-            queueableBinaryWriter.Write(this.RainLineWidth);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.fieldpad2);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Sprites);
+            queueableBlamBinaryWriter.Write(this.ViewBoxWidth);
+            queueableBlamBinaryWriter.Write(this.ViewBoxHeight);
+            queueableBlamBinaryWriter.Write(this.ViewBoxDepth);
+            queueableBlamBinaryWriter.Write(this.ExclusionRadius);
+            queueableBlamBinaryWriter.Write(this.MaxVelocity);
+            queueableBlamBinaryWriter.Write(this.MinMass);
+            queueableBlamBinaryWriter.Write(this.MaxMass);
+            queueableBlamBinaryWriter.Write(this.MinSize);
+            queueableBlamBinaryWriter.Write(this.MaxSize);
+            queueableBlamBinaryWriter.Write(this.MaximumNumberOfParticles);
+            queueableBlamBinaryWriter.Write(this.InitialVelocity);
+            queueableBlamBinaryWriter.Write(this.BitmapAnimationSpeed);
+            this.GeometryBlockInfo.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.ParticleSystemData);
+            queueableBlamBinaryWriter.Write(((short)(this.Type)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.MininumOpacity);
+            queueableBlamBinaryWriter.Write(this.MaxinumOpacity);
+            queueableBlamBinaryWriter.Write(this.RainStreakScale);
+            queueableBlamBinaryWriter.Write(this.RainLineWidth);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
         }
         public enum TypeEnum : short
         {

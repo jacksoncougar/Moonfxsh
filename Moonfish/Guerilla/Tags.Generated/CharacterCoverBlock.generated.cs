@@ -76,27 +76,27 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.CharacterCoverCoverFlags)));
-            queueableBinaryWriter.Write(this.HideBehindCoverTime);
-            queueableBinaryWriter.Write(this.CoverVitalityThreshold);
-            queueableBinaryWriter.Write(this.CoverShieldFraction);
-            queueableBinaryWriter.Write(this.CoverCheckDelay);
-            queueableBinaryWriter.Write(this.EmergeFromCoverWhenShieldFractionReachesThreshold);
-            queueableBinaryWriter.Write(this.CoverDangerThreshold);
-            queueableBinaryWriter.Write(this.DangerUpperThreshold);
-            queueableBinaryWriter.Write(this.CoverChance);
-            queueableBinaryWriter.Write(this.ProximitySelfpreserve);
-            queueableBinaryWriter.Write(this.DisallowCoverDistance);
-            queueableBinaryWriter.Write(this.ProximityMeleeDistance);
-            queueableBinaryWriter.Write(this.UnreachableEnemyDangerThreshold);
-            queueableBinaryWriter.Write(this.ScaryTargetThreshold);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.CharacterCoverCoverFlags)));
+            queueableBlamBinaryWriter.Write(this.HideBehindCoverTime);
+            queueableBlamBinaryWriter.Write(this.CoverVitalityThreshold);
+            queueableBlamBinaryWriter.Write(this.CoverShieldFraction);
+            queueableBlamBinaryWriter.Write(this.CoverCheckDelay);
+            queueableBlamBinaryWriter.Write(this.EmergeFromCoverWhenShieldFractionReachesThreshold);
+            queueableBlamBinaryWriter.Write(this.CoverDangerThreshold);
+            queueableBlamBinaryWriter.Write(this.DangerUpperThreshold);
+            queueableBlamBinaryWriter.Write(this.CoverChance);
+            queueableBlamBinaryWriter.Write(this.ProximitySelfpreserve);
+            queueableBlamBinaryWriter.Write(this.DisallowCoverDistance);
+            queueableBlamBinaryWriter.Write(this.ProximityMeleeDistance);
+            queueableBlamBinaryWriter.Write(this.UnreachableEnemyDangerThreshold);
+            queueableBlamBinaryWriter.Write(this.ScaryTargetThreshold);
         }
         [System.FlagsAttribute()]
         public enum CoverFlags : int

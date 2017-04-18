@@ -74,35 +74,35 @@ namespace Moonfish.Guerilla.Tags
             this.ConstantInfo = base.ReadBlockArrayData<ShaderPassPostprocessConstantInfoNewBlock>(binaryReader, pointerQueue.Dequeue());
             this.OldImplementations = base.ReadBlockArrayData<ShaderPassPostprocessImplementationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Implementations);
-            queueableBinaryWriter.QueueWrite(this.Textures);
-            queueableBinaryWriter.QueueWrite(this.RenderStates);
-            queueableBinaryWriter.QueueWrite(this.TextureStates);
-            queueableBinaryWriter.QueueWrite(this.PsFragments);
-            queueableBinaryWriter.QueueWrite(this.PsPermutations);
-            queueableBinaryWriter.QueueWrite(this.PsCombiners);
-            queueableBinaryWriter.QueueWrite(this.Externs);
-            queueableBinaryWriter.QueueWrite(this.Constants);
-            queueableBinaryWriter.QueueWrite(this.ConstantInfo);
-            queueableBinaryWriter.QueueWrite(this.OldImplementations);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Implementations);
+            queueableBlamBinaryWriter.QueueWrite(this.Textures);
+            queueableBlamBinaryWriter.QueueWrite(this.RenderStates);
+            queueableBlamBinaryWriter.QueueWrite(this.TextureStates);
+            queueableBlamBinaryWriter.QueueWrite(this.PsFragments);
+            queueableBlamBinaryWriter.QueueWrite(this.PsPermutations);
+            queueableBlamBinaryWriter.QueueWrite(this.PsCombiners);
+            queueableBlamBinaryWriter.QueueWrite(this.Externs);
+            queueableBlamBinaryWriter.QueueWrite(this.Constants);
+            queueableBlamBinaryWriter.QueueWrite(this.ConstantInfo);
+            queueableBlamBinaryWriter.QueueWrite(this.OldImplementations);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Implementations);
-            queueableBinaryWriter.WritePointer(this.Textures);
-            queueableBinaryWriter.WritePointer(this.RenderStates);
-            queueableBinaryWriter.WritePointer(this.TextureStates);
-            queueableBinaryWriter.WritePointer(this.PsFragments);
-            queueableBinaryWriter.WritePointer(this.PsPermutations);
-            queueableBinaryWriter.WritePointer(this.PsCombiners);
-            queueableBinaryWriter.WritePointer(this.Externs);
-            queueableBinaryWriter.WritePointer(this.Constants);
-            queueableBinaryWriter.WritePointer(this.ConstantInfo);
-            queueableBinaryWriter.WritePointer(this.OldImplementations);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Implementations);
+            queueableBlamBinaryWriter.WritePointer(this.Textures);
+            queueableBlamBinaryWriter.WritePointer(this.RenderStates);
+            queueableBlamBinaryWriter.WritePointer(this.TextureStates);
+            queueableBlamBinaryWriter.WritePointer(this.PsFragments);
+            queueableBlamBinaryWriter.WritePointer(this.PsPermutations);
+            queueableBlamBinaryWriter.WritePointer(this.PsCombiners);
+            queueableBlamBinaryWriter.WritePointer(this.Externs);
+            queueableBlamBinaryWriter.WritePointer(this.Constants);
+            queueableBlamBinaryWriter.WritePointer(this.ConstantInfo);
+            queueableBlamBinaryWriter.WritePointer(this.OldImplementations);
         }
     }
 }

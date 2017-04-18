@@ -57,21 +57,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Position);
-            queueableBinaryWriter.Write(this.Facing);
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(((short)(this.TeamDesignator)));
-            queueableBinaryWriter.Write(this.Identifier);
-            queueableBinaryWriter.Write(((short)(this.ScenarioNetpointsFlags)));
-            queueableBinaryWriter.Write(this.EMPTYSTRING);
-            queueableBinaryWriter.Write(this.EMPTYSTRING0);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Position);
+            queueableBlamBinaryWriter.Write(this.Facing);
+            queueableBlamBinaryWriter.Write(((short)(this.Type)));
+            queueableBlamBinaryWriter.Write(((short)(this.TeamDesignator)));
+            queueableBlamBinaryWriter.Write(this.Identifier);
+            queueableBlamBinaryWriter.Write(((short)(this.ScenarioNetpointsFlags)));
+            queueableBlamBinaryWriter.Write(this.EMPTYSTRING);
+            queueableBlamBinaryWriter.Write(this.EMPTYSTRING0);
         }
         public enum TypeEnum : short
         {

@@ -86,36 +86,36 @@ namespace Moonfish.Guerilla.Tags
             this.ExtraSounds.ReadInstances(binaryReader, pointerQueue);
             this.SoundPermutations = base.ReadBlockArrayData<SoundResponseDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.ExtraSounds.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.SoundPermutations);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.ExtraSounds.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.SoundPermutations);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.GameEngineTerritoriesEventFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.Event)));
-            queueableBinaryWriter.Write(((short)(this.Audience)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.DisplayString);
-            queueableBinaryWriter.Write(((short)(this.RequiredField)));
-            queueableBinaryWriter.Write(((short)(this.ExcludedAudience)));
-            queueableBinaryWriter.Write(this.PrimaryString);
-            queueableBinaryWriter.Write(this.PrimaryStringDuration);
-            queueableBinaryWriter.Write(this.PluralDisplayString);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.SoundDelay);
-            queueableBinaryWriter.Write(((short)(this.GameEngineTerritoriesEventSoundFlags)));
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.Sound);
-            this.ExtraSounds.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.WritePointer(this.SoundPermutations);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.GameEngineTerritoriesEventFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(((short)(this.Event)));
+            queueableBlamBinaryWriter.Write(((short)(this.Audience)));
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.DisplayString);
+            queueableBlamBinaryWriter.Write(((short)(this.RequiredField)));
+            queueableBlamBinaryWriter.Write(((short)(this.ExcludedAudience)));
+            queueableBlamBinaryWriter.Write(this.PrimaryString);
+            queueableBlamBinaryWriter.Write(this.PrimaryStringDuration);
+            queueableBlamBinaryWriter.Write(this.PluralDisplayString);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.SoundDelay);
+            queueableBlamBinaryWriter.Write(((short)(this.GameEngineTerritoriesEventSoundFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
+            queueableBlamBinaryWriter.Write(this.Sound);
+            this.ExtraSounds.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.fieldpad4);
+            queueableBlamBinaryWriter.Write(this.fieldpad5);
+            queueableBlamBinaryWriter.WritePointer(this.SoundPermutations);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

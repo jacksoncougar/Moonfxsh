@@ -53,20 +53,20 @@ namespace Moonfish.Guerilla.Tags
             this.moppCode = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
             this.EvironmentObjectIdentifiers = base.ReadBlockArrayData<OldUnusedObjectIdentifiersBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.moppCode);
-            queueableBinaryWriter.QueueWrite(this.EvironmentObjectIdentifiers);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.moppCode);
+            queueableBlamBinaryWriter.QueueWrite(this.EvironmentObjectIdentifiers);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.moppCode);
-            queueableBinaryWriter.WritePointer(this.EvironmentObjectIdentifiers);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.MoppBoundsMin);
-            queueableBinaryWriter.Write(this.MoppBoundsMax);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.moppCode);
+            queueableBlamBinaryWriter.WritePointer(this.EvironmentObjectIdentifiers);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.MoppBoundsMin);
+            queueableBlamBinaryWriter.Write(this.MoppBoundsMax);
         }
     }
 }

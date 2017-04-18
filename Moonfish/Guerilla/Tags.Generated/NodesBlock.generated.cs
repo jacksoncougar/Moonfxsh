@@ -51,18 +51,18 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((short)(this.NodesFlags)));
-            queueableBinaryWriter.Write(this.Parent);
-            queueableBinaryWriter.Write(this.Sibling);
-            queueableBinaryWriter.Write(this.Child);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(((short)(this.NodesFlags)));
+            queueableBlamBinaryWriter.Write(this.Parent);
+            queueableBlamBinaryWriter.Write(this.Sibling);
+            queueableBlamBinaryWriter.Write(this.Child);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

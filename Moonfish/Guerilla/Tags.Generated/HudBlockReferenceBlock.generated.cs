@@ -59,21 +59,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.HudReferenceFlags)));
-            queueableBinaryWriter.Write(((short)(this.AnimationIndex)));
-            queueableBinaryWriter.Write(this.IntroAnimationDelayMilliseconds);
-            queueableBinaryWriter.Write(this.RenderDepthBias);
-            queueableBinaryWriter.Write(this.StartingBitmapSequenceIndex);
-            queueableBinaryWriter.Write(this.Bitmap);
-            queueableBinaryWriter.Write(this.Shader);
-            queueableBinaryWriter.Write(this.Bounds);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.HudReferenceFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.AnimationIndex)));
+            queueableBlamBinaryWriter.Write(this.IntroAnimationDelayMilliseconds);
+            queueableBlamBinaryWriter.Write(this.RenderDepthBias);
+            queueableBlamBinaryWriter.Write(this.StartingBitmapSequenceIndex);
+            queueableBlamBinaryWriter.Write(this.Bitmap);
+            queueableBlamBinaryWriter.Write(this.Shader);
+            queueableBlamBinaryWriter.Write(this.Bounds);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

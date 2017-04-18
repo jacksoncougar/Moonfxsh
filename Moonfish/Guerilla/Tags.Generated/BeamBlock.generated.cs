@@ -66,28 +66,28 @@ namespace Moonfish.Guerilla.Tags
             this.Yaw.ReadInstances(binaryReader, pointerQueue);
             this.Pitch.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.Color.QueueWrites(queueableBinaryWriter);
-            this.Alpha.QueueWrites(queueableBinaryWriter);
-            this.Width.QueueWrites(queueableBinaryWriter);
-            this.Length.QueueWrites(queueableBinaryWriter);
-            this.Yaw.QueueWrites(queueableBinaryWriter);
-            this.Pitch.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.Color.QueueWrites(queueableBlamBinaryWriter);
+            this.Alpha.QueueWrites(queueableBlamBinaryWriter);
+            this.Width.QueueWrites(queueableBlamBinaryWriter);
+            this.Length.QueueWrites(queueableBlamBinaryWriter);
+            this.Yaw.QueueWrites(queueableBlamBinaryWriter);
+            this.Pitch.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Shader);
-            queueableBinaryWriter.Write(this.Location);
-            queueableBinaryWriter.Write(this.fieldpad);
-            this.Color.Write_(queueableBinaryWriter);
-            this.Alpha.Write_(queueableBinaryWriter);
-            this.Width.Write_(queueableBinaryWriter);
-            this.Length.Write_(queueableBinaryWriter);
-            this.Yaw.Write_(queueableBinaryWriter);
-            this.Pitch.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Shader);
+            queueableBlamBinaryWriter.Write(this.Location);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            this.Color.Write_(queueableBlamBinaryWriter);
+            this.Alpha.Write_(queueableBlamBinaryWriter);
+            this.Width.Write_(queueableBlamBinaryWriter);
+            this.Length.Write_(queueableBlamBinaryWriter);
+            this.Yaw.Write_(queueableBlamBinaryWriter);
+            this.Pitch.Write_(queueableBlamBinaryWriter);
         }
     }
 }

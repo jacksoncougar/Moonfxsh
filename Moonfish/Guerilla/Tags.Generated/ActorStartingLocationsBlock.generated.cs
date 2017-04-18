@@ -85,35 +85,35 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.Position);
-            queueableBinaryWriter.Write(this.ReferenceFrame);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Facing);
-            queueableBinaryWriter.Write(((int)(this.ActorStartingLocationsFlags)));
-            queueableBinaryWriter.Write(this.CharacterType);
-            queueableBinaryWriter.Write(this.InitialWeapon);
-            queueableBinaryWriter.Write(this.InitialSecondaryWeapon);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.VehicleType);
-            queueableBinaryWriter.Write(((short)(this.SeatType)));
-            queueableBinaryWriter.Write(((short)(this.GrenadeType)));
-            queueableBinaryWriter.Write(this.SwarmCount);
-            queueableBinaryWriter.Write(this.ActorVariantName);
-            queueableBinaryWriter.Write(this.VehicleVariantName);
-            queueableBinaryWriter.Write(this.InitialMovementDistance);
-            queueableBinaryWriter.Write(this.EmitterVehicle);
-            queueableBinaryWriter.Write(((short)(this.InitialMovementMode)));
-            queueableBinaryWriter.Write(this.PlacementScript);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.fieldpad1);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(this.Position);
+            queueableBlamBinaryWriter.Write(this.ReferenceFrame);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.Facing);
+            queueableBlamBinaryWriter.Write(((int)(this.ActorStartingLocationsFlags)));
+            queueableBlamBinaryWriter.Write(this.CharacterType);
+            queueableBlamBinaryWriter.Write(this.InitialWeapon);
+            queueableBlamBinaryWriter.Write(this.InitialSecondaryWeapon);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.VehicleType);
+            queueableBlamBinaryWriter.Write(((short)(this.SeatType)));
+            queueableBlamBinaryWriter.Write(((short)(this.GrenadeType)));
+            queueableBlamBinaryWriter.Write(this.SwarmCount);
+            queueableBlamBinaryWriter.Write(this.ActorVariantName);
+            queueableBlamBinaryWriter.Write(this.VehicleVariantName);
+            queueableBlamBinaryWriter.Write(this.InitialMovementDistance);
+            queueableBlamBinaryWriter.Write(this.EmitterVehicle);
+            queueableBlamBinaryWriter.Write(((short)(this.InitialMovementMode)));
+            queueableBlamBinaryWriter.Write(this.PlacementScript);
+            queueableBlamBinaryWriter.Write(this.fieldskip);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

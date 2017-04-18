@@ -61,23 +61,23 @@ namespace Moonfish.Guerilla.Tags
             this.StaticRespawnZones = base.ReadBlockArrayData<StaticSpawnZoneBlock>(binaryReader, pointerQueue.Dequeue());
             this.StaticInitialSpawnZones = base.ReadBlockArrayData<StaticSpawnZoneBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.DynamicSpawnOverloads);
-            queueableBinaryWriter.QueueWrite(this.StaticRespawnZones);
-            queueableBinaryWriter.QueueWrite(this.StaticInitialSpawnZones);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.DynamicSpawnOverloads);
+            queueableBlamBinaryWriter.QueueWrite(this.StaticRespawnZones);
+            queueableBlamBinaryWriter.QueueWrite(this.StaticInitialSpawnZones);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DynamicSpawnLowerHeight);
-            queueableBinaryWriter.Write(this.DynamicSpawnUpperHeight);
-            queueableBinaryWriter.Write(this.GameObjectResetHeight);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.DynamicSpawnOverloads);
-            queueableBinaryWriter.WritePointer(this.StaticRespawnZones);
-            queueableBinaryWriter.WritePointer(this.StaticInitialSpawnZones);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.DynamicSpawnLowerHeight);
+            queueableBlamBinaryWriter.Write(this.DynamicSpawnUpperHeight);
+            queueableBlamBinaryWriter.Write(this.GameObjectResetHeight);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.WritePointer(this.DynamicSpawnOverloads);
+            queueableBlamBinaryWriter.WritePointer(this.StaticRespawnZones);
+            queueableBlamBinaryWriter.WritePointer(this.StaticInitialSpawnZones);
         }
     }
 }

@@ -79,31 +79,31 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.PatchyFogFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.RotationMultiplier);
-            queueableBinaryWriter.Write(this.StrafingMultiplier);
-            queueableBinaryWriter.Write(this.ZoomMultiplier);
-            queueableBinaryWriter.Write(this.NoiseMapScale);
-            queueableBinaryWriter.Write(this.NoiseMap);
-            queueableBinaryWriter.Write(this.NoiseVerticalScaleForward);
-            queueableBinaryWriter.Write(this.NoiseVerticalScaleUp);
-            queueableBinaryWriter.Write(this.NoiseOpacityScaleUp);
-            queueableBinaryWriter.Write(this.AnimationPeriod);
-            queueableBinaryWriter.Write(this.WindVelocity);
-            queueableBinaryWriter.Write(this.WindPeriod);
-            queueableBinaryWriter.Write(this.WindAccelerationWeight);
-            queueableBinaryWriter.Write(this.WindPerpendicularWeight);
-            queueableBinaryWriter.Write(this.WindConstantVelocityX);
-            queueableBinaryWriter.Write(this.WindConstantVelocityY);
-            queueableBinaryWriter.Write(this.WindConstantVelocityZ);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.PatchyFogFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.RotationMultiplier);
+            queueableBlamBinaryWriter.Write(this.StrafingMultiplier);
+            queueableBlamBinaryWriter.Write(this.ZoomMultiplier);
+            queueableBlamBinaryWriter.Write(this.NoiseMapScale);
+            queueableBlamBinaryWriter.Write(this.NoiseMap);
+            queueableBlamBinaryWriter.Write(this.NoiseVerticalScaleForward);
+            queueableBlamBinaryWriter.Write(this.NoiseVerticalScaleUp);
+            queueableBlamBinaryWriter.Write(this.NoiseOpacityScaleUp);
+            queueableBlamBinaryWriter.Write(this.AnimationPeriod);
+            queueableBlamBinaryWriter.Write(this.WindVelocity);
+            queueableBlamBinaryWriter.Write(this.WindPeriod);
+            queueableBlamBinaryWriter.Write(this.WindAccelerationWeight);
+            queueableBlamBinaryWriter.Write(this.WindPerpendicularWeight);
+            queueableBlamBinaryWriter.Write(this.WindConstantVelocityX);
+            queueableBlamBinaryWriter.Write(this.WindConstantVelocityY);
+            queueableBlamBinaryWriter.Write(this.WindConstantVelocityZ);
         }
         /// <summary>
         /// Use the separate_layer_depths flag carefully, it's expensive!

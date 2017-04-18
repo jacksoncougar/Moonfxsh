@@ -84,7 +84,7 @@ namespace Moonfish.Guerilla.Tags
         [GuerillaPreProcessMethod(BlockName = "scenario_vehicle_block")]
         [GuerillaPreProcessMethod(BlockName = "scenario_weapon_block")]
         [GuerillaPreProcessMethod(BlockName = "scenario_crate_block")]
-        protected static void GuerillaPreProcessMethod(BinaryReader binaryReader, IList<tag_field> fields)
+        protected static void GuerillaPreProcessMethod(BlamBinaryReader blamBinaryReader, IList<tag_field> fields)
         {
             var index = (from field in fields
                 where field.Name == "Object Data"

@@ -56,20 +56,20 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.PermutationName);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((byte)(this.ModelVariantStatePropertyFlags)));
-            queueableBinaryWriter.Write(((short)(this.State)));
-            queueableBinaryWriter.Write(this.LoopingEffect);
-            queueableBinaryWriter.Write(this.LoopingEffectMarkerName);
-            queueableBinaryWriter.Write(this.InitialProbability);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.PermutationName);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(((byte)(this.ModelVariantStatePropertyFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.State)));
+            queueableBlamBinaryWriter.Write(this.LoopingEffect);
+            queueableBlamBinaryWriter.Write(this.LoopingEffectMarkerName);
+            queueableBlamBinaryWriter.Write(this.InitialProbability);
         }
         [System.FlagsAttribute()]
         public enum PropertyFlags : byte

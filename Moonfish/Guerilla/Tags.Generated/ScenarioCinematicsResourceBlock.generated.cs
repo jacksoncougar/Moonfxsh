@@ -51,19 +51,19 @@ namespace Moonfish.Guerilla.Tags
             this.CameraPoints = base.ReadBlockArrayData<ScenarioCutsceneCameraPointBlock>(binaryReader, pointerQueue.Dequeue());
             this.RecordedAnimations = base.ReadBlockArrayData<RecordedAnimationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Flags);
-            queueableBinaryWriter.QueueWrite(this.CameraPoints);
-            queueableBinaryWriter.QueueWrite(this.RecordedAnimations);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Flags);
+            queueableBlamBinaryWriter.QueueWrite(this.CameraPoints);
+            queueableBlamBinaryWriter.QueueWrite(this.RecordedAnimations);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Flags);
-            queueableBinaryWriter.WritePointer(this.CameraPoints);
-            queueableBinaryWriter.WritePointer(this.RecordedAnimations);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Flags);
+            queueableBlamBinaryWriter.WritePointer(this.CameraPoints);
+            queueableBlamBinaryWriter.WritePointer(this.RecordedAnimations);
         }
     }
 }

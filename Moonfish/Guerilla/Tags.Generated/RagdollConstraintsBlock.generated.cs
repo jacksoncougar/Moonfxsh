@@ -60,23 +60,23 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.ConstraintBodies.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.ConstraintBodies.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.ConstraintBodies.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            this.ConstraintBodies.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.MinTwist);
-            queueableBinaryWriter.Write(this.MaxTwist);
-            queueableBinaryWriter.Write(this.MinCone);
-            queueableBinaryWriter.Write(this.MaxCone);
-            queueableBinaryWriter.Write(this.MinPlane);
-            queueableBinaryWriter.Write(this.MaxPlane);
-            queueableBinaryWriter.Write(this.MaxFricitonTorque);
+            base.Write_(queueableBlamBinaryWriter);
+            this.ConstraintBodies.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.MinTwist);
+            queueableBlamBinaryWriter.Write(this.MaxTwist);
+            queueableBlamBinaryWriter.Write(this.MinCone);
+            queueableBlamBinaryWriter.Write(this.MaxCone);
+            queueableBlamBinaryWriter.Write(this.MinPlane);
+            queueableBlamBinaryWriter.Write(this.MaxPlane);
+            queueableBlamBinaryWriter.Write(this.MaxFricitonTorque);
         }
     }
 }

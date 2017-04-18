@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text;
+using Moonfish.Guerilla;
 
 namespace Moonfish
 {
@@ -15,7 +16,7 @@ namespace Moonfish
             private PathsInfoStruct(Stream sourceStream)
             {
                 using (
-                    var binaryReader = new BinaryReader(sourceStream,
+                    var binaryReader = new BlamBinaryReader(sourceStream,
                         Encoding.Default, true))
                 {
                     PathCount = binaryReader.ReadInt32();

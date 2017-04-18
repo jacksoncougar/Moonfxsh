@@ -50,19 +50,19 @@ namespace Moonfish.Guerilla.Tags
             this.PixelConstants.ReadInstances(binaryReader, pointerQueue);
             this.VertexConstants.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.Bitmaps.QueueWrites(queueableBinaryWriter);
-            this.PixelConstants.QueueWrites(queueableBinaryWriter);
-            this.VertexConstants.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.Bitmaps.QueueWrites(queueableBlamBinaryWriter);
+            this.PixelConstants.QueueWrites(queueableBlamBinaryWriter);
+            this.VertexConstants.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            this.Bitmaps.Write_(queueableBinaryWriter);
-            this.PixelConstants.Write_(queueableBinaryWriter);
-            this.VertexConstants.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            this.Bitmaps.Write_(queueableBlamBinaryWriter);
+            this.PixelConstants.Write_(queueableBlamBinaryWriter);
+            this.VertexConstants.Write_(queueableBlamBinaryWriter);
         }
     }
 }

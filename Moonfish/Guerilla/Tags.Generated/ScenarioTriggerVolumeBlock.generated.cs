@@ -71,32 +71,32 @@ namespace Moonfish.Guerilla.Tags
                 this.EMPTYSTRING00[i].ReadInstances(binaryReader, pointerQueue);
             }
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
             int i;
             for (i = 0; (i < 6); i = (i + 1))
             {
-                this.EMPTYSTRING00[i].QueueWrites(queueableBinaryWriter);
+                this.EMPTYSTRING00[i].QueueWrites(queueableBlamBinaryWriter);
             }
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.ObjectName);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.NodeName);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(this.ObjectName);
+            queueableBlamBinaryWriter.Write(this.fieldskip);
+            queueableBlamBinaryWriter.Write(this.NodeName);
             int i;
             for (i = 0; (i < 6); i = (i + 1))
             {
-                this.EMPTYSTRING00[i].Write_(queueableBinaryWriter);
+                this.EMPTYSTRING00[i].Write_(queueableBlamBinaryWriter);
             }
-            queueableBinaryWriter.Write(this.Position);
-            queueableBinaryWriter.Write(this.Extents);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.KillTriggerVolume);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.Position);
+            queueableBlamBinaryWriter.Write(this.Extents);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.KillTriggerVolume);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
         }
         public class EMPTYSTRINGBlock : GuerillaBlock, IWriteQueueable
         {
@@ -125,14 +125,14 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.QueueWrites(queueableBinaryWriter);
+                base.QueueWrites(queueableBlamBinaryWriter);
             }
-            public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.Write_(queueableBinaryWriter);
-                queueableBinaryWriter.Write(this.EMPTYSTRING);
+                base.Write_(queueableBlamBinaryWriter);
+                queueableBlamBinaryWriter.Write(this.EMPTYSTRING);
             }
         }
     }

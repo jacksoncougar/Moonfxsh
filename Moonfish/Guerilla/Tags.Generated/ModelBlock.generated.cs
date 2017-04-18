@@ -159,71 +159,71 @@ namespace Moonfish.Guerilla.Tags
             }
             this.ScenarioLoadParameters = base.ReadBlockArrayData<GlobalScenarioLoadParametersBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Variants);
-            queueableBinaryWriter.QueueWrite(this.Materials);
-            queueableBinaryWriter.QueueWrite(this.NewDamageInfo);
-            queueableBinaryWriter.QueueWrite(this.Targets);
-            queueableBinaryWriter.QueueWrite(this.ModelRegionBlock);
-            queueableBinaryWriter.QueueWrite(this.ModelNodeBlock);
-            queueableBinaryWriter.QueueWrite(this.ModelObjectData);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Variants);
+            queueableBlamBinaryWriter.QueueWrite(this.Materials);
+            queueableBlamBinaryWriter.QueueWrite(this.NewDamageInfo);
+            queueableBlamBinaryWriter.QueueWrite(this.Targets);
+            queueableBlamBinaryWriter.QueueWrite(this.ModelRegionBlock);
+            queueableBlamBinaryWriter.QueueWrite(this.ModelNodeBlock);
+            queueableBlamBinaryWriter.QueueWrite(this.ModelObjectData);
             int i;
             for (i = 0; (i < 32); i = (i + 1))
             {
-                this.RenderonlyNodeFlags00[i].QueueWrites(queueableBinaryWriter);
+                this.RenderonlyNodeFlags00[i].QueueWrites(queueableBlamBinaryWriter);
             }
             for (i = 0; (i < 32); i = (i + 1))
             {
-                this.RenderonlySectionFlags00[i].QueueWrites(queueableBinaryWriter);
+                this.RenderonlySectionFlags00[i].QueueWrites(queueableBlamBinaryWriter);
             }
-            queueableBinaryWriter.QueueWrite(this.ScenarioLoadParameters);
+            queueableBlamBinaryWriter.QueueWrite(this.ScenarioLoadParameters);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.RenderModel);
-            queueableBinaryWriter.Write(this.CollisionModel);
-            queueableBinaryWriter.Write(this.Animation);
-            queueableBinaryWriter.Write(this.Physics);
-            queueableBinaryWriter.Write(this.PhysicsModel);
-            queueableBinaryWriter.Write(this.DisappearDistance);
-            queueableBinaryWriter.Write(this.BeginFadeDistance);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.ReduceToL1);
-            queueableBinaryWriter.Write(this.ReduceToL2);
-            queueableBinaryWriter.Write(this.ReduceToL3);
-            queueableBinaryWriter.Write(this.ReduceToL4);
-            queueableBinaryWriter.Write(this.ReduceToL5);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(((short)(this.ShadowFadeDistance)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.WritePointer(this.Variants);
-            queueableBinaryWriter.WritePointer(this.Materials);
-            queueableBinaryWriter.WritePointer(this.NewDamageInfo);
-            queueableBinaryWriter.WritePointer(this.Targets);
-            queueableBinaryWriter.WritePointer(this.ModelRegionBlock);
-            queueableBinaryWriter.WritePointer(this.ModelNodeBlock);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.WritePointer(this.ModelObjectData);
-            queueableBinaryWriter.Write(this.DefaultDialogue);
-            queueableBinaryWriter.Write(this.UNUSED);
-            queueableBinaryWriter.Write(((int)(this.ModelFlags)));
-            queueableBinaryWriter.Write(this.DefaultDialogueEffect);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.RenderModel);
+            queueableBlamBinaryWriter.Write(this.CollisionModel);
+            queueableBlamBinaryWriter.Write(this.Animation);
+            queueableBlamBinaryWriter.Write(this.Physics);
+            queueableBlamBinaryWriter.Write(this.PhysicsModel);
+            queueableBlamBinaryWriter.Write(this.DisappearDistance);
+            queueableBlamBinaryWriter.Write(this.BeginFadeDistance);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.ReduceToL1);
+            queueableBlamBinaryWriter.Write(this.ReduceToL2);
+            queueableBlamBinaryWriter.Write(this.ReduceToL3);
+            queueableBlamBinaryWriter.Write(this.ReduceToL4);
+            queueableBlamBinaryWriter.Write(this.ReduceToL5);
+            queueableBlamBinaryWriter.Write(this.fieldskip);
+            queueableBlamBinaryWriter.Write(((short)(this.ShadowFadeDistance)));
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.WritePointer(this.Variants);
+            queueableBlamBinaryWriter.WritePointer(this.Materials);
+            queueableBlamBinaryWriter.WritePointer(this.NewDamageInfo);
+            queueableBlamBinaryWriter.WritePointer(this.Targets);
+            queueableBlamBinaryWriter.WritePointer(this.ModelRegionBlock);
+            queueableBlamBinaryWriter.WritePointer(this.ModelNodeBlock);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.WritePointer(this.ModelObjectData);
+            queueableBlamBinaryWriter.Write(this.DefaultDialogue);
+            queueableBlamBinaryWriter.Write(this.UNUSED);
+            queueableBlamBinaryWriter.Write(((int)(this.ModelFlags)));
+            queueableBlamBinaryWriter.Write(this.DefaultDialogueEffect);
             int i;
             for (i = 0; (i < 32); i = (i + 1))
             {
-                this.RenderonlyNodeFlags00[i].Write_(queueableBinaryWriter);
+                this.RenderonlyNodeFlags00[i].Write_(queueableBlamBinaryWriter);
             }
             for (i = 0; (i < 32); i = (i + 1))
             {
-                this.RenderonlySectionFlags00[i].Write_(queueableBinaryWriter);
+                this.RenderonlySectionFlags00[i].Write_(queueableBlamBinaryWriter);
             }
-            queueableBinaryWriter.Write(((int)(this.ModelRuntimeFlags)));
-            queueableBinaryWriter.WritePointer(this.ScenarioLoadParameters);
-            queueableBinaryWriter.Write(this.HologramShader);
-            queueableBinaryWriter.Write(this.HologramControlFunction);
+            queueableBlamBinaryWriter.Write(((int)(this.ModelRuntimeFlags)));
+            queueableBlamBinaryWriter.WritePointer(this.ScenarioLoadParameters);
+            queueableBlamBinaryWriter.Write(this.HologramShader);
+            queueableBlamBinaryWriter.Write(this.HologramControlFunction);
         }
         public enum ShadowFadeDistanceEnum : short
         {
@@ -269,14 +269,14 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.QueueWrites(queueableBinaryWriter);
+                base.QueueWrites(queueableBlamBinaryWriter);
             }
-            public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.Write_(queueableBinaryWriter);
-                queueableBinaryWriter.Write(this.FieldCharInteger);
+                base.Write_(queueableBlamBinaryWriter);
+                queueableBlamBinaryWriter.Write(this.FieldCharInteger);
             }
         }
         public class RenderonlySectionFlagsBlock : GuerillaBlock, IWriteQueueable
@@ -306,14 +306,14 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.QueueWrites(queueableBinaryWriter);
+                base.QueueWrites(queueableBlamBinaryWriter);
             }
-            public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.Write_(queueableBinaryWriter);
-                queueableBinaryWriter.Write(this.FieldCharInteger);
+                base.Write_(queueableBlamBinaryWriter);
+                queueableBlamBinaryWriter.Write(this.FieldCharInteger);
             }
         }
         [System.FlagsAttribute()]

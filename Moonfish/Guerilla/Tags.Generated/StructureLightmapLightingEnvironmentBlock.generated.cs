@@ -99,52 +99,52 @@ namespace Moonfish.Guerilla.Tags
                 this.BlueCoefficients00[i].ReadInstances(binaryReader, pointerQueue);
             }
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
             int i;
             for (i = 0; (i < 9); i = (i + 1))
             {
-                this.RedCoefficients00[i].QueueWrites(queueableBinaryWriter);
+                this.RedCoefficients00[i].QueueWrites(queueableBlamBinaryWriter);
             }
             for (i = 0; (i < 9); i = (i + 1))
             {
-                this.GreenCoefficients00[i].QueueWrites(queueableBinaryWriter);
+                this.GreenCoefficients00[i].QueueWrites(queueableBlamBinaryWriter);
             }
             for (i = 0; (i < 9); i = (i + 1))
             {
-                this.BlueCoefficients00[i].QueueWrites(queueableBinaryWriter);
+                this.BlueCoefficients00[i].QueueWrites(queueableBlamBinaryWriter);
             }
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.SamplePoint);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.SamplePoint);
             int i;
             for (i = 0; (i < 9); i = (i + 1))
             {
-                this.RedCoefficients00[i].Write_(queueableBinaryWriter);
+                this.RedCoefficients00[i].Write_(queueableBlamBinaryWriter);
             }
             for (i = 0; (i < 9); i = (i + 1))
             {
-                this.GreenCoefficients00[i].Write_(queueableBinaryWriter);
+                this.GreenCoefficients00[i].Write_(queueableBlamBinaryWriter);
             }
             for (i = 0; (i < 9); i = (i + 1))
             {
-                this.BlueCoefficients00[i].Write_(queueableBinaryWriter);
+                this.BlueCoefficients00[i].Write_(queueableBlamBinaryWriter);
             }
-            queueableBinaryWriter.Write(this.MeanIncomingLightDirection);
-            queueableBinaryWriter.Write(this.IncomingLightIntensity);
-            queueableBinaryWriter.Write(this.SpecularBitmapIndex);
-            queueableBinaryWriter.Write(this.RotationAxis);
-            queueableBinaryWriter.Write(this.RotationSpeed);
-            queueableBinaryWriter.Write(this.BumpDirection);
-            queueableBinaryWriter.Write(this.ColorTint);
-            queueableBinaryWriter.Write(((short)(this.ProceduralOveride)));
-            queueableBinaryWriter.Write(((short)(this.StructureLightmapLightingEnvironmentFlags)));
-            queueableBinaryWriter.Write(this.ProceduralParam0);
-            queueableBinaryWriter.Write(this.ProceduralParam1xyz);
-            queueableBinaryWriter.Write(this.ProceduralParam1w);
+            queueableBlamBinaryWriter.Write(this.MeanIncomingLightDirection);
+            queueableBlamBinaryWriter.Write(this.IncomingLightIntensity);
+            queueableBlamBinaryWriter.Write(this.SpecularBitmapIndex);
+            queueableBlamBinaryWriter.Write(this.RotationAxis);
+            queueableBlamBinaryWriter.Write(this.RotationSpeed);
+            queueableBlamBinaryWriter.Write(this.BumpDirection);
+            queueableBlamBinaryWriter.Write(this.ColorTint);
+            queueableBlamBinaryWriter.Write(((short)(this.ProceduralOveride)));
+            queueableBlamBinaryWriter.Write(((short)(this.StructureLightmapLightingEnvironmentFlags)));
+            queueableBlamBinaryWriter.Write(this.ProceduralParam0);
+            queueableBlamBinaryWriter.Write(this.ProceduralParam1xyz);
+            queueableBlamBinaryWriter.Write(this.ProceduralParam1w);
         }
         public class RedCoefficientsBlock : GuerillaBlock, IWriteQueueable
         {
@@ -173,14 +173,14 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.QueueWrites(queueableBinaryWriter);
+                base.QueueWrites(queueableBlamBinaryWriter);
             }
-            public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.Write_(queueableBinaryWriter);
-                queueableBinaryWriter.Write(this.RedCoefficient);
+                base.Write_(queueableBlamBinaryWriter);
+                queueableBlamBinaryWriter.Write(this.RedCoefficient);
             }
         }
         public class GreenCoefficientsBlock : GuerillaBlock, IWriteQueueable
@@ -210,14 +210,14 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.QueueWrites(queueableBinaryWriter);
+                base.QueueWrites(queueableBlamBinaryWriter);
             }
-            public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.Write_(queueableBinaryWriter);
-                queueableBinaryWriter.Write(this.GreenCoefficient);
+                base.Write_(queueableBlamBinaryWriter);
+                queueableBlamBinaryWriter.Write(this.GreenCoefficient);
             }
         }
         public class BlueCoefficientsBlock : GuerillaBlock, IWriteQueueable
@@ -247,14 +247,14 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.QueueWrites(queueableBinaryWriter);
+                base.QueueWrites(queueableBlamBinaryWriter);
             }
-            public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.Write_(queueableBinaryWriter);
-                queueableBinaryWriter.Write(this.BlueCoefficient);
+                base.Write_(queueableBlamBinaryWriter);
+                queueableBlamBinaryWriter.Write(this.BlueCoefficient);
             }
         }
         public enum ProceduralOverideEnum : short

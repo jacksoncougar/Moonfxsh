@@ -120,50 +120,50 @@ namespace Moonfish.Guerilla.Tags
             this.Rangescale.ReadInstances(binaryReader, pointerQueue);
             this.Brightnessscale.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.HorizontalRange.QueueWrites(queueableBinaryWriter);
-            this.VerticalRange.QueueWrites(queueableBinaryWriter);
-            this.Roughness.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Cores);
-            this.Rangescale.QueueWrites(queueableBinaryWriter);
-            this.Brightnessscale.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.HorizontalRange.QueueWrites(queueableBlamBinaryWriter);
+            this.VerticalRange.QueueWrites(queueableBlamBinaryWriter);
+            this.Roughness.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Cores);
+            this.Rangescale.QueueWrites(queueableBlamBinaryWriter);
+            this.Brightnessscale.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.LiquidArcFlags)));
-            queueableBinaryWriter.Write(((short)(this.SpriteCount)));
-            queueableBinaryWriter.Write(this.NaturalLength);
-            queueableBinaryWriter.Write(this.Instances);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.InstanceSpreadAngle);
-            queueableBinaryWriter.Write(this.InstanceRotationPeriod);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.MaterialEffects);
-            queueableBinaryWriter.Write(this.Bitmap);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            this.HorizontalRange.Write_(queueableBinaryWriter);
-            this.VerticalRange.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.VerticalNegativeScale);
-            this.Roughness.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.Octave1Frequency);
-            queueableBinaryWriter.Write(this.Octave2Frequency);
-            queueableBinaryWriter.Write(this.Octave3Frequency);
-            queueableBinaryWriter.Write(this.Octave4Frequency);
-            queueableBinaryWriter.Write(this.Octave5Frequency);
-            queueableBinaryWriter.Write(this.Octave6Frequency);
-            queueableBinaryWriter.Write(this.Octave7Frequency);
-            queueableBinaryWriter.Write(this.Octave8Frequency);
-            queueableBinaryWriter.Write(this.Octave9Frequency);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(((short)(this.LiquidArcOctaveFlags)));
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.WritePointer(this.Cores);
-            this.Rangescale.Write_(queueableBinaryWriter);
-            this.Brightnessscale.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.LiquidArcFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.SpriteCount)));
+            queueableBlamBinaryWriter.Write(this.NaturalLength);
+            queueableBlamBinaryWriter.Write(this.Instances);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.InstanceSpreadAngle);
+            queueableBlamBinaryWriter.Write(this.InstanceRotationPeriod);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.MaterialEffects);
+            queueableBlamBinaryWriter.Write(this.Bitmap);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            this.HorizontalRange.Write_(queueableBlamBinaryWriter);
+            this.VerticalRange.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.VerticalNegativeScale);
+            this.Roughness.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.Octave1Frequency);
+            queueableBlamBinaryWriter.Write(this.Octave2Frequency);
+            queueableBlamBinaryWriter.Write(this.Octave3Frequency);
+            queueableBlamBinaryWriter.Write(this.Octave4Frequency);
+            queueableBlamBinaryWriter.Write(this.Octave5Frequency);
+            queueableBlamBinaryWriter.Write(this.Octave6Frequency);
+            queueableBlamBinaryWriter.Write(this.Octave7Frequency);
+            queueableBlamBinaryWriter.Write(this.Octave8Frequency);
+            queueableBlamBinaryWriter.Write(this.Octave9Frequency);
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
+            queueableBlamBinaryWriter.Write(((short)(this.LiquidArcOctaveFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad4);
+            queueableBlamBinaryWriter.WritePointer(this.Cores);
+            this.Rangescale.Write_(queueableBlamBinaryWriter);
+            this.Brightnessscale.Write_(queueableBlamBinaryWriter);
         }
         /// <summary>
         /// Note that if the type is not STANDARD, then the 'collide_with_stuff' and material effects will not have any effect. In addition, the 'natural_length' will not have an effect except as a means to compute the collision fraction.

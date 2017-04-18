@@ -47,17 +47,17 @@ namespace Moonfish.Guerilla.Tags
             this.GeometryBlockInfo.ReadInstances(binaryReader, pointerQueue);
             this.CacheBlockData = base.ReadBlockArrayData<DecoratorCacheBlockDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.GeometryBlockInfo.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.CacheBlockData);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.GeometryBlockInfo.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.CacheBlockData);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            this.GeometryBlockInfo.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.CacheBlockData);
+            base.Write_(queueableBlamBinaryWriter);
+            this.GeometryBlockInfo.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.CacheBlockData);
         }
     }
 }

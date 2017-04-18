@@ -78,35 +78,35 @@ namespace Moonfish.Guerilla.Tags
             this.DeadPhysics.ReadInstances(binaryReader, pointerQueue);
             this.SentinelPhysics.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.DeadSphereShapes);
-            queueableBinaryWriter.QueueWrite(this.PillShapes);
-            queueableBinaryWriter.QueueWrite(this.SphereShapes);
-            this.GroundPhysics.QueueWrites(queueableBinaryWriter);
-            this.FlyingPhysics.QueueWrites(queueableBinaryWriter);
-            this.DeadPhysics.QueueWrites(queueableBinaryWriter);
-            this.SentinelPhysics.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.DeadSphereShapes);
+            queueableBlamBinaryWriter.QueueWrite(this.PillShapes);
+            queueableBlamBinaryWriter.QueueWrite(this.SphereShapes);
+            this.GroundPhysics.QueueWrites(queueableBlamBinaryWriter);
+            this.FlyingPhysics.QueueWrites(queueableBlamBinaryWriter);
+            this.DeadPhysics.QueueWrites(queueableBlamBinaryWriter);
+            this.SentinelPhysics.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.CharacterPhysicsStructFlags)));
-            queueableBinaryWriter.Write(this.HeightStanding);
-            queueableBinaryWriter.Write(this.HeightCrouching);
-            queueableBinaryWriter.Write(this.Radius);
-            queueableBinaryWriter.Write(this.Mass);
-            queueableBinaryWriter.Write(this.LivingMaterialName);
-            queueableBinaryWriter.Write(this.DeadMaterialName);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.DeadSphereShapes);
-            queueableBinaryWriter.WritePointer(this.PillShapes);
-            queueableBinaryWriter.WritePointer(this.SphereShapes);
-            this.GroundPhysics.Write_(queueableBinaryWriter);
-            this.FlyingPhysics.Write_(queueableBinaryWriter);
-            this.DeadPhysics.Write_(queueableBinaryWriter);
-            this.SentinelPhysics.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.CharacterPhysicsStructFlags)));
+            queueableBlamBinaryWriter.Write(this.HeightStanding);
+            queueableBlamBinaryWriter.Write(this.HeightCrouching);
+            queueableBlamBinaryWriter.Write(this.Radius);
+            queueableBlamBinaryWriter.Write(this.Mass);
+            queueableBlamBinaryWriter.Write(this.LivingMaterialName);
+            queueableBlamBinaryWriter.Write(this.DeadMaterialName);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.WritePointer(this.DeadSphereShapes);
+            queueableBlamBinaryWriter.WritePointer(this.PillShapes);
+            queueableBlamBinaryWriter.WritePointer(this.SphereShapes);
+            this.GroundPhysics.Write_(queueableBlamBinaryWriter);
+            this.FlyingPhysics.Write_(queueableBlamBinaryWriter);
+            this.DeadPhysics.Write_(queueableBlamBinaryWriter);
+            this.SentinelPhysics.Write_(queueableBlamBinaryWriter);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

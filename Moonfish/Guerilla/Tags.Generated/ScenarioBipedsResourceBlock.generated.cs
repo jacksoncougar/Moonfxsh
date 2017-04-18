@@ -62,26 +62,26 @@ namespace Moonfish.Guerilla.Tags
             this.Objects = base.ReadBlockArrayData<ScenarioBipedBlock>(binaryReader, pointerQueue.Dequeue());
             this.EditorFolders = base.ReadBlockArrayData<GScenarioEditorFolderBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Names);
-            queueableBinaryWriter.QueueWrite(this.DontUseMeScenarioEnvironmentObjectBlock);
-            queueableBinaryWriter.QueueWrite(this.StructureReferences);
-            queueableBinaryWriter.QueueWrite(this.Palette);
-            queueableBinaryWriter.QueueWrite(this.Objects);
-            queueableBinaryWriter.QueueWrite(this.EditorFolders);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Names);
+            queueableBlamBinaryWriter.QueueWrite(this.DontUseMeScenarioEnvironmentObjectBlock);
+            queueableBlamBinaryWriter.QueueWrite(this.StructureReferences);
+            queueableBlamBinaryWriter.QueueWrite(this.Palette);
+            queueableBlamBinaryWriter.QueueWrite(this.Objects);
+            queueableBlamBinaryWriter.QueueWrite(this.EditorFolders);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Names);
-            queueableBinaryWriter.WritePointer(this.DontUseMeScenarioEnvironmentObjectBlock);
-            queueableBinaryWriter.WritePointer(this.StructureReferences);
-            queueableBinaryWriter.WritePointer(this.Palette);
-            queueableBinaryWriter.WritePointer(this.Objects);
-            queueableBinaryWriter.Write(this.NextObjectIDSalt);
-            queueableBinaryWriter.WritePointer(this.EditorFolders);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Names);
+            queueableBlamBinaryWriter.WritePointer(this.DontUseMeScenarioEnvironmentObjectBlock);
+            queueableBlamBinaryWriter.WritePointer(this.StructureReferences);
+            queueableBlamBinaryWriter.WritePointer(this.Palette);
+            queueableBlamBinaryWriter.WritePointer(this.Objects);
+            queueableBlamBinaryWriter.Write(this.NextObjectIDSalt);
+            queueableBlamBinaryWriter.WritePointer(this.EditorFolders);
         }
     }
 }

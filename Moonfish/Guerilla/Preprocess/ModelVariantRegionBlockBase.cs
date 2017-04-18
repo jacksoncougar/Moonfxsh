@@ -6,7 +6,7 @@ namespace Moonfish.Guerilla.Preprocess
     partial class ModelVariantRegionBlockBase
     {
         [GuerillaPreProcessMethod(BlockName = "model_variant_region_block")]
-        protected static void GuerillaPreProcessMethod(BinaryReader binaryReader, IList<tag_field> fields)
+        protected static void GuerillaPreProcessMethod(BlamBinaryReader blamBinaryReader, IList<tag_field> fields)
         {
             ((enum_definition) fields[5].Definition).Options = new List<string>(new[]
             {

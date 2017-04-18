@@ -1,10 +1,10 @@
 namespace Moonfish.Guerilla
 {
     /// <summary>
-    /// Exposes the implementing class as supporting writing with <see cref="QueueableBinaryWriter"/>.
+    /// Exposes the implementing class as supporting writing with <see cref="QueueableBlamBinaryWriter"/>.
     /// </summary>
     public interface IWriteQueueable
     {
-        void QueueWrites(QueueableBinaryWriter binaryWriter);
+        void QueueWrites(QueueableBlamBinaryWriter blamBinaryWriter);
     }
 }

@@ -65,25 +65,25 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.HudWidgetStateDefinitionStructYUnitFlags)));
-            queueableBinaryWriter.Write(((short)(this.HudWidgetStateDefinitionStructYExtraFlags)));
-            queueableBinaryWriter.Write(((short)(this.HudWidgetStateDefinitionStructYWeaponFlags)));
-            queueableBinaryWriter.Write(((short)(this.HudWidgetStateDefinitionStructYGameEngineStateFlags)));
-            queueableBinaryWriter.Write(((short)(this.HudWidgetStateDefinitionStructNUnitFlags)));
-            queueableBinaryWriter.Write(((short)(this.HudWidgetStateDefinitionStructNExtraFlags)));
-            queueableBinaryWriter.Write(((short)(this.HudWidgetStateDefinitionStructNWeaponFlags)));
-            queueableBinaryWriter.Write(((short)(this.HudWidgetStateDefinitionStructNGameEngineStateFlags)));
-            queueableBinaryWriter.Write(this.AgeCutoff);
-            queueableBinaryWriter.Write(this.ClipCutoff);
-            queueableBinaryWriter.Write(this.TotalCutoff);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.HudWidgetStateDefinitionStructYUnitFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.HudWidgetStateDefinitionStructYExtraFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.HudWidgetStateDefinitionStructYWeaponFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.HudWidgetStateDefinitionStructYGameEngineStateFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.HudWidgetStateDefinitionStructNUnitFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.HudWidgetStateDefinitionStructNExtraFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.HudWidgetStateDefinitionStructNWeaponFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.HudWidgetStateDefinitionStructNGameEngineStateFlags)));
+            queueableBlamBinaryWriter.Write(this.AgeCutoff);
+            queueableBlamBinaryWriter.Write(this.ClipCutoff);
+            queueableBlamBinaryWriter.Write(this.TotalCutoff);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
         }
         /// <summary>
         /// this section is split up into YES and NO flags.

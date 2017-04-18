@@ -62,23 +62,23 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.CollisionDamage);
-            queueableBinaryWriter.Write(this.MinGameAcc);
-            queueableBinaryWriter.Write(this.MaxGameAcc);
-            queueableBinaryWriter.Write(this.MinGameScale);
-            queueableBinaryWriter.Write(this.MaxGameScale);
-            queueableBinaryWriter.Write(this.MinAbsAcc);
-            queueableBinaryWriter.Write(this.MaxAbsAcc);
-            queueableBinaryWriter.Write(this.MinAbsScale);
-            queueableBinaryWriter.Write(this.MaxAbsScale);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.CollisionDamage);
+            queueableBlamBinaryWriter.Write(this.MinGameAcc);
+            queueableBlamBinaryWriter.Write(this.MaxGameAcc);
+            queueableBlamBinaryWriter.Write(this.MinGameScale);
+            queueableBlamBinaryWriter.Write(this.MaxGameScale);
+            queueableBlamBinaryWriter.Write(this.MinAbsAcc);
+            queueableBlamBinaryWriter.Write(this.MaxAbsAcc);
+            queueableBlamBinaryWriter.Write(this.MinAbsScale);
+            queueableBlamBinaryWriter.Write(this.MaxAbsScale);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
         }
     }
 }

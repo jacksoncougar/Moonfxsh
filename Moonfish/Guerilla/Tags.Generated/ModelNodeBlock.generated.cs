@@ -65,25 +65,25 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.ParentNode);
-            queueableBinaryWriter.Write(this.FirstChildNode);
-            queueableBinaryWriter.Write(this.NextSiblingNode);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.DefaultTranslation);
-            queueableBinaryWriter.Write(this.DefaultRotation);
-            queueableBinaryWriter.Write(this.DefaultInverseScale);
-            queueableBinaryWriter.Write(this.DefaultInverseForward);
-            queueableBinaryWriter.Write(this.DefaultInverseLeft);
-            queueableBinaryWriter.Write(this.DefaultInverseUp);
-            queueableBinaryWriter.Write(this.DefaultInversePosition);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(this.ParentNode);
+            queueableBlamBinaryWriter.Write(this.FirstChildNode);
+            queueableBlamBinaryWriter.Write(this.NextSiblingNode);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.DefaultTranslation);
+            queueableBlamBinaryWriter.Write(this.DefaultRotation);
+            queueableBlamBinaryWriter.Write(this.DefaultInverseScale);
+            queueableBlamBinaryWriter.Write(this.DefaultInverseForward);
+            queueableBlamBinaryWriter.Write(this.DefaultInverseLeft);
+            queueableBlamBinaryWriter.Write(this.DefaultInverseUp);
+            queueableBlamBinaryWriter.Write(this.DefaultInversePosition);
         }
     }
 }

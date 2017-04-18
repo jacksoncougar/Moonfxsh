@@ -14,9 +14,9 @@ namespace Moonfish.Guerilla.Tags
             if ( resourceStreamWrapper == null ) return;
 
             LightmapGeometrySectionCacheDataBlock sectionBlock = new LightmapGeometrySectionCacheDataBlock( );
-            using ( BinaryReader binaryReader = new BinaryReader( resourceStreamWrapper ) )
+            using ( BlamBinaryReader blamBinaryReader = new BlamBinaryReader( resourceStreamWrapper ) )
             {
-                sectionBlock.Read( binaryReader );
+                sectionBlock.Read( blamBinaryReader );
 
                 GlobalGeometryBlockResourceBlock[] vertexBufferResources = GeometryBlockInfo.Resources.Where(
                     x => x.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer ).ToArray( );

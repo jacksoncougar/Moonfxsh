@@ -205,7 +205,7 @@ namespace Moonfish.Graphics
                 }
             }
 
-            using (var binaryReader = new BinaryReader(new MemoryStream(coordinates)))
+            using (var binaryReader = new BlamBinaryReader(new MemoryStream(coordinates)))
             using (var binaryWriter = new BinaryWriter(LockVerts()))
             {
                 for ( var i = 0; i < vertexCount; ++i )

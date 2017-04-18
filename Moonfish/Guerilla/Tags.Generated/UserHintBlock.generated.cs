@@ -68,31 +68,31 @@ namespace Moonfish.Guerilla.Tags
             this.WellHints = base.ReadBlockArrayData<UserHintWellBlock>(binaryReader, pointerQueue.Dequeue());
             this.FlightHints = base.ReadBlockArrayData<UserHintFlightBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.PointGeometry);
-            queueableBinaryWriter.QueueWrite(this.RayGeometry);
-            queueableBinaryWriter.QueueWrite(this.LineSegmentGeometry);
-            queueableBinaryWriter.QueueWrite(this.ParallelogramGeometry);
-            queueableBinaryWriter.QueueWrite(this.PolygonGeometry);
-            queueableBinaryWriter.QueueWrite(this.JumpHints);
-            queueableBinaryWriter.QueueWrite(this.ClimbHints);
-            queueableBinaryWriter.QueueWrite(this.WellHints);
-            queueableBinaryWriter.QueueWrite(this.FlightHints);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.PointGeometry);
+            queueableBlamBinaryWriter.QueueWrite(this.RayGeometry);
+            queueableBlamBinaryWriter.QueueWrite(this.LineSegmentGeometry);
+            queueableBlamBinaryWriter.QueueWrite(this.ParallelogramGeometry);
+            queueableBlamBinaryWriter.QueueWrite(this.PolygonGeometry);
+            queueableBlamBinaryWriter.QueueWrite(this.JumpHints);
+            queueableBlamBinaryWriter.QueueWrite(this.ClimbHints);
+            queueableBlamBinaryWriter.QueueWrite(this.WellHints);
+            queueableBlamBinaryWriter.QueueWrite(this.FlightHints);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.PointGeometry);
-            queueableBinaryWriter.WritePointer(this.RayGeometry);
-            queueableBinaryWriter.WritePointer(this.LineSegmentGeometry);
-            queueableBinaryWriter.WritePointer(this.ParallelogramGeometry);
-            queueableBinaryWriter.WritePointer(this.PolygonGeometry);
-            queueableBinaryWriter.WritePointer(this.JumpHints);
-            queueableBinaryWriter.WritePointer(this.ClimbHints);
-            queueableBinaryWriter.WritePointer(this.WellHints);
-            queueableBinaryWriter.WritePointer(this.FlightHints);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.PointGeometry);
+            queueableBlamBinaryWriter.WritePointer(this.RayGeometry);
+            queueableBlamBinaryWriter.WritePointer(this.LineSegmentGeometry);
+            queueableBlamBinaryWriter.WritePointer(this.ParallelogramGeometry);
+            queueableBlamBinaryWriter.WritePointer(this.PolygonGeometry);
+            queueableBlamBinaryWriter.WritePointer(this.JumpHints);
+            queueableBlamBinaryWriter.WritePointer(this.ClimbHints);
+            queueableBlamBinaryWriter.WritePointer(this.WellHints);
+            queueableBlamBinaryWriter.WritePointer(this.FlightHints);
         }
     }
 }

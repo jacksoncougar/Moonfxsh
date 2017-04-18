@@ -88,44 +88,44 @@ namespace Moonfish.Guerilla.Tags
             this.ValueProperties = base.ReadBlockArrayData<ShaderPostprocessValuePropertyBlock>(binaryReader, pointerQueue.Dequeue());
             this.OldLevelsOfDetail = base.ReadBlockArrayData<ShaderPostprocessLevelOfDetailBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Bitmaps);
-            queueableBinaryWriter.QueueWrite(this.PixelConstants);
-            queueableBinaryWriter.QueueWrite(this.VertexConstants);
-            queueableBinaryWriter.QueueWrite(this.LevelsOfDetail);
-            queueableBinaryWriter.QueueWrite(this.Layers);
-            queueableBinaryWriter.QueueWrite(this.Passes);
-            queueableBinaryWriter.QueueWrite(this.Implementations);
-            queueableBinaryWriter.QueueWrite(this.Overlays);
-            queueableBinaryWriter.QueueWrite(this.OverlayReferences);
-            queueableBinaryWriter.QueueWrite(this.AnimatedParameters);
-            queueableBinaryWriter.QueueWrite(this.AnimatedParameterReferences);
-            queueableBinaryWriter.QueueWrite(this.BitmapProperties);
-            queueableBinaryWriter.QueueWrite(this.ColorProperties);
-            queueableBinaryWriter.QueueWrite(this.ValueProperties);
-            queueableBinaryWriter.QueueWrite(this.OldLevelsOfDetail);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Bitmaps);
+            queueableBlamBinaryWriter.QueueWrite(this.PixelConstants);
+            queueableBlamBinaryWriter.QueueWrite(this.VertexConstants);
+            queueableBlamBinaryWriter.QueueWrite(this.LevelsOfDetail);
+            queueableBlamBinaryWriter.QueueWrite(this.Layers);
+            queueableBlamBinaryWriter.QueueWrite(this.Passes);
+            queueableBlamBinaryWriter.QueueWrite(this.Implementations);
+            queueableBlamBinaryWriter.QueueWrite(this.Overlays);
+            queueableBlamBinaryWriter.QueueWrite(this.OverlayReferences);
+            queueableBlamBinaryWriter.QueueWrite(this.AnimatedParameters);
+            queueableBlamBinaryWriter.QueueWrite(this.AnimatedParameterReferences);
+            queueableBlamBinaryWriter.QueueWrite(this.BitmapProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.ColorProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.ValueProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.OldLevelsOfDetail);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ShaderTemplateIndex);
-            queueableBinaryWriter.WritePointer(this.Bitmaps);
-            queueableBinaryWriter.WritePointer(this.PixelConstants);
-            queueableBinaryWriter.WritePointer(this.VertexConstants);
-            queueableBinaryWriter.WritePointer(this.LevelsOfDetail);
-            queueableBinaryWriter.WritePointer(this.Layers);
-            queueableBinaryWriter.WritePointer(this.Passes);
-            queueableBinaryWriter.WritePointer(this.Implementations);
-            queueableBinaryWriter.WritePointer(this.Overlays);
-            queueableBinaryWriter.WritePointer(this.OverlayReferences);
-            queueableBinaryWriter.WritePointer(this.AnimatedParameters);
-            queueableBinaryWriter.WritePointer(this.AnimatedParameterReferences);
-            queueableBinaryWriter.WritePointer(this.BitmapProperties);
-            queueableBinaryWriter.WritePointer(this.ColorProperties);
-            queueableBinaryWriter.WritePointer(this.ValueProperties);
-            queueableBinaryWriter.WritePointer(this.OldLevelsOfDetail);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.ShaderTemplateIndex);
+            queueableBlamBinaryWriter.WritePointer(this.Bitmaps);
+            queueableBlamBinaryWriter.WritePointer(this.PixelConstants);
+            queueableBlamBinaryWriter.WritePointer(this.VertexConstants);
+            queueableBlamBinaryWriter.WritePointer(this.LevelsOfDetail);
+            queueableBlamBinaryWriter.WritePointer(this.Layers);
+            queueableBlamBinaryWriter.WritePointer(this.Passes);
+            queueableBlamBinaryWriter.WritePointer(this.Implementations);
+            queueableBlamBinaryWriter.WritePointer(this.Overlays);
+            queueableBlamBinaryWriter.WritePointer(this.OverlayReferences);
+            queueableBlamBinaryWriter.WritePointer(this.AnimatedParameters);
+            queueableBlamBinaryWriter.WritePointer(this.AnimatedParameterReferences);
+            queueableBlamBinaryWriter.WritePointer(this.BitmapProperties);
+            queueableBlamBinaryWriter.WritePointer(this.ColorProperties);
+            queueableBlamBinaryWriter.WritePointer(this.ValueProperties);
+            queueableBlamBinaryWriter.WritePointer(this.OldLevelsOfDetail);
         }
     }
 }

@@ -51,19 +51,19 @@ namespace Moonfish.Guerilla.Tags
             this.TriggerConditions = base.ReadBlockArrayData<AiSceneTriggerBlock>(binaryReader, pointerQueue.Dequeue());
             this.Roles = base.ReadBlockArrayData<AiSceneRoleBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.TriggerConditions);
-            queueableBinaryWriter.QueueWrite(this.Roles);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.TriggerConditions);
+            queueableBlamBinaryWriter.QueueWrite(this.Roles);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((int)(this.AiSceneFlags)));
-            queueableBinaryWriter.WritePointer(this.TriggerConditions);
-            queueableBinaryWriter.WritePointer(this.Roles);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(((int)(this.AiSceneFlags)));
+            queueableBlamBinaryWriter.WritePointer(this.TriggerConditions);
+            queueableBlamBinaryWriter.WritePointer(this.Roles);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

@@ -51,18 +51,18 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.SeatLabel);
-            queueableBinaryWriter.Write(this.DirectDamageScale);
-            queueableBinaryWriter.Write(this.DamageTransferFalloffRadius);
-            queueableBinaryWriter.Write(this.MaximumTransferDamageScale);
-            queueableBinaryWriter.Write(this.MinimumTransferDamageScale);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.SeatLabel);
+            queueableBlamBinaryWriter.Write(this.DirectDamageScale);
+            queueableBlamBinaryWriter.Write(this.DamageTransferFalloffRadius);
+            queueableBlamBinaryWriter.Write(this.MaximumTransferDamageScale);
+            queueableBlamBinaryWriter.Write(this.MinimumTransferDamageScale);
         }
     }
 }

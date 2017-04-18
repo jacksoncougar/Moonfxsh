@@ -95,40 +95,40 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.MultitexOverlay = base.ReadBlockArrayData<GlobalHudMultitextureOverlayDefinition>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.MultitexOverlay);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.MultitexOverlay);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.StateAttachedTo)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.CanUseOnMapType)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.AnchorOffset);
-            queueableBinaryWriter.Write(this.WidthScale);
-            queueableBinaryWriter.Write(this.HeightScale);
-            queueableBinaryWriter.Write(((short)(this.WeaponHudStaticScalingFlags)));
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.InterfaceBitmap);
-            queueableBinaryWriter.Write(this.DefaultColor);
-            queueableBinaryWriter.Write(this.FlashingColor);
-            queueableBinaryWriter.Write(this.FlashPeriod);
-            queueableBinaryWriter.Write(this.FlashDelay);
-            queueableBinaryWriter.Write(this.NumberOfFlashes);
-            queueableBinaryWriter.Write(((short)(this.WeaponHudStaticFlashFlags)));
-            queueableBinaryWriter.Write(this.FlashLength);
-            queueableBinaryWriter.Write(this.DisabledColor);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.SequenceIndex);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.WritePointer(this.MultitexOverlay);
-            queueableBinaryWriter.Write(this.fieldpad6);
-            queueableBinaryWriter.Write(this.fieldpad7);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.StateAttachedTo)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(((short)(this.CanUseOnMapType)));
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.AnchorOffset);
+            queueableBlamBinaryWriter.Write(this.WidthScale);
+            queueableBlamBinaryWriter.Write(this.HeightScale);
+            queueableBlamBinaryWriter.Write(((short)(this.WeaponHudStaticScalingFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
+            queueableBlamBinaryWriter.Write(this.InterfaceBitmap);
+            queueableBlamBinaryWriter.Write(this.DefaultColor);
+            queueableBlamBinaryWriter.Write(this.FlashingColor);
+            queueableBlamBinaryWriter.Write(this.FlashPeriod);
+            queueableBlamBinaryWriter.Write(this.FlashDelay);
+            queueableBlamBinaryWriter.Write(this.NumberOfFlashes);
+            queueableBlamBinaryWriter.Write(((short)(this.WeaponHudStaticFlashFlags)));
+            queueableBlamBinaryWriter.Write(this.FlashLength);
+            queueableBlamBinaryWriter.Write(this.DisabledColor);
+            queueableBlamBinaryWriter.Write(this.fieldpad4);
+            queueableBlamBinaryWriter.Write(this.SequenceIndex);
+            queueableBlamBinaryWriter.Write(this.fieldpad5);
+            queueableBlamBinaryWriter.WritePointer(this.MultitexOverlay);
+            queueableBlamBinaryWriter.Write(this.fieldpad6);
+            queueableBlamBinaryWriter.Write(this.fieldpad7);
         }
         public enum StateAttachedToEnum : short
         {

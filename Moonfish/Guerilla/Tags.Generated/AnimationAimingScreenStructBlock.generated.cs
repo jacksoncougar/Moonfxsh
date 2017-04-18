@@ -57,21 +57,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.RightYawPerFrame);
-            queueableBinaryWriter.Write(this.LeftYawPerFrame);
-            queueableBinaryWriter.Write(this.RightFrameCount);
-            queueableBinaryWriter.Write(this.LeftFrameCount);
-            queueableBinaryWriter.Write(this.DownPitchPerFrame);
-            queueableBinaryWriter.Write(this.UpPitchPerFrame);
-            queueableBinaryWriter.Write(this.DownPitchFrameCount);
-            queueableBinaryWriter.Write(this.UpPitchFrameCount);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.RightYawPerFrame);
+            queueableBlamBinaryWriter.Write(this.LeftYawPerFrame);
+            queueableBlamBinaryWriter.Write(this.RightFrameCount);
+            queueableBlamBinaryWriter.Write(this.LeftFrameCount);
+            queueableBlamBinaryWriter.Write(this.DownPitchPerFrame);
+            queueableBlamBinaryWriter.Write(this.UpPitchPerFrame);
+            queueableBlamBinaryWriter.Write(this.DownPitchFrameCount);
+            queueableBlamBinaryWriter.Write(this.UpPitchFrameCount);
         }
     }
 }

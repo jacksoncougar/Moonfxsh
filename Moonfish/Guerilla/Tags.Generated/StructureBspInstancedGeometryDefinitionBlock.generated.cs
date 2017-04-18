@@ -62,26 +62,26 @@ namespace Moonfish.Guerilla.Tags
             this.RenderLeaves = base.ReadBlockArrayData<StructureBspLeafBlock>(binaryReader, pointerQueue.Dequeue());
             this.SurfaceReferences = base.ReadBlockArrayData<StructureBspSurfaceReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.RenderInfo.QueueWrites(queueableBinaryWriter);
-            this.CollisionInfo.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.BspPhysics);
-            queueableBinaryWriter.QueueWrite(this.RenderLeaves);
-            queueableBinaryWriter.QueueWrite(this.SurfaceReferences);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.RenderInfo.QueueWrites(queueableBlamBinaryWriter);
+            this.CollisionInfo.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.BspPhysics);
+            queueableBlamBinaryWriter.QueueWrite(this.RenderLeaves);
+            queueableBlamBinaryWriter.QueueWrite(this.SurfaceReferences);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            this.RenderInfo.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Checksum);
-            queueableBinaryWriter.Write(this.BoundingSphereCenter);
-            queueableBinaryWriter.Write(this.BoundingSphereRadius);
-            this.CollisionInfo.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.BspPhysics);
-            queueableBinaryWriter.WritePointer(this.RenderLeaves);
-            queueableBinaryWriter.WritePointer(this.SurfaceReferences);
+            base.Write_(queueableBlamBinaryWriter);
+            this.RenderInfo.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Checksum);
+            queueableBlamBinaryWriter.Write(this.BoundingSphereCenter);
+            queueableBlamBinaryWriter.Write(this.BoundingSphereRadius);
+            this.CollisionInfo.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.BspPhysics);
+            queueableBlamBinaryWriter.WritePointer(this.RenderLeaves);
+            queueableBlamBinaryWriter.WritePointer(this.SurfaceReferences);
         }
     }
 }

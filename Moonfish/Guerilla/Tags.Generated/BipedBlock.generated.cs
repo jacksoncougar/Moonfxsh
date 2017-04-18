@@ -110,47 +110,47 @@ namespace Moonfish.Guerilla.Tags
             this.Physics.ReadInstances(binaryReader, pointerQueue);
             this.ContactPoints = base.ReadBlockArrayData<ContactPointBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.LockonData.QueueWrites(queueableBinaryWriter);
-            this.Physics.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ContactPoints);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.LockonData.QueueWrites(queueableBlamBinaryWriter);
+            this.Physics.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.ContactPoints);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MovingTurningSpeed);
-            queueableBinaryWriter.Write(((int)(this.BipedBipedFlags)));
-            queueableBinaryWriter.Write(this.StationaryTurningThreshold);
-            queueableBinaryWriter.Write(this.JumpVelocity);
-            queueableBinaryWriter.Write(this.MaximumSoftLandingTime);
-            queueableBinaryWriter.Write(this.MaximumHardLandingTime);
-            queueableBinaryWriter.Write(this.MinimumSoftLandingVelocity);
-            queueableBinaryWriter.Write(this.MinimumHardLandingVelocity);
-            queueableBinaryWriter.Write(this.MaximumHardLandingVelocity);
-            queueableBinaryWriter.Write(this.DeathHardLandingVelocity);
-            queueableBinaryWriter.Write(this.StunDuration);
-            queueableBinaryWriter.Write(this.StandingCameraHeight);
-            queueableBinaryWriter.Write(this.CrouchingCameraHeight);
-            queueableBinaryWriter.Write(this.CrouchTransitionTime);
-            queueableBinaryWriter.Write(this.CameraInterpolationStart);
-            queueableBinaryWriter.Write(this.CameraInterpolationEnd);
-            queueableBinaryWriter.Write(this.CameraForwardMovementScale);
-            queueableBinaryWriter.Write(this.CameraSideMovementScale);
-            queueableBinaryWriter.Write(this.CameraVerticalMovementScale);
-            queueableBinaryWriter.Write(this.CameraExclusionDistance);
-            queueableBinaryWriter.Write(this.AutoaimWidth);
-            this.LockonData.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.HeadShotAccScale);
-            queueableBinaryWriter.Write(this.AreaDamageEffect);
-            this.Physics.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.ContactPoints);
-            queueableBinaryWriter.Write(this.ReanimationCharacter);
-            queueableBinaryWriter.Write(this.DeathSpawnCharacter);
-            queueableBinaryWriter.Write(this.DeathSpawnCount);
-            queueableBinaryWriter.Write(this.fieldpad5);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.MovingTurningSpeed);
+            queueableBlamBinaryWriter.Write(((int)(this.BipedBipedFlags)));
+            queueableBlamBinaryWriter.Write(this.StationaryTurningThreshold);
+            queueableBlamBinaryWriter.Write(this.JumpVelocity);
+            queueableBlamBinaryWriter.Write(this.MaximumSoftLandingTime);
+            queueableBlamBinaryWriter.Write(this.MaximumHardLandingTime);
+            queueableBlamBinaryWriter.Write(this.MinimumSoftLandingVelocity);
+            queueableBlamBinaryWriter.Write(this.MinimumHardLandingVelocity);
+            queueableBlamBinaryWriter.Write(this.MaximumHardLandingVelocity);
+            queueableBlamBinaryWriter.Write(this.DeathHardLandingVelocity);
+            queueableBlamBinaryWriter.Write(this.StunDuration);
+            queueableBlamBinaryWriter.Write(this.StandingCameraHeight);
+            queueableBlamBinaryWriter.Write(this.CrouchingCameraHeight);
+            queueableBlamBinaryWriter.Write(this.CrouchTransitionTime);
+            queueableBlamBinaryWriter.Write(this.CameraInterpolationStart);
+            queueableBlamBinaryWriter.Write(this.CameraInterpolationEnd);
+            queueableBlamBinaryWriter.Write(this.CameraForwardMovementScale);
+            queueableBlamBinaryWriter.Write(this.CameraSideMovementScale);
+            queueableBlamBinaryWriter.Write(this.CameraVerticalMovementScale);
+            queueableBlamBinaryWriter.Write(this.CameraExclusionDistance);
+            queueableBlamBinaryWriter.Write(this.AutoaimWidth);
+            this.LockonData.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.fieldpad4);
+            queueableBlamBinaryWriter.Write(this.HeadShotAccScale);
+            queueableBlamBinaryWriter.Write(this.AreaDamageEffect);
+            this.Physics.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.ContactPoints);
+            queueableBlamBinaryWriter.Write(this.ReanimationCharacter);
+            queueableBlamBinaryWriter.Write(this.DeathSpawnCharacter);
+            queueableBlamBinaryWriter.Write(this.DeathSpawnCount);
+            queueableBlamBinaryWriter.Write(this.fieldpad5);
         }
         [System.FlagsAttribute()]
         public enum BipedFlags : int

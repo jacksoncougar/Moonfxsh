@@ -99,51 +99,51 @@ namespace Moonfish.Guerilla.Tags
             this.Flocks = base.ReadBlockArrayData<FlockDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
             this.TriggerVolumeReferences = base.ReadBlockArrayData<ScenarioTriggerVolumeBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.StylePalette);
-            queueableBinaryWriter.QueueWrite(this.SquadGroups);
-            queueableBinaryWriter.QueueWrite(this.Squads);
-            queueableBinaryWriter.QueueWrite(this.Zones);
-            queueableBinaryWriter.QueueWrite(this.CharacterPalette);
-            queueableBinaryWriter.QueueWrite(this.AIAnimationReferences);
-            queueableBinaryWriter.QueueWrite(this.AIScriptReferences);
-            queueableBinaryWriter.QueueWrite(this.AIRecordingReferences);
-            queueableBinaryWriter.QueueWrite(this.AIConversations);
-            queueableBinaryWriter.QueueWrite(this.ScriptingData);
-            queueableBinaryWriter.QueueWrite(this.Orders);
-            queueableBinaryWriter.QueueWrite(this.Triggers);
-            queueableBinaryWriter.QueueWrite(this.BSPPreferences);
-            queueableBinaryWriter.QueueWrite(this.WeaponReferences);
-            queueableBinaryWriter.QueueWrite(this.VehicleReferences);
-            queueableBinaryWriter.QueueWrite(this.VehicleDatumReferences);
-            queueableBinaryWriter.QueueWrite(this.MissionDialogueScenes);
-            queueableBinaryWriter.QueueWrite(this.Flocks);
-            queueableBinaryWriter.QueueWrite(this.TriggerVolumeReferences);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.StylePalette);
+            queueableBlamBinaryWriter.QueueWrite(this.SquadGroups);
+            queueableBlamBinaryWriter.QueueWrite(this.Squads);
+            queueableBlamBinaryWriter.QueueWrite(this.Zones);
+            queueableBlamBinaryWriter.QueueWrite(this.CharacterPalette);
+            queueableBlamBinaryWriter.QueueWrite(this.AIAnimationReferences);
+            queueableBlamBinaryWriter.QueueWrite(this.AIScriptReferences);
+            queueableBlamBinaryWriter.QueueWrite(this.AIRecordingReferences);
+            queueableBlamBinaryWriter.QueueWrite(this.AIConversations);
+            queueableBlamBinaryWriter.QueueWrite(this.ScriptingData);
+            queueableBlamBinaryWriter.QueueWrite(this.Orders);
+            queueableBlamBinaryWriter.QueueWrite(this.Triggers);
+            queueableBlamBinaryWriter.QueueWrite(this.BSPPreferences);
+            queueableBlamBinaryWriter.QueueWrite(this.WeaponReferences);
+            queueableBlamBinaryWriter.QueueWrite(this.VehicleReferences);
+            queueableBlamBinaryWriter.QueueWrite(this.VehicleDatumReferences);
+            queueableBlamBinaryWriter.QueueWrite(this.MissionDialogueScenes);
+            queueableBlamBinaryWriter.QueueWrite(this.Flocks);
+            queueableBlamBinaryWriter.QueueWrite(this.TriggerVolumeReferences);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.StylePalette);
-            queueableBinaryWriter.WritePointer(this.SquadGroups);
-            queueableBinaryWriter.WritePointer(this.Squads);
-            queueableBinaryWriter.WritePointer(this.Zones);
-            queueableBinaryWriter.WritePointer(this.CharacterPalette);
-            queueableBinaryWriter.WritePointer(this.AIAnimationReferences);
-            queueableBinaryWriter.WritePointer(this.AIScriptReferences);
-            queueableBinaryWriter.WritePointer(this.AIRecordingReferences);
-            queueableBinaryWriter.WritePointer(this.AIConversations);
-            queueableBinaryWriter.WritePointer(this.ScriptingData);
-            queueableBinaryWriter.WritePointer(this.Orders);
-            queueableBinaryWriter.WritePointer(this.Triggers);
-            queueableBinaryWriter.WritePointer(this.BSPPreferences);
-            queueableBinaryWriter.WritePointer(this.WeaponReferences);
-            queueableBinaryWriter.WritePointer(this.VehicleReferences);
-            queueableBinaryWriter.WritePointer(this.VehicleDatumReferences);
-            queueableBinaryWriter.WritePointer(this.MissionDialogueScenes);
-            queueableBinaryWriter.WritePointer(this.Flocks);
-            queueableBinaryWriter.WritePointer(this.TriggerVolumeReferences);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.StylePalette);
+            queueableBlamBinaryWriter.WritePointer(this.SquadGroups);
+            queueableBlamBinaryWriter.WritePointer(this.Squads);
+            queueableBlamBinaryWriter.WritePointer(this.Zones);
+            queueableBlamBinaryWriter.WritePointer(this.CharacterPalette);
+            queueableBlamBinaryWriter.WritePointer(this.AIAnimationReferences);
+            queueableBlamBinaryWriter.WritePointer(this.AIScriptReferences);
+            queueableBlamBinaryWriter.WritePointer(this.AIRecordingReferences);
+            queueableBlamBinaryWriter.WritePointer(this.AIConversations);
+            queueableBlamBinaryWriter.WritePointer(this.ScriptingData);
+            queueableBlamBinaryWriter.WritePointer(this.Orders);
+            queueableBlamBinaryWriter.WritePointer(this.Triggers);
+            queueableBlamBinaryWriter.WritePointer(this.BSPPreferences);
+            queueableBlamBinaryWriter.WritePointer(this.WeaponReferences);
+            queueableBlamBinaryWriter.WritePointer(this.VehicleReferences);
+            queueableBlamBinaryWriter.WritePointer(this.VehicleDatumReferences);
+            queueableBlamBinaryWriter.WritePointer(this.MissionDialogueScenes);
+            queueableBlamBinaryWriter.WritePointer(this.Flocks);
+            queueableBlamBinaryWriter.WritePointer(this.TriggerVolumeReferences);
         }
     }
 }

@@ -75,30 +75,30 @@ namespace Moonfish.Guerilla.Tags
             this.StripIndices = base.ReadBlockArrayData<ClothIndicesBlock>(binaryReader, pointerQueue.Dequeue());
             this.Links = base.ReadBlockArrayData<ClothLinksBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.Properties.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Vertices);
-            queueableBinaryWriter.QueueWrite(this.Indices);
-            queueableBinaryWriter.QueueWrite(this.StripIndices);
-            queueableBinaryWriter.QueueWrite(this.Links);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.Properties.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Vertices);
+            queueableBlamBinaryWriter.QueueWrite(this.Indices);
+            queueableBlamBinaryWriter.QueueWrite(this.StripIndices);
+            queueableBlamBinaryWriter.QueueWrite(this.Links);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.ClothFlags)));
-            queueableBinaryWriter.Write(this.MarkerAttachmentName);
-            queueableBinaryWriter.Write(this.Shader);
-            queueableBinaryWriter.Write(this.GridXDimension);
-            queueableBinaryWriter.Write(this.GridYDimension);
-            queueableBinaryWriter.Write(this.GridSpacingX);
-            queueableBinaryWriter.Write(this.GridSpacingY);
-            this.Properties.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Vertices);
-            queueableBinaryWriter.WritePointer(this.Indices);
-            queueableBinaryWriter.WritePointer(this.StripIndices);
-            queueableBinaryWriter.WritePointer(this.Links);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.ClothFlags)));
+            queueableBlamBinaryWriter.Write(this.MarkerAttachmentName);
+            queueableBlamBinaryWriter.Write(this.Shader);
+            queueableBlamBinaryWriter.Write(this.GridXDimension);
+            queueableBlamBinaryWriter.Write(this.GridYDimension);
+            queueableBlamBinaryWriter.Write(this.GridSpacingX);
+            queueableBlamBinaryWriter.Write(this.GridSpacingY);
+            this.Properties.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Vertices);
+            queueableBlamBinaryWriter.WritePointer(this.Indices);
+            queueableBlamBinaryWriter.WritePointer(this.StripIndices);
+            queueableBlamBinaryWriter.WritePointer(this.Links);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

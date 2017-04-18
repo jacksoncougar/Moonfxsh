@@ -48,17 +48,17 @@ namespace Moonfish.Guerilla.Tags
             this.Decorator = base.ReadBlockArrayData<DecoratorPlacementDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
             this.DecoratorPalette = base.ReadBlockArrayData<ScenarioDecoratorSetPaletteEntryBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Decorator);
-            queueableBinaryWriter.QueueWrite(this.DecoratorPalette);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Decorator);
+            queueableBlamBinaryWriter.QueueWrite(this.DecoratorPalette);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Decorator);
-            queueableBinaryWriter.WritePointer(this.DecoratorPalette);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Decorator);
+            queueableBlamBinaryWriter.WritePointer(this.DecoratorPalette);
         }
     }
 }

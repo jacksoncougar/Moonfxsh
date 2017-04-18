@@ -95,43 +95,43 @@ namespace Moonfish.Guerilla.Tags
             this.MiscState = base.ReadBlockArrayData<ShaderStateMiscStateBlock>(binaryReader, pointerQueue.Dequeue());
             this.Constants = base.ReadBlockArrayData<ShaderStateConstantBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Textures);
-            queueableBinaryWriter.QueueWrite(this.VsConstants);
-            queueableBinaryWriter.QueueWrite(this.PixelShaderCodeNOLONGERUSED);
-            queueableBinaryWriter.QueueWrite(this.ChannelState);
-            queueableBinaryWriter.QueueWrite(this.AlphablendState);
-            queueableBinaryWriter.QueueWrite(this.AlphatestState);
-            queueableBinaryWriter.QueueWrite(this.DepthState);
-            queueableBinaryWriter.QueueWrite(this.CullState);
-            queueableBinaryWriter.QueueWrite(this.FillState);
-            queueableBinaryWriter.QueueWrite(this.MiscState);
-            queueableBinaryWriter.QueueWrite(this.Constants);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Textures);
+            queueableBlamBinaryWriter.QueueWrite(this.VsConstants);
+            queueableBlamBinaryWriter.QueueWrite(this.PixelShaderCodeNOLONGERUSED);
+            queueableBlamBinaryWriter.QueueWrite(this.ChannelState);
+            queueableBlamBinaryWriter.QueueWrite(this.AlphablendState);
+            queueableBlamBinaryWriter.QueueWrite(this.AlphatestState);
+            queueableBlamBinaryWriter.QueueWrite(this.DepthState);
+            queueableBlamBinaryWriter.QueueWrite(this.CullState);
+            queueableBlamBinaryWriter.QueueWrite(this.FillState);
+            queueableBlamBinaryWriter.QueueWrite(this.MiscState);
+            queueableBlamBinaryWriter.QueueWrite(this.Constants);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.ShaderPassImplementationFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.Textures);
-            queueableBinaryWriter.Write(this.VertexShader);
-            queueableBinaryWriter.WritePointer(this.VsConstants);
-            queueableBinaryWriter.WritePointer(this.PixelShaderCodeNOLONGERUSED);
-            queueableBinaryWriter.Write(((short)(this.Channels)));
-            queueableBinaryWriter.Write(((short)(this.Alphablend)));
-            queueableBinaryWriter.Write(((short)(this.Depth)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.WritePointer(this.ChannelState);
-            queueableBinaryWriter.WritePointer(this.AlphablendState);
-            queueableBinaryWriter.WritePointer(this.AlphatestState);
-            queueableBinaryWriter.WritePointer(this.DepthState);
-            queueableBinaryWriter.WritePointer(this.CullState);
-            queueableBinaryWriter.WritePointer(this.FillState);
-            queueableBinaryWriter.WritePointer(this.MiscState);
-            queueableBinaryWriter.WritePointer(this.Constants);
-            queueableBinaryWriter.Write(this.PixelShader);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.ShaderPassImplementationFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.WritePointer(this.Textures);
+            queueableBlamBinaryWriter.Write(this.VertexShader);
+            queueableBlamBinaryWriter.WritePointer(this.VsConstants);
+            queueableBlamBinaryWriter.WritePointer(this.PixelShaderCodeNOLONGERUSED);
+            queueableBlamBinaryWriter.Write(((short)(this.Channels)));
+            queueableBlamBinaryWriter.Write(((short)(this.Alphablend)));
+            queueableBlamBinaryWriter.Write(((short)(this.Depth)));
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.WritePointer(this.ChannelState);
+            queueableBlamBinaryWriter.WritePointer(this.AlphablendState);
+            queueableBlamBinaryWriter.WritePointer(this.AlphatestState);
+            queueableBlamBinaryWriter.WritePointer(this.DepthState);
+            queueableBlamBinaryWriter.WritePointer(this.CullState);
+            queueableBlamBinaryWriter.WritePointer(this.FillState);
+            queueableBlamBinaryWriter.WritePointer(this.MiscState);
+            queueableBlamBinaryWriter.WritePointer(this.Constants);
+            queueableBlamBinaryWriter.Write(this.PixelShader);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

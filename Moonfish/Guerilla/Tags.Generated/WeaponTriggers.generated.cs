@@ -61,24 +61,24 @@ namespace Moonfish.Guerilla.Tags
             this.Autofire.ReadInstances(binaryReader, pointerQueue);
             this.Charging.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.Autofire.QueueWrites(queueableBinaryWriter);
-            this.Charging.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.Autofire.QueueWrites(queueableBlamBinaryWriter);
+            this.Charging.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.WeaponTriggersFlags)));
-            queueableBinaryWriter.Write(((short)(this.Input)));
-            queueableBinaryWriter.Write(((short)(this.Behavior)));
-            queueableBinaryWriter.Write(this.PrimaryBarrel);
-            queueableBinaryWriter.Write(this.SecondaryBarrel);
-            queueableBinaryWriter.Write(((short)(this.Prediction)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            this.Autofire.Write_(queueableBinaryWriter);
-            this.Charging.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.WeaponTriggersFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.Input)));
+            queueableBlamBinaryWriter.Write(((short)(this.Behavior)));
+            queueableBlamBinaryWriter.Write(this.PrimaryBarrel);
+            queueableBlamBinaryWriter.Write(this.SecondaryBarrel);
+            queueableBlamBinaryWriter.Write(((short)(this.Prediction)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            this.Autofire.Write_(queueableBlamBinaryWriter);
+            this.Charging.Write_(queueableBlamBinaryWriter);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

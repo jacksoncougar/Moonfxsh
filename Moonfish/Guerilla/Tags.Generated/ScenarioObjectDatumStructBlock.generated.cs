@@ -62,24 +62,24 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.ObjectID.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.ObjectID.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.ObjectID.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.ScenarioObjectDatumStructPlacementFlags)));
-            queueableBinaryWriter.Write(this.Position);
-            queueableBinaryWriter.Write(this.Rotation);
-            queueableBinaryWriter.Write(this.Scale);
-            queueableBinaryWriter.Write(((short)(this.ScenarioObjectDatumStructTransformFlags)));
-            queueableBinaryWriter.Write(this.ManualBSPFlags);
-            this.ObjectID.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((byte)(this.BSPPolicy)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.EditorFolder);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.ScenarioObjectDatumStructPlacementFlags)));
+            queueableBlamBinaryWriter.Write(this.Position);
+            queueableBlamBinaryWriter.Write(this.Rotation);
+            queueableBlamBinaryWriter.Write(this.Scale);
+            queueableBlamBinaryWriter.Write(((short)(this.ScenarioObjectDatumStructTransformFlags)));
+            queueableBlamBinaryWriter.Write(this.ManualBSPFlags);
+            this.ObjectID.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((byte)(this.BSPPolicy)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.EditorFolder);
         }
         [System.FlagsAttribute()]
         public enum PlacementFlags : int

@@ -105,53 +105,53 @@ namespace Moonfish.Guerilla.Tags
             this.RenderStateInfo.ReadInstances(binaryReader, pointerQueue);
             this.TextureStateInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.Textures.QueueWrites(queueableBinaryWriter);
-            this.RenderStates.QueueWrites(queueableBinaryWriter);
-            this.TextureStates.QueueWrites(queueableBinaryWriter);
-            this.PsFragments.QueueWrites(queueableBinaryWriter);
-            this.PsPermutations.QueueWrites(queueableBinaryWriter);
-            this.PsCombiners.QueueWrites(queueableBinaryWriter);
-            this.DefaultRenderStates.QueueWrites(queueableBinaryWriter);
-            this.RenderStateExterns.QueueWrites(queueableBinaryWriter);
-            this.TextureStateExterns.QueueWrites(queueableBinaryWriter);
-            this.PixelConstantExterns.QueueWrites(queueableBinaryWriter);
-            this.VertexConstantExterns.QueueWrites(queueableBinaryWriter);
-            this.PsConstants.QueueWrites(queueableBinaryWriter);
-            this.VsConstants.QueueWrites(queueableBinaryWriter);
-            this.PixelConstantInfo.QueueWrites(queueableBinaryWriter);
-            this.VertexConstantInfo.QueueWrites(queueableBinaryWriter);
-            this.RenderStateInfo.QueueWrites(queueableBinaryWriter);
-            this.TextureStateInfo.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.Textures.QueueWrites(queueableBlamBinaryWriter);
+            this.RenderStates.QueueWrites(queueableBlamBinaryWriter);
+            this.TextureStates.QueueWrites(queueableBlamBinaryWriter);
+            this.PsFragments.QueueWrites(queueableBlamBinaryWriter);
+            this.PsPermutations.QueueWrites(queueableBlamBinaryWriter);
+            this.PsCombiners.QueueWrites(queueableBlamBinaryWriter);
+            this.DefaultRenderStates.QueueWrites(queueableBlamBinaryWriter);
+            this.RenderStateExterns.QueueWrites(queueableBlamBinaryWriter);
+            this.TextureStateExterns.QueueWrites(queueableBlamBinaryWriter);
+            this.PixelConstantExterns.QueueWrites(queueableBlamBinaryWriter);
+            this.VertexConstantExterns.QueueWrites(queueableBlamBinaryWriter);
+            this.PsConstants.QueueWrites(queueableBlamBinaryWriter);
+            this.VsConstants.QueueWrites(queueableBlamBinaryWriter);
+            this.PixelConstantInfo.QueueWrites(queueableBlamBinaryWriter);
+            this.VertexConstantInfo.QueueWrites(queueableBlamBinaryWriter);
+            this.RenderStateInfo.QueueWrites(queueableBlamBinaryWriter);
+            this.TextureStateInfo.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            this.Textures.Write_(queueableBinaryWriter);
-            this.RenderStates.Write_(queueableBinaryWriter);
-            this.TextureStates.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldskip);
-            this.PsFragments.Write_(queueableBinaryWriter);
-            this.PsPermutations.Write_(queueableBinaryWriter);
-            this.PsCombiners.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.VertexShader);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.Write(this.fieldskip1);
-            queueableBinaryWriter.Write(this.fieldskip2);
-            queueableBinaryWriter.Write(this.fieldskip3);
-            this.DefaultRenderStates.Write_(queueableBinaryWriter);
-            this.RenderStateExterns.Write_(queueableBinaryWriter);
-            this.TextureStateExterns.Write_(queueableBinaryWriter);
-            this.PixelConstantExterns.Write_(queueableBinaryWriter);
-            this.VertexConstantExterns.Write_(queueableBinaryWriter);
-            this.PsConstants.Write_(queueableBinaryWriter);
-            this.VsConstants.Write_(queueableBinaryWriter);
-            this.PixelConstantInfo.Write_(queueableBinaryWriter);
-            this.VertexConstantInfo.Write_(queueableBinaryWriter);
-            this.RenderStateInfo.Write_(queueableBinaryWriter);
-            this.TextureStateInfo.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            this.Textures.Write_(queueableBlamBinaryWriter);
+            this.RenderStates.Write_(queueableBlamBinaryWriter);
+            this.TextureStates.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.fieldskip);
+            this.PsFragments.Write_(queueableBlamBinaryWriter);
+            this.PsPermutations.Write_(queueableBlamBinaryWriter);
+            this.PsCombiners.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.VertexShader);
+            queueableBlamBinaryWriter.Write(this.fieldskip0);
+            queueableBlamBinaryWriter.Write(this.fieldskip1);
+            queueableBlamBinaryWriter.Write(this.fieldskip2);
+            queueableBlamBinaryWriter.Write(this.fieldskip3);
+            this.DefaultRenderStates.Write_(queueableBlamBinaryWriter);
+            this.RenderStateExterns.Write_(queueableBlamBinaryWriter);
+            this.TextureStateExterns.Write_(queueableBlamBinaryWriter);
+            this.PixelConstantExterns.Write_(queueableBlamBinaryWriter);
+            this.VertexConstantExterns.Write_(queueableBlamBinaryWriter);
+            this.PsConstants.Write_(queueableBlamBinaryWriter);
+            this.VsConstants.Write_(queueableBlamBinaryWriter);
+            this.PixelConstantInfo.Write_(queueableBlamBinaryWriter);
+            this.VertexConstantInfo.Write_(queueableBlamBinaryWriter);
+            this.RenderStateInfo.Write_(queueableBlamBinaryWriter);
+            this.TextureStateInfo.Write_(queueableBlamBinaryWriter);
         }
     }
 }

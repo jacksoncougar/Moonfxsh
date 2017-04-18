@@ -103,47 +103,47 @@ namespace Moonfish.Guerilla.Tags
             this.EffectEventsABCDCC = base.ReadBlockArrayData<AnimationEffectEventBlock>(binaryReader, pointerQueue.Dequeue());
             this.ObjectspaceParentNodesABCDCC = base.ReadBlockArrayData<ObjectSpaceNodeDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.AnimationData);
-            this.DataSizes.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.FrameEventsABCDCC);
-            queueableBinaryWriter.QueueWrite(this.SoundEventsABCDCC);
-            queueableBinaryWriter.QueueWrite(this.EffectEventsABCDCC);
-            queueableBinaryWriter.QueueWrite(this.ObjectspaceParentNodesABCDCC);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.AnimationData);
+            this.DataSizes.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.FrameEventsABCDCC);
+            queueableBlamBinaryWriter.QueueWrite(this.SoundEventsABCDCC);
+            queueableBlamBinaryWriter.QueueWrite(this.EffectEventsABCDCC);
+            queueableBlamBinaryWriter.QueueWrite(this.ObjectspaceParentNodesABCDCC);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.NodeListChecksum);
-            queueableBinaryWriter.Write(this.ProductionChecksum);
-            queueableBinaryWriter.Write(this.ImportChecksum);
-            queueableBinaryWriter.Write(((byte)(this.Type)));
-            queueableBinaryWriter.Write(((byte)(this.FrameInfoType)));
-            queueableBinaryWriter.Write(this.BlendScreen);
-            queueableBinaryWriter.Write(this.NodeCount);
-            queueableBinaryWriter.Write(this.FrameCount);
-            queueableBinaryWriter.Write(((byte)(this.AnimationPoolInternalFlags)));
-            queueableBinaryWriter.Write(((byte)(this.AnimationPoolProductionFlags)));
-            queueableBinaryWriter.Write(((short)(this.AnimationPoolPlaybackFlags)));
-            queueableBinaryWriter.Write(((byte)(this.DesiredCompression)));
-            queueableBinaryWriter.Write(((byte)(this.CurrentCompression)));
-            queueableBinaryWriter.Write(this.Weight);
-            queueableBinaryWriter.Write(this.ParentGraphIndex);
-            queueableBinaryWriter.Write(this.ParentGraphBlockIndex);
-            queueableBinaryWriter.Write(this.ParentGraphBlockOffset);
-            queueableBinaryWriter.Write(this.ParentGraphStartingPointIndex);
-            queueableBinaryWriter.Write(this.LoopFrameIndex);
-            queueableBinaryWriter.Write(this.ParentAnimation);
-            queueableBinaryWriter.Write(this.NextAnimation);
-            queueableBinaryWriter.WritePointer(this.AnimationData);
-            this.DataSizes.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.FrameEventsABCDCC);
-            queueableBinaryWriter.WritePointer(this.SoundEventsABCDCC);
-            queueableBinaryWriter.WritePointer(this.EffectEventsABCDCC);
-            queueableBinaryWriter.WritePointer(this.ObjectspaceParentNodesABCDCC);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(this.NodeListChecksum);
+            queueableBlamBinaryWriter.Write(this.ProductionChecksum);
+            queueableBlamBinaryWriter.Write(this.ImportChecksum);
+            queueableBlamBinaryWriter.Write(((byte)(this.Type)));
+            queueableBlamBinaryWriter.Write(((byte)(this.FrameInfoType)));
+            queueableBlamBinaryWriter.Write(this.BlendScreen);
+            queueableBlamBinaryWriter.Write(this.NodeCount);
+            queueableBlamBinaryWriter.Write(this.FrameCount);
+            queueableBlamBinaryWriter.Write(((byte)(this.AnimationPoolInternalFlags)));
+            queueableBlamBinaryWriter.Write(((byte)(this.AnimationPoolProductionFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.AnimationPoolPlaybackFlags)));
+            queueableBlamBinaryWriter.Write(((byte)(this.DesiredCompression)));
+            queueableBlamBinaryWriter.Write(((byte)(this.CurrentCompression)));
+            queueableBlamBinaryWriter.Write(this.Weight);
+            queueableBlamBinaryWriter.Write(this.ParentGraphIndex);
+            queueableBlamBinaryWriter.Write(this.ParentGraphBlockIndex);
+            queueableBlamBinaryWriter.Write(this.ParentGraphBlockOffset);
+            queueableBlamBinaryWriter.Write(this.ParentGraphStartingPointIndex);
+            queueableBlamBinaryWriter.Write(this.LoopFrameIndex);
+            queueableBlamBinaryWriter.Write(this.ParentAnimation);
+            queueableBlamBinaryWriter.Write(this.NextAnimation);
+            queueableBlamBinaryWriter.WritePointer(this.AnimationData);
+            this.DataSizes.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.FrameEventsABCDCC);
+            queueableBlamBinaryWriter.WritePointer(this.SoundEventsABCDCC);
+            queueableBlamBinaryWriter.WritePointer(this.EffectEventsABCDCC);
+            queueableBlamBinaryWriter.WritePointer(this.ObjectspaceParentNodesABCDCC);
         }
         public enum TypeEnum : byte
         {

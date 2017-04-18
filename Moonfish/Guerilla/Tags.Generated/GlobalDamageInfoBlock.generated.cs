@@ -124,53 +124,53 @@ namespace Moonfish.Guerilla.Tags
             this.DamageSeats = base.ReadBlockArrayData<DamageSeatInfoBlock>(binaryReader, pointerQueue.Dequeue());
             this.DamageConstraints = base.ReadBlockArrayData<DamageConstraintInfoBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.DamageSections);
-            queueableBinaryWriter.QueueWrite(this.Nodes);
-            queueableBinaryWriter.QueueWrite(this.DamageSeats);
-            queueableBinaryWriter.QueueWrite(this.DamageConstraints);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.DamageSections);
+            queueableBlamBinaryWriter.QueueWrite(this.Nodes);
+            queueableBlamBinaryWriter.QueueWrite(this.DamageSeats);
+            queueableBlamBinaryWriter.QueueWrite(this.DamageConstraints);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.GlobalDamageInfoFlags)));
-            queueableBinaryWriter.Write(this.GlobalIndirectMaterialName);
-            queueableBinaryWriter.Write(this.IndirectDamageSection);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(((byte)(this.CollisionDamageReportingType)));
-            queueableBinaryWriter.Write(((byte)(this.ResponseDamageReportingType)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.MaximumVitality);
-            queueableBinaryWriter.Write(this.MinimumStunDamage);
-            queueableBinaryWriter.Write(this.StunTime);
-            queueableBinaryWriter.Write(this.RechargeTime);
-            queueableBinaryWriter.Write(this.RechargeFraction);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.ShieldDamagedFirstPersonShader);
-            queueableBinaryWriter.Write(this.ShieldDamagedShader);
-            queueableBinaryWriter.Write(this.MaximumShieldVitality);
-            queueableBinaryWriter.Write(this.GlobalShieldMaterialName);
-            queueableBinaryWriter.Write(this.MinimumStunDamage0);
-            queueableBinaryWriter.Write(this.StunTime0);
-            queueableBinaryWriter.Write(this.RechargeTime0);
-            queueableBinaryWriter.Write(this.ShieldDamagedThreshold);
-            queueableBinaryWriter.Write(this.ShieldDamagedEffect);
-            queueableBinaryWriter.Write(this.ShieldDepletedEffect);
-            queueableBinaryWriter.Write(this.ShieldRechargingEffect);
-            queueableBinaryWriter.WritePointer(this.DamageSections);
-            queueableBinaryWriter.WritePointer(this.Nodes);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(this.fieldpad6);
-            queueableBinaryWriter.Write(this.fieldpad7);
-            queueableBinaryWriter.WritePointer(this.DamageSeats);
-            queueableBinaryWriter.WritePointer(this.DamageConstraints);
-            queueableBinaryWriter.Write(this.OvershieldFirstPersonShader);
-            queueableBinaryWriter.Write(this.OvershieldShader);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.GlobalDamageInfoFlags)));
+            queueableBlamBinaryWriter.Write(this.GlobalIndirectMaterialName);
+            queueableBlamBinaryWriter.Write(this.IndirectDamageSection);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(((byte)(this.CollisionDamageReportingType)));
+            queueableBlamBinaryWriter.Write(((byte)(this.ResponseDamageReportingType)));
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.MaximumVitality);
+            queueableBlamBinaryWriter.Write(this.MinimumStunDamage);
+            queueableBlamBinaryWriter.Write(this.StunTime);
+            queueableBlamBinaryWriter.Write(this.RechargeTime);
+            queueableBlamBinaryWriter.Write(this.RechargeFraction);
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
+            queueableBlamBinaryWriter.Write(this.ShieldDamagedFirstPersonShader);
+            queueableBlamBinaryWriter.Write(this.ShieldDamagedShader);
+            queueableBlamBinaryWriter.Write(this.MaximumShieldVitality);
+            queueableBlamBinaryWriter.Write(this.GlobalShieldMaterialName);
+            queueableBlamBinaryWriter.Write(this.MinimumStunDamage0);
+            queueableBlamBinaryWriter.Write(this.StunTime0);
+            queueableBlamBinaryWriter.Write(this.RechargeTime0);
+            queueableBlamBinaryWriter.Write(this.ShieldDamagedThreshold);
+            queueableBlamBinaryWriter.Write(this.ShieldDamagedEffect);
+            queueableBlamBinaryWriter.Write(this.ShieldDepletedEffect);
+            queueableBlamBinaryWriter.Write(this.ShieldRechargingEffect);
+            queueableBlamBinaryWriter.WritePointer(this.DamageSections);
+            queueableBlamBinaryWriter.WritePointer(this.Nodes);
+            queueableBlamBinaryWriter.Write(this.fieldpad4);
+            queueableBlamBinaryWriter.Write(this.fieldpad5);
+            queueableBlamBinaryWriter.Write(this.fieldpad6);
+            queueableBlamBinaryWriter.Write(this.fieldpad7);
+            queueableBlamBinaryWriter.WritePointer(this.DamageSeats);
+            queueableBlamBinaryWriter.WritePointer(this.DamageConstraints);
+            queueableBlamBinaryWriter.Write(this.OvershieldFirstPersonShader);
+            queueableBlamBinaryWriter.Write(this.OvershieldShader);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

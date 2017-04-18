@@ -6,6 +6,7 @@ using System.Linq;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 using Moonfish.Graphics;
+using Moonfish.Guerilla;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
@@ -134,11 +135,11 @@ namespace Moonfish.Graphics
                             TriangleBatch.VertexAttribArray(3, 2, VertexAttribPointerType.Float, false,
                                 attributeSize);
                             break;
-                        case VertexAttributeType.LightmapUVCoordinateOneXbox:
+                        case VertexAttributeType.LightmapUvCoordinateOneXbox:
                             TriangleBatch.VertexAttribArray(7, 2, VertexAttribPointerType.Short, true,
                                 attributeSize);
                             break;
-                        case VertexAttributeType.LightmapUVCoordinateTwoXbox:
+                        case VertexAttributeType.LightmapUvCoordinateTwoXbox:
                             TriangleBatch.VertexAttribArray(8, 2, VertexAttribPointerType.Short, true,
                                 attributeSize);
                             break;
@@ -163,7 +164,7 @@ namespace Moonfish.Graphics
                     var count = (data.Length / packedElementSize);
                     var bufferLength = count * stride;
                     var buffer = new byte[bufferLength];
-                    using (var binaryReader = new BinaryReader(new MemoryStream(data)))
+                    using (var binaryReader = new BlamBinaryReader(new MemoryStream(data)))
                     using (var binaryWriter = new BinaryWriter(new MemoryStream(buffer)))
                     {
                         while (binaryReader.BaseStream.Position < data.Length)
@@ -238,7 +239,7 @@ namespace Moonfish.Graphics
                     var count = (data.Length / packedElementSize);
                     var bufferLength = count * stride;
                     var buffer = new byte[bufferLength];
-                    using (var binaryReader = new BinaryReader(new MemoryStream(data)))
+                    using (var binaryReader = new BlamBinaryReader(new MemoryStream(data)))
                     using (var binaryWriter = new BinaryWriter(new MemoryStream(buffer)))
                     {
                         while (binaryReader.BaseStream.Position < data.Length)

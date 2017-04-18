@@ -47,16 +47,16 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ReferenceFrameIndex);
-            queueableBinaryWriter.Write(this.ProjectionAxis);
-            queueableBinaryWriter.Write(((byte)(this.EnvironmentObjectNodesProjectionSign)));
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.ReferenceFrameIndex);
+            queueableBlamBinaryWriter.Write(this.ProjectionAxis);
+            queueableBlamBinaryWriter.Write(((byte)(this.EnvironmentObjectNodesProjectionSign)));
         }
         [System.FlagsAttribute()]
         public enum ProjectionSign : byte

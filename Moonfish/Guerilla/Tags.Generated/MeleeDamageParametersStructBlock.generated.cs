@@ -73,23 +73,23 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DamagePyramidAngles);
-            queueableBinaryWriter.Write(this.DamagePyramidDepth);
-            queueableBinaryWriter.Write(this._1stHitMeleeDamage);
-            queueableBinaryWriter.Write(this._1stHitMeleeResponse);
-            queueableBinaryWriter.Write(this._2ndHitMeleeDamage);
-            queueableBinaryWriter.Write(this._2ndHitMeleeResponse);
-            queueableBinaryWriter.Write(this._3rdHitMeleeDamage);
-            queueableBinaryWriter.Write(this._3rdHitMeleeResponse);
-            queueableBinaryWriter.Write(this.LungeMeleeDamage);
-            queueableBinaryWriter.Write(this.LungeMeleeResponse);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.DamagePyramidAngles);
+            queueableBlamBinaryWriter.Write(this.DamagePyramidDepth);
+            queueableBlamBinaryWriter.Write(this._1stHitMeleeDamage);
+            queueableBlamBinaryWriter.Write(this._1stHitMeleeResponse);
+            queueableBlamBinaryWriter.Write(this._2ndHitMeleeDamage);
+            queueableBlamBinaryWriter.Write(this._2ndHitMeleeResponse);
+            queueableBlamBinaryWriter.Write(this._3rdHitMeleeDamage);
+            queueableBlamBinaryWriter.Write(this._3rdHitMeleeResponse);
+            queueableBlamBinaryWriter.Write(this.LungeMeleeDamage);
+            queueableBlamBinaryWriter.Write(this.LungeMeleeResponse);
         }
     }
 }

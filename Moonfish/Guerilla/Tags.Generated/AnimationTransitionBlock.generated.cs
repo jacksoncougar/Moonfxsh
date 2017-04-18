@@ -49,18 +49,18 @@ namespace Moonfish.Guerilla.Tags
             this.StateInfo.ReadInstances(binaryReader, pointerQueue);
             this.DestinationsAABBCC = base.ReadBlockArrayData<AnimationTransitionDestinationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.StateInfo.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.DestinationsAABBCC);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.StateInfo.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.DestinationsAABBCC);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.FullName);
-            this.StateInfo.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.DestinationsAABBCC);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.FullName);
+            this.StateInfo.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.DestinationsAABBCC);
         }
     }
 }

@@ -60,25 +60,25 @@ namespace Moonfish.Guerilla.Tags
             this.YourMom2.ReadInstances(binaryReader, pointerQueue);
             this.YourMom3.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.YourMom.QueueWrites(queueableBinaryWriter);
-            this.YourMom0.QueueWrites(queueableBinaryWriter);
-            this.YourMom1.QueueWrites(queueableBinaryWriter);
-            this.YourMom2.QueueWrites(queueableBinaryWriter);
-            this.YourMom3.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.YourMom.QueueWrites(queueableBlamBinaryWriter);
+            this.YourMom0.QueueWrites(queueableBlamBinaryWriter);
+            this.YourMom1.QueueWrites(queueableBlamBinaryWriter);
+            this.YourMom2.QueueWrites(queueableBlamBinaryWriter);
+            this.YourMom3.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.HudWidgetEffectFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            this.YourMom.Write_(queueableBinaryWriter);
-            this.YourMom0.Write_(queueableBinaryWriter);
-            this.YourMom1.Write_(queueableBinaryWriter);
-            this.YourMom2.Write_(queueableBinaryWriter);
-            this.YourMom3.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.HudWidgetEffectFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            this.YourMom.Write_(queueableBlamBinaryWriter);
+            this.YourMom0.Write_(queueableBlamBinaryWriter);
+            this.YourMom1.Write_(queueableBlamBinaryWriter);
+            this.YourMom2.Write_(queueableBlamBinaryWriter);
+            this.YourMom3.Write_(queueableBlamBinaryWriter);
         }
         /// <summary>
         /// allow the scaling, rotation, and offsetting of widgets

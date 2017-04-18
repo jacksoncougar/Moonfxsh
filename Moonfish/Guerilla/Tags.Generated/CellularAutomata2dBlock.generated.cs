@@ -100,42 +100,42 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Rules = base.ReadBlockArrayData<RulesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Rules);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Rules);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.UpdatesPerSecond);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.DeadCellPenalty);
-            queueableBinaryWriter.Write(this.LiveCellBonus);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.Width);
-            queueableBinaryWriter.Write(this.Height);
-            queueableBinaryWriter.Write(this.CellWidth);
-            queueableBinaryWriter.Write(this.Height0);
-            queueableBinaryWriter.Write(this.Velocity);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.Marker);
-            queueableBinaryWriter.Write(((int)(this.CellularAutomata2dInterpolationFlags)));
-            queueableBinaryWriter.Write(this.BaseColor);
-            queueableBinaryWriter.Write(this.PeakColor);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.Width0);
-            queueableBinaryWriter.Write(this.Height1);
-            queueableBinaryWriter.Write(this.CellWidth0);
-            queueableBinaryWriter.Write(this.Velocity0);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.Marker0);
-            queueableBinaryWriter.Write(this.TextureWidth);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(this.Texture);
-            queueableBinaryWriter.Write(this.fieldpad6);
-            queueableBinaryWriter.WritePointer(this.Rules);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.UpdatesPerSecond);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.DeadCellPenalty);
+            queueableBlamBinaryWriter.Write(this.LiveCellBonus);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.Width);
+            queueableBlamBinaryWriter.Write(this.Height);
+            queueableBlamBinaryWriter.Write(this.CellWidth);
+            queueableBlamBinaryWriter.Write(this.Height0);
+            queueableBlamBinaryWriter.Write(this.Velocity);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.Marker);
+            queueableBlamBinaryWriter.Write(((int)(this.CellularAutomata2dInterpolationFlags)));
+            queueableBlamBinaryWriter.Write(this.BaseColor);
+            queueableBlamBinaryWriter.Write(this.PeakColor);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.Width0);
+            queueableBlamBinaryWriter.Write(this.Height1);
+            queueableBlamBinaryWriter.Write(this.CellWidth0);
+            queueableBlamBinaryWriter.Write(this.Velocity0);
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
+            queueableBlamBinaryWriter.Write(this.Marker0);
+            queueableBlamBinaryWriter.Write(this.TextureWidth);
+            queueableBlamBinaryWriter.Write(this.fieldpad4);
+            queueableBlamBinaryWriter.Write(this.fieldpad5);
+            queueableBlamBinaryWriter.Write(this.Texture);
+            queueableBlamBinaryWriter.Write(this.fieldpad6);
+            queueableBlamBinaryWriter.WritePointer(this.Rules);
         }
         [System.FlagsAttribute()]
         public enum InterpolationFlags : int

@@ -128,51 +128,51 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Unused);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.WalkingSpeed);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.RunForward);
-            queueableBinaryWriter.Write(this.RunBackward);
-            queueableBinaryWriter.Write(this.RunSideways);
-            queueableBinaryWriter.Write(this.RunAcceleration);
-            queueableBinaryWriter.Write(this.SneakForward);
-            queueableBinaryWriter.Write(this.SneakBackward);
-            queueableBinaryWriter.Write(this.SneakSideways);
-            queueableBinaryWriter.Write(this.SneakAcceleration);
-            queueableBinaryWriter.Write(this.AirborneAcceleration);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.GrenadeOrigin);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.StunMovementPenalty);
-            queueableBinaryWriter.Write(this.StunTurningPenalty);
-            queueableBinaryWriter.Write(this.StunJumpingPenalty);
-            queueableBinaryWriter.Write(this.MinimumStunTime);
-            queueableBinaryWriter.Write(this.MaximumStunTime);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.FirstPersonIdleTime);
-            queueableBinaryWriter.Write(this.FirstPersonSkipFraction);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.CoopRespawnEffect);
-            queueableBinaryWriter.Write(this.BinocularsZoomCount);
-            queueableBinaryWriter.Write(this.BinocularsZoomRange);
-            queueableBinaryWriter.Write(this.BinocularsZoomInSound);
-            queueableBinaryWriter.Write(this.BinocularsZoomOutSound);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(this.ActiveCamouflageOn);
-            queueableBinaryWriter.Write(this.ActiveCamouflageOff);
-            queueableBinaryWriter.Write(this.ActiveCamouflageError);
-            queueableBinaryWriter.Write(this.ActiveCamouflageReady);
-            queueableBinaryWriter.Write(this.FlashlightOn);
-            queueableBinaryWriter.Write(this.FlashlightOff);
-            queueableBinaryWriter.Write(this.IceCream);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Unused);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.WalkingSpeed);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.RunForward);
+            queueableBlamBinaryWriter.Write(this.RunBackward);
+            queueableBlamBinaryWriter.Write(this.RunSideways);
+            queueableBlamBinaryWriter.Write(this.RunAcceleration);
+            queueableBlamBinaryWriter.Write(this.SneakForward);
+            queueableBlamBinaryWriter.Write(this.SneakBackward);
+            queueableBlamBinaryWriter.Write(this.SneakSideways);
+            queueableBlamBinaryWriter.Write(this.SneakAcceleration);
+            queueableBlamBinaryWriter.Write(this.AirborneAcceleration);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.GrenadeOrigin);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.StunMovementPenalty);
+            queueableBlamBinaryWriter.Write(this.StunTurningPenalty);
+            queueableBlamBinaryWriter.Write(this.StunJumpingPenalty);
+            queueableBlamBinaryWriter.Write(this.MinimumStunTime);
+            queueableBlamBinaryWriter.Write(this.MaximumStunTime);
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
+            queueableBlamBinaryWriter.Write(this.FirstPersonIdleTime);
+            queueableBlamBinaryWriter.Write(this.FirstPersonSkipFraction);
+            queueableBlamBinaryWriter.Write(this.fieldpad4);
+            queueableBlamBinaryWriter.Write(this.CoopRespawnEffect);
+            queueableBlamBinaryWriter.Write(this.BinocularsZoomCount);
+            queueableBlamBinaryWriter.Write(this.BinocularsZoomRange);
+            queueableBlamBinaryWriter.Write(this.BinocularsZoomInSound);
+            queueableBlamBinaryWriter.Write(this.BinocularsZoomOutSound);
+            queueableBlamBinaryWriter.Write(this.fieldpad5);
+            queueableBlamBinaryWriter.Write(this.ActiveCamouflageOn);
+            queueableBlamBinaryWriter.Write(this.ActiveCamouflageOff);
+            queueableBlamBinaryWriter.Write(this.ActiveCamouflageError);
+            queueableBlamBinaryWriter.Write(this.ActiveCamouflageReady);
+            queueableBlamBinaryWriter.Write(this.FlashlightOn);
+            queueableBlamBinaryWriter.Write(this.FlashlightOff);
+            queueableBlamBinaryWriter.Write(this.IceCream);
         }
     }
 }

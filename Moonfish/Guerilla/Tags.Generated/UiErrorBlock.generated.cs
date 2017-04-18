@@ -57,21 +57,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.Error)));
-            queueableBinaryWriter.Write(((short)(this.UiErrorFlags)));
-            queueableBinaryWriter.Write(((byte)(this.DefaultButton)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Title);
-            queueableBinaryWriter.Write(this.Message);
-            queueableBinaryWriter.Write(this.Ok);
-            queueableBinaryWriter.Write(this.Cancel);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.Error)));
+            queueableBlamBinaryWriter.Write(((short)(this.UiErrorFlags)));
+            queueableBlamBinaryWriter.Write(((byte)(this.DefaultButton)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.Title);
+            queueableBlamBinaryWriter.Write(this.Message);
+            queueableBlamBinaryWriter.Write(this.Ok);
+            queueableBlamBinaryWriter.Write(this.Cancel);
         }
         public enum ErrorEnum : int
         {

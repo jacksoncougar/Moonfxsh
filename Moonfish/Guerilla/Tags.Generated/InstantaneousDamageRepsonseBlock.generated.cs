@@ -100,34 +100,34 @@ namespace Moonfish.Guerilla.Tags
             this.DamageEffect.ReadInstances(binaryReader, pointerQueue);
             this.DamageEffectMarker.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.DamageEffect.QueueWrites(queueableBinaryWriter);
-            this.DamageEffectMarker.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.DamageEffect.QueueWrites(queueableBlamBinaryWriter);
+            this.DamageEffectMarker.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.ResponseType)));
-            queueableBinaryWriter.Write(((short)(this.ConstraintDamageType)));
-            queueableBinaryWriter.Write(((int)(this.InstantaneousDamageRepsonseFlags)));
-            queueableBinaryWriter.Write(this.DamageThreshold);
-            queueableBinaryWriter.Write(this.TransitionEffect);
-            this.DamageEffect.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Region);
-            queueableBinaryWriter.Write(((short)(this.NewState)));
-            queueableBinaryWriter.Write(this.RuntimeRegionIndex);
-            queueableBinaryWriter.Write(this.EffectMarkerName);
-            this.DamageEffectMarker.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ResponseDelay);
-            queueableBinaryWriter.Write(this.DelayEffect);
-            queueableBinaryWriter.Write(this.DelayEffectMarkerName);
-            queueableBinaryWriter.Write(this.ConstraintgroupName);
-            queueableBinaryWriter.Write(this.EjectingSeatLabel);
-            queueableBinaryWriter.Write(this.SkipFraction);
-            queueableBinaryWriter.Write(this.DestroyedChildObjectMarkerName);
-            queueableBinaryWriter.Write(this.TotalDamageThreshold);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.ResponseType)));
+            queueableBlamBinaryWriter.Write(((short)(this.ConstraintDamageType)));
+            queueableBlamBinaryWriter.Write(((int)(this.InstantaneousDamageRepsonseFlags)));
+            queueableBlamBinaryWriter.Write(this.DamageThreshold);
+            queueableBlamBinaryWriter.Write(this.TransitionEffect);
+            this.DamageEffect.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Region);
+            queueableBlamBinaryWriter.Write(((short)(this.NewState)));
+            queueableBlamBinaryWriter.Write(this.RuntimeRegionIndex);
+            queueableBlamBinaryWriter.Write(this.EffectMarkerName);
+            this.DamageEffectMarker.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.ResponseDelay);
+            queueableBlamBinaryWriter.Write(this.DelayEffect);
+            queueableBlamBinaryWriter.Write(this.DelayEffectMarkerName);
+            queueableBlamBinaryWriter.Write(this.ConstraintgroupName);
+            queueableBlamBinaryWriter.Write(this.EjectingSeatLabel);
+            queueableBlamBinaryWriter.Write(this.SkipFraction);
+            queueableBlamBinaryWriter.Write(this.DestroyedChildObjectMarkerName);
+            queueableBlamBinaryWriter.Write(this.TotalDamageThreshold);
         }
         public enum ResponseTypeEnum : short
         {

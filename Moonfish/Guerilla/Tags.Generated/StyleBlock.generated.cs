@@ -94,40 +94,40 @@ namespace Moonfish.Guerilla.Tags
             this.SpecialMovement = base.ReadBlockArrayData<SpecialMovementBlock>(binaryReader, pointerQueue.Dequeue());
             this.BehaviorList = base.ReadBlockArrayData<BehaviorNamesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.SpecialMovement);
-            queueableBinaryWriter.QueueWrite(this.BehaviorList);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.SpecialMovement);
+            queueableBlamBinaryWriter.QueueWrite(this.BehaviorList);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((short)(this.CombatStatusDecayOptions)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.Attitude)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(((byte)(this.EngageAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.EvasionAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.CoverAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.SearchAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.PresearchAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.RetreatAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.ChargeAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.ReadyAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.IdleAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.WeaponAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.SwarmAttitude)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(((int)(this.StyleStyleControl)));
-            queueableBinaryWriter.Write(((int)(this.StyleBehaviors1)));
-            queueableBinaryWriter.Write(((int)(this.StyleBehaviors2)));
-            queueableBinaryWriter.Write(((int)(this.StyleBehaviors3)));
-            queueableBinaryWriter.Write(((int)(this.StyleBehaviors4)));
-            queueableBinaryWriter.Write(((int)(this.StyleBehaviors5)));
-            queueableBinaryWriter.WritePointer(this.SpecialMovement);
-            queueableBinaryWriter.WritePointer(this.BehaviorList);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(((short)(this.CombatStatusDecayOptions)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(((short)(this.Attitude)));
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(((byte)(this.EngageAttitude)));
+            queueableBlamBinaryWriter.Write(((byte)(this.EvasionAttitude)));
+            queueableBlamBinaryWriter.Write(((byte)(this.CoverAttitude)));
+            queueableBlamBinaryWriter.Write(((byte)(this.SearchAttitude)));
+            queueableBlamBinaryWriter.Write(((byte)(this.PresearchAttitude)));
+            queueableBlamBinaryWriter.Write(((byte)(this.RetreatAttitude)));
+            queueableBlamBinaryWriter.Write(((byte)(this.ChargeAttitude)));
+            queueableBlamBinaryWriter.Write(((byte)(this.ReadyAttitude)));
+            queueableBlamBinaryWriter.Write(((byte)(this.IdleAttitude)));
+            queueableBlamBinaryWriter.Write(((byte)(this.WeaponAttitude)));
+            queueableBlamBinaryWriter.Write(((byte)(this.SwarmAttitude)));
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(((int)(this.StyleStyleControl)));
+            queueableBlamBinaryWriter.Write(((int)(this.StyleBehaviors1)));
+            queueableBlamBinaryWriter.Write(((int)(this.StyleBehaviors2)));
+            queueableBlamBinaryWriter.Write(((int)(this.StyleBehaviors3)));
+            queueableBlamBinaryWriter.Write(((int)(this.StyleBehaviors4)));
+            queueableBlamBinaryWriter.Write(((int)(this.StyleBehaviors5)));
+            queueableBlamBinaryWriter.WritePointer(this.SpecialMovement);
+            queueableBlamBinaryWriter.WritePointer(this.BehaviorList);
         }
         /// <summary>
         /// Controls how combat status is allowed to be automatically reduced in the absence of combat stimuli. 'Latch at X' means that once the level of x is attained (and/or surpassed) the combat status never falls below it

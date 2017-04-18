@@ -52,19 +52,19 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((byte)(this.Type)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.PrimaryLocator);
-            queueableBinaryWriter.Write(this.SecondaryLocator);
-            queueableBinaryWriter.Write(this.ResourceDataSize);
-            queueableBinaryWriter.Write(this.ResourceDataOffset);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((byte)(this.Type)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.PrimaryLocator);
+            queueableBlamBinaryWriter.Write(this.SecondaryLocator);
+            queueableBlamBinaryWriter.Write(this.ResourceDataSize);
+            queueableBlamBinaryWriter.Write(this.ResourceDataOffset);
         }
         public enum TypeEnum : byte
         {

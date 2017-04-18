@@ -36,7 +36,7 @@ namespace Moonfish.Guerilla.Tags
             if (resourceStreamWrapper == null) return;
 
             var clusterBlock = new StructureBspClusterDataBlockNew();
-            using (var binaryReader = new BinaryReader(resourceStreamWrapper))
+            using (var binaryReader = new BlamBinaryReader(resourceStreamWrapper))
             {
                 clusterBlock.Read(binaryReader);
 

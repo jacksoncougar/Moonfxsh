@@ -61,21 +61,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.Sound);
-            queueableBinaryWriter.Write(this.RandomPeriodBounds);
-            queueableBinaryWriter.Write(this.FieldReal);
-            queueableBinaryWriter.Write(((int)(this.LoopingSoundDetailFlags)));
-            queueableBinaryWriter.Write(this.YawBounds);
-            queueableBinaryWriter.Write(this.PitchBounds);
-            queueableBinaryWriter.Write(this.DistanceBounds);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(this.Sound);
+            queueableBlamBinaryWriter.Write(this.RandomPeriodBounds);
+            queueableBlamBinaryWriter.Write(this.FieldReal);
+            queueableBlamBinaryWriter.Write(((int)(this.LoopingSoundDetailFlags)));
+            queueableBlamBinaryWriter.Write(this.YawBounds);
+            queueableBlamBinaryWriter.Write(this.PitchBounds);
+            queueableBlamBinaryWriter.Write(this.DistanceBounds);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

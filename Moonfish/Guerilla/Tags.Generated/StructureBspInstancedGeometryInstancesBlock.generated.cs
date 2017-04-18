@@ -69,27 +69,27 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Scale);
-            queueableBinaryWriter.Write(this.Forward);
-            queueableBinaryWriter.Write(this.Left);
-            queueableBinaryWriter.Write(this.Up);
-            queueableBinaryWriter.Write(this.Position);
-            queueableBinaryWriter.Write(this.InstanceDefinition);
-            queueableBinaryWriter.Write(((short)(this.StructureBspInstancedGeometryInstancesFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.Write(this.Checksum);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((short)(this.PathfindingPolicy)));
-            queueableBinaryWriter.Write(((short)(this.LightmappingPolicy)));
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Scale);
+            queueableBlamBinaryWriter.Write(this.Forward);
+            queueableBlamBinaryWriter.Write(this.Left);
+            queueableBlamBinaryWriter.Write(this.Up);
+            queueableBlamBinaryWriter.Write(this.Position);
+            queueableBlamBinaryWriter.Write(this.InstanceDefinition);
+            queueableBlamBinaryWriter.Write(((short)(this.StructureBspInstancedGeometryInstancesFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.fieldskip);
+            queueableBlamBinaryWriter.Write(this.fieldskip0);
+            queueableBlamBinaryWriter.Write(this.Checksum);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(((short)(this.PathfindingPolicy)));
+            queueableBlamBinaryWriter.Write(((short)(this.LightmappingPolicy)));
         }
         [System.FlagsAttribute()]
         public enum Flags : short

@@ -69,25 +69,25 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DiffuseMap);
-            queueableBinaryWriter.Write(this.LightmapEmissiveMap);
-            queueableBinaryWriter.Write(this.LightmapEmissiveColor);
-            queueableBinaryWriter.Write(this.LightmapEmissivePower);
-            queueableBinaryWriter.Write(this.LightmapResolutionScale);
-            queueableBinaryWriter.Write(this.LightmapHalfLife);
-            queueableBinaryWriter.Write(this.LightmapDiffuseScale);
-            queueableBinaryWriter.Write(this.AlphaTestMap);
-            queueableBinaryWriter.Write(this.TranslucentMap);
-            queueableBinaryWriter.Write(this.LightmapTransparentColor);
-            queueableBinaryWriter.Write(this.LightmapTransparentAlpha);
-            queueableBinaryWriter.Write(this.LightmapFoliageScale);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.DiffuseMap);
+            queueableBlamBinaryWriter.Write(this.LightmapEmissiveMap);
+            queueableBlamBinaryWriter.Write(this.LightmapEmissiveColor);
+            queueableBlamBinaryWriter.Write(this.LightmapEmissivePower);
+            queueableBlamBinaryWriter.Write(this.LightmapResolutionScale);
+            queueableBlamBinaryWriter.Write(this.LightmapHalfLife);
+            queueableBlamBinaryWriter.Write(this.LightmapDiffuseScale);
+            queueableBlamBinaryWriter.Write(this.AlphaTestMap);
+            queueableBlamBinaryWriter.Write(this.TranslucentMap);
+            queueableBlamBinaryWriter.Write(this.LightmapTransparentColor);
+            queueableBlamBinaryWriter.Write(this.LightmapTransparentAlpha);
+            queueableBlamBinaryWriter.Write(this.LightmapFoliageScale);
         }
     }
 }

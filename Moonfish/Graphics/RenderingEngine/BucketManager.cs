@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using JetBrains.Annotations;
+using Moonfish.Guerilla;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 using OpenTK;
@@ -181,7 +182,7 @@ namespace Moonfish.Graphics
             var count = vertexBuffer.Data.Length / packedElementSize;
             var bufferLength = count * stride;
             var buffer = new byte[bufferLength];
-            using ( var binaryReader = new BinaryReader( new MemoryStream( vertexBuffer.Data ) ) )
+            using ( var binaryReader = new BlamBinaryReader( new MemoryStream( vertexBuffer.Data ) ) )
             using ( var binaryWriter = new BinaryWriter( new MemoryStream( buffer ) ) )
             {
                 while ( binaryReader.BaseStream.Position < vertexBuffer.Data.Length )
@@ -209,7 +210,7 @@ namespace Moonfish.Graphics
             var count = vertexBuffer.Data.Length / packedElementSize;
             var bufferLength = count * stride;
             var buffer = new byte[bufferLength];
-            using ( var binaryReader = new BinaryReader( new MemoryStream( vertexBuffer.Data ) ) )
+            using ( var binaryReader = new BlamBinaryReader( new MemoryStream( vertexBuffer.Data ) ) )
             using ( var binaryWriter = new BinaryWriter( new MemoryStream( buffer ) ) )
             {
                 while ( binaryReader.BaseStream.Position < vertexBuffer.Data.Length )
@@ -239,7 +240,7 @@ namespace Moonfish.Graphics
             var count = vertexBuffer.Data.Length / packedElementSize;
             var bufferLength = count * stride;
             var buffer = new byte[bufferLength];
-            using ( var binaryReader = new BinaryReader( new MemoryStream( vertexBuffer.Data ) ) )
+            using ( var binaryReader = new BlamBinaryReader( new MemoryStream( vertexBuffer.Data ) ) )
             using ( var binaryWriter = new BinaryWriter( new MemoryStream( buffer ) ) )
             {
                 while ( binaryReader.BaseStream.Position < vertexBuffer.Data.Length )

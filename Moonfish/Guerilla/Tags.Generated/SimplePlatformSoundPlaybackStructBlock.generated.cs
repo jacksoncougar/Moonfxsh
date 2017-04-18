@@ -60,25 +60,25 @@ namespace Moonfish.Guerilla.Tags
             this.FilterLfo = base.ReadBlockArrayData<PlatformSoundFilterLfoBlock>(binaryReader, pointerQueue.Dequeue());
             this.SoundEffect = base.ReadBlockArrayData<SoundEffectPlaybackBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.PlatformSoundOverrideMixbinsBlock);
-            queueableBinaryWriter.QueueWrite(this.Filter);
-            queueableBinaryWriter.QueueWrite(this.PitchLfo);
-            queueableBinaryWriter.QueueWrite(this.FilterLfo);
-            queueableBinaryWriter.QueueWrite(this.SoundEffect);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.PlatformSoundOverrideMixbinsBlock);
+            queueableBlamBinaryWriter.QueueWrite(this.Filter);
+            queueableBlamBinaryWriter.QueueWrite(this.PitchLfo);
+            queueableBlamBinaryWriter.QueueWrite(this.FilterLfo);
+            queueableBlamBinaryWriter.QueueWrite(this.SoundEffect);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.PlatformSoundOverrideMixbinsBlock);
-            queueableBinaryWriter.Write(((int)(this.SimplePlatformSoundPlaybackStructFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.Filter);
-            queueableBinaryWriter.WritePointer(this.PitchLfo);
-            queueableBinaryWriter.WritePointer(this.FilterLfo);
-            queueableBinaryWriter.WritePointer(this.SoundEffect);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.PlatformSoundOverrideMixbinsBlock);
+            queueableBlamBinaryWriter.Write(((int)(this.SimplePlatformSoundPlaybackStructFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.WritePointer(this.Filter);
+            queueableBlamBinaryWriter.WritePointer(this.PitchLfo);
+            queueableBlamBinaryWriter.WritePointer(this.FilterLfo);
+            queueableBlamBinaryWriter.WritePointer(this.SoundEffect);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

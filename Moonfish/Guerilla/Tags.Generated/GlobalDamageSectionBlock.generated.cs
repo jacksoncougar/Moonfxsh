@@ -66,27 +66,27 @@ namespace Moonfish.Guerilla.Tags
             this.GNullBlock = base.ReadBlockArrayData<GNullBlock>(binaryReader, pointerQueue.Dequeue());
             this.GNullBlock0 = base.ReadBlockArrayData<GNullBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.InstantResponses);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock0);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.InstantResponses);
+            queueableBlamBinaryWriter.QueueWrite(this.GNullBlock);
+            queueableBlamBinaryWriter.QueueWrite(this.GNullBlock0);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((int)(this.GlobalDamageSectionFlags)));
-            queueableBinaryWriter.Write(this.VitalityPercentage);
-            queueableBinaryWriter.WritePointer(this.InstantResponses);
-            queueableBinaryWriter.WritePointer(this.GNullBlock);
-            queueableBinaryWriter.WritePointer(this.GNullBlock0);
-            queueableBinaryWriter.Write(this.StunTime);
-            queueableBinaryWriter.Write(this.RechargeTime);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.ResurrectionRestoredRegionName);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(((int)(this.GlobalDamageSectionFlags)));
+            queueableBlamBinaryWriter.Write(this.VitalityPercentage);
+            queueableBlamBinaryWriter.WritePointer(this.InstantResponses);
+            queueableBlamBinaryWriter.WritePointer(this.GNullBlock);
+            queueableBlamBinaryWriter.WritePointer(this.GNullBlock0);
+            queueableBlamBinaryWriter.Write(this.StunTime);
+            queueableBlamBinaryWriter.Write(this.RechargeTime);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.ResurrectionRestoredRegionName);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
         }
         /// <summary>
         /// absorbs body damage: damage to this section does not count against body vitality

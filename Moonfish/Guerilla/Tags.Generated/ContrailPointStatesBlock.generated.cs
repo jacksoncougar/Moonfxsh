@@ -56,20 +56,20 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Duration);
-            queueableBinaryWriter.Write(this.TransitionDuration);
-            queueableBinaryWriter.Write(this.Physics);
-            queueableBinaryWriter.Write(this.Width);
-            queueableBinaryWriter.Write(this.ColorLowerBound);
-            queueableBinaryWriter.Write(this.ColorUpperBound);
-            queueableBinaryWriter.Write(((int)(this.ContrailPointStatesScaleFlags)));
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Duration);
+            queueableBlamBinaryWriter.Write(this.TransitionDuration);
+            queueableBlamBinaryWriter.Write(this.Physics);
+            queueableBlamBinaryWriter.Write(this.Width);
+            queueableBlamBinaryWriter.Write(this.ColorLowerBound);
+            queueableBlamBinaryWriter.Write(this.ColorUpperBound);
+            queueableBlamBinaryWriter.Write(((int)(this.ContrailPointStatesScaleFlags)));
         }
         [System.FlagsAttribute()]
         public enum ScaleFlags : int

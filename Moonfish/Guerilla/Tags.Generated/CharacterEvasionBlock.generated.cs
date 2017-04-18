@@ -54,18 +54,18 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.EvasionDangerThreshold);
-            queueableBinaryWriter.Write(this.EvasionDelayTimer);
-            queueableBinaryWriter.Write(this.EvasionChance);
-            queueableBinaryWriter.Write(this.EvasionProximityThreshold);
-            queueableBinaryWriter.Write(this.DiveRetreatChance);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.EvasionDangerThreshold);
+            queueableBlamBinaryWriter.Write(this.EvasionDelayTimer);
+            queueableBlamBinaryWriter.Write(this.EvasionChance);
+            queueableBlamBinaryWriter.Write(this.EvasionProximityThreshold);
+            queueableBlamBinaryWriter.Write(this.DiveRetreatChance);
         }
     }
 }

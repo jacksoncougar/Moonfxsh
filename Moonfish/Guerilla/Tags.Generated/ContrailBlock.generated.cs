@@ -138,59 +138,59 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.PointStates = base.ReadBlockArrayData<ContrailPointStatesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.PointStates);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.PointStates);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.ContrailFlags)));
-            queueableBinaryWriter.Write(((short)(this.ContrailScaleFlags)));
-            queueableBinaryWriter.Write(this.PointGenerationRate);
-            queueableBinaryWriter.Write(this.PointVelocity);
-            queueableBinaryWriter.Write(this.PointVelocityConeAngle);
-            queueableBinaryWriter.Write(this.InheritedVelocityFraction);
-            queueableBinaryWriter.Write(((short)(this.RenderType)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.TextureRepeatsU);
-            queueableBinaryWriter.Write(this.TextureRepeatsV);
-            queueableBinaryWriter.Write(this.TextureAnimationU);
-            queueableBinaryWriter.Write(this.TextureAnimationV);
-            queueableBinaryWriter.Write(this.AnimationRate);
-            queueableBinaryWriter.Write(this.Bitmap);
-            queueableBinaryWriter.Write(this.FirstSequenceIndex);
-            queueableBinaryWriter.Write(this.SequenceCount);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(((short)(this.ContrailShaderFlags)));
-            queueableBinaryWriter.Write(((short)(this.FramebufferBlendFunction)));
-            queueableBinaryWriter.Write(((short)(this.FramebufferFadeMode)));
-            queueableBinaryWriter.Write(((short)(this.ContrailMapFlags)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.Bitmap0);
-            queueableBinaryWriter.Write(((short)(this.Anchor)));
-            queueableBinaryWriter.Write(((short)(this.ContrailContrailFlags0)));
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(((short)(this.UanimationFunction)));
-            queueableBinaryWriter.Write(this.UanimationPeriod);
-            queueableBinaryWriter.Write(this.UanimationPhase);
-            queueableBinaryWriter.Write(this.UanimationScale);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(((short)(this.VanimationFunction)));
-            queueableBinaryWriter.Write(this.VanimationPeriod);
-            queueableBinaryWriter.Write(this.VanimationPhase);
-            queueableBinaryWriter.Write(this.VanimationScale);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(((short)(this.RotationanimationFunction)));
-            queueableBinaryWriter.Write(this.RotationanimationPeriod);
-            queueableBinaryWriter.Write(this.RotationanimationPhase);
-            queueableBinaryWriter.Write(this.RotationanimationScale);
-            queueableBinaryWriter.Write(this.RotationanimationCenter);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(this.ZspriteRadiusScale);
-            queueableBinaryWriter.Write(this.fieldpad6);
-            queueableBinaryWriter.WritePointer(this.PointStates);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.ContrailFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.ContrailScaleFlags)));
+            queueableBlamBinaryWriter.Write(this.PointGenerationRate);
+            queueableBlamBinaryWriter.Write(this.PointVelocity);
+            queueableBlamBinaryWriter.Write(this.PointVelocityConeAngle);
+            queueableBlamBinaryWriter.Write(this.InheritedVelocityFraction);
+            queueableBlamBinaryWriter.Write(((short)(this.RenderType)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.TextureRepeatsU);
+            queueableBlamBinaryWriter.Write(this.TextureRepeatsV);
+            queueableBlamBinaryWriter.Write(this.TextureAnimationU);
+            queueableBlamBinaryWriter.Write(this.TextureAnimationV);
+            queueableBlamBinaryWriter.Write(this.AnimationRate);
+            queueableBlamBinaryWriter.Write(this.Bitmap);
+            queueableBlamBinaryWriter.Write(this.FirstSequenceIndex);
+            queueableBlamBinaryWriter.Write(this.SequenceCount);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(((short)(this.ContrailShaderFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.FramebufferBlendFunction)));
+            queueableBlamBinaryWriter.Write(((short)(this.FramebufferFadeMode)));
+            queueableBlamBinaryWriter.Write(((short)(this.ContrailMapFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.Bitmap0);
+            queueableBlamBinaryWriter.Write(((short)(this.Anchor)));
+            queueableBlamBinaryWriter.Write(((short)(this.ContrailContrailFlags0)));
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(((short)(this.UanimationFunction)));
+            queueableBlamBinaryWriter.Write(this.UanimationPeriod);
+            queueableBlamBinaryWriter.Write(this.UanimationPhase);
+            queueableBlamBinaryWriter.Write(this.UanimationScale);
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
+            queueableBlamBinaryWriter.Write(((short)(this.VanimationFunction)));
+            queueableBlamBinaryWriter.Write(this.VanimationPeriod);
+            queueableBlamBinaryWriter.Write(this.VanimationPhase);
+            queueableBlamBinaryWriter.Write(this.VanimationScale);
+            queueableBlamBinaryWriter.Write(this.fieldpad4);
+            queueableBlamBinaryWriter.Write(((short)(this.RotationanimationFunction)));
+            queueableBlamBinaryWriter.Write(this.RotationanimationPeriod);
+            queueableBlamBinaryWriter.Write(this.RotationanimationPhase);
+            queueableBlamBinaryWriter.Write(this.RotationanimationScale);
+            queueableBlamBinaryWriter.Write(this.RotationanimationCenter);
+            queueableBlamBinaryWriter.Write(this.fieldpad5);
+            queueableBlamBinaryWriter.Write(this.ZspriteRadiusScale);
+            queueableBlamBinaryWriter.Write(this.fieldpad6);
+            queueableBlamBinaryWriter.WritePointer(this.PointStates);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

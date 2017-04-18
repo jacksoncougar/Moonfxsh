@@ -62,27 +62,27 @@ namespace Moonfish.Guerilla.Tags
             this.VnConstants.ReadInstances(binaryReader, pointerQueue);
             this.CnConstants.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.RenderStates.QueueWrites(queueableBinaryWriter);
-            this.TextureStageStates.QueueWrites(queueableBinaryWriter);
-            this.RenderStateParameters.QueueWrites(queueableBinaryWriter);
-            this.TextureStageParameters.QueueWrites(queueableBinaryWriter);
-            this.Textures.QueueWrites(queueableBinaryWriter);
-            this.VnConstants.QueueWrites(queueableBinaryWriter);
-            this.CnConstants.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.RenderStates.QueueWrites(queueableBlamBinaryWriter);
+            this.TextureStageStates.QueueWrites(queueableBlamBinaryWriter);
+            this.RenderStateParameters.QueueWrites(queueableBlamBinaryWriter);
+            this.TextureStageParameters.QueueWrites(queueableBlamBinaryWriter);
+            this.Textures.QueueWrites(queueableBlamBinaryWriter);
+            this.VnConstants.QueueWrites(queueableBlamBinaryWriter);
+            this.CnConstants.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            this.RenderStates.Write_(queueableBinaryWriter);
-            this.TextureStageStates.Write_(queueableBinaryWriter);
-            this.RenderStateParameters.Write_(queueableBinaryWriter);
-            this.TextureStageParameters.Write_(queueableBinaryWriter);
-            this.Textures.Write_(queueableBinaryWriter);
-            this.VnConstants.Write_(queueableBinaryWriter);
-            this.CnConstants.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            this.RenderStates.Write_(queueableBlamBinaryWriter);
+            this.TextureStageStates.Write_(queueableBlamBinaryWriter);
+            this.RenderStateParameters.Write_(queueableBlamBinaryWriter);
+            this.TextureStageParameters.Write_(queueableBlamBinaryWriter);
+            this.Textures.Write_(queueableBlamBinaryWriter);
+            this.VnConstants.Write_(queueableBlamBinaryWriter);
+            this.CnConstants.Write_(queueableBlamBinaryWriter);
         }
     }
 }

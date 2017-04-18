@@ -71,28 +71,28 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.NodeA);
-            queueableBinaryWriter.Write(this.NodeB);
-            queueableBinaryWriter.Write(this.AScale);
-            queueableBinaryWriter.Write(this.AForward);
-            queueableBinaryWriter.Write(this.ALeft);
-            queueableBinaryWriter.Write(this.AUp);
-            queueableBinaryWriter.Write(this.APosition);
-            queueableBinaryWriter.Write(this.BScale);
-            queueableBinaryWriter.Write(this.BForward);
-            queueableBinaryWriter.Write(this.BLeft);
-            queueableBinaryWriter.Write(this.BUp);
-            queueableBinaryWriter.Write(this.BPosition);
-            queueableBinaryWriter.Write(this.EdgeIndex);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(this.NodeA);
+            queueableBlamBinaryWriter.Write(this.NodeB);
+            queueableBlamBinaryWriter.Write(this.AScale);
+            queueableBlamBinaryWriter.Write(this.AForward);
+            queueableBlamBinaryWriter.Write(this.ALeft);
+            queueableBlamBinaryWriter.Write(this.AUp);
+            queueableBlamBinaryWriter.Write(this.APosition);
+            queueableBlamBinaryWriter.Write(this.BScale);
+            queueableBlamBinaryWriter.Write(this.BForward);
+            queueableBlamBinaryWriter.Write(this.BLeft);
+            queueableBlamBinaryWriter.Write(this.BUp);
+            queueableBlamBinaryWriter.Write(this.BPosition);
+            queueableBlamBinaryWriter.Write(this.EdgeIndex);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
         }
     }
 }

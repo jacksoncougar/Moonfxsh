@@ -6,13 +6,13 @@ using Moonfish.Tags;
 
 namespace Moonfish.Guerilla
 {
-    public class QueueableBinaryReader : BinaryReader
+    public class QueueableBlamBinaryReader : BlamBinaryReader
     {
         private readonly Dictionary<object, QueueItem> lookupDictionary;
         private readonly Queue<QueueItem> queue;
         private int queueAddress;
 
-        public QueueableBinaryReader( Stream input, int serializedSize )
+        public QueueableBlamBinaryReader( Stream input, int serializedSize )
             : base( input, Encoding.Default, true )
         {
             queueAddress = serializedSize;
@@ -20,10 +20,10 @@ namespace Moonfish.Guerilla
             lookupDictionary = new Dictionary<object, QueueItem>( 100 );
         }
 
-        public VertexBuffer ReadVertexBuffer(BinaryReader binaryReader)
+        public VertexBuffer ReadVertexBuffer(BlamBinaryReader blamBinaryReader)
         {
-            var buffer = new VertexBuffer { Type = binaryReader.ReadVertexAttributeType() };
-            binaryReader.ReadBytes(30);
+            var buffer = new VertexBuffer { Type = blamBinaryReader.ReadVertexAttributeType() };
+            blamBinaryReader.ReadBytes(30);
             return buffer;
         }
 

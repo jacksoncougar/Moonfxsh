@@ -74,32 +74,32 @@ namespace Moonfish.Guerilla.Tags
             this.VertexBuffers = base.ReadBlockArrayData<PrtVertexBuffersBlock>(binaryReader, pointerQueue.Dequeue());
             this.GeometryBlockInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.LodInfo);
-            queueableBinaryWriter.QueueWrite(this.ClusterBasis);
-            queueableBinaryWriter.QueueWrite(this.RawPcaData);
-            queueableBinaryWriter.QueueWrite(this.VertexBuffers);
-            this.GeometryBlockInfo.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.LodInfo);
+            queueableBlamBinaryWriter.QueueWrite(this.ClusterBasis);
+            queueableBlamBinaryWriter.QueueWrite(this.RawPcaData);
+            queueableBlamBinaryWriter.QueueWrite(this.VertexBuffers);
+            this.GeometryBlockInfo.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.SHOrder);
-            queueableBinaryWriter.Write(this.NumOfClusters);
-            queueableBinaryWriter.Write(this.PcaVectorsPerCluster);
-            queueableBinaryWriter.Write(this.NumberOfRays);
-            queueableBinaryWriter.Write(this.NumberOfBounces);
-            queueableBinaryWriter.Write(this.MatIndexForSbsfcScattering);
-            queueableBinaryWriter.Write(this.LengthScale);
-            queueableBinaryWriter.Write(this.NumberOfLodsInModel);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.LodInfo);
-            queueableBinaryWriter.WritePointer(this.ClusterBasis);
-            queueableBinaryWriter.WritePointer(this.RawPcaData);
-            queueableBinaryWriter.WritePointer(this.VertexBuffers);
-            this.GeometryBlockInfo.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.SHOrder);
+            queueableBlamBinaryWriter.Write(this.NumOfClusters);
+            queueableBlamBinaryWriter.Write(this.PcaVectorsPerCluster);
+            queueableBlamBinaryWriter.Write(this.NumberOfRays);
+            queueableBlamBinaryWriter.Write(this.NumberOfBounces);
+            queueableBlamBinaryWriter.Write(this.MatIndexForSbsfcScattering);
+            queueableBlamBinaryWriter.Write(this.LengthScale);
+            queueableBlamBinaryWriter.Write(this.NumberOfLodsInModel);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.WritePointer(this.LodInfo);
+            queueableBlamBinaryWriter.WritePointer(this.ClusterBasis);
+            queueableBlamBinaryWriter.WritePointer(this.RawPcaData);
+            queueableBlamBinaryWriter.WritePointer(this.VertexBuffers);
+            this.GeometryBlockInfo.Write_(queueableBlamBinaryWriter);
         }
     }
 }

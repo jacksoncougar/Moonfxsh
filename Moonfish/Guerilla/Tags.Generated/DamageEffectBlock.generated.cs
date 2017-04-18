@@ -166,63 +166,63 @@ namespace Moonfish.Guerilla.Tags
             this.Blah.ReadInstances(binaryReader, pointerQueue);
             this.PlayerResponses = base.ReadBlockArrayData<DamageEffectPlayerResponseBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.Blah.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.PlayerResponses);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.Blah.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.PlayerResponses);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Radius);
-            queueableBinaryWriter.Write(this.CutoffScale);
-            queueableBinaryWriter.Write(((int)(this.DamageEffectFlags)));
-            queueableBinaryWriter.Write(((short)(this.SideEffect)));
-            queueableBinaryWriter.Write(((short)(this.Category)));
-            queueableBinaryWriter.Write(((int)(this.DamageEffectDamageEffectFlags0)));
-            queueableBinaryWriter.Write(this.AOECoreRadius);
-            queueableBinaryWriter.Write(this.DamageLowerBound);
-            queueableBinaryWriter.Write(this.DamageUpperBound);
-            queueableBinaryWriter.Write(this.DmgInnerConeAngle);
-            this.Blah.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ActiveCamouflageDamage);
-            queueableBinaryWriter.Write(this.Stun);
-            queueableBinaryWriter.Write(this.MaximumStun);
-            queueableBinaryWriter.Write(this.StunTime);
-            queueableBinaryWriter.Write(this.InstantaneousAcceleration);
-            queueableBinaryWriter.Write(this.RiderDirectDamageScale);
-            queueableBinaryWriter.Write(this.RiderMaximumTransferDamageScale);
-            queueableBinaryWriter.Write(this.RiderMinimumTransferDamageScale);
-            queueableBinaryWriter.Write(this.GeneralDamage);
-            queueableBinaryWriter.Write(this.SpecificDamage);
-            queueableBinaryWriter.Write(this.AIStunRadius);
-            queueableBinaryWriter.Write(this.AIStunBounds);
-            queueableBinaryWriter.Write(this.ShakeRadius);
-            queueableBinaryWriter.Write(this.EMPRadius);
-            queueableBinaryWriter.WritePointer(this.PlayerResponses);
-            queueableBinaryWriter.Write(this.Duration);
-            queueableBinaryWriter.Write(((short)(this.FadeFunction)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Rotation);
-            queueableBinaryWriter.Write(this.Pushback);
-            queueableBinaryWriter.Write(this.Jitter);
-            queueableBinaryWriter.Write(this.Duration0);
-            queueableBinaryWriter.Write(((short)(this.FalloffFunction)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.RandomTranslation);
-            queueableBinaryWriter.Write(this.RandomRotation);
-            queueableBinaryWriter.Write(((short)(this.WobbleFunction)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.WobbleFunctionPeriod);
-            queueableBinaryWriter.Write(this.WobbleWeight);
-            queueableBinaryWriter.Write(this.Sound);
-            queueableBinaryWriter.Write(this.ForwardVelocity);
-            queueableBinaryWriter.Write(this.ForwardRadius);
-            queueableBinaryWriter.Write(this.ForwardExponent);
-            queueableBinaryWriter.Write(this.OutwardVelocity);
-            queueableBinaryWriter.Write(this.OutwardRadius);
-            queueableBinaryWriter.Write(this.OutwardExponent);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Radius);
+            queueableBlamBinaryWriter.Write(this.CutoffScale);
+            queueableBlamBinaryWriter.Write(((int)(this.DamageEffectFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.SideEffect)));
+            queueableBlamBinaryWriter.Write(((short)(this.Category)));
+            queueableBlamBinaryWriter.Write(((int)(this.DamageEffectDamageEffectFlags0)));
+            queueableBlamBinaryWriter.Write(this.AOECoreRadius);
+            queueableBlamBinaryWriter.Write(this.DamageLowerBound);
+            queueableBlamBinaryWriter.Write(this.DamageUpperBound);
+            queueableBlamBinaryWriter.Write(this.DmgInnerConeAngle);
+            this.Blah.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.ActiveCamouflageDamage);
+            queueableBlamBinaryWriter.Write(this.Stun);
+            queueableBlamBinaryWriter.Write(this.MaximumStun);
+            queueableBlamBinaryWriter.Write(this.StunTime);
+            queueableBlamBinaryWriter.Write(this.InstantaneousAcceleration);
+            queueableBlamBinaryWriter.Write(this.RiderDirectDamageScale);
+            queueableBlamBinaryWriter.Write(this.RiderMaximumTransferDamageScale);
+            queueableBlamBinaryWriter.Write(this.RiderMinimumTransferDamageScale);
+            queueableBlamBinaryWriter.Write(this.GeneralDamage);
+            queueableBlamBinaryWriter.Write(this.SpecificDamage);
+            queueableBlamBinaryWriter.Write(this.AIStunRadius);
+            queueableBlamBinaryWriter.Write(this.AIStunBounds);
+            queueableBlamBinaryWriter.Write(this.ShakeRadius);
+            queueableBlamBinaryWriter.Write(this.EMPRadius);
+            queueableBlamBinaryWriter.WritePointer(this.PlayerResponses);
+            queueableBlamBinaryWriter.Write(this.Duration);
+            queueableBlamBinaryWriter.Write(((short)(this.FadeFunction)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.Rotation);
+            queueableBlamBinaryWriter.Write(this.Pushback);
+            queueableBlamBinaryWriter.Write(this.Jitter);
+            queueableBlamBinaryWriter.Write(this.Duration0);
+            queueableBlamBinaryWriter.Write(((short)(this.FalloffFunction)));
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.RandomTranslation);
+            queueableBlamBinaryWriter.Write(this.RandomRotation);
+            queueableBlamBinaryWriter.Write(((short)(this.WobbleFunction)));
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.WobbleFunctionPeriod);
+            queueableBlamBinaryWriter.Write(this.WobbleWeight);
+            queueableBlamBinaryWriter.Write(this.Sound);
+            queueableBlamBinaryWriter.Write(this.ForwardVelocity);
+            queueableBlamBinaryWriter.Write(this.ForwardRadius);
+            queueableBlamBinaryWriter.Write(this.ForwardExponent);
+            queueableBlamBinaryWriter.Write(this.OutwardVelocity);
+            queueableBlamBinaryWriter.Write(this.OutwardRadius);
+            queueableBlamBinaryWriter.Write(this.OutwardExponent);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

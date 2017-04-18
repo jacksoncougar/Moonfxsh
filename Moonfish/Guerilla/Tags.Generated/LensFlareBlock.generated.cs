@@ -98,41 +98,41 @@ namespace Moonfish.Guerilla.Tags
             this.Color = base.ReadBlockArrayData<LensFlareColorAnimationBlock>(binaryReader, pointerQueue.Dequeue());
             this.Rotation = base.ReadBlockArrayData<LensFlareScalarAnimationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Reflections);
-            queueableBinaryWriter.QueueWrite(this.Brightness);
-            queueableBinaryWriter.QueueWrite(this.Color);
-            queueableBinaryWriter.QueueWrite(this.Rotation);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Reflections);
+            queueableBlamBinaryWriter.QueueWrite(this.Brightness);
+            queueableBlamBinaryWriter.QueueWrite(this.Color);
+            queueableBlamBinaryWriter.QueueWrite(this.Rotation);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.FalloffAngle);
-            queueableBinaryWriter.Write(this.CutoffAngle);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.Write(this.OcclusionRadius);
-            queueableBinaryWriter.Write(((short)(this.OcclusionOffsetDirection)));
-            queueableBinaryWriter.Write(((short)(this.OcclusionInnerRadiusScale)));
-            queueableBinaryWriter.Write(this.NearFadeDistance);
-            queueableBinaryWriter.Write(this.FarFadeDistance);
-            queueableBinaryWriter.Write(this.Bitmap);
-            queueableBinaryWriter.Write(((short)(this.LensFlareFlags)));
-            queueableBinaryWriter.Write(this.fieldskip1);
-            queueableBinaryWriter.Write(((short)(this.RotationFunction)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.RotationFunctionScale);
-            queueableBinaryWriter.Write(this.CoronaScale);
-            queueableBinaryWriter.Write(((short)(this.FalloffFunction)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.WritePointer(this.Reflections);
-            queueableBinaryWriter.Write(((short)(this.LensFlareLensFlareFlags0)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.WritePointer(this.Brightness);
-            queueableBinaryWriter.WritePointer(this.Color);
-            queueableBinaryWriter.WritePointer(this.Rotation);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.FalloffAngle);
+            queueableBlamBinaryWriter.Write(this.CutoffAngle);
+            queueableBlamBinaryWriter.Write(this.fieldskip);
+            queueableBlamBinaryWriter.Write(this.fieldskip0);
+            queueableBlamBinaryWriter.Write(this.OcclusionRadius);
+            queueableBlamBinaryWriter.Write(((short)(this.OcclusionOffsetDirection)));
+            queueableBlamBinaryWriter.Write(((short)(this.OcclusionInnerRadiusScale)));
+            queueableBlamBinaryWriter.Write(this.NearFadeDistance);
+            queueableBlamBinaryWriter.Write(this.FarFadeDistance);
+            queueableBlamBinaryWriter.Write(this.Bitmap);
+            queueableBlamBinaryWriter.Write(((short)(this.LensFlareFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldskip1);
+            queueableBlamBinaryWriter.Write(((short)(this.RotationFunction)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.RotationFunctionScale);
+            queueableBlamBinaryWriter.Write(this.CoronaScale);
+            queueableBlamBinaryWriter.Write(((short)(this.FalloffFunction)));
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.WritePointer(this.Reflections);
+            queueableBlamBinaryWriter.Write(((short)(this.LensFlareLensFlareFlags0)));
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.WritePointer(this.Brightness);
+            queueableBlamBinaryWriter.WritePointer(this.Color);
+            queueableBlamBinaryWriter.WritePointer(this.Rotation);
         }
         public enum OcclusionOffsetDirectionEnum : short
         {

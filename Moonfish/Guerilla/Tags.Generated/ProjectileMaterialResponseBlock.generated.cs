@@ -84,33 +84,33 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.ProjectileMaterialResponseFlags)));
-            queueableBinaryWriter.Write(((short)(this.Response)));
-            queueableBinaryWriter.Write(this.DONOTUSE);
-            queueableBinaryWriter.Write(this.MaterialName);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(((short)(this.ProjectileMaterialResponseProjectileMaterialResponseResponse)));
-            queueableBinaryWriter.Write(((short)(this.ProjectileMaterialResponseProjectileMaterialResponseFlags0)));
-            queueableBinaryWriter.Write(this.ChanceFraction);
-            queueableBinaryWriter.Write(this.Between);
-            queueableBinaryWriter.Write(this.And);
-            queueableBinaryWriter.Write(this.DONOTUSE0);
-            queueableBinaryWriter.Write(((short)(this.ScaleEffectsBy)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.AngularNoise);
-            queueableBinaryWriter.Write(this.VelocityNoise);
-            queueableBinaryWriter.Write(this.DONOTUSE1);
-            queueableBinaryWriter.Write(this.InitialFriction);
-            queueableBinaryWriter.Write(this.MaximumDistance);
-            queueableBinaryWriter.Write(this.ParallelFriction);
-            queueableBinaryWriter.Write(this.PerpendicularFriction);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.ProjectileMaterialResponseFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.Response)));
+            queueableBlamBinaryWriter.Write(this.DONOTUSE);
+            queueableBlamBinaryWriter.Write(this.MaterialName);
+            queueableBlamBinaryWriter.Write(this.fieldskip);
+            queueableBlamBinaryWriter.Write(((short)(this.ProjectileMaterialResponseProjectileMaterialResponseResponse)));
+            queueableBlamBinaryWriter.Write(((short)(this.ProjectileMaterialResponseProjectileMaterialResponseFlags0)));
+            queueableBlamBinaryWriter.Write(this.ChanceFraction);
+            queueableBlamBinaryWriter.Write(this.Between);
+            queueableBlamBinaryWriter.Write(this.And);
+            queueableBlamBinaryWriter.Write(this.DONOTUSE0);
+            queueableBlamBinaryWriter.Write(((short)(this.ScaleEffectsBy)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.AngularNoise);
+            queueableBlamBinaryWriter.Write(this.VelocityNoise);
+            queueableBlamBinaryWriter.Write(this.DONOTUSE1);
+            queueableBlamBinaryWriter.Write(this.InitialFriction);
+            queueableBlamBinaryWriter.Write(this.MaximumDistance);
+            queueableBlamBinaryWriter.Write(this.ParallelFriction);
+            queueableBlamBinaryWriter.Write(this.PerpendicularFriction);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

@@ -62,27 +62,27 @@ namespace Moonfish.Guerilla.Tags
             this.VnConstants = base.ReadBlockArrayData<VertexShaderConstantBlock>(binaryReader, pointerQueue.Dequeue());
             this.CnConstants = base.ReadBlockArrayData<VertexShaderConstantBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.RenderStates);
-            queueableBinaryWriter.QueueWrite(this.TextureStageStates);
-            queueableBinaryWriter.QueueWrite(this.RenderStateParameters);
-            queueableBinaryWriter.QueueWrite(this.TextureStageParameters);
-            queueableBinaryWriter.QueueWrite(this.Textures);
-            queueableBinaryWriter.QueueWrite(this.VnConstants);
-            queueableBinaryWriter.QueueWrite(this.CnConstants);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.RenderStates);
+            queueableBlamBinaryWriter.QueueWrite(this.TextureStageStates);
+            queueableBlamBinaryWriter.QueueWrite(this.RenderStateParameters);
+            queueableBlamBinaryWriter.QueueWrite(this.TextureStageParameters);
+            queueableBlamBinaryWriter.QueueWrite(this.Textures);
+            queueableBlamBinaryWriter.QueueWrite(this.VnConstants);
+            queueableBlamBinaryWriter.QueueWrite(this.CnConstants);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.RenderStates);
-            queueableBinaryWriter.WritePointer(this.TextureStageStates);
-            queueableBinaryWriter.WritePointer(this.RenderStateParameters);
-            queueableBinaryWriter.WritePointer(this.TextureStageParameters);
-            queueableBinaryWriter.WritePointer(this.Textures);
-            queueableBinaryWriter.WritePointer(this.VnConstants);
-            queueableBinaryWriter.WritePointer(this.CnConstants);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.RenderStates);
+            queueableBlamBinaryWriter.WritePointer(this.TextureStageStates);
+            queueableBlamBinaryWriter.WritePointer(this.RenderStateParameters);
+            queueableBlamBinaryWriter.WritePointer(this.TextureStageParameters);
+            queueableBlamBinaryWriter.WritePointer(this.Textures);
+            queueableBlamBinaryWriter.WritePointer(this.VnConstants);
+            queueableBlamBinaryWriter.WritePointer(this.CnConstants);
         }
     }
 }

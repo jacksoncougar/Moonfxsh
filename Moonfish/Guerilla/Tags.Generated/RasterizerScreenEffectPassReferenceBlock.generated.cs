@@ -81,33 +81,33 @@ namespace Moonfish.Guerilla.Tags
             this.AdvancedControl = base.ReadBlockArrayData<RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock>(binaryReader, pointerQueue.Dequeue());
             this.Convolution = base.ReadBlockArrayData<RasterizerScreenEffectConvolutionBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Explanation);
-            queueableBinaryWriter.QueueWrite(this.AdvancedControl);
-            queueableBinaryWriter.QueueWrite(this.Convolution);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Explanation);
+            queueableBlamBinaryWriter.QueueWrite(this.AdvancedControl);
+            queueableBlamBinaryWriter.QueueWrite(this.Convolution);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Explanation);
-            queueableBinaryWriter.Write(this.LayerPassIndex);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Primary0AndSecondary0);
-            queueableBinaryWriter.Write(this.Primary0AndSecondary00);
-            queueableBinaryWriter.Write(this.Primary0AndSecondary01);
-            queueableBinaryWriter.Write(this.Primary0AndSecondary02);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(((short)(this.Stage0Mode)));
-            queueableBinaryWriter.Write(((short)(this.Stage1Mode)));
-            queueableBinaryWriter.Write(((short)(this.Stage2Mode)));
-            queueableBinaryWriter.Write(((short)(this.Stage3Mode)));
-            queueableBinaryWriter.WritePointer(this.AdvancedControl);
-            queueableBinaryWriter.Write(((short)(this.Target)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.WritePointer(this.Convolution);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Explanation);
+            queueableBlamBinaryWriter.Write(this.LayerPassIndex);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.Primary0AndSecondary0);
+            queueableBlamBinaryWriter.Write(this.Primary0AndSecondary00);
+            queueableBlamBinaryWriter.Write(this.Primary0AndSecondary01);
+            queueableBlamBinaryWriter.Write(this.Primary0AndSecondary02);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(((short)(this.Stage0Mode)));
+            queueableBlamBinaryWriter.Write(((short)(this.Stage1Mode)));
+            queueableBlamBinaryWriter.Write(((short)(this.Stage2Mode)));
+            queueableBlamBinaryWriter.Write(((short)(this.Stage3Mode)));
+            queueableBlamBinaryWriter.WritePointer(this.AdvancedControl);
+            queueableBlamBinaryWriter.Write(((short)(this.Target)));
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.WritePointer(this.Convolution);
         }
         /// <summary>
         /// DEFAULT: Use for mask bitmaps that are mirrored and offset through the texcoords supplied to the screen effect (e.g. through the weapon HUD interface). The shader system must handle scaling.

@@ -57,21 +57,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.RasterizerScreenEffectTexcoordGenerationAdvancedControlStage0Flags)));
-            queueableBinaryWriter.Write(((short)(this.RasterizerScreenEffectTexcoordGenerationAdvancedControlStage1Flags)));
-            queueableBinaryWriter.Write(((short)(this.RasterizerScreenEffectTexcoordGenerationAdvancedControlStage2Flags)));
-            queueableBinaryWriter.Write(((short)(this.RasterizerScreenEffectTexcoordGenerationAdvancedControlStage3Flags)));
-            queueableBinaryWriter.Write(this.Stage0Offset);
-            queueableBinaryWriter.Write(this.Stage1Offset);
-            queueableBinaryWriter.Write(this.Stage2Offset);
-            queueableBinaryWriter.Write(this.Stage3Offset);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.RasterizerScreenEffectTexcoordGenerationAdvancedControlStage0Flags)));
+            queueableBlamBinaryWriter.Write(((short)(this.RasterizerScreenEffectTexcoordGenerationAdvancedControlStage1Flags)));
+            queueableBlamBinaryWriter.Write(((short)(this.RasterizerScreenEffectTexcoordGenerationAdvancedControlStage2Flags)));
+            queueableBlamBinaryWriter.Write(((short)(this.RasterizerScreenEffectTexcoordGenerationAdvancedControlStage3Flags)));
+            queueableBlamBinaryWriter.Write(this.Stage0Offset);
+            queueableBlamBinaryWriter.Write(this.Stage1Offset);
+            queueableBlamBinaryWriter.Write(this.Stage2Offset);
+            queueableBlamBinaryWriter.Write(this.Stage3Offset);
         }
         [System.FlagsAttribute()]
         public enum Stage0Flags : short

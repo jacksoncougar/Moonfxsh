@@ -55,19 +55,19 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.ParticleEffects = base.ReadBlockArrayData<ParticleSystemDefinitionBlockNew>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ParticleEffects);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.ParticleEffects);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MaximumVitality);
-            queueableBinaryWriter.Write(this.Effect);
-            queueableBinaryWriter.Write(this.Sound);
-            queueableBinaryWriter.WritePointer(this.ParticleEffects);
-            queueableBinaryWriter.Write(this.ParticleDensity);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.MaximumVitality);
+            queueableBlamBinaryWriter.Write(this.Effect);
+            queueableBlamBinaryWriter.Write(this.Sound);
+            queueableBlamBinaryWriter.WritePointer(this.ParticleEffects);
+            queueableBlamBinaryWriter.Write(this.ParticleDensity);
         }
     }
 }

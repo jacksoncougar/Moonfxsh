@@ -50,19 +50,19 @@ namespace Moonfish.Guerilla.Tags
             this.ModelSceneBlocks = base.ReadBlockArrayData<UiModelSceneReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.BitmapBlocks = base.ReadBlockArrayData<BitmapBlockReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Shapes);
-            queueableBinaryWriter.QueueWrite(this.ModelSceneBlocks);
-            queueableBinaryWriter.QueueWrite(this.BitmapBlocks);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Shapes);
+            queueableBlamBinaryWriter.QueueWrite(this.ModelSceneBlocks);
+            queueableBlamBinaryWriter.QueueWrite(this.BitmapBlocks);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Shapes);
-            queueableBinaryWriter.WritePointer(this.ModelSceneBlocks);
-            queueableBinaryWriter.WritePointer(this.BitmapBlocks);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Shapes);
+            queueableBlamBinaryWriter.WritePointer(this.ModelSceneBlocks);
+            queueableBlamBinaryWriter.WritePointer(this.BitmapBlocks);
         }
     }
 }

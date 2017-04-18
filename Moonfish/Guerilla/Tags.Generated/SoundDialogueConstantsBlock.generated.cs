@@ -55,18 +55,18 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.AlmostNever);
-            queueableBinaryWriter.Write(this.Rarely);
-            queueableBinaryWriter.Write(this.Somewhat);
-            queueableBinaryWriter.Write(this.Often);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.AlmostNever);
+            queueableBlamBinaryWriter.Write(this.Rarely);
+            queueableBlamBinaryWriter.Write(this.Somewhat);
+            queueableBlamBinaryWriter.Write(this.Often);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Moonfish.Guerilla;
 
 namespace Moonfish.Graphics
 {
@@ -21,7 +22,7 @@ namespace Moonfish.Graphics
             return type;
         }
 
-        static Dictionary<VertexAttributeType, int> IdLookup =new Dictionary<VertexAttributeType, int>();
+        static Dictionary<VertexAttributeType, int> idLookup =new Dictionary<VertexAttributeType, int>();
 
         static VertexAttributeTypeExtensions( )
         {
@@ -29,9 +30,9 @@ namespace Moonfish.Graphics
             int index = 1;
             foreach ( var value in values )
             {
-                if ( !IdLookup.ContainsKey( ( VertexAttributeType ) value ) )
+                if ( !idLookup.ContainsKey( ( VertexAttributeType ) value ) )
                 {
-                    IdLookup.Add( ( VertexAttributeType ) value, index <<= 1 );
+                    idLookup.Add( ( VertexAttributeType ) value, index <<= 1 );
                 }
             }
         }
@@ -41,7 +42,7 @@ namespace Moonfish.Graphics
             var id = 0;
             foreach ( var vertexAttributeType in attributes )
             {
-                id |= IdLookup.ContainsKey( vertexAttributeType ) ? IdLookup[ vertexAttributeType ] : 0;
+                id |= idLookup.ContainsKey( vertexAttributeType ) ? idLookup[ vertexAttributeType ] : 0;
             }
             return id;
         }
@@ -64,9 +65,9 @@ namespace Moonfish.Graphics
         TangentSpaceUnitVectorsCompressed = 0x1B0C,
 
         LightmapUvCoordinateOne = 0x1F08,
-        LightmapUVCoordinateOneXbox = 0x1F04,
+        LightmapUvCoordinateOneXbox = 0x1F04,
         LightmapUvCoordinateTwo = 0x3008,
-        LightmapUVCoordinateTwoXbox = 0x3004,
+        LightmapUvCoordinateTwoXbox = 0x3004,
 
         DiffuseColour = 0x350C,
 

@@ -84,7 +84,7 @@ namespace Moonfish.Guerilla
 
     public interface IReadDefinition
     {
-        void Read(BinaryReader reader);
+        void Read(BlamBinaryReader reader);
     }
 
     public class tag_field : IReadDefinition
@@ -103,7 +103,7 @@ namespace Moonfish.Guerilla
         public string Name { get; set; }
         public dynamic Definition { get; private set; }
 
-        public void Read(BinaryReader reader)
+        public void Read(BlamBinaryReader reader)
         {
             // Read all the fields from the stream.
             type = (field_type) reader.ReadInt16();
@@ -120,7 +120,7 @@ namespace Moonfish.Guerilla
             Definition = ReadDefinition(reader);
         }
 
-        private dynamic ReadDefinition(BinaryReader reader)
+        private dynamic ReadDefinition(BlamBinaryReader reader)
         {
             switch (type)
             {
@@ -166,7 +166,7 @@ namespace Moonfish.Guerilla
             get { return new TagClass(group_tag); }
         }
 
-        public void Read(BinaryReader reader)
+        public void Read(BlamBinaryReader reader)
         {
             // Read all the fields from the stream.
             flags = reader.ReadInt32();
@@ -205,7 +205,7 @@ namespace Moonfish.Guerilla
             get { return maximum_size_string; }
         }
 
-        public void Read(BinaryReader reader)
+        public void Read(BlamBinaryReader reader)
         {
             // Read all the fields from the stream.
             nameAddress = reader.ReadInt32();
@@ -232,7 +232,7 @@ namespace Moonfish.Guerilla
         public int get_block_proc;
         public int is_valid_source_block_proc;
 
-        public void Read(BinaryReader reader)
+        public void Read(BlamBinaryReader reader)
         {
             // Read the fields from the stream.
             get_block_proc = reader.ReadInt32();
@@ -248,7 +248,7 @@ namespace Moonfish.Guerilla
 
         public List<string> Options { get; set; }
 
-        public void Read(BinaryReader reader)
+        public void Read(BlamBinaryReader reader)
         {
             // Read all the fields from the stream.
             option_count = reader.ReadInt32();
@@ -291,7 +291,7 @@ namespace Moonfish.Guerilla
 
         public dynamic Definition { get; set; }
 
-        public tag_struct_definition(BinaryReader reader)
+        public tag_struct_definition(BlamBinaryReader reader)
             : this()
         {
             // Read all the fields from the stream.
@@ -307,7 +307,7 @@ namespace Moonfish.Guerilla
             Definition = reader.ReadFieldDefinition<TagBlockDefinition>();
         }
 
-        public void Read(BinaryReader reader)
+        public void Read(BlamBinaryReader reader)
         {
             this = new tag_struct_definition(reader);
         }
@@ -353,7 +353,7 @@ namespace Moonfish.Guerilla
         public List<tag_field_set> FieldSets { get; set; }
         public tag_field_set LatestFieldSet { get; set; }
 
-        public TagBlockDefinition(BinaryReader reader)
+        public TagBlockDefinition(BlamBinaryReader reader)
             : this()
         {
             // Read all the fields from the stream.
@@ -394,10 +394,7 @@ namespace Moonfish.Guerilla
 
 
                 var definitionName = name;
-                fieldSet.ReadFields(reader,
-                    Guerilla.PostprocessFunctions.Where(x => x.Key == definitionName)
-                        .Select(x => x.Value)
-                        .FirstOrDefault());
+                fieldSet.ReadFields(reader, null);
                 LatestFieldSet = fieldSet;
                 FieldSets.Add(fieldSet);
             }
@@ -450,7 +447,7 @@ namespace Moonfish.Guerilla
                     default:
                         reader.BaseStream.Seek(field_set_latest_address, SeekOrigin.Begin);
                         var latestFieldSet = new tag_field_set(reader,
-                            Guerilla.PostprocessFunctions.Where(x => x.Key == definitionName)
+                            Guerilla.PostprocessFunctions?.Where(x => x.Key == definitionName)
                                 .Select(x => x.Value)
                                 .FirstOrDefault());
                         LatestFieldSet = latestFieldSet;
@@ -459,7 +456,7 @@ namespace Moonfish.Guerilla
             }
         }
 
-        public void Read(BinaryReader reader)
+        public void Read(BlamBinaryReader reader)
         {
             this = new TagBlockDefinition(reader);
         }
@@ -473,7 +470,7 @@ namespace Moonfish.Guerilla
         //public int i1;
         public int size_of;
 
-        public s_tag_field_set_version(BinaryReader reader)
+        public s_tag_field_set_version(BlamBinaryReader reader)
         {
             // Read all the fields from the stream.
             fields_address = reader.ReadInt32();
@@ -483,7 +480,7 @@ namespace Moonfish.Guerilla
             size_of = reader.ReadInt32();
         }
 
-        public void Read(BinaryReader reader)
+        public void Read(BlamBinaryReader reader)
         {
             this = new s_tag_field_set_version(reader);
         }
@@ -519,7 +516,7 @@ namespace Moonfish.Guerilla
 
         public List<tag_field> Fields;
 
-        public tag_field_set(BinaryReader reader, Action<BinaryReader, IList<tag_field>> postprocessFunction = null)
+        public tag_field_set(BlamBinaryReader reader, Action<BlamBinaryReader, IList<tag_field>> postprocessFunction = null)
             : this()
         {
             version = reader.ReadFieldDefinition<s_tag_field_set_version>();
@@ -535,7 +532,7 @@ namespace Moonfish.Guerilla
             ReadFields(reader, postprocessFunction);
         }
 
-        public void ReadFields(BinaryReader reader, Action<BinaryReader, IList<tag_field>> postprocessFunction)
+        public void ReadFields(BlamBinaryReader reader, Action<BlamBinaryReader, IList<tag_field>> postprocessFunction)
         {
             Fields = new List<tag_field>();
             reader.BaseStream.Position = fields_address;
@@ -544,7 +541,7 @@ namespace Moonfish.Guerilla
             if (postprocessFunction != null) postprocessFunction(reader, Fields);
         }
 
-        public void Read(BinaryReader reader)
+        public void Read(BlamBinaryReader reader)
         {
             this = new tag_field_set(reader);
         }

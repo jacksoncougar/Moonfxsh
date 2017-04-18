@@ -16,9 +16,9 @@ namespace Moonfish.Guerilla
             if ( resourceStreamWrapper == null ) return default(GlobalGeometrySectionStructBlock);
 
             GlobalGeometrySectionStructBlock sectionBlock = new GlobalGeometrySectionStructBlock( );
-            using ( BinaryReader binaryReader = new BinaryReader( resourceStreamWrapper ) )
+            using ( BlamBinaryReader blamBinaryReader = new BlamBinaryReader( resourceStreamWrapper ) )
             {
-                sectionBlock.Read( binaryReader );
+                sectionBlock.Read( blamBinaryReader );
 
                 GlobalGeometryBlockResourceBlock[] vertexBufferResources = geometryInfo.Resources.Where(
                     x => x.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer ).ToArray( );

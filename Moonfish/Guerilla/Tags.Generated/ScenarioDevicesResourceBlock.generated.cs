@@ -81,38 +81,38 @@ namespace Moonfish.Guerilla.Tags
             this.LightFixturesPalette = base.ReadBlockArrayData<ScenarioLightFixturePaletteBlock>(binaryReader, pointerQueue.Dequeue());
             this.EditorFolders = base.ReadBlockArrayData<GScenarioEditorFolderBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Names);
-            queueableBinaryWriter.QueueWrite(this.DontUseMeScenarioEnvironmentObjectBlock);
-            queueableBinaryWriter.QueueWrite(this.StructureReferences);
-            queueableBinaryWriter.QueueWrite(this.DeviceGroups);
-            queueableBinaryWriter.QueueWrite(this.Machines);
-            queueableBinaryWriter.QueueWrite(this.MachinesPalette);
-            queueableBinaryWriter.QueueWrite(this.Controls);
-            queueableBinaryWriter.QueueWrite(this.ControlsPalette);
-            queueableBinaryWriter.QueueWrite(this.LightFixtures);
-            queueableBinaryWriter.QueueWrite(this.LightFixturesPalette);
-            queueableBinaryWriter.QueueWrite(this.EditorFolders);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Names);
+            queueableBlamBinaryWriter.QueueWrite(this.DontUseMeScenarioEnvironmentObjectBlock);
+            queueableBlamBinaryWriter.QueueWrite(this.StructureReferences);
+            queueableBlamBinaryWriter.QueueWrite(this.DeviceGroups);
+            queueableBlamBinaryWriter.QueueWrite(this.Machines);
+            queueableBlamBinaryWriter.QueueWrite(this.MachinesPalette);
+            queueableBlamBinaryWriter.QueueWrite(this.Controls);
+            queueableBlamBinaryWriter.QueueWrite(this.ControlsPalette);
+            queueableBlamBinaryWriter.QueueWrite(this.LightFixtures);
+            queueableBlamBinaryWriter.QueueWrite(this.LightFixturesPalette);
+            queueableBlamBinaryWriter.QueueWrite(this.EditorFolders);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Names);
-            queueableBinaryWriter.WritePointer(this.DontUseMeScenarioEnvironmentObjectBlock);
-            queueableBinaryWriter.WritePointer(this.StructureReferences);
-            queueableBinaryWriter.WritePointer(this.DeviceGroups);
-            queueableBinaryWriter.WritePointer(this.Machines);
-            queueableBinaryWriter.WritePointer(this.MachinesPalette);
-            queueableBinaryWriter.WritePointer(this.Controls);
-            queueableBinaryWriter.WritePointer(this.ControlsPalette);
-            queueableBinaryWriter.WritePointer(this.LightFixtures);
-            queueableBinaryWriter.WritePointer(this.LightFixturesPalette);
-            queueableBinaryWriter.Write(this.NextMachineIdSalt);
-            queueableBinaryWriter.Write(this.NextControlIDSalt);
-            queueableBinaryWriter.Write(this.NextLightFixtureIDSalt);
-            queueableBinaryWriter.WritePointer(this.EditorFolders);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Names);
+            queueableBlamBinaryWriter.WritePointer(this.DontUseMeScenarioEnvironmentObjectBlock);
+            queueableBlamBinaryWriter.WritePointer(this.StructureReferences);
+            queueableBlamBinaryWriter.WritePointer(this.DeviceGroups);
+            queueableBlamBinaryWriter.WritePointer(this.Machines);
+            queueableBlamBinaryWriter.WritePointer(this.MachinesPalette);
+            queueableBlamBinaryWriter.WritePointer(this.Controls);
+            queueableBlamBinaryWriter.WritePointer(this.ControlsPalette);
+            queueableBlamBinaryWriter.WritePointer(this.LightFixtures);
+            queueableBlamBinaryWriter.WritePointer(this.LightFixturesPalette);
+            queueableBlamBinaryWriter.Write(this.NextMachineIdSalt);
+            queueableBlamBinaryWriter.Write(this.NextControlIDSalt);
+            queueableBlamBinaryWriter.Write(this.NextLightFixtureIDSalt);
+            queueableBlamBinaryWriter.WritePointer(this.EditorFolders);
         }
     }
 }

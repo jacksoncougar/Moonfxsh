@@ -65,25 +65,25 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(((short)(this.ScenarioLightStructFlags)));
-            queueableBinaryWriter.Write(((short)(this.LightmapType)));
-            queueableBinaryWriter.Write(((short)(this.ScenarioLightStructLightmapFlags)));
-            queueableBinaryWriter.Write(this.LightmapHalfLife);
-            queueableBinaryWriter.Write(this.LightmapLightScale);
-            queueableBinaryWriter.Write(this.TargetPoint);
-            queueableBinaryWriter.Write(this.Width);
-            queueableBinaryWriter.Write(this.HeightScale);
-            queueableBinaryWriter.Write(this.FieldOfView);
-            queueableBinaryWriter.Write(this.FalloffDistance);
-            queueableBinaryWriter.Write(this.CutoffDistance);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.Type)));
+            queueableBlamBinaryWriter.Write(((short)(this.ScenarioLightStructFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.LightmapType)));
+            queueableBlamBinaryWriter.Write(((short)(this.ScenarioLightStructLightmapFlags)));
+            queueableBlamBinaryWriter.Write(this.LightmapHalfLife);
+            queueableBlamBinaryWriter.Write(this.LightmapLightScale);
+            queueableBlamBinaryWriter.Write(this.TargetPoint);
+            queueableBlamBinaryWriter.Write(this.Width);
+            queueableBlamBinaryWriter.Write(this.HeightScale);
+            queueableBlamBinaryWriter.Write(this.FieldOfView);
+            queueableBlamBinaryWriter.Write(this.FalloffDistance);
+            queueableBlamBinaryWriter.Write(this.CutoffDistance);
         }
         public enum TypeEnum : short
         {

@@ -63,27 +63,27 @@ namespace Moonfish.Guerilla.Tags
             this.XboxAnimationDataBlock = base.ReadBlockArrayData<MoonfishXboxAnimationRawBlock>(binaryReader, pointerQueue.Dequeue());
             this.XboxUnknownAnimationBlock = base.ReadBlockArrayData<MoonfishXboxAnimationUnknownBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.Resources.QueueWrites(queueableBinaryWriter);
-            this.Content.QueueWrites(queueableBinaryWriter);
-            this.RunTimeData.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.LastImportResults);
-            queueableBinaryWriter.QueueWrite(this.AdditionalNodeData);
-            queueableBinaryWriter.QueueWrite(this.XboxAnimationDataBlock);
-            queueableBinaryWriter.QueueWrite(this.XboxUnknownAnimationBlock);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.Resources.QueueWrites(queueableBlamBinaryWriter);
+            this.Content.QueueWrites(queueableBlamBinaryWriter);
+            this.RunTimeData.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.LastImportResults);
+            queueableBlamBinaryWriter.QueueWrite(this.AdditionalNodeData);
+            queueableBlamBinaryWriter.QueueWrite(this.XboxAnimationDataBlock);
+            queueableBlamBinaryWriter.QueueWrite(this.XboxUnknownAnimationBlock);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            this.Resources.Write_(queueableBinaryWriter);
-            this.Content.Write_(queueableBinaryWriter);
-            this.RunTimeData.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.LastImportResults);
-            queueableBinaryWriter.WritePointer(this.AdditionalNodeData);
-            queueableBinaryWriter.WritePointer(this.XboxAnimationDataBlock);
-            queueableBinaryWriter.WritePointer(this.XboxUnknownAnimationBlock);
+            base.Write_(queueableBlamBinaryWriter);
+            this.Resources.Write_(queueableBlamBinaryWriter);
+            this.Content.Write_(queueableBlamBinaryWriter);
+            this.RunTimeData.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.LastImportResults);
+            queueableBlamBinaryWriter.WritePointer(this.AdditionalNodeData);
+            queueableBlamBinaryWriter.WritePointer(this.XboxAnimationDataBlock);
+            queueableBlamBinaryWriter.WritePointer(this.XboxUnknownAnimationBlock);
         }
     }
 }

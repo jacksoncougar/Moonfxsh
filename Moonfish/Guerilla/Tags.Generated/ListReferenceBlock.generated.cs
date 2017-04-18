@@ -56,21 +56,21 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.UNUSED = base.ReadBlockArrayData<STextValuePairReferenceBlockUNUSED>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.UNUSED);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.UNUSED);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.ListReferenceFlags)));
-            queueableBinaryWriter.Write(((short)(this.SkinIndex)));
-            queueableBinaryWriter.Write(this.NumVisibleItems);
-            queueableBinaryWriter.Write(this.BottomLeft);
-            queueableBinaryWriter.Write(((short)(this.AnimationIndex)));
-            queueableBinaryWriter.Write(this.IntroAnimationDelayMilliseconds);
-            queueableBinaryWriter.WritePointer(this.UNUSED);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.ListReferenceFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.SkinIndex)));
+            queueableBlamBinaryWriter.Write(this.NumVisibleItems);
+            queueableBlamBinaryWriter.Write(this.BottomLeft);
+            queueableBlamBinaryWriter.Write(((short)(this.AnimationIndex)));
+            queueableBlamBinaryWriter.Write(this.IntroAnimationDelayMilliseconds);
+            queueableBlamBinaryWriter.WritePointer(this.UNUSED);
         }
         /// <summary>
         /// If the pane contains a list, define it here

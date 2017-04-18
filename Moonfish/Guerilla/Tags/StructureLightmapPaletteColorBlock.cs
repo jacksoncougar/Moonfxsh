@@ -7,7 +7,7 @@ namespace Moonfish.Guerilla.Tags
         public byte[] GetColourPaletteData( )
         {
             var buffer = new byte[1024];
-            using ( var binaryWriter = new BinaryWriter( new MemoryStream( buffer ) ) )
+            using ( var binaryWriter = new BlamBinaryWriter( new MemoryStream( buffer ) ) )
             {
                 binaryWriter.Write( FIRSTPaletteColor );
                 binaryWriter.Write( fieldskip );

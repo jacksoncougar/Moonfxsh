@@ -8,7 +8,7 @@ namespace Moonfish.Guerilla
     {
         public static void Write(this Stream output, GuerillaBlock block)
         {
-            var queueableBinaryWriter = new QueueableBinaryWriter(output,
+            var queueableBinaryWriter = new QueueableBlamBinaryWriter(output,
                 (int)output.Position + block.SerializedSize);
 
             block.QueueWrites(queueableBinaryWriter);
@@ -16,15 +16,15 @@ namespace Moonfish.Guerilla
             queueableBinaryWriter.WriteQueue();
         }
 
-        public static void Write(this BinaryWriter binaryWriter, GuerillaBlock block)
+        public static void Write(this BlamBinaryWriter blamBinaryWriter, GuerillaBlock block)
         {
-            block.Write_(binaryWriter as QueueableBinaryWriter ??
-                         new QueueableBinaryWriter(binaryWriter.BaseStream, block.SerializedSize));
+            block.Write_(blamBinaryWriter as QueueableBlamBinaryWriter ??
+                         new QueueableBlamBinaryWriter(blamBinaryWriter.BaseStream, block.SerializedSize));
         }
 
-        public delegate void PreProcessFieldSet(BinaryReader reader, List<tag_field> fieldSet);
+        public delegate void PreProcessFieldSet(BlamBinaryReader reader, List<tag_field> fieldSet);
 
-        public static List<tag_field> ReadFields(this BinaryReader reader)
+        public static List<tag_field> ReadFields(this BlamBinaryReader reader)
         {
             var fields = new List<tag_field>();
             var field = new tag_field();
@@ -39,7 +39,7 @@ namespace Moonfish.Guerilla
             return fields;
         }
 
-        public static T ReadFieldDefinition<T>(this BinaryReader reader) where T : IReadDefinition, new()
+        public static T ReadFieldDefinition<T>(this BlamBinaryReader reader) where T : IReadDefinition, new()
         {
             // Read the tag_block_definition struct from the stream.
             T definition = new T();
@@ -48,7 +48,7 @@ namespace Moonfish.Guerilla
             return definition;
         }
 
-        public static T ReadFieldDefinition<T>(this BinaryReader reader, tag_field field)
+        public static T ReadFieldDefinition<T>(this BlamBinaryReader reader, tag_field field)
             where T : IReadDefinition, new()
         {
             // Seek to the tag_block_definition address.

@@ -53,21 +53,21 @@ namespace Moonfish.Guerilla.Tags
             this.RigidPointGroups = base.ReadBlockArrayData<GlobalGeometryRigidPointGroupBlock>(binaryReader, pointerQueue.Dequeue());
             this.VertexPointIndices = base.ReadBlockArrayData<GlobalGeometryPointDataIndexBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.RawPoints);
-            queueableBinaryWriter.QueueWrite(this.RuntimePointData);
-            queueableBinaryWriter.QueueWrite(this.RigidPointGroups);
-            queueableBinaryWriter.QueueWrite(this.VertexPointIndices);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.RawPoints);
+            queueableBlamBinaryWriter.QueueWrite(this.RuntimePointData);
+            queueableBlamBinaryWriter.QueueWrite(this.RigidPointGroups);
+            queueableBlamBinaryWriter.QueueWrite(this.VertexPointIndices);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.RawPoints);
-            queueableBinaryWriter.WritePointer(this.RuntimePointData);
-            queueableBinaryWriter.WritePointer(this.RigidPointGroups);
-            queueableBinaryWriter.WritePointer(this.VertexPointIndices);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.RawPoints);
+            queueableBlamBinaryWriter.WritePointer(this.RuntimePointData);
+            queueableBlamBinaryWriter.WritePointer(this.RigidPointGroups);
+            queueableBlamBinaryWriter.WritePointer(this.VertexPointIndices);
         }
     }
 }

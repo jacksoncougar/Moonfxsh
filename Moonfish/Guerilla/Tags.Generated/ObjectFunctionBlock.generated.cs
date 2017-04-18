@@ -56,21 +56,21 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.DefaultFunction.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.DefaultFunction.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.DefaultFunction.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.ObjectFunctionFlags)));
-            queueableBinaryWriter.Write(this.ImportName);
-            queueableBinaryWriter.Write(this.ExportName);
-            queueableBinaryWriter.Write(this.TurnOffWith);
-            queueableBinaryWriter.Write(this.MinValue);
-            this.DefaultFunction.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ScaleBy);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.ObjectFunctionFlags)));
+            queueableBlamBinaryWriter.Write(this.ImportName);
+            queueableBlamBinaryWriter.Write(this.ExportName);
+            queueableBlamBinaryWriter.Write(this.TurnOffWith);
+            queueableBlamBinaryWriter.Write(this.MinValue);
+            this.DefaultFunction.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.ScaleBy);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

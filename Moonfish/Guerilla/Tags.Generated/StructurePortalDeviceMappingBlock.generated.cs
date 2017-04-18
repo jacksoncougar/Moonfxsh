@@ -47,17 +47,17 @@ namespace Moonfish.Guerilla.Tags
             this.DevicePortalAssociations = base.ReadBlockArrayData<StructureDevicePortalAssociationBlock>(binaryReader, pointerQueue.Dequeue());
             this.GamePortalToPortalMap = base.ReadBlockArrayData<GamePortalToPortalMappingBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.DevicePortalAssociations);
-            queueableBinaryWriter.QueueWrite(this.GamePortalToPortalMap);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.DevicePortalAssociations);
+            queueableBlamBinaryWriter.QueueWrite(this.GamePortalToPortalMap);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.DevicePortalAssociations);
-            queueableBinaryWriter.WritePointer(this.GamePortalToPortalMap);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.DevicePortalAssociations);
+            queueableBlamBinaryWriter.WritePointer(this.GamePortalToPortalMap);
         }
     }
 }

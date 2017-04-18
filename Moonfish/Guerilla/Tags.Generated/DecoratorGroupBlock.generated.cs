@@ -67,26 +67,26 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DecoratorSet);
-            queueableBinaryWriter.Write(((byte)(this.DecoratorType)));
-            queueableBinaryWriter.Write(this.ShaderIndex);
-            queueableBinaryWriter.Write(this.CompressedRadius);
-            queueableBinaryWriter.Write(this.Cluster);
-            queueableBinaryWriter.Write(this.CacheBlock);
-            queueableBinaryWriter.Write(this.DecoratorStartIndex);
-            queueableBinaryWriter.Write(this.DecoratorCount);
-            queueableBinaryWriter.Write(this.VertexStartOffset);
-            queueableBinaryWriter.Write(this.VertexCount);
-            queueableBinaryWriter.Write(this.IndexStartOffset);
-            queueableBinaryWriter.Write(this.IndexCount);
-            queueableBinaryWriter.Write(this.CompressedBoundingCenter);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.DecoratorSet);
+            queueableBlamBinaryWriter.Write(((byte)(this.DecoratorType)));
+            queueableBlamBinaryWriter.Write(this.ShaderIndex);
+            queueableBlamBinaryWriter.Write(this.CompressedRadius);
+            queueableBlamBinaryWriter.Write(this.Cluster);
+            queueableBlamBinaryWriter.Write(this.CacheBlock);
+            queueableBlamBinaryWriter.Write(this.DecoratorStartIndex);
+            queueableBlamBinaryWriter.Write(this.DecoratorCount);
+            queueableBlamBinaryWriter.Write(this.VertexStartOffset);
+            queueableBlamBinaryWriter.Write(this.VertexCount);
+            queueableBlamBinaryWriter.Write(this.IndexStartOffset);
+            queueableBlamBinaryWriter.Write(this.IndexCount);
+            queueableBlamBinaryWriter.Write(this.CompressedBoundingCenter);
         }
         public enum DecoratorTypeEnum : byte
         {

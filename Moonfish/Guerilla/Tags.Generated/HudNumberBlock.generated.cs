@@ -61,22 +61,22 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DigitsBitmap);
-            queueableBinaryWriter.Write(this.BitmapDigitWidth);
-            queueableBinaryWriter.Write(this.ScreenDigitWidth);
-            queueableBinaryWriter.Write(this.XOffset);
-            queueableBinaryWriter.Write(this.YOffset);
-            queueableBinaryWriter.Write(this.DecimalPointWidth);
-            queueableBinaryWriter.Write(this.ColonWidth);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.DigitsBitmap);
+            queueableBlamBinaryWriter.Write(this.BitmapDigitWidth);
+            queueableBlamBinaryWriter.Write(this.ScreenDigitWidth);
+            queueableBlamBinaryWriter.Write(this.XOffset);
+            queueableBlamBinaryWriter.Write(this.YOffset);
+            queueableBlamBinaryWriter.Write(this.DecimalPointWidth);
+            queueableBlamBinaryWriter.Write(this.ColonWidth);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
         }
     }
 }

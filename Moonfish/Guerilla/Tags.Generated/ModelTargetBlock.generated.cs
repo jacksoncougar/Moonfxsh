@@ -56,21 +56,21 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.LockonData.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.LockonData.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.LockonData.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MarkerName);
-            queueableBinaryWriter.Write(this.Size);
-            queueableBinaryWriter.Write(this.ConeAngle);
-            queueableBinaryWriter.Write(this.DamageSection);
-            queueableBinaryWriter.Write(this.Variant);
-            queueableBinaryWriter.Write(this.TargetingRelevance);
-            this.LockonData.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.MarkerName);
+            queueableBlamBinaryWriter.Write(this.Size);
+            queueableBlamBinaryWriter.Write(this.ConeAngle);
+            queueableBlamBinaryWriter.Write(this.DamageSection);
+            queueableBlamBinaryWriter.Write(this.Variant);
+            queueableBlamBinaryWriter.Write(this.TargetingRelevance);
+            this.LockonData.Write_(queueableBlamBinaryWriter);
         }
     }
 }

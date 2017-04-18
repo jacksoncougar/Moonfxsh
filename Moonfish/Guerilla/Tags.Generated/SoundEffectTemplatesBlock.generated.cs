@@ -58,21 +58,21 @@ namespace Moonfish.Guerilla.Tags
             this.Explanation = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
             this.Parameters = base.ReadBlockArrayData<SoundEffectTemplateParameterBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Explanation);
-            queueableBinaryWriter.QueueWrite(this.Parameters);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Explanation);
+            queueableBlamBinaryWriter.QueueWrite(this.Parameters);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DspEffect);
-            queueableBinaryWriter.WritePointer(this.Explanation);
-            queueableBinaryWriter.Write(((int)(this.SoundEffectTemplatesFlags)));
-            queueableBinaryWriter.Write(this.FieldShortInteger);
-            queueableBinaryWriter.Write(this.FieldShortInteger0);
-            queueableBinaryWriter.WritePointer(this.Parameters);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.DspEffect);
+            queueableBlamBinaryWriter.WritePointer(this.Explanation);
+            queueableBlamBinaryWriter.Write(((int)(this.SoundEffectTemplatesFlags)));
+            queueableBlamBinaryWriter.Write(this.FieldShortInteger);
+            queueableBlamBinaryWriter.Write(this.FieldShortInteger0);
+            queueableBlamBinaryWriter.WritePointer(this.Parameters);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

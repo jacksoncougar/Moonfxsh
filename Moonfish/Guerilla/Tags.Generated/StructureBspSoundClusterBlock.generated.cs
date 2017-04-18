@@ -51,19 +51,19 @@ namespace Moonfish.Guerilla.Tags
             this.EnclosingPortalDesignators = base.ReadBlockArrayData<StructureSoundClusterPortalDesignators>(binaryReader, pointerQueue.Dequeue());
             this.InteriorClusterIndices = base.ReadBlockArrayData<StructureSoundClusterInteriorClusterIndices>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.EnclosingPortalDesignators);
-            queueableBinaryWriter.QueueWrite(this.InteriorClusterIndices);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.EnclosingPortalDesignators);
+            queueableBlamBinaryWriter.QueueWrite(this.InteriorClusterIndices);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.WritePointer(this.EnclosingPortalDesignators);
-            queueableBinaryWriter.WritePointer(this.InteriorClusterIndices);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.WritePointer(this.EnclosingPortalDesignators);
+            queueableBlamBinaryWriter.WritePointer(this.InteriorClusterIndices);
         }
     }
 }

@@ -55,21 +55,21 @@ namespace Moonfish.Guerilla.Tags
             this.Constants.ReadInstances(binaryReader, pointerQueue);
             this.Combiners.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.Constants.QueueWrites(queueableBinaryWriter);
-            this.Combiners.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.Constants.QueueWrites(queueableBlamBinaryWriter);
+            this.Combiners.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.EnumIndex);
-            queueableBinaryWriter.Write(((short)(this.PixelShaderPermutationFlags)));
-            this.Constants.Write_(queueableBinaryWriter);
-            this.Combiners.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.fieldskip0);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.EnumIndex);
+            queueableBlamBinaryWriter.Write(((short)(this.PixelShaderPermutationFlags)));
+            this.Constants.Write_(queueableBlamBinaryWriter);
+            this.Combiners.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.fieldskip);
+            queueableBlamBinaryWriter.Write(this.fieldskip0);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

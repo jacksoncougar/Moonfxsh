@@ -86,36 +86,36 @@ namespace Moonfish.Guerilla.Tags
             this.HudWidgetStateDefinitionStruct.ReadInstances(binaryReader, pointerQueue);
             this.Effect = base.ReadBlockArrayData<HudWidgetEffectBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.HudWidgetInputsStruct.QueueWrites(queueableBinaryWriter);
-            this.HudWidgetStateDefinitionStruct.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Effect);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.HudWidgetInputsStruct.QueueWrites(queueableBlamBinaryWriter);
+            this.HudWidgetStateDefinitionStruct.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Effect);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            this.HudWidgetInputsStruct.Write_(queueableBinaryWriter);
-            this.HudWidgetStateDefinitionStruct.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.Anchor)));
-            queueableBinaryWriter.Write(((short)(this.HudBitmapWidgetsFlags)));
-            queueableBinaryWriter.Write(this.Bitmap);
-            queueableBinaryWriter.Write(this.Shader);
-            queueableBinaryWriter.Write(this.FullscreenSequenceIndex);
-            queueableBinaryWriter.Write(this.HalfscreenSequenceIndex);
-            queueableBinaryWriter.Write(this.QuarterscreenSequenceIndex);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.FullscreenOffset);
-            queueableBinaryWriter.Write(this.HalfscreenOffset);
-            queueableBinaryWriter.Write(this.QuarterscreenOffset);
-            queueableBinaryWriter.Write(this.FullscreenRegistrationPoint);
-            queueableBinaryWriter.Write(this.HalfscreenRegistrationPoint);
-            queueableBinaryWriter.Write(this.QuarterscreenRegistrationPoint);
-            queueableBinaryWriter.WritePointer(this.Effect);
-            queueableBinaryWriter.Write(((short)(this.SpecialHudType)));
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            this.HudWidgetInputsStruct.Write_(queueableBlamBinaryWriter);
+            this.HudWidgetStateDefinitionStruct.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.Anchor)));
+            queueableBlamBinaryWriter.Write(((short)(this.HudBitmapWidgetsFlags)));
+            queueableBlamBinaryWriter.Write(this.Bitmap);
+            queueableBlamBinaryWriter.Write(this.Shader);
+            queueableBlamBinaryWriter.Write(this.FullscreenSequenceIndex);
+            queueableBlamBinaryWriter.Write(this.HalfscreenSequenceIndex);
+            queueableBlamBinaryWriter.Write(this.QuarterscreenSequenceIndex);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.FullscreenOffset);
+            queueableBlamBinaryWriter.Write(this.HalfscreenOffset);
+            queueableBlamBinaryWriter.Write(this.QuarterscreenOffset);
+            queueableBlamBinaryWriter.Write(this.FullscreenRegistrationPoint);
+            queueableBlamBinaryWriter.Write(this.HalfscreenRegistrationPoint);
+            queueableBlamBinaryWriter.Write(this.QuarterscreenRegistrationPoint);
+            queueableBlamBinaryWriter.WritePointer(this.Effect);
+            queueableBlamBinaryWriter.Write(((short)(this.SpecialHudType)));
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
         }
         public enum AnchorEnum : short
         {

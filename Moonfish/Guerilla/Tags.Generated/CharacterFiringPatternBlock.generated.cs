@@ -75,26 +75,26 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.RateOfFire);
-            queueableBinaryWriter.Write(this.TargetTracking);
-            queueableBinaryWriter.Write(this.TargetLeading);
-            queueableBinaryWriter.Write(this.BurstOriginRadius);
-            queueableBinaryWriter.Write(this.BurstOriginAngle);
-            queueableBinaryWriter.Write(this.BurstReturnLength);
-            queueableBinaryWriter.Write(this.BurstReturnAngle);
-            queueableBinaryWriter.Write(this.BurstDuration);
-            queueableBinaryWriter.Write(this.BurstSeparation);
-            queueableBinaryWriter.Write(this.WeaponDamageModifier);
-            queueableBinaryWriter.Write(this.ProjectileError);
-            queueableBinaryWriter.Write(this.BurstAngularVelocity);
-            queueableBinaryWriter.Write(this.MaximumErrorAngle);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.RateOfFire);
+            queueableBlamBinaryWriter.Write(this.TargetTracking);
+            queueableBlamBinaryWriter.Write(this.TargetLeading);
+            queueableBlamBinaryWriter.Write(this.BurstOriginRadius);
+            queueableBlamBinaryWriter.Write(this.BurstOriginAngle);
+            queueableBlamBinaryWriter.Write(this.BurstReturnLength);
+            queueableBlamBinaryWriter.Write(this.BurstReturnAngle);
+            queueableBlamBinaryWriter.Write(this.BurstDuration);
+            queueableBlamBinaryWriter.Write(this.BurstSeparation);
+            queueableBlamBinaryWriter.Write(this.WeaponDamageModifier);
+            queueableBlamBinaryWriter.Write(this.ProjectileError);
+            queueableBlamBinaryWriter.Write(this.BurstAngularVelocity);
+            queueableBlamBinaryWriter.Write(this.MaximumErrorAngle);
         }
     }
 }

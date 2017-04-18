@@ -65,24 +65,24 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Animation.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.Animation.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.Animation.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Label);
-            this.Animation.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MarkerName);
-            queueableBinaryWriter.Write(this.MassPointOffset);
-            queueableBinaryWriter.Write(this.FullExtensionGroundDepth);
-            queueableBinaryWriter.Write(this.FullCompressionGroundDepth);
-            queueableBinaryWriter.Write(this.RegionName);
-            queueableBinaryWriter.Write(this.DestroyedMassPointOffset);
-            queueableBinaryWriter.Write(this.DestroyedFullExtensionGroundDepth);
-            queueableBinaryWriter.Write(this.DestroyedFullCompressionGroundDepth);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Label);
+            this.Animation.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.MarkerName);
+            queueableBlamBinaryWriter.Write(this.MassPointOffset);
+            queueableBlamBinaryWriter.Write(this.FullExtensionGroundDepth);
+            queueableBlamBinaryWriter.Write(this.FullCompressionGroundDepth);
+            queueableBlamBinaryWriter.Write(this.RegionName);
+            queueableBlamBinaryWriter.Write(this.DestroyedMassPointOffset);
+            queueableBlamBinaryWriter.Write(this.DestroyedFullExtensionGroundDepth);
+            queueableBlamBinaryWriter.Write(this.DestroyedFullCompressionGroundDepth);
         }
     }
 }

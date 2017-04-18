@@ -95,37 +95,37 @@ namespace Moonfish.Guerilla.Tags
             this.EMPTYSTRING0 = base.ReadBlockArrayData<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryReader, pointerQueue.Dequeue());
             this.PostprocessDefinition = base.ReadBlockArrayData<ShaderTemplatePostprocessDefinitionNewBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Documentation);
-            queueableBinaryWriter.QueueWrite(this.Properties);
-            queueableBinaryWriter.QueueWrite(this.Categories);
-            queueableBinaryWriter.QueueWrite(this.LODs);
-            queueableBinaryWriter.QueueWrite(this.EMPTYSTRING);
-            queueableBinaryWriter.QueueWrite(this.EMPTYSTRING0);
-            queueableBinaryWriter.QueueWrite(this.PostprocessDefinition);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Documentation);
+            queueableBlamBinaryWriter.QueueWrite(this.Properties);
+            queueableBlamBinaryWriter.QueueWrite(this.Categories);
+            queueableBlamBinaryWriter.QueueWrite(this.LODs);
+            queueableBlamBinaryWriter.QueueWrite(this.EMPTYSTRING);
+            queueableBlamBinaryWriter.QueueWrite(this.EMPTYSTRING0);
+            queueableBlamBinaryWriter.QueueWrite(this.PostprocessDefinition);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Documentation);
-            queueableBinaryWriter.Write(this.DefaultMaterialName);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.ShaderTemplateFlags)));
-            queueableBinaryWriter.WritePointer(this.Properties);
-            queueableBinaryWriter.WritePointer(this.Categories);
-            queueableBinaryWriter.Write(this.LightResponse);
-            queueableBinaryWriter.WritePointer(this.LODs);
-            queueableBinaryWriter.WritePointer(this.EMPTYSTRING);
-            queueableBinaryWriter.WritePointer(this.EMPTYSTRING0);
-            queueableBinaryWriter.Write(this.Aux1Shader);
-            queueableBinaryWriter.Write(((short)(this.Aux1Layer)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.Aux2Shader);
-            queueableBinaryWriter.Write(((short)(this.Aux2Layer)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.WritePointer(this.PostprocessDefinition);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Documentation);
+            queueableBlamBinaryWriter.Write(this.DefaultMaterialName);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(((short)(this.ShaderTemplateFlags)));
+            queueableBlamBinaryWriter.WritePointer(this.Properties);
+            queueableBlamBinaryWriter.WritePointer(this.Categories);
+            queueableBlamBinaryWriter.Write(this.LightResponse);
+            queueableBlamBinaryWriter.WritePointer(this.LODs);
+            queueableBlamBinaryWriter.WritePointer(this.EMPTYSTRING);
+            queueableBlamBinaryWriter.WritePointer(this.EMPTYSTRING0);
+            queueableBlamBinaryWriter.Write(this.Aux1Shader);
+            queueableBlamBinaryWriter.Write(((short)(this.Aux1Layer)));
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.Aux2Shader);
+            queueableBlamBinaryWriter.Write(((short)(this.Aux2Layer)));
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.WritePointer(this.PostprocessDefinition);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

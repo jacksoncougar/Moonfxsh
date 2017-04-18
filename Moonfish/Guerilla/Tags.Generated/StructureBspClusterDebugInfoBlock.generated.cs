@@ -62,26 +62,26 @@ namespace Moonfish.Guerilla.Tags
             this.VisFogOmissionClusterIndices = base.ReadBlockArrayData<StructureBspDebugInfoIndicesBlock>(binaryReader, pointerQueue.Dequeue());
             this.ContainingFogZoneIndices = base.ReadBlockArrayData<StructureBspDebugInfoIndicesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Lines);
-            queueableBinaryWriter.QueueWrite(this.FogPlaneIndices);
-            queueableBinaryWriter.QueueWrite(this.VisibleFogPlaneIndices);
-            queueableBinaryWriter.QueueWrite(this.VisFogOmissionClusterIndices);
-            queueableBinaryWriter.QueueWrite(this.ContainingFogZoneIndices);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Lines);
+            queueableBlamBinaryWriter.QueueWrite(this.FogPlaneIndices);
+            queueableBlamBinaryWriter.QueueWrite(this.VisibleFogPlaneIndices);
+            queueableBlamBinaryWriter.QueueWrite(this.VisFogOmissionClusterIndices);
+            queueableBlamBinaryWriter.QueueWrite(this.ContainingFogZoneIndices);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.StructureBspClusterDebugInfoErrors)));
-            queueableBinaryWriter.Write(((short)(this.StructureBspClusterDebugInfoWarnings)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.Lines);
-            queueableBinaryWriter.WritePointer(this.FogPlaneIndices);
-            queueableBinaryWriter.WritePointer(this.VisibleFogPlaneIndices);
-            queueableBinaryWriter.WritePointer(this.VisFogOmissionClusterIndices);
-            queueableBinaryWriter.WritePointer(this.ContainingFogZoneIndices);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.StructureBspClusterDebugInfoErrors)));
+            queueableBlamBinaryWriter.Write(((short)(this.StructureBspClusterDebugInfoWarnings)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.WritePointer(this.Lines);
+            queueableBlamBinaryWriter.WritePointer(this.FogPlaneIndices);
+            queueableBlamBinaryWriter.WritePointer(this.VisibleFogPlaneIndices);
+            queueableBlamBinaryWriter.WritePointer(this.VisFogOmissionClusterIndices);
+            queueableBlamBinaryWriter.WritePointer(this.ContainingFogZoneIndices);
         }
         [System.FlagsAttribute()]
         public enum Errors : short

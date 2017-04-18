@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using Moonfish.Forms.ShaderForm;
 using Moonfish.Graphics;
+using Moonfish.Guerilla;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 using WeifenLuo.WinFormsUI.Docking;
@@ -72,7 +73,7 @@ namespace Moonfish.Forms
                     asmEditor.SetText( strBuilder.ToString( ) );
                     return;
                 }
-                using ( var binaryReader = new BinaryReader( new MemoryStream( code ) ) )
+                using ( var binaryReader = new BlamBinaryReader( new MemoryStream( code ) ) )
                 {
                     var version = binaryReader.ReadInt16( );
                     strBuilder.AppendLine( "#" + version );

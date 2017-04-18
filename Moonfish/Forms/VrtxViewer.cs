@@ -132,7 +132,7 @@ namespace Moonfish.Forms
                 var dataSize = Marshal.SizeOf(type);
                 if (type == typeof(sbyte))
                 {
-                    using (var binaryReader = new BinaryReader(_stream, Encoding.Default, true))
+                    using (var binaryReader = new BlamBinaryReader(_stream, Encoding.Default, true))
                     {
 
                     }

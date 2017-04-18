@@ -57,22 +57,22 @@ namespace Moonfish.Guerilla.Tags
             this.DashlightData.ReadInstances(binaryReader, pointerQueue);
             this.ScreenEffectWidgets = base.ReadBlockArrayData<HudScreenEffectWidgets>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.BitmapWidgets);
-            queueableBinaryWriter.QueueWrite(this.TextWidgets);
-            this.DashlightData.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ScreenEffectWidgets);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.BitmapWidgets);
+            queueableBlamBinaryWriter.QueueWrite(this.TextWidgets);
+            this.DashlightData.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.ScreenEffectWidgets);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DONOTUSE);
-            queueableBinaryWriter.WritePointer(this.BitmapWidgets);
-            queueableBinaryWriter.WritePointer(this.TextWidgets);
-            this.DashlightData.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.ScreenEffectWidgets);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.DONOTUSE);
+            queueableBlamBinaryWriter.WritePointer(this.BitmapWidgets);
+            queueableBlamBinaryWriter.WritePointer(this.TextWidgets);
+            this.DashlightData.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.ScreenEffectWidgets);
         }
     }
 }

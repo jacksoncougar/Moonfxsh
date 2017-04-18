@@ -133,55 +133,55 @@ namespace Moonfish.Guerilla.Tags
             this.ChangeColors = base.ReadBlockArrayData<ObjectChangeColors>(binaryReader, pointerQueue.Dequeue());
             this.PredictedResources = base.ReadBlockArrayData<PredictedResourceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.AiProperties);
-            queueableBinaryWriter.QueueWrite(this.Functions);
-            queueableBinaryWriter.QueueWrite(this.Attachments);
-            queueableBinaryWriter.QueueWrite(this.Widgets);
-            queueableBinaryWriter.QueueWrite(this.OldFunctions);
-            queueableBinaryWriter.QueueWrite(this.ChangeColors);
-            queueableBinaryWriter.QueueWrite(this.PredictedResources);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.AiProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.Functions);
+            queueableBlamBinaryWriter.QueueWrite(this.Attachments);
+            queueableBlamBinaryWriter.QueueWrite(this.Widgets);
+            queueableBlamBinaryWriter.QueueWrite(this.OldFunctions);
+            queueableBlamBinaryWriter.QueueWrite(this.ChangeColors);
+            queueableBlamBinaryWriter.QueueWrite(this.PredictedResources);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.ObjectFlags)));
-            queueableBinaryWriter.Write(this.BoundingRadius);
-            queueableBinaryWriter.Write(this.BoundingOffset);
-            queueableBinaryWriter.Write(this.AccelerationScale);
-            queueableBinaryWriter.Write(((short)(this.LightmapShadowMode)));
-            queueableBinaryWriter.Write(((byte)(this.SweetenerSize)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.DynamicLightSphereRadius);
-            queueableBinaryWriter.Write(this.DynamicLightSphereOffset);
-            queueableBinaryWriter.Write(this.DefaultModelVariant);
-            queueableBinaryWriter.Write(this.Model);
-            queueableBinaryWriter.Write(this.CrateObject);
-            queueableBinaryWriter.Write(this.ModifierShader);
-            queueableBinaryWriter.Write(this.CreationEffect);
-            queueableBinaryWriter.Write(this.MaterialEffects);
-            queueableBinaryWriter.WritePointer(this.AiProperties);
-            queueableBinaryWriter.WritePointer(this.Functions);
-            queueableBinaryWriter.Write(this.ApplyCollisionDamageScale);
-            queueableBinaryWriter.Write(this.MinGameAcc);
-            queueableBinaryWriter.Write(this.MaxGameAcc);
-            queueableBinaryWriter.Write(this.MinGameScale);
-            queueableBinaryWriter.Write(this.MaxGameScale);
-            queueableBinaryWriter.Write(this.MinAbsAcc);
-            queueableBinaryWriter.Write(this.MaxAbsAcc);
-            queueableBinaryWriter.Write(this.MinAbsScale);
-            queueableBinaryWriter.Write(this.MaxAbsScale);
-            queueableBinaryWriter.Write(this.HudTextMessageIndex);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.WritePointer(this.Attachments);
-            queueableBinaryWriter.WritePointer(this.Widgets);
-            queueableBinaryWriter.WritePointer(this.OldFunctions);
-            queueableBinaryWriter.WritePointer(this.ChangeColors);
-            queueableBinaryWriter.WritePointer(this.PredictedResources);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(((short)(this.ObjectFlags)));
+            queueableBlamBinaryWriter.Write(this.BoundingRadius);
+            queueableBlamBinaryWriter.Write(this.BoundingOffset);
+            queueableBlamBinaryWriter.Write(this.AccelerationScale);
+            queueableBlamBinaryWriter.Write(((short)(this.LightmapShadowMode)));
+            queueableBlamBinaryWriter.Write(((byte)(this.SweetenerSize)));
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.DynamicLightSphereRadius);
+            queueableBlamBinaryWriter.Write(this.DynamicLightSphereOffset);
+            queueableBlamBinaryWriter.Write(this.DefaultModelVariant);
+            queueableBlamBinaryWriter.Write(this.Model);
+            queueableBlamBinaryWriter.Write(this.CrateObject);
+            queueableBlamBinaryWriter.Write(this.ModifierShader);
+            queueableBlamBinaryWriter.Write(this.CreationEffect);
+            queueableBlamBinaryWriter.Write(this.MaterialEffects);
+            queueableBlamBinaryWriter.WritePointer(this.AiProperties);
+            queueableBlamBinaryWriter.WritePointer(this.Functions);
+            queueableBlamBinaryWriter.Write(this.ApplyCollisionDamageScale);
+            queueableBlamBinaryWriter.Write(this.MinGameAcc);
+            queueableBlamBinaryWriter.Write(this.MaxGameAcc);
+            queueableBlamBinaryWriter.Write(this.MinGameScale);
+            queueableBlamBinaryWriter.Write(this.MaxGameScale);
+            queueableBlamBinaryWriter.Write(this.MinAbsAcc);
+            queueableBlamBinaryWriter.Write(this.MaxAbsAcc);
+            queueableBlamBinaryWriter.Write(this.MinAbsScale);
+            queueableBlamBinaryWriter.Write(this.MaxAbsScale);
+            queueableBlamBinaryWriter.Write(this.HudTextMessageIndex);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.WritePointer(this.Attachments);
+            queueableBlamBinaryWriter.WritePointer(this.Widgets);
+            queueableBlamBinaryWriter.WritePointer(this.OldFunctions);
+            queueableBlamBinaryWriter.WritePointer(this.ChangeColors);
+            queueableBlamBinaryWriter.WritePointer(this.PredictedResources);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

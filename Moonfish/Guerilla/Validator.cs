@@ -33,7 +33,7 @@ namespace Moonfish.Guerilla
 
             elementArray.count = 1;
 
-            var binaryReader = new BinaryReader(dataStream);
+            var binaryReader = new BlamBinaryReader(dataStream);
 
 			var virtualTagMemory = new VirtualStreamSectionDescription(datum.VirtualAddress, datum.Length, 0);
 
@@ -69,7 +69,7 @@ namespace Moonfish.Guerilla
             {
                 using (var map = new Map(file))
                 {
-                    var binaryReader = new BinaryReader(map.BaseStream);
+                    var binaryReader = new BlamBinaryReader(map.BaseStream);
 
                     //OnWriteMessage(string.Format("Begin ({0})", map.MapName));
 
@@ -292,7 +292,7 @@ namespace Moonfish.Guerilla
             return true;
         }
 
-        private void ValidateChildren(ElementArray elementArray, BinaryReader binaryReader, ref int nextAddress)
+        private void ValidateChildren(ElementArray elementArray, BlamBinaryReader blamBinaryReader, ref int nextAddress)
         {
             var childrenArrayPointers = (from child in elementArray.children
                 select new
@@ -300,10 +300,10 @@ namespace Moonfish.Guerilla
                     ElementArray = child,
                     ArrayPointer = new Func<BlamPointer>(() =>
                     {
-                        using (binaryReader.BaseStream.Pin())
+                        using (blamBinaryReader.BaseStream.Pin())
                         {
-                            binaryReader.BaseStream.Seek(child.address, SeekOrigin.Current);
-                            var arrayPointer = binaryReader.ReadBlamPointer(child.elementSize);
+                            blamBinaryReader.BaseStream.Seek(child.address, SeekOrigin.Current);
+                            var arrayPointer = blamBinaryReader.ReadBlamPointer(child.elementSize);
                             child.virtualAddress = arrayPointer.StartAddress;
                             child.count = arrayPointer.ElementCount;
                             return arrayPointer;
@@ -317,12 +317,12 @@ namespace Moonfish.Guerilla
                     continue;
                 if (!(child.ArrayPointer.ElementCount == 0 && child.ArrayPointer.StartAddress == 0))
                 {
-                    ValidateTagBlock(child.ElementArray, child.ArrayPointer, binaryReader, ref nextAddress);
+                    ValidateTagBlock(child.ElementArray, child.ArrayPointer, blamBinaryReader, ref nextAddress);
                 }
             }
         }
 
-        private void ValidateTagBlock(ElementArray info, BlamPointer pointer, BinaryReader reader, ref int address)
+        private void ValidateTagBlock(ElementArray info, BlamPointer pointer, BlamBinaryReader reader, ref int address)
         {
             using (reader.BaseStream.Pin())
             {

@@ -79,36 +79,36 @@ namespace Moonfish.Guerilla.Tags
             this.EmissionRadius.ReadInstances(binaryReader, pointerQueue);
             this.EmissionAngle.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.ParticleEmissionRate.QueueWrites(queueableBinaryWriter);
-            this.ParticleLifespan.QueueWrites(queueableBinaryWriter);
-            this.ParticleVelocity.QueueWrites(queueableBinaryWriter);
-            this.ParticleAngularVelocity.QueueWrites(queueableBinaryWriter);
-            this.ParticleSize.QueueWrites(queueableBinaryWriter);
-            this.ParticleTint.QueueWrites(queueableBinaryWriter);
-            this.ParticleAlpha.QueueWrites(queueableBinaryWriter);
-            this.EmissionRadius.QueueWrites(queueableBinaryWriter);
-            this.EmissionAngle.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.ParticleEmissionRate.QueueWrites(queueableBlamBinaryWriter);
+            this.ParticleLifespan.QueueWrites(queueableBlamBinaryWriter);
+            this.ParticleVelocity.QueueWrites(queueableBlamBinaryWriter);
+            this.ParticleAngularVelocity.QueueWrites(queueableBlamBinaryWriter);
+            this.ParticleSize.QueueWrites(queueableBlamBinaryWriter);
+            this.ParticleTint.QueueWrites(queueableBlamBinaryWriter);
+            this.ParticleAlpha.QueueWrites(queueableBlamBinaryWriter);
+            this.EmissionRadius.QueueWrites(queueableBlamBinaryWriter);
+            this.EmissionAngle.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ParticlePhysics);
-            this.ParticleEmissionRate.Write_(queueableBinaryWriter);
-            this.ParticleLifespan.Write_(queueableBinaryWriter);
-            this.ParticleVelocity.Write_(queueableBinaryWriter);
-            this.ParticleAngularVelocity.Write_(queueableBinaryWriter);
-            this.ParticleSize.Write_(queueableBinaryWriter);
-            this.ParticleTint.Write_(queueableBinaryWriter);
-            this.ParticleAlpha.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.EmissionShape)));
-            this.EmissionRadius.Write_(queueableBinaryWriter);
-            this.EmissionAngle.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.TranslationalOffset);
-            queueableBinaryWriter.Write(this.RelativeDirection);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.ParticlePhysics);
+            this.ParticleEmissionRate.Write_(queueableBlamBinaryWriter);
+            this.ParticleLifespan.Write_(queueableBlamBinaryWriter);
+            this.ParticleVelocity.Write_(queueableBlamBinaryWriter);
+            this.ParticleAngularVelocity.Write_(queueableBlamBinaryWriter);
+            this.ParticleSize.Write_(queueableBlamBinaryWriter);
+            this.ParticleTint.Write_(queueableBlamBinaryWriter);
+            this.ParticleAlpha.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.EmissionShape)));
+            this.EmissionRadius.Write_(queueableBlamBinaryWriter);
+            this.EmissionAngle.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.TranslationalOffset);
+            queueableBlamBinaryWriter.Write(this.RelativeDirection);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
         }
         public enum EmissionShapeEnum : int
         {

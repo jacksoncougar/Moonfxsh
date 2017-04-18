@@ -90,38 +90,38 @@ namespace Moonfish.Guerilla.Tags
             this.Section = base.ReadBlockArrayData<WaterGeometrySectionBlock>(binaryReader, pointerQueue.Dequeue());
             this.GeometryBlockInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Section);
-            this.GeometryBlockInfo.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Section);
+            this.GeometryBlockInfo.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Shader);
-            queueableBinaryWriter.WritePointer(this.Section);
-            this.GeometryBlockInfo.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.SunSpotColor);
-            queueableBinaryWriter.Write(this.ReflectionTint);
-            queueableBinaryWriter.Write(this.RefractionTint);
-            queueableBinaryWriter.Write(this.HorizonColor);
-            queueableBinaryWriter.Write(this.SunSpecularPower);
-            queueableBinaryWriter.Write(this.ReflectionBumpScale);
-            queueableBinaryWriter.Write(this.RefractionBumpScale);
-            queueableBinaryWriter.Write(this.FresnelScale);
-            queueableBinaryWriter.Write(this.SunDirHeading);
-            queueableBinaryWriter.Write(this.SunDirPitch);
-            queueableBinaryWriter.Write(this.FOV);
-            queueableBinaryWriter.Write(this.Aspect);
-            queueableBinaryWriter.Write(this.Height);
-            queueableBinaryWriter.Write(this.Farz);
-            queueableBinaryWriter.Write(this.RotateOffset);
-            queueableBinaryWriter.Write(this.Center);
-            queueableBinaryWriter.Write(this.Extents);
-            queueableBinaryWriter.Write(this.FogNear);
-            queueableBinaryWriter.Write(this.FogFar);
-            queueableBinaryWriter.Write(this.DynamicHeightBias);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Shader);
+            queueableBlamBinaryWriter.WritePointer(this.Section);
+            this.GeometryBlockInfo.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.SunSpotColor);
+            queueableBlamBinaryWriter.Write(this.ReflectionTint);
+            queueableBlamBinaryWriter.Write(this.RefractionTint);
+            queueableBlamBinaryWriter.Write(this.HorizonColor);
+            queueableBlamBinaryWriter.Write(this.SunSpecularPower);
+            queueableBlamBinaryWriter.Write(this.ReflectionBumpScale);
+            queueableBlamBinaryWriter.Write(this.RefractionBumpScale);
+            queueableBlamBinaryWriter.Write(this.FresnelScale);
+            queueableBlamBinaryWriter.Write(this.SunDirHeading);
+            queueableBlamBinaryWriter.Write(this.SunDirPitch);
+            queueableBlamBinaryWriter.Write(this.FOV);
+            queueableBlamBinaryWriter.Write(this.Aspect);
+            queueableBlamBinaryWriter.Write(this.Height);
+            queueableBlamBinaryWriter.Write(this.Farz);
+            queueableBlamBinaryWriter.Write(this.RotateOffset);
+            queueableBlamBinaryWriter.Write(this.Center);
+            queueableBlamBinaryWriter.Write(this.Extents);
+            queueableBlamBinaryWriter.Write(this.FogNear);
+            queueableBlamBinaryWriter.Write(this.FogFar);
+            queueableBlamBinaryWriter.Write(this.DynamicHeightBias);
         }
     }
 }

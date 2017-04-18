@@ -61,23 +61,23 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.TextBounds);
-            queueableBinaryWriter.Write(((short)(this.Justification)));
-            queueableBinaryWriter.Write(((short)(this.Font)));
-            queueableBinaryWriter.Write(this.TextColor);
-            queueableBinaryWriter.Write(this.ShadowColor);
-            queueableBinaryWriter.Write(this.FadeInTimeseconds);
-            queueableBinaryWriter.Write(this.UpTimeseconds);
-            queueableBinaryWriter.Write(this.FadeOutTimeseconds);
-            queueableBinaryWriter.Write(this.padding);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(this.TextBounds);
+            queueableBlamBinaryWriter.Write(((short)(this.Justification)));
+            queueableBlamBinaryWriter.Write(((short)(this.Font)));
+            queueableBlamBinaryWriter.Write(this.TextColor);
+            queueableBlamBinaryWriter.Write(this.ShadowColor);
+            queueableBlamBinaryWriter.Write(this.FadeInTimeseconds);
+            queueableBlamBinaryWriter.Write(this.UpTimeseconds);
+            queueableBlamBinaryWriter.Write(this.FadeOutTimeseconds);
+            queueableBlamBinaryWriter.Write(this.padding);
         }
         public enum JustificationEnum : short
         {

@@ -104,43 +104,43 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Texture0);
-            queueableBinaryWriter.Write(this.Texture1);
-            queueableBinaryWriter.Write(this.Texture2);
-            queueableBinaryWriter.Write(this.PlatePositions0);
-            queueableBinaryWriter.Write(this.PlatePositions1);
-            queueableBinaryWriter.Write(this.PlatePositions2);
-            queueableBinaryWriter.Write(this.MoveSpeed0);
-            queueableBinaryWriter.Write(this.MoveSpeed1);
-            queueableBinaryWriter.Write(this.MoveSpeed2);
-            queueableBinaryWriter.Write(this.TextureScale0);
-            queueableBinaryWriter.Write(this.TextureScale1);
-            queueableBinaryWriter.Write(this.TextureScale2);
-            queueableBinaryWriter.Write(this.Jitter0);
-            queueableBinaryWriter.Write(this.Jitter1);
-            queueableBinaryWriter.Write(this.Jitter2);
-            queueableBinaryWriter.Write(this.PlateZNear);
-            queueableBinaryWriter.Write(this.PlateZFar);
-            queueableBinaryWriter.Write(this.DepthBlendZNear);
-            queueableBinaryWriter.Write(this.DepthBlendZFar);
-            queueableBinaryWriter.Write(this.Opacity0);
-            queueableBinaryWriter.Write(this.Opacity1);
-            queueableBinaryWriter.Write(this.Opacity2);
-            queueableBinaryWriter.Write(((int)(this.GlobalWeatherBackgroundPlateFlags)));
-            queueableBinaryWriter.Write(this.TintColor0);
-            queueableBinaryWriter.Write(this.TintColor1);
-            queueableBinaryWriter.Write(this.TintColor2);
-            queueableBinaryWriter.Write(this.Mass1);
-            queueableBinaryWriter.Write(this.Mass2);
-            queueableBinaryWriter.Write(this.Mass3);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Texture0);
+            queueableBlamBinaryWriter.Write(this.Texture1);
+            queueableBlamBinaryWriter.Write(this.Texture2);
+            queueableBlamBinaryWriter.Write(this.PlatePositions0);
+            queueableBlamBinaryWriter.Write(this.PlatePositions1);
+            queueableBlamBinaryWriter.Write(this.PlatePositions2);
+            queueableBlamBinaryWriter.Write(this.MoveSpeed0);
+            queueableBlamBinaryWriter.Write(this.MoveSpeed1);
+            queueableBlamBinaryWriter.Write(this.MoveSpeed2);
+            queueableBlamBinaryWriter.Write(this.TextureScale0);
+            queueableBlamBinaryWriter.Write(this.TextureScale1);
+            queueableBlamBinaryWriter.Write(this.TextureScale2);
+            queueableBlamBinaryWriter.Write(this.Jitter0);
+            queueableBlamBinaryWriter.Write(this.Jitter1);
+            queueableBlamBinaryWriter.Write(this.Jitter2);
+            queueableBlamBinaryWriter.Write(this.PlateZNear);
+            queueableBlamBinaryWriter.Write(this.PlateZFar);
+            queueableBlamBinaryWriter.Write(this.DepthBlendZNear);
+            queueableBlamBinaryWriter.Write(this.DepthBlendZFar);
+            queueableBlamBinaryWriter.Write(this.Opacity0);
+            queueableBlamBinaryWriter.Write(this.Opacity1);
+            queueableBlamBinaryWriter.Write(this.Opacity2);
+            queueableBlamBinaryWriter.Write(((int)(this.GlobalWeatherBackgroundPlateFlags)));
+            queueableBlamBinaryWriter.Write(this.TintColor0);
+            queueableBlamBinaryWriter.Write(this.TintColor1);
+            queueableBlamBinaryWriter.Write(this.TintColor2);
+            queueableBlamBinaryWriter.Write(this.Mass1);
+            queueableBlamBinaryWriter.Write(this.Mass2);
+            queueableBlamBinaryWriter.Write(this.Mass3);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

@@ -60,25 +60,25 @@ namespace Moonfish.Guerilla.Tags
             this.ClusterDistances = base.ReadBlockArrayData<EncodedClusterDistancesBlock>(binaryReader, pointerQueue.Dequeue());
             this.MachineDoorMapping = base.ReadBlockArrayData<OccluderToMachineDoorMapping>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.EncodedDoorPas);
-            queueableBinaryWriter.QueueWrite(this.ClusterDoorPortalEncodedPas);
-            queueableBinaryWriter.QueueWrite(this.AiDeafeningPas);
-            queueableBinaryWriter.QueueWrite(this.ClusterDistances);
-            queueableBinaryWriter.QueueWrite(this.MachineDoorMapping);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.EncodedDoorPas);
+            queueableBlamBinaryWriter.QueueWrite(this.ClusterDoorPortalEncodedPas);
+            queueableBlamBinaryWriter.QueueWrite(this.AiDeafeningPas);
+            queueableBlamBinaryWriter.QueueWrite(this.ClusterDistances);
+            queueableBlamBinaryWriter.QueueWrite(this.MachineDoorMapping);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DoorPortalCount);
-            queueableBinaryWriter.Write(this.ClusterDistanceBounds);
-            queueableBinaryWriter.WritePointer(this.EncodedDoorPas);
-            queueableBinaryWriter.WritePointer(this.ClusterDoorPortalEncodedPas);
-            queueableBinaryWriter.WritePointer(this.AiDeafeningPas);
-            queueableBinaryWriter.WritePointer(this.ClusterDistances);
-            queueableBinaryWriter.WritePointer(this.MachineDoorMapping);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.DoorPortalCount);
+            queueableBlamBinaryWriter.Write(this.ClusterDistanceBounds);
+            queueableBlamBinaryWriter.WritePointer(this.EncodedDoorPas);
+            queueableBlamBinaryWriter.WritePointer(this.ClusterDoorPortalEncodedPas);
+            queueableBlamBinaryWriter.WritePointer(this.AiDeafeningPas);
+            queueableBlamBinaryWriter.WritePointer(this.ClusterDistances);
+            queueableBlamBinaryWriter.WritePointer(this.MachineDoorMapping);
         }
     }
 }

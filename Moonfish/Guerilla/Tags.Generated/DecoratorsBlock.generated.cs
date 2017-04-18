@@ -58,23 +58,23 @@ namespace Moonfish.Guerilla.Tags
             this.Cells = base.ReadBlockArrayData<DecoratorCellCollectionBlock>(binaryReader, pointerQueue.Dequeue());
             this.Decals = base.ReadBlockArrayData<DecoratorProjectedDecalBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.CacheBlocks);
-            queueableBinaryWriter.QueueWrite(this.Groups);
-            queueableBinaryWriter.QueueWrite(this.Cells);
-            queueableBinaryWriter.QueueWrite(this.Decals);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.CacheBlocks);
+            queueableBlamBinaryWriter.QueueWrite(this.Groups);
+            queueableBlamBinaryWriter.QueueWrite(this.Cells);
+            queueableBlamBinaryWriter.QueueWrite(this.Decals);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.GridOrigin);
-            queueableBinaryWriter.Write(this.CellCountPerDimension);
-            queueableBinaryWriter.WritePointer(this.CacheBlocks);
-            queueableBinaryWriter.WritePointer(this.Groups);
-            queueableBinaryWriter.WritePointer(this.Cells);
-            queueableBinaryWriter.WritePointer(this.Decals);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.GridOrigin);
+            queueableBlamBinaryWriter.Write(this.CellCountPerDimension);
+            queueableBlamBinaryWriter.WritePointer(this.CacheBlocks);
+            queueableBlamBinaryWriter.WritePointer(this.Groups);
+            queueableBlamBinaryWriter.WritePointer(this.Cells);
+            queueableBlamBinaryWriter.WritePointer(this.Decals);
         }
     }
 }

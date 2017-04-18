@@ -67,25 +67,25 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Physics.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.Physics.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.Physics.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.CreatureCreatureFlags)));
-            queueableBinaryWriter.Write(((short)(this.DefaultTeam)));
-            queueableBinaryWriter.Write(((short)(this.MotionSensorBlipSize)));
-            queueableBinaryWriter.Write(this.TurningVelocityMaximum);
-            queueableBinaryWriter.Write(this.TurningAccelerationMaximum);
-            queueableBinaryWriter.Write(this.CasualTurningModifier);
-            queueableBinaryWriter.Write(this.AutoaimWidth);
-            this.Physics.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ImpactDamage);
-            queueableBinaryWriter.Write(this.ImpactShieldDamage);
-            queueableBinaryWriter.Write(this.DestroyAfterDeathTime);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.CreatureCreatureFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.DefaultTeam)));
+            queueableBlamBinaryWriter.Write(((short)(this.MotionSensorBlipSize)));
+            queueableBlamBinaryWriter.Write(this.TurningVelocityMaximum);
+            queueableBlamBinaryWriter.Write(this.TurningAccelerationMaximum);
+            queueableBlamBinaryWriter.Write(this.CasualTurningModifier);
+            queueableBlamBinaryWriter.Write(this.AutoaimWidth);
+            this.Physics.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.ImpactDamage);
+            queueableBlamBinaryWriter.Write(this.ImpactShieldDamage);
+            queueableBlamBinaryWriter.Write(this.DestroyAfterDeathTime);
         }
         [System.FlagsAttribute()]
         public enum CreatureFlags : int

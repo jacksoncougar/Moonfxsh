@@ -57,23 +57,23 @@ namespace Moonfish.Guerilla.Tags
             this.WeatherPalette = base.ReadBlockArrayData<StructureBspWeatherPaletteBlock>(binaryReader, pointerQueue.Dequeue());
             this.AtmosphericFogPalette = base.ReadBlockArrayData<ScenarioAtmosphericFogPalette>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ClusterData);
-            queueableBinaryWriter.QueueWrite(this.BackgroundSoundPalette);
-            queueableBinaryWriter.QueueWrite(this.SoundEnvironmentPalette);
-            queueableBinaryWriter.QueueWrite(this.WeatherPalette);
-            queueableBinaryWriter.QueueWrite(this.AtmosphericFogPalette);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.ClusterData);
+            queueableBlamBinaryWriter.QueueWrite(this.BackgroundSoundPalette);
+            queueableBlamBinaryWriter.QueueWrite(this.SoundEnvironmentPalette);
+            queueableBlamBinaryWriter.QueueWrite(this.WeatherPalette);
+            queueableBlamBinaryWriter.QueueWrite(this.AtmosphericFogPalette);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.ClusterData);
-            queueableBinaryWriter.WritePointer(this.BackgroundSoundPalette);
-            queueableBinaryWriter.WritePointer(this.SoundEnvironmentPalette);
-            queueableBinaryWriter.WritePointer(this.WeatherPalette);
-            queueableBinaryWriter.WritePointer(this.AtmosphericFogPalette);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.ClusterData);
+            queueableBlamBinaryWriter.WritePointer(this.BackgroundSoundPalette);
+            queueableBlamBinaryWriter.WritePointer(this.SoundEnvironmentPalette);
+            queueableBlamBinaryWriter.WritePointer(this.WeatherPalette);
+            queueableBlamBinaryWriter.WritePointer(this.AtmosphericFogPalette);
         }
     }
 }

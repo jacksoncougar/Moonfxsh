@@ -76,33 +76,33 @@ namespace Moonfish.Guerilla.Tags
             this.SpecialMovement = base.ReadBlockArrayData<SpecialMovementBlock>(binaryReader, pointerQueue.Dequeue());
             this.OrderEndings = base.ReadBlockArrayData<OrderEndingBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.PrimaryAreaSet);
-            queueableBinaryWriter.QueueWrite(this.SecondaryAreaSet);
-            queueableBinaryWriter.QueueWrite(this.SecondarySetTrigger);
-            queueableBinaryWriter.QueueWrite(this.SpecialMovement);
-            queueableBinaryWriter.QueueWrite(this.OrderEndings);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.PrimaryAreaSet);
+            queueableBlamBinaryWriter.QueueWrite(this.SecondaryAreaSet);
+            queueableBlamBinaryWriter.QueueWrite(this.SecondarySetTrigger);
+            queueableBlamBinaryWriter.QueueWrite(this.SpecialMovement);
+            queueableBlamBinaryWriter.QueueWrite(this.OrderEndings);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.Style);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((int)(this.OrdersFlags)));
-            queueableBinaryWriter.Write(((short)(this.ForceCombatStatus)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.EntryScript);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.FollowSquad);
-            queueableBinaryWriter.Write(this.FollowRadius);
-            queueableBinaryWriter.WritePointer(this.PrimaryAreaSet);
-            queueableBinaryWriter.WritePointer(this.SecondaryAreaSet);
-            queueableBinaryWriter.WritePointer(this.SecondarySetTrigger);
-            queueableBinaryWriter.WritePointer(this.SpecialMovement);
-            queueableBinaryWriter.WritePointer(this.OrderEndings);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(this.Style);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(((int)(this.OrdersFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.ForceCombatStatus)));
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.EntryScript);
+            queueableBlamBinaryWriter.Write(this.fieldskip);
+            queueableBlamBinaryWriter.Write(this.FollowSquad);
+            queueableBlamBinaryWriter.Write(this.FollowRadius);
+            queueableBlamBinaryWriter.WritePointer(this.PrimaryAreaSet);
+            queueableBlamBinaryWriter.WritePointer(this.SecondaryAreaSet);
+            queueableBlamBinaryWriter.WritePointer(this.SecondarySetTrigger);
+            queueableBlamBinaryWriter.WritePointer(this.SpecialMovement);
+            queueableBlamBinaryWriter.WritePointer(this.OrderEndings);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

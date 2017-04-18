@@ -61,23 +61,23 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DisplayString);
-            queueableBinaryWriter.Write(this.DisplayString2);
-            queueableBinaryWriter.Write(this.DisplayString3);
-            queueableBinaryWriter.Write(this.MaxDisplayTime);
-            queueableBinaryWriter.Write(this.DisplayCount);
-            queueableBinaryWriter.Write(this.DissapearDelay);
-            queueableBinaryWriter.Write(this.RedisplayDelay);
-            queueableBinaryWriter.Write(this.DisplayDelay);
-            queueableBinaryWriter.Write(((short)(this.PlayerTrainingEntryDataFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.DisplayString);
+            queueableBlamBinaryWriter.Write(this.DisplayString2);
+            queueableBlamBinaryWriter.Write(this.DisplayString3);
+            queueableBlamBinaryWriter.Write(this.MaxDisplayTime);
+            queueableBlamBinaryWriter.Write(this.DisplayCount);
+            queueableBlamBinaryWriter.Write(this.DissapearDelay);
+            queueableBlamBinaryWriter.Write(this.RedisplayDelay);
+            queueableBlamBinaryWriter.Write(this.DisplayDelay);
+            queueableBlamBinaryWriter.Write(((short)(this.PlayerTrainingEntryDataFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

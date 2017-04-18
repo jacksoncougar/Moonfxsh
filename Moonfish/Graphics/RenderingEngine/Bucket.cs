@@ -207,10 +207,10 @@ namespace Moonfish.Graphics
                 case VertexAttributeType.TextureCoordinateFloat:
                     MoonGL.VertexAttribArray( 3, bindingIndex, 2, VertexAttribType.Float );
                     break;
-                case VertexAttributeType.LightmapUVCoordinateOneXbox:
+                case VertexAttributeType.LightmapUvCoordinateOneXbox:
                     MoonGL.VertexAttribArray( 11, bindingIndex, 2, VertexAttribType.Short, true );
                     break;
-                case VertexAttributeType.LightmapUVCoordinateTwoXbox:
+                case VertexAttributeType.LightmapUvCoordinateTwoXbox:
                     MoonGL.VertexAttribArray( 12, bindingIndex, 2, VertexAttribType.Short, true );
                     break;
                 default:

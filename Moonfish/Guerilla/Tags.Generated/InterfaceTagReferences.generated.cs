@@ -98,32 +98,32 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Obsolete1);
-            queueableBinaryWriter.Write(this.Obsolete2);
-            queueableBinaryWriter.Write(this.ScreenColorTable);
-            queueableBinaryWriter.Write(this.HudColorTable);
-            queueableBinaryWriter.Write(this.EditorColorTable);
-            queueableBinaryWriter.Write(this.DialogColorTable);
-            queueableBinaryWriter.Write(this.HudGlobals);
-            queueableBinaryWriter.Write(this.MotionSensorSweepBitmap);
-            queueableBinaryWriter.Write(this.MotionSensorSweepBitmapMask);
-            queueableBinaryWriter.Write(this.MultiplayerHudBitmap);
-            queueableBinaryWriter.Write(this.TagReference);
-            queueableBinaryWriter.Write(this.HudDigitsDefinition);
-            queueableBinaryWriter.Write(this.MotionSensorBlipBitmap);
-            queueableBinaryWriter.Write(this.InterfaceGooMap1);
-            queueableBinaryWriter.Write(this.InterfaceGooMap2);
-            queueableBinaryWriter.Write(this.InterfaceGooMap3);
-            queueableBinaryWriter.Write(this.MainmenuUiGlobals);
-            queueableBinaryWriter.Write(this.SingleplayerUiGlobals);
-            queueableBinaryWriter.Write(this.MultiplayerUiGlobals);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Obsolete1);
+            queueableBlamBinaryWriter.Write(this.Obsolete2);
+            queueableBlamBinaryWriter.Write(this.ScreenColorTable);
+            queueableBlamBinaryWriter.Write(this.HudColorTable);
+            queueableBlamBinaryWriter.Write(this.EditorColorTable);
+            queueableBlamBinaryWriter.Write(this.DialogColorTable);
+            queueableBlamBinaryWriter.Write(this.HudGlobals);
+            queueableBlamBinaryWriter.Write(this.MotionSensorSweepBitmap);
+            queueableBlamBinaryWriter.Write(this.MotionSensorSweepBitmapMask);
+            queueableBlamBinaryWriter.Write(this.MultiplayerHudBitmap);
+            queueableBlamBinaryWriter.Write(this.TagReference);
+            queueableBlamBinaryWriter.Write(this.HudDigitsDefinition);
+            queueableBlamBinaryWriter.Write(this.MotionSensorBlipBitmap);
+            queueableBlamBinaryWriter.Write(this.InterfaceGooMap1);
+            queueableBlamBinaryWriter.Write(this.InterfaceGooMap2);
+            queueableBlamBinaryWriter.Write(this.InterfaceGooMap3);
+            queueableBlamBinaryWriter.Write(this.MainmenuUiGlobals);
+            queueableBlamBinaryWriter.Write(this.SingleplayerUiGlobals);
+            queueableBlamBinaryWriter.Write(this.MultiplayerUiGlobals);
         }
     }
 }

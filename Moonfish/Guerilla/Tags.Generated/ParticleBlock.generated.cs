@@ -97,42 +97,42 @@ namespace Moonfish.Guerilla.Tags
             this.AttachedParticleSystems = base.ReadBlockArrayData<ParticleSystemDefinitionBlockNew>(binaryReader, pointerQueue.Dequeue());
             this.ShaderPostprocessDefinitionNewBlock = base.ReadBlockArrayData<ShaderPostprocessDefinitionNewBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ShaderParameters);
-            this.Color.QueueWrites(queueableBinaryWriter);
-            this.Alpha.QueueWrites(queueableBinaryWriter);
-            this.Scale.QueueWrites(queueableBinaryWriter);
-            this.Rotation.QueueWrites(queueableBinaryWriter);
-            this.FrameIndex.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Locations);
-            queueableBinaryWriter.QueueWrite(this.AttachedParticleSystems);
-            queueableBinaryWriter.QueueWrite(this.ShaderPostprocessDefinitionNewBlock);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.ShaderParameters);
+            this.Color.QueueWrites(queueableBlamBinaryWriter);
+            this.Alpha.QueueWrites(queueableBlamBinaryWriter);
+            this.Scale.QueueWrites(queueableBlamBinaryWriter);
+            this.Rotation.QueueWrites(queueableBlamBinaryWriter);
+            this.FrameIndex.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Locations);
+            queueableBlamBinaryWriter.QueueWrite(this.AttachedParticleSystems);
+            queueableBlamBinaryWriter.QueueWrite(this.ShaderPostprocessDefinitionNewBlock);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.ParticleFlags)));
-            queueableBinaryWriter.Write(((short)(this.ParticleBillboardStyle)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.FirstSequenceIndex);
-            queueableBinaryWriter.Write(this.SequenceCount);
-            queueableBinaryWriter.Write(this.ShaderTemplate);
-            queueableBinaryWriter.WritePointer(this.ShaderParameters);
-            this.Color.Write_(queueableBinaryWriter);
-            this.Alpha.Write_(queueableBinaryWriter);
-            this.Scale.Write_(queueableBinaryWriter);
-            this.Rotation.Write_(queueableBinaryWriter);
-            this.FrameIndex.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.CollisionEffect);
-            queueableBinaryWriter.Write(this.DeathEffect);
-            queueableBinaryWriter.WritePointer(this.Locations);
-            queueableBinaryWriter.WritePointer(this.AttachedParticleSystems);
-            queueableBinaryWriter.WritePointer(this.ShaderPostprocessDefinitionNewBlock);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.fieldpad2);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.ParticleFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.ParticleBillboardStyle)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.FirstSequenceIndex);
+            queueableBlamBinaryWriter.Write(this.SequenceCount);
+            queueableBlamBinaryWriter.Write(this.ShaderTemplate);
+            queueableBlamBinaryWriter.WritePointer(this.ShaderParameters);
+            this.Color.Write_(queueableBlamBinaryWriter);
+            this.Alpha.Write_(queueableBlamBinaryWriter);
+            this.Scale.Write_(queueableBlamBinaryWriter);
+            this.Rotation.Write_(queueableBlamBinaryWriter);
+            this.FrameIndex.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.CollisionEffect);
+            queueableBlamBinaryWriter.Write(this.DeathEffect);
+            queueableBlamBinaryWriter.WritePointer(this.Locations);
+            queueableBlamBinaryWriter.WritePointer(this.AttachedParticleSystems);
+            queueableBlamBinaryWriter.WritePointer(this.ShaderPostprocessDefinitionNewBlock);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

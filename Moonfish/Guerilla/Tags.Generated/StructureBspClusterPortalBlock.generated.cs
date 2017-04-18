@@ -56,21 +56,21 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Vertices = base.ReadBlockArrayData<StructureBspClusterPortalVertexBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Vertices);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Vertices);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.BackCluster);
-            queueableBinaryWriter.Write(this.FrontCluster);
-            queueableBinaryWriter.Write(this.PlaneIndex);
-            queueableBinaryWriter.Write(this.Centroid);
-            queueableBinaryWriter.Write(this.BoundingRadius);
-            queueableBinaryWriter.Write(((int)(this.StructureBspClusterPortalFlags)));
-            queueableBinaryWriter.WritePointer(this.Vertices);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.BackCluster);
+            queueableBlamBinaryWriter.Write(this.FrontCluster);
+            queueableBlamBinaryWriter.Write(this.PlaneIndex);
+            queueableBlamBinaryWriter.Write(this.Centroid);
+            queueableBlamBinaryWriter.Write(this.BoundingRadius);
+            queueableBlamBinaryWriter.Write(((int)(this.StructureBspClusterPortalFlags)));
+            queueableBlamBinaryWriter.WritePointer(this.Vertices);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

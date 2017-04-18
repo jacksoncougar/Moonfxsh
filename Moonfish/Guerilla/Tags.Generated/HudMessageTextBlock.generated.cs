@@ -53,20 +53,20 @@ namespace Moonfish.Guerilla.Tags
             this.MessageElements = base.ReadBlockArrayData<HudMessageElementsBlock>(binaryReader, pointerQueue.Dequeue());
             this.Messages = base.ReadBlockArrayData<HudMessagesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.TextData);
-            queueableBinaryWriter.QueueWrite(this.MessageElements);
-            queueableBinaryWriter.QueueWrite(this.Messages);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.TextData);
+            queueableBlamBinaryWriter.QueueWrite(this.MessageElements);
+            queueableBlamBinaryWriter.QueueWrite(this.Messages);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.TextData);
-            queueableBinaryWriter.WritePointer(this.MessageElements);
-            queueableBinaryWriter.WritePointer(this.Messages);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.TextData);
+            queueableBlamBinaryWriter.WritePointer(this.MessageElements);
+            queueableBlamBinaryWriter.WritePointer(this.Messages);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
         }
     }
 }

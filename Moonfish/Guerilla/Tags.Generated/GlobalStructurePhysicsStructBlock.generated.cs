@@ -56,22 +56,22 @@ namespace Moonfish.Guerilla.Tags
             this.BreakableSurfacesMoppCode = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
             this.BreakableSurfaceKeyTable = base.ReadBlockArrayData<BreakableSurfaceKeyTableBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.moppCode, 16);
-            queueableBinaryWriter.QueueWrite(this.BreakableSurfacesMoppCode);
-            queueableBinaryWriter.QueueWrite(this.BreakableSurfaceKeyTable);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.moppCode, 16);
+            queueableBlamBinaryWriter.QueueWrite(this.BreakableSurfacesMoppCode);
+            queueableBlamBinaryWriter.QueueWrite(this.BreakableSurfaceKeyTable);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.moppCode);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.moppBoundsMin);
-            queueableBinaryWriter.Write(this.moppBoundsMax);
-            queueableBinaryWriter.WritePointer(this.BreakableSurfacesMoppCode);
-            queueableBinaryWriter.WritePointer(this.BreakableSurfaceKeyTable);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.moppCode);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.moppBoundsMin);
+            queueableBlamBinaryWriter.Write(this.moppBoundsMax);
+            queueableBlamBinaryWriter.WritePointer(this.BreakableSurfacesMoppCode);
+            queueableBlamBinaryWriter.WritePointer(this.BreakableSurfaceKeyTable);
         }
     }
 }

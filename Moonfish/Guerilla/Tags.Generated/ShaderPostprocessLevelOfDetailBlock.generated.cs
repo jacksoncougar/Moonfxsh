@@ -81,39 +81,39 @@ namespace Moonfish.Guerilla.Tags
             this.VertexShaderConstants = base.ReadBlockArrayData<ShaderPostprocessVertexShaderConstantBlock>(binaryReader, pointerQueue.Dequeue());
             this.GPUState.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Layers);
-            queueableBinaryWriter.QueueWrite(this.Passes);
-            queueableBinaryWriter.QueueWrite(this.Implementations);
-            queueableBinaryWriter.QueueWrite(this.Bitmaps);
-            queueableBinaryWriter.QueueWrite(this.BitmapTransforms);
-            queueableBinaryWriter.QueueWrite(this.Values);
-            queueableBinaryWriter.QueueWrite(this.Colors);
-            queueableBinaryWriter.QueueWrite(this.BitmapTransformOverlays);
-            queueableBinaryWriter.QueueWrite(this.ValueOverlays);
-            queueableBinaryWriter.QueueWrite(this.ColorOverlays);
-            queueableBinaryWriter.QueueWrite(this.VertexShaderConstants);
-            this.GPUState.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Layers);
+            queueableBlamBinaryWriter.QueueWrite(this.Passes);
+            queueableBlamBinaryWriter.QueueWrite(this.Implementations);
+            queueableBlamBinaryWriter.QueueWrite(this.Bitmaps);
+            queueableBlamBinaryWriter.QueueWrite(this.BitmapTransforms);
+            queueableBlamBinaryWriter.QueueWrite(this.Values);
+            queueableBlamBinaryWriter.QueueWrite(this.Colors);
+            queueableBlamBinaryWriter.QueueWrite(this.BitmapTransformOverlays);
+            queueableBlamBinaryWriter.QueueWrite(this.ValueOverlays);
+            queueableBlamBinaryWriter.QueueWrite(this.ColorOverlays);
+            queueableBlamBinaryWriter.QueueWrite(this.VertexShaderConstants);
+            this.GPUState.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ProjectedHeightPercentage);
-            queueableBinaryWriter.Write(this.AvailableLayers);
-            queueableBinaryWriter.WritePointer(this.Layers);
-            queueableBinaryWriter.WritePointer(this.Passes);
-            queueableBinaryWriter.WritePointer(this.Implementations);
-            queueableBinaryWriter.WritePointer(this.Bitmaps);
-            queueableBinaryWriter.WritePointer(this.BitmapTransforms);
-            queueableBinaryWriter.WritePointer(this.Values);
-            queueableBinaryWriter.WritePointer(this.Colors);
-            queueableBinaryWriter.WritePointer(this.BitmapTransformOverlays);
-            queueableBinaryWriter.WritePointer(this.ValueOverlays);
-            queueableBinaryWriter.WritePointer(this.ColorOverlays);
-            queueableBinaryWriter.WritePointer(this.VertexShaderConstants);
-            this.GPUState.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.ProjectedHeightPercentage);
+            queueableBlamBinaryWriter.Write(this.AvailableLayers);
+            queueableBlamBinaryWriter.WritePointer(this.Layers);
+            queueableBlamBinaryWriter.WritePointer(this.Passes);
+            queueableBlamBinaryWriter.WritePointer(this.Implementations);
+            queueableBlamBinaryWriter.WritePointer(this.Bitmaps);
+            queueableBlamBinaryWriter.WritePointer(this.BitmapTransforms);
+            queueableBlamBinaryWriter.WritePointer(this.Values);
+            queueableBlamBinaryWriter.WritePointer(this.Colors);
+            queueableBlamBinaryWriter.WritePointer(this.BitmapTransformOverlays);
+            queueableBlamBinaryWriter.WritePointer(this.ValueOverlays);
+            queueableBlamBinaryWriter.WritePointer(this.ColorOverlays);
+            queueableBlamBinaryWriter.WritePointer(this.VertexShaderConstants);
+            this.GPUState.Write_(queueableBlamBinaryWriter);
         }
     }
 }

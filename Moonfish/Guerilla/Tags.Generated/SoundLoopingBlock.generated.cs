@@ -59,22 +59,22 @@ namespace Moonfish.Guerilla.Tags
             this.Tracks = base.ReadBlockArrayData<LoopingSoundTrackBlock>(binaryReader, pointerQueue.Dequeue());
             this.DetailSounds = base.ReadBlockArrayData<LoopingSoundDetailBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Tracks);
-            queueableBinaryWriter.QueueWrite(this.DetailSounds);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Tracks);
+            queueableBlamBinaryWriter.QueueWrite(this.DetailSounds);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.SoundLoopingFlags)));
-            queueableBinaryWriter.Write(this.MartysMusicTime);
-            queueableBinaryWriter.Write(this.FieldReal);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.TagReference);
-            queueableBinaryWriter.WritePointer(this.Tracks);
-            queueableBinaryWriter.WritePointer(this.DetailSounds);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.SoundLoopingFlags)));
+            queueableBlamBinaryWriter.Write(this.MartysMusicTime);
+            queueableBlamBinaryWriter.Write(this.FieldReal);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.TagReference);
+            queueableBlamBinaryWriter.WritePointer(this.Tracks);
+            queueableBlamBinaryWriter.WritePointer(this.DetailSounds);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

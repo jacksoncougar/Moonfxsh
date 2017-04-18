@@ -57,23 +57,23 @@ namespace Moonfish.Guerilla.Tags
             this.Counts = base.ReadBlockArrayData<GlobalDetailObjectCountsBlock>(binaryReader, pointerQueue.Dequeue());
             this.ZReferenceVectors = base.ReadBlockArrayData<GlobalZReferenceVectorBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Cells);
-            queueableBinaryWriter.QueueWrite(this.Instances);
-            queueableBinaryWriter.QueueWrite(this.Counts);
-            queueableBinaryWriter.QueueWrite(this.ZReferenceVectors);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Cells);
+            queueableBlamBinaryWriter.QueueWrite(this.Instances);
+            queueableBlamBinaryWriter.QueueWrite(this.Counts);
+            queueableBlamBinaryWriter.QueueWrite(this.ZReferenceVectors);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Cells);
-            queueableBinaryWriter.WritePointer(this.Instances);
-            queueableBinaryWriter.WritePointer(this.Counts);
-            queueableBinaryWriter.WritePointer(this.ZReferenceVectors);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Cells);
+            queueableBlamBinaryWriter.WritePointer(this.Instances);
+            queueableBlamBinaryWriter.WritePointer(this.Counts);
+            queueableBlamBinaryWriter.WritePointer(this.ZReferenceVectors);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
         }
     }
 }

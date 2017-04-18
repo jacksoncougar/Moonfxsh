@@ -51,17 +51,17 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ChiefSound);
-            queueableBinaryWriter.Write(((int)(this.NewHudSoundLatchedTo)));
-            queueableBinaryWriter.Write(this.Scale);
-            queueableBinaryWriter.Write(this.DervishSound);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.ChiefSound);
+            queueableBlamBinaryWriter.Write(((int)(this.NewHudSoundLatchedTo)));
+            queueableBlamBinaryWriter.Write(this.Scale);
+            queueableBlamBinaryWriter.Write(this.DervishSound);
         }
         [System.FlagsAttribute()]
         public enum LatchedTo : int

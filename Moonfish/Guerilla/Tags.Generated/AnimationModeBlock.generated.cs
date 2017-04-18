@@ -49,18 +49,18 @@ namespace Moonfish.Guerilla.Tags
             this.WeaponClassAABBCC = base.ReadBlockArrayData<WeaponClassBlock>(binaryReader, pointerQueue.Dequeue());
             this.ModeIkAABBCC = base.ReadBlockArrayData<AnimationIkBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.WeaponClassAABBCC);
-            queueableBinaryWriter.QueueWrite(this.ModeIkAABBCC);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.WeaponClassAABBCC);
+            queueableBlamBinaryWriter.QueueWrite(this.ModeIkAABBCC);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Label);
-            queueableBinaryWriter.WritePointer(this.WeaponClassAABBCC);
-            queueableBinaryWriter.WritePointer(this.ModeIkAABBCC);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Label);
+            queueableBlamBinaryWriter.WritePointer(this.WeaponClassAABBCC);
+            queueableBlamBinaryWriter.WritePointer(this.ModeIkAABBCC);
         }
     }
 }

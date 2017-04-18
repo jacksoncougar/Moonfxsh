@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ICSharpCode.TextEditor.Actions;
 using Moonfish.Graphics;
+using Moonfish.Guerilla;
 using Moonfish.Guerilla.Tags;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -44,14 +45,14 @@ namespace Moonfish.Forms.ShaderForm
                 textEditorControl1.Refresh(  );
                 return;
             }
-            using ( BinaryReader binaryReader = new BinaryReader( new MemoryStream( code ) ) )
+            using ( BlamBinaryReader blamBinaryReader = new BlamBinaryReader( new MemoryStream( code ) ) )
             {
-                    var version = binaryReader.ReadInt16( );
+                    var version = blamBinaryReader.ReadInt16( );
                     strBuilder.AppendLine( "#" + version );
-                    var instructionCount = binaryReader.ReadInt16( );
+                    var instructionCount = blamBinaryReader.ReadInt16( );
                     for ( int i = 0; i < instructionCount; i++ )
                     {
-                        var instructionBytes = binaryReader.ReadBytes( 16 );
+                        var instructionBytes = blamBinaryReader.ReadBytes( 16 );
                         var instruction = new VertexProgramInstruction( instructionBytes );
                         strBuilder.AppendLine( instruction.ToAsm );
                     }

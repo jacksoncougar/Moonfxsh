@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text;
+using Moonfish.Guerilla;
 
 namespace Moonfish
 {
@@ -14,7 +15,7 @@ namespace Moonfish
             private SharedInfoStruct(Stream stream)
             {
                 using (
-                    var binaryReader = new BinaryReader(stream, Encoding.Default,
+                    var binaryReader = new BlamBinaryReader(stream, Encoding.Default,
                         true))
                 {
                     shared0 = binaryReader.ReadInt32();

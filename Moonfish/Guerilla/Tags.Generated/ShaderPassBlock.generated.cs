@@ -58,23 +58,23 @@ namespace Moonfish.Guerilla.Tags
             this.Implementations = base.ReadBlockArrayData<ShaderPassImplementationBlock>(binaryReader, pointerQueue.Dequeue());
             this.PostprocessDefinition = base.ReadBlockArrayData<ShaderPassPostprocessDefinitionNewBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Documentation);
-            queueableBinaryWriter.QueueWrite(this.Parameters);
-            queueableBinaryWriter.QueueWrite(this.Implementations);
-            queueableBinaryWriter.QueueWrite(this.PostprocessDefinition);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Documentation);
+            queueableBlamBinaryWriter.QueueWrite(this.Parameters);
+            queueableBlamBinaryWriter.QueueWrite(this.Implementations);
+            queueableBlamBinaryWriter.QueueWrite(this.PostprocessDefinition);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Documentation);
-            queueableBinaryWriter.WritePointer(this.Parameters);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.WritePointer(this.Implementations);
-            queueableBinaryWriter.WritePointer(this.PostprocessDefinition);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Documentation);
+            queueableBlamBinaryWriter.WritePointer(this.Parameters);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.WritePointer(this.Implementations);
+            queueableBlamBinaryWriter.WritePointer(this.PostprocessDefinition);
         }
     }
 }

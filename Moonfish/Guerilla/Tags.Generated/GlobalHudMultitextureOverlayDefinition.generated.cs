@@ -108,41 +108,41 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Effectors = base.ReadBlockArrayData<GlobalHudMultitextureOverlayEffectorDefinition>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Effectors);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Effectors);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Type);
-            queueableBinaryWriter.Write(((short)(this.FramebufferBlendFunc)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(((short)(this.PrimaryAnchor)));
-            queueableBinaryWriter.Write(((short)(this.SecondaryAnchor)));
-            queueableBinaryWriter.Write(((short)(this.TertiaryAnchor)));
-            queueableBinaryWriter.Write(((short)(this._0To1BlendFunc)));
-            queueableBinaryWriter.Write(((short)(this._1To2BlendFunc)));
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.PrimaryScale);
-            queueableBinaryWriter.Write(this.SecondaryScale);
-            queueableBinaryWriter.Write(this.TertiaryScale);
-            queueableBinaryWriter.Write(this.PrimaryOffset);
-            queueableBinaryWriter.Write(this.SecondaryOffset);
-            queueableBinaryWriter.Write(this.TertiaryOffset);
-            queueableBinaryWriter.Write(this.Primary);
-            queueableBinaryWriter.Write(this.Secondary);
-            queueableBinaryWriter.Write(this.Tertiary);
-            queueableBinaryWriter.Write(((short)(this.PrimaryWrapMode)));
-            queueableBinaryWriter.Write(((short)(this.SecondaryWrapMode)));
-            queueableBinaryWriter.Write(((short)(this.TertiaryWrapMode)));
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.WritePointer(this.Effectors);
-            queueableBinaryWriter.Write(this.fieldpad5);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.Type);
+            queueableBlamBinaryWriter.Write(((short)(this.FramebufferBlendFunc)));
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(((short)(this.PrimaryAnchor)));
+            queueableBlamBinaryWriter.Write(((short)(this.SecondaryAnchor)));
+            queueableBlamBinaryWriter.Write(((short)(this.TertiaryAnchor)));
+            queueableBlamBinaryWriter.Write(((short)(this._0To1BlendFunc)));
+            queueableBlamBinaryWriter.Write(((short)(this._1To2BlendFunc)));
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.PrimaryScale);
+            queueableBlamBinaryWriter.Write(this.SecondaryScale);
+            queueableBlamBinaryWriter.Write(this.TertiaryScale);
+            queueableBlamBinaryWriter.Write(this.PrimaryOffset);
+            queueableBlamBinaryWriter.Write(this.SecondaryOffset);
+            queueableBlamBinaryWriter.Write(this.TertiaryOffset);
+            queueableBlamBinaryWriter.Write(this.Primary);
+            queueableBlamBinaryWriter.Write(this.Secondary);
+            queueableBlamBinaryWriter.Write(this.Tertiary);
+            queueableBlamBinaryWriter.Write(((short)(this.PrimaryWrapMode)));
+            queueableBlamBinaryWriter.Write(((short)(this.SecondaryWrapMode)));
+            queueableBlamBinaryWriter.Write(((short)(this.TertiaryWrapMode)));
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
+            queueableBlamBinaryWriter.Write(this.fieldpad4);
+            queueableBlamBinaryWriter.WritePointer(this.Effectors);
+            queueableBlamBinaryWriter.Write(this.fieldpad5);
         }
         public enum FramebufferBlendFuncEnum : short
         {

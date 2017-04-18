@@ -6,7 +6,7 @@ namespace Moonfish.Guerilla.Preprocess
     internal class BitmapDataBlock
     {
         [GuerillaPreProcessMethod(BlockName = "bsp_3d_nodes_block")]
-        protected static void GuerillaPreProcessMethod(BinaryReader binaryReader, IList<tag_field> fields)
+        protected static void GuerillaPreProcessMethod(BlamBinaryReader blamBinaryReader, IList<tag_field> fields)
         {
            
         }

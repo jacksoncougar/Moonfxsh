@@ -113,34 +113,34 @@ namespace Moonfish.Guerilla.Tags
             this.LightmapGroups = base.ReadBlockArrayData<StructureLightmapGroupBlock>(binaryReader, pointerQueue.Dequeue());
             this.Errors = base.ReadBlockArrayData<GlobalErrorReportCategoriesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.LightmapGroups);
-            queueableBinaryWriter.QueueWrite(this.Errors);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.LightmapGroups);
+            queueableBlamBinaryWriter.QueueWrite(this.Errors);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.SearchDistanceLowerBound);
-            queueableBinaryWriter.Write(this.SearchDistanceUpperBound);
-            queueableBinaryWriter.Write(this.LuminelsPerWorldUnit);
-            queueableBinaryWriter.Write(this.OutputWhiteReference);
-            queueableBinaryWriter.Write(this.OutputBlackReference);
-            queueableBinaryWriter.Write(this.OutputSchlickParameter);
-            queueableBinaryWriter.Write(this.DiffuseMapScale);
-            queueableBinaryWriter.Write(this.SunScale);
-            queueableBinaryWriter.Write(this.SkyScale);
-            queueableBinaryWriter.Write(this.IndirectScale);
-            queueableBinaryWriter.Write(this.PrtScale);
-            queueableBinaryWriter.Write(this.SurfaceLightScale);
-            queueableBinaryWriter.Write(this.ScenarioLightScale);
-            queueableBinaryWriter.Write(this.LightprobeInterpolationOveride);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.LightmapGroups);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.WritePointer(this.Errors);
-            queueableBinaryWriter.Write(this.fieldpad1);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.SearchDistanceLowerBound);
+            queueableBlamBinaryWriter.Write(this.SearchDistanceUpperBound);
+            queueableBlamBinaryWriter.Write(this.LuminelsPerWorldUnit);
+            queueableBlamBinaryWriter.Write(this.OutputWhiteReference);
+            queueableBlamBinaryWriter.Write(this.OutputBlackReference);
+            queueableBlamBinaryWriter.Write(this.OutputSchlickParameter);
+            queueableBlamBinaryWriter.Write(this.DiffuseMapScale);
+            queueableBlamBinaryWriter.Write(this.SunScale);
+            queueableBlamBinaryWriter.Write(this.SkyScale);
+            queueableBlamBinaryWriter.Write(this.IndirectScale);
+            queueableBlamBinaryWriter.Write(this.PrtScale);
+            queueableBlamBinaryWriter.Write(this.SurfaceLightScale);
+            queueableBlamBinaryWriter.Write(this.ScenarioLightScale);
+            queueableBlamBinaryWriter.Write(this.LightprobeInterpolationOveride);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.WritePointer(this.LightmapGroups);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.WritePointer(this.Errors);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
         }
     }
 }

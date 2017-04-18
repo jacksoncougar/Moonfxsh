@@ -59,22 +59,22 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DecoratorSet);
-            queueableBinaryWriter.Write(this.DecoratorClass);
-            queueableBinaryWriter.Write(this.DecoratorPermutation);
-            queueableBinaryWriter.Write(this.SpriteIndex);
-            queueableBinaryWriter.Write(this.Position);
-            queueableBinaryWriter.Write(this.Left);
-            queueableBinaryWriter.Write(this.Up);
-            queueableBinaryWriter.Write(this.Extents);
-            queueableBinaryWriter.Write(this.PreviousPosition);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.DecoratorSet);
+            queueableBlamBinaryWriter.Write(this.DecoratorClass);
+            queueableBlamBinaryWriter.Write(this.DecoratorPermutation);
+            queueableBlamBinaryWriter.Write(this.SpriteIndex);
+            queueableBlamBinaryWriter.Write(this.Position);
+            queueableBlamBinaryWriter.Write(this.Left);
+            queueableBlamBinaryWriter.Write(this.Up);
+            queueableBlamBinaryWriter.Write(this.Extents);
+            queueableBlamBinaryWriter.Write(this.PreviousPosition);
         }
     }
 }

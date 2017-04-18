@@ -70,27 +70,27 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.CharacterChargeChargeFlags)));
-            queueableBinaryWriter.Write(this.MeleeConsiderRange);
-            queueableBinaryWriter.Write(this.MeleeChance);
-            queueableBinaryWriter.Write(this.MeleeAttackRange);
-            queueableBinaryWriter.Write(this.MeleeAbortRange);
-            queueableBinaryWriter.Write(this.MeleeAttackTimeout);
-            queueableBinaryWriter.Write(this.MeleeAttackDelayTimer);
-            queueableBinaryWriter.Write(this.MeleeLeapRange);
-            queueableBinaryWriter.Write(this.MeleeLeapChance);
-            queueableBinaryWriter.Write(this.IdealLeapVelocity);
-            queueableBinaryWriter.Write(this.MaxLeapVelocity);
-            queueableBinaryWriter.Write(this.MeleeLeapBallistic);
-            queueableBinaryWriter.Write(this.MeleeDelayTimer);
-            queueableBinaryWriter.Write(this.BerserkWeapon);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.CharacterChargeChargeFlags)));
+            queueableBlamBinaryWriter.Write(this.MeleeConsiderRange);
+            queueableBlamBinaryWriter.Write(this.MeleeChance);
+            queueableBlamBinaryWriter.Write(this.MeleeAttackRange);
+            queueableBlamBinaryWriter.Write(this.MeleeAbortRange);
+            queueableBlamBinaryWriter.Write(this.MeleeAttackTimeout);
+            queueableBlamBinaryWriter.Write(this.MeleeAttackDelayTimer);
+            queueableBlamBinaryWriter.Write(this.MeleeLeapRange);
+            queueableBlamBinaryWriter.Write(this.MeleeLeapChance);
+            queueableBlamBinaryWriter.Write(this.IdealLeapVelocity);
+            queueableBlamBinaryWriter.Write(this.MaxLeapVelocity);
+            queueableBlamBinaryWriter.Write(this.MeleeLeapBallistic);
+            queueableBlamBinaryWriter.Write(this.MeleeDelayTimer);
+            queueableBlamBinaryWriter.Write(this.BerserkWeapon);
         }
         [System.FlagsAttribute()]
         public enum ChargeFlags : int

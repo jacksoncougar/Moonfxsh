@@ -87,39 +87,39 @@ namespace Moonfish.Guerilla.Tags
             this.Quads = base.ReadBlockArrayData<ErrorReportQuadsBlock>(binaryReader, pointerQueue.Dequeue());
             this.Comments = base.ReadBlockArrayData<ErrorReportCommentsBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Text);
-            queueableBinaryWriter.QueueWrite(this.Vertices);
-            queueableBinaryWriter.QueueWrite(this.Vectors);
-            queueableBinaryWriter.QueueWrite(this.Lines);
-            queueableBinaryWriter.QueueWrite(this.Triangles);
-            queueableBinaryWriter.QueueWrite(this.Quads);
-            queueableBinaryWriter.QueueWrite(this.Comments);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Text);
+            queueableBlamBinaryWriter.QueueWrite(this.Vertices);
+            queueableBlamBinaryWriter.QueueWrite(this.Vectors);
+            queueableBlamBinaryWriter.QueueWrite(this.Lines);
+            queueableBlamBinaryWriter.QueueWrite(this.Triangles);
+            queueableBlamBinaryWriter.QueueWrite(this.Quads);
+            queueableBlamBinaryWriter.QueueWrite(this.Comments);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(((short)(this.ErrorReportsFlags)));
-            queueableBinaryWriter.WritePointer(this.Text);
-            queueableBinaryWriter.Write(this.SourceFilename);
-            queueableBinaryWriter.Write(this.SourceLineNumber);
-            queueableBinaryWriter.WritePointer(this.Vertices);
-            queueableBinaryWriter.WritePointer(this.Vectors);
-            queueableBinaryWriter.WritePointer(this.Lines);
-            queueableBinaryWriter.WritePointer(this.Triangles);
-            queueableBinaryWriter.WritePointer(this.Quads);
-            queueableBinaryWriter.WritePointer(this.Comments);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.ReportKey);
-            queueableBinaryWriter.Write(this.NodeIndex);
-            queueableBinaryWriter.Write(this.BoundsX);
-            queueableBinaryWriter.Write(this.BoundsY);
-            queueableBinaryWriter.Write(this.BoundsZ);
-            queueableBinaryWriter.Write(this.Color);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.Type)));
+            queueableBlamBinaryWriter.Write(((short)(this.ErrorReportsFlags)));
+            queueableBlamBinaryWriter.WritePointer(this.Text);
+            queueableBlamBinaryWriter.Write(this.SourceFilename);
+            queueableBlamBinaryWriter.Write(this.SourceLineNumber);
+            queueableBlamBinaryWriter.WritePointer(this.Vertices);
+            queueableBlamBinaryWriter.WritePointer(this.Vectors);
+            queueableBlamBinaryWriter.WritePointer(this.Lines);
+            queueableBlamBinaryWriter.WritePointer(this.Triangles);
+            queueableBlamBinaryWriter.WritePointer(this.Quads);
+            queueableBlamBinaryWriter.WritePointer(this.Comments);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.ReportKey);
+            queueableBlamBinaryWriter.Write(this.NodeIndex);
+            queueableBlamBinaryWriter.Write(this.BoundsX);
+            queueableBlamBinaryWriter.Write(this.BoundsY);
+            queueableBlamBinaryWriter.Write(this.BoundsZ);
+            queueableBlamBinaryWriter.Write(this.Color);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
         }
         public enum TypeEnum : short
         {

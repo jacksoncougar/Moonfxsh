@@ -61,25 +61,25 @@ namespace Moonfish.Guerilla.Tags
             this.Accelerations = base.ReadBlockArrayData<EffectAccelerationsBlock>(binaryReader, pointerQueue.Dequeue());
             this.ParticleSystems = base.ReadBlockArrayData<ParticleSystemDefinitionBlockNew>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Parts);
-            queueableBinaryWriter.QueueWrite(this.Beams);
-            queueableBinaryWriter.QueueWrite(this.Accelerations);
-            queueableBinaryWriter.QueueWrite(this.ParticleSystems);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Parts);
+            queueableBlamBinaryWriter.QueueWrite(this.Beams);
+            queueableBlamBinaryWriter.QueueWrite(this.Accelerations);
+            queueableBlamBinaryWriter.QueueWrite(this.ParticleSystems);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.EffectEventFlags)));
-            queueableBinaryWriter.Write(this.SkipFraction);
-            queueableBinaryWriter.Write(this.DelayBounds);
-            queueableBinaryWriter.Write(this.DurationBounds);
-            queueableBinaryWriter.WritePointer(this.Parts);
-            queueableBinaryWriter.WritePointer(this.Beams);
-            queueableBinaryWriter.WritePointer(this.Accelerations);
-            queueableBinaryWriter.WritePointer(this.ParticleSystems);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.EffectEventFlags)));
+            queueableBlamBinaryWriter.Write(this.SkipFraction);
+            queueableBlamBinaryWriter.Write(this.DelayBounds);
+            queueableBlamBinaryWriter.Write(this.DurationBounds);
+            queueableBlamBinaryWriter.WritePointer(this.Parts);
+            queueableBlamBinaryWriter.WritePointer(this.Beams);
+            queueableBlamBinaryWriter.WritePointer(this.Accelerations);
+            queueableBlamBinaryWriter.WritePointer(this.ParticleSystems);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

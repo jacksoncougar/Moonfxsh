@@ -18,7 +18,7 @@ namespace Moonfish.Guerilla.Reflection
                 AccessModifiers = AccessModifiers.Public | AccessModifiers.Override,
                 Arguments = new List<ParameterInfo>
                 {
-                    new ParameterInfo(typeof (BinaryReader)),
+                    new ParameterInfo(typeof (BlamBinaryReader)),
                     new ParameterInfo(typeof (Queue<BlamPointer>), "blamPointers"),
                 },
                 Returns = typeof (void).Name()
@@ -85,7 +85,7 @@ namespace Moonfish.Guerilla.Reflection
                 AccessModifiers = AccessModifiers.Public | AccessModifiers.Override,
                 Arguments = new List<ParameterInfo>
                 {
-                    new ParameterInfo(typeof (BinaryReader))
+                    new ParameterInfo(typeof (BlamBinaryReader))
                 },
                 Returns = typeof(Queue<BlamPointer>).Name()
             };

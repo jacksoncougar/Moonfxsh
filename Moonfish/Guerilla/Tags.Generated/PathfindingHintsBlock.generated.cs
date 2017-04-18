@@ -61,23 +61,23 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.HintType)));
-            queueableBinaryWriter.Write(this.NextHintIndex);
-            queueableBinaryWriter.Write(this.HintData0);
-            queueableBinaryWriter.Write(this.HintData1);
-            queueableBinaryWriter.Write(this.HintData2);
-            queueableBinaryWriter.Write(this.HintData3);
-            queueableBinaryWriter.Write(this.HintData4);
-            queueableBinaryWriter.Write(this.HintData5);
-            queueableBinaryWriter.Write(this.HintData6);
-            queueableBinaryWriter.Write(this.HintData7);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.HintType)));
+            queueableBlamBinaryWriter.Write(this.NextHintIndex);
+            queueableBlamBinaryWriter.Write(this.HintData0);
+            queueableBlamBinaryWriter.Write(this.HintData1);
+            queueableBlamBinaryWriter.Write(this.HintData2);
+            queueableBlamBinaryWriter.Write(this.HintData3);
+            queueableBlamBinaryWriter.Write(this.HintData4);
+            queueableBlamBinaryWriter.Write(this.HintData5);
+            queueableBlamBinaryWriter.Write(this.HintData6);
+            queueableBlamBinaryWriter.Write(this.HintData7);
         }
         public enum HintTypeEnum : short
         {

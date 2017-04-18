@@ -97,41 +97,41 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.StateAttachedTo)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.CanUseOnMapType)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.AnchorOffset);
-            queueableBinaryWriter.Write(this.WidthScale);
-            queueableBinaryWriter.Write(this.HeightScale);
-            queueableBinaryWriter.Write(((short)(this.WeaponHudNumberScalingFlags)));
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.DefaultColor);
-            queueableBinaryWriter.Write(this.FlashingColor);
-            queueableBinaryWriter.Write(this.FlashPeriod);
-            queueableBinaryWriter.Write(this.FlashDelay);
-            queueableBinaryWriter.Write(this.NumberOfFlashes);
-            queueableBinaryWriter.Write(((short)(this.WeaponHudNumberFlashFlags)));
-            queueableBinaryWriter.Write(this.FlashLength);
-            queueableBinaryWriter.Write(this.DisabledColor);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.MaximumNumberOfDigits);
-            queueableBinaryWriter.Write(((byte)(this.WeaponHudNumberFlags)));
-            queueableBinaryWriter.Write(this.NumberOfFractionalDigits);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(this.fieldpad6);
-            queueableBinaryWriter.Write(((short)(this.WeaponHudNumberWeaponSpecificFlags)));
-            queueableBinaryWriter.Write(this.fieldpad7);
-            queueableBinaryWriter.Write(this.fieldpad8);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.StateAttachedTo)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(((short)(this.CanUseOnMapType)));
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.AnchorOffset);
+            queueableBlamBinaryWriter.Write(this.WidthScale);
+            queueableBlamBinaryWriter.Write(this.HeightScale);
+            queueableBlamBinaryWriter.Write(((short)(this.WeaponHudNumberScalingFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
+            queueableBlamBinaryWriter.Write(this.DefaultColor);
+            queueableBlamBinaryWriter.Write(this.FlashingColor);
+            queueableBlamBinaryWriter.Write(this.FlashPeriod);
+            queueableBlamBinaryWriter.Write(this.FlashDelay);
+            queueableBlamBinaryWriter.Write(this.NumberOfFlashes);
+            queueableBlamBinaryWriter.Write(((short)(this.WeaponHudNumberFlashFlags)));
+            queueableBlamBinaryWriter.Write(this.FlashLength);
+            queueableBlamBinaryWriter.Write(this.DisabledColor);
+            queueableBlamBinaryWriter.Write(this.fieldpad4);
+            queueableBlamBinaryWriter.Write(this.MaximumNumberOfDigits);
+            queueableBlamBinaryWriter.Write(((byte)(this.WeaponHudNumberFlags)));
+            queueableBlamBinaryWriter.Write(this.NumberOfFractionalDigits);
+            queueableBlamBinaryWriter.Write(this.fieldpad5);
+            queueableBlamBinaryWriter.Write(this.fieldpad6);
+            queueableBlamBinaryWriter.Write(((short)(this.WeaponHudNumberWeaponSpecificFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad7);
+            queueableBlamBinaryWriter.Write(this.fieldpad8);
         }
         public enum StateAttachedToEnum : short
         {

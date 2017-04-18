@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Moonfish.Guerilla;
+using Moonfish.Guerilla.CodeDom;
+using Moonfish.Tags;
 using NDesk.Options;
 
 namespace Moonfish
@@ -75,7 +78,7 @@ namespace Moonfish
             {
                 Console.WriteLine("Rebuilding...");
 
-                var package = new Package(stream);
+                GuerillaCodeDom.GenerateGuerillaCode(GuerillaCodeDom.TagClasses.Select(x=>(TagClass)x).ToArray());
 
                 Console.WriteLine("Done...");
             }

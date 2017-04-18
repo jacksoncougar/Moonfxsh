@@ -53,20 +53,20 @@ namespace Moonfish.Guerilla.Tags
             this.AdditionalSoundInputs = base.ReadBlockArrayData<SoundEffectTemplateAdditionalSoundInputBlock>(binaryReader, pointerQueue.Dequeue());
             this.PlatformSoundEffectTemplateCollectionBlock = base.ReadBlockArrayData<PlatformSoundEffectTemplateCollectionBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.TemplateCollection);
-            queueableBinaryWriter.QueueWrite(this.AdditionalSoundInputs);
-            queueableBinaryWriter.QueueWrite(this.PlatformSoundEffectTemplateCollectionBlock);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.TemplateCollection);
+            queueableBlamBinaryWriter.QueueWrite(this.AdditionalSoundInputs);
+            queueableBlamBinaryWriter.QueueWrite(this.PlatformSoundEffectTemplateCollectionBlock);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.TemplateCollection);
-            queueableBinaryWriter.Write(this.InputEffectName);
-            queueableBinaryWriter.WritePointer(this.AdditionalSoundInputs);
-            queueableBinaryWriter.WritePointer(this.PlatformSoundEffectTemplateCollectionBlock);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.TemplateCollection);
+            queueableBlamBinaryWriter.Write(this.InputEffectName);
+            queueableBlamBinaryWriter.WritePointer(this.AdditionalSoundInputs);
+            queueableBlamBinaryWriter.WritePointer(this.PlatformSoundEffectTemplateCollectionBlock);
         }
     }
 }

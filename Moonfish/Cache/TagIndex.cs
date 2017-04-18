@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Moonfish.Guerilla;
 using Moonfish.Tags;
 
 namespace Moonfish
@@ -14,7 +15,7 @@ namespace Moonfish
 
         public TagIndex(Map cache, IReadOnlyList<string> paths) : base(cache)
         {
-            var binaryReader = new BinaryReader(cache.BaseStream);
+            var binaryReader = new BlamBinaryReader(cache.BaseStream);
             ClassHeirarchies = new List<TagClassHeirarchy>(new TagClassHeirarchy[ClassArrayCount]);
             for (var i = 0; i < ClassArrayCount; i++)
             {

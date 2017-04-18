@@ -56,22 +56,22 @@ namespace Moonfish.Guerilla.Tags
             this.IntersectedClusterIndices = base.ReadBlockArrayData<StructureBspDebugInfoIndicesBlock>(binaryReader, pointerQueue.Dequeue());
             this.InfExtentClusterIndices = base.ReadBlockArrayData<StructureBspDebugInfoIndicesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Lines);
-            queueableBinaryWriter.QueueWrite(this.IntersectedClusterIndices);
-            queueableBinaryWriter.QueueWrite(this.InfExtentClusterIndices);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Lines);
+            queueableBlamBinaryWriter.QueueWrite(this.IntersectedClusterIndices);
+            queueableBlamBinaryWriter.QueueWrite(this.InfExtentClusterIndices);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.FogZoneIndex);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.ConnectedPlaneDesignator);
-            queueableBinaryWriter.WritePointer(this.Lines);
-            queueableBinaryWriter.WritePointer(this.IntersectedClusterIndices);
-            queueableBinaryWriter.WritePointer(this.InfExtentClusterIndices);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.FogZoneIndex);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.ConnectedPlaneDesignator);
+            queueableBlamBinaryWriter.WritePointer(this.Lines);
+            queueableBlamBinaryWriter.WritePointer(this.IntersectedClusterIndices);
+            queueableBlamBinaryWriter.WritePointer(this.InfExtentClusterIndices);
         }
     }
 }

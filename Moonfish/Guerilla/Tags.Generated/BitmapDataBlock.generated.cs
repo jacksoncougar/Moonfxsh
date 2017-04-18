@@ -81,33 +81,33 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Signature);
-            queueableBinaryWriter.Write(this.Width);
-            queueableBinaryWriter.Write(this.Height);
-            queueableBinaryWriter.Write(this.Depth);
-            queueableBinaryWriter.Write(((byte)(this.BitmapDataMoreFlags)));
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(((short)(this.Format)));
-            queueableBinaryWriter.Write(((short)(this.BitmapDataFlags)));
-            queueableBinaryWriter.Write(this.RegistrationPoint);
-            queueableBinaryWriter.Write(this.MipmapCount);
-            queueableBinaryWriter.Write(this.LowDetailMipmapCount);
-            queueableBinaryWriter.Write(this.PixelsOffset);
-            queueableBinaryWriter.Write(this.LOD1TextureDataOffset);
-            queueableBinaryWriter.Write(this.LOD2TextureDataOffset);
-            queueableBinaryWriter.Write(this.LOD3TextureDataOffset);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.LOD1TextureDataLength);
-            queueableBinaryWriter.Write(this.LOD2TextureDataLength);
-            queueableBinaryWriter.Write(this.LOD3TextureDataLength);
-            queueableBinaryWriter.Write(this.fieldskip0);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Signature);
+            queueableBlamBinaryWriter.Write(this.Width);
+            queueableBlamBinaryWriter.Write(this.Height);
+            queueableBlamBinaryWriter.Write(this.Depth);
+            queueableBlamBinaryWriter.Write(((byte)(this.BitmapDataMoreFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.Type)));
+            queueableBlamBinaryWriter.Write(((short)(this.Format)));
+            queueableBlamBinaryWriter.Write(((short)(this.BitmapDataFlags)));
+            queueableBlamBinaryWriter.Write(this.RegistrationPoint);
+            queueableBlamBinaryWriter.Write(this.MipmapCount);
+            queueableBlamBinaryWriter.Write(this.LowDetailMipmapCount);
+            queueableBlamBinaryWriter.Write(this.PixelsOffset);
+            queueableBlamBinaryWriter.Write(this.LOD1TextureDataOffset);
+            queueableBlamBinaryWriter.Write(this.LOD2TextureDataOffset);
+            queueableBlamBinaryWriter.Write(this.LOD3TextureDataOffset);
+            queueableBlamBinaryWriter.Write(this.fieldskip);
+            queueableBlamBinaryWriter.Write(this.LOD1TextureDataLength);
+            queueableBlamBinaryWriter.Write(this.LOD2TextureDataLength);
+            queueableBlamBinaryWriter.Write(this.LOD3TextureDataLength);
+            queueableBlamBinaryWriter.Write(this.fieldskip0);
         }
         [System.FlagsAttribute()]
         public enum MoreFlags : byte

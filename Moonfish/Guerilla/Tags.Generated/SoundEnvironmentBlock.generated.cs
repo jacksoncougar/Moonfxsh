@@ -74,29 +74,29 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Priority);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.RoomIntensity);
-            queueableBinaryWriter.Write(this.RoomIntensityHf);
-            queueableBinaryWriter.Write(this.RoomRolloff);
-            queueableBinaryWriter.Write(this.DecayTime);
-            queueableBinaryWriter.Write(this.DecayHfRatio);
-            queueableBinaryWriter.Write(this.ReflectionsIntensity);
-            queueableBinaryWriter.Write(this.ReflectionsDelay);
-            queueableBinaryWriter.Write(this.ReverbIntensity);
-            queueableBinaryWriter.Write(this.ReverbDelay);
-            queueableBinaryWriter.Write(this.Diffusion);
-            queueableBinaryWriter.Write(this.Density);
-            queueableBinaryWriter.Write(this.HfReference);
-            queueableBinaryWriter.Write(this.fieldpad1);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.Priority);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.RoomIntensity);
+            queueableBlamBinaryWriter.Write(this.RoomIntensityHf);
+            queueableBlamBinaryWriter.Write(this.RoomRolloff);
+            queueableBlamBinaryWriter.Write(this.DecayTime);
+            queueableBlamBinaryWriter.Write(this.DecayHfRatio);
+            queueableBlamBinaryWriter.Write(this.ReflectionsIntensity);
+            queueableBlamBinaryWriter.Write(this.ReflectionsDelay);
+            queueableBlamBinaryWriter.Write(this.ReverbIntensity);
+            queueableBlamBinaryWriter.Write(this.ReverbDelay);
+            queueableBlamBinaryWriter.Write(this.Diffusion);
+            queueableBlamBinaryWriter.Write(this.Density);
+            queueableBlamBinaryWriter.Write(this.HfReference);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
         }
     }
 }

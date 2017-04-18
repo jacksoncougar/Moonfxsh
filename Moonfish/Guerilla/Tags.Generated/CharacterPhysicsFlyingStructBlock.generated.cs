@@ -63,24 +63,24 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.BankAngle);
-            queueableBinaryWriter.Write(this.BankApplyTime);
-            queueableBinaryWriter.Write(this.BankDecayTime);
-            queueableBinaryWriter.Write(this.PitchRatio);
-            queueableBinaryWriter.Write(this.MaxVelocity);
-            queueableBinaryWriter.Write(this.MaxSidestepVelocity);
-            queueableBinaryWriter.Write(this.Acceleration);
-            queueableBinaryWriter.Write(this.Deceleration);
-            queueableBinaryWriter.Write(this.AngularVelocityMaximum);
-            queueableBinaryWriter.Write(this.AngularAccelerationMaximum);
-            queueableBinaryWriter.Write(this.CrouchVelocityModifier);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.BankAngle);
+            queueableBlamBinaryWriter.Write(this.BankApplyTime);
+            queueableBlamBinaryWriter.Write(this.BankDecayTime);
+            queueableBlamBinaryWriter.Write(this.PitchRatio);
+            queueableBlamBinaryWriter.Write(this.MaxVelocity);
+            queueableBlamBinaryWriter.Write(this.MaxSidestepVelocity);
+            queueableBlamBinaryWriter.Write(this.Acceleration);
+            queueableBlamBinaryWriter.Write(this.Deceleration);
+            queueableBlamBinaryWriter.Write(this.AngularVelocityMaximum);
+            queueableBlamBinaryWriter.Write(this.AngularAccelerationMaximum);
+            queueableBlamBinaryWriter.Write(this.CrouchVelocityModifier);
         }
     }
 }

@@ -47,17 +47,17 @@ namespace Moonfish.Guerilla.Tags
             this.CollisionLeaves = base.ReadBlockArrayData<BspLeafBlock>(binaryReader, pointerQueue.Dequeue());
             this.SurfaceReferences = base.ReadBlockArrayData<BspSurfaceReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.CollisionLeaves);
-            queueableBinaryWriter.QueueWrite(this.SurfaceReferences);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.CollisionLeaves);
+            queueableBlamBinaryWriter.QueueWrite(this.SurfaceReferences);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.CollisionLeaves);
-            queueableBinaryWriter.WritePointer(this.SurfaceReferences);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.CollisionLeaves);
+            queueableBlamBinaryWriter.WritePointer(this.SurfaceReferences);
         }
     }
 }

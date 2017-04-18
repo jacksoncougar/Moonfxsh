@@ -61,25 +61,25 @@ namespace Moonfish.Guerilla.Tags
             this.ClusterRemapTable = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
             this.VisibilityVolumes = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Projections);
-            queueableBinaryWriter.QueueWrite(this.VisibilityClusters);
-            queueableBinaryWriter.QueueWrite(this.ClusterRemapTable);
-            queueableBinaryWriter.QueueWrite(this.VisibilityVolumes);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Projections);
+            queueableBlamBinaryWriter.QueueWrite(this.VisibilityClusters);
+            queueableBlamBinaryWriter.QueueWrite(this.ClusterRemapTable);
+            queueableBlamBinaryWriter.QueueWrite(this.VisibilityVolumes);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ProjectionCount);
-            queueableBinaryWriter.Write(this.ClusterCount);
-            queueableBinaryWriter.Write(this.VolumeCount);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.Projections);
-            queueableBinaryWriter.WritePointer(this.VisibilityClusters);
-            queueableBinaryWriter.WritePointer(this.ClusterRemapTable);
-            queueableBinaryWriter.WritePointer(this.VisibilityVolumes);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.ProjectionCount);
+            queueableBlamBinaryWriter.Write(this.ClusterCount);
+            queueableBlamBinaryWriter.Write(this.VolumeCount);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.WritePointer(this.Projections);
+            queueableBlamBinaryWriter.WritePointer(this.VisibilityClusters);
+            queueableBlamBinaryWriter.WritePointer(this.ClusterRemapTable);
+            queueableBlamBinaryWriter.WritePointer(this.VisibilityVolumes);
         }
     }
 }

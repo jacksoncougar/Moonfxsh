@@ -95,45 +95,45 @@ namespace Moonfish.Guerilla.Tags
             this.PixelShaderCombiners = base.ReadBlockArrayData<PixelShaderCombinerBlock>(binaryReader, pointerQueue.Dequeue());
             this.PixelShaderConstants = base.ReadBlockArrayData<PixelShaderConstantBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.GPUState.QueueWrites(queueableBinaryWriter);
-            this.GPUConstantState.QueueWrites(queueableBinaryWriter);
-            this.GPUVolatileState.QueueWrites(queueableBinaryWriter);
-            this.GPUDefaultState.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ValueExterns);
-            queueableBinaryWriter.QueueWrite(this.ColorExterns);
-            queueableBinaryWriter.QueueWrite(this.SwitchExterns);
-            queueableBinaryWriter.QueueWrite(this.PixelShaderFragments);
-            queueableBinaryWriter.QueueWrite(this.PixelShaderPermutations);
-            queueableBinaryWriter.QueueWrite(this.PixelShaderCombiners);
-            queueableBinaryWriter.QueueWrite(this.PixelShaderConstants);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.GPUState.QueueWrites(queueableBlamBinaryWriter);
+            this.GPUConstantState.QueueWrites(queueableBlamBinaryWriter);
+            this.GPUVolatileState.QueueWrites(queueableBlamBinaryWriter);
+            this.GPUDefaultState.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.ValueExterns);
+            queueableBlamBinaryWriter.QueueWrite(this.ColorExterns);
+            queueableBlamBinaryWriter.QueueWrite(this.SwitchExterns);
+            queueableBlamBinaryWriter.QueueWrite(this.PixelShaderFragments);
+            queueableBlamBinaryWriter.QueueWrite(this.PixelShaderPermutations);
+            queueableBlamBinaryWriter.QueueWrite(this.PixelShaderCombiners);
+            queueableBlamBinaryWriter.QueueWrite(this.PixelShaderConstants);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            this.GPUState.Write_(queueableBinaryWriter);
-            this.GPUConstantState.Write_(queueableBinaryWriter);
-            this.GPUVolatileState.Write_(queueableBinaryWriter);
-            this.GPUDefaultState.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.VertexShader);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.Write(this.fieldskip1);
-            queueableBinaryWriter.Write(this.fieldskip2);
-            queueableBinaryWriter.WritePointer(this.ValueExterns);
-            queueableBinaryWriter.WritePointer(this.ColorExterns);
-            queueableBinaryWriter.WritePointer(this.SwitchExterns);
-            queueableBinaryWriter.Write(this.BitmapParameterCount);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldskip3);
-            queueableBinaryWriter.WritePointer(this.PixelShaderFragments);
-            queueableBinaryWriter.WritePointer(this.PixelShaderPermutations);
-            queueableBinaryWriter.WritePointer(this.PixelShaderCombiners);
-            queueableBinaryWriter.WritePointer(this.PixelShaderConstants);
-            queueableBinaryWriter.Write(this.fieldskip4);
-            queueableBinaryWriter.Write(this.fieldskip5);
+            base.Write_(queueableBlamBinaryWriter);
+            this.GPUState.Write_(queueableBlamBinaryWriter);
+            this.GPUConstantState.Write_(queueableBlamBinaryWriter);
+            this.GPUVolatileState.Write_(queueableBlamBinaryWriter);
+            this.GPUDefaultState.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.VertexShader);
+            queueableBlamBinaryWriter.Write(this.fieldskip);
+            queueableBlamBinaryWriter.Write(this.fieldskip0);
+            queueableBlamBinaryWriter.Write(this.fieldskip1);
+            queueableBlamBinaryWriter.Write(this.fieldskip2);
+            queueableBlamBinaryWriter.WritePointer(this.ValueExterns);
+            queueableBlamBinaryWriter.WritePointer(this.ColorExterns);
+            queueableBlamBinaryWriter.WritePointer(this.SwitchExterns);
+            queueableBlamBinaryWriter.Write(this.BitmapParameterCount);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.fieldskip3);
+            queueableBlamBinaryWriter.WritePointer(this.PixelShaderFragments);
+            queueableBlamBinaryWriter.WritePointer(this.PixelShaderPermutations);
+            queueableBlamBinaryWriter.WritePointer(this.PixelShaderCombiners);
+            queueableBlamBinaryWriter.WritePointer(this.PixelShaderConstants);
+            queueableBlamBinaryWriter.Write(this.fieldskip4);
+            queueableBlamBinaryWriter.Write(this.fieldskip5);
         }
     }
 }

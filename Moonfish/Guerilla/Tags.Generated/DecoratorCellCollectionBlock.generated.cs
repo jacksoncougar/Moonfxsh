@@ -59,26 +59,26 @@ namespace Moonfish.Guerilla.Tags
                 this.ChildIndices00[i].ReadInstances(binaryReader, pointerQueue);
             }
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
             int i;
             for (i = 0; (i < 8); i = (i + 1))
             {
-                this.ChildIndices00[i].QueueWrites(queueableBinaryWriter);
+                this.ChildIndices00[i].QueueWrites(queueableBlamBinaryWriter);
             }
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
             int i;
             for (i = 0; (i < 8); i = (i + 1))
             {
-                this.ChildIndices00[i].Write_(queueableBinaryWriter);
+                this.ChildIndices00[i].Write_(queueableBlamBinaryWriter);
             }
-            queueableBinaryWriter.Write(this.CacheBlockIndex);
-            queueableBinaryWriter.Write(this.GroupCount);
-            queueableBinaryWriter.Write(this.GroupStartIndex);
+            queueableBlamBinaryWriter.Write(this.CacheBlockIndex);
+            queueableBlamBinaryWriter.Write(this.GroupCount);
+            queueableBlamBinaryWriter.Write(this.GroupStartIndex);
         }
         public class ChildIndicesBlock : GuerillaBlock, IWriteQueueable
         {
@@ -107,14 +107,14 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.QueueWrites(queueableBinaryWriter);
+                base.QueueWrites(queueableBlamBinaryWriter);
             }
-            public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.Write_(queueableBinaryWriter);
-                queueableBinaryWriter.Write(this.ChildIndex);
+                base.Write_(queueableBlamBinaryWriter);
+                queueableBlamBinaryWriter.Write(this.ChildIndex);
             }
         }
     }

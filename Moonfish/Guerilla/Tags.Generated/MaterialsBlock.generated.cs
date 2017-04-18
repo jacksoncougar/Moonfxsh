@@ -69,28 +69,28 @@ namespace Moonfish.Guerilla.Tags.Generated
             this.PhysicsProperties.ReadInstances(binaryReader, pointerQueue);
             this.Sweeteners.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.PhysicsProperties.QueueWrites(queueableBinaryWriter);
-            this.Sweeteners.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.PhysicsProperties.QueueWrites(queueableBlamBinaryWriter);
+            this.Sweeteners.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.ParentName);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.MaterialsFlags)));
-            queueableBinaryWriter.Write(((short)(this.OldMaterialType)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.GeneralArmor);
-            queueableBinaryWriter.Write(this.SpecificArmor);
-            this.PhysicsProperties.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.OldMaterialPhysics);
-            queueableBinaryWriter.Write(this.BreakableSurface);
-            this.Sweeteners.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MaterialEffects);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(this.ParentName);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(((short)(this.MaterialsFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.OldMaterialType)));
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.GeneralArmor);
+            queueableBlamBinaryWriter.Write(this.SpecificArmor);
+            this.PhysicsProperties.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.OldMaterialPhysics);
+            queueableBlamBinaryWriter.Write(this.BreakableSurface);
+            this.Sweeteners.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.MaterialEffects);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

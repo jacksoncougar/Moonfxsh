@@ -42,7 +42,7 @@ namespace Moonfish
                     FileMode.Open, FileAccess.Read, FileShare.Read, 8*1024));
 
             //HEADER
-            var binaryReader = new BinaryReader(BaseStream, Encoding.UTF8);
+            var binaryReader = new BlamBinaryReader(BaseStream, Encoding.UTF8);
 
             Header = CacheHeader.DeserializeFrom(BaseStream);
 
@@ -205,7 +205,7 @@ namespace Moonfish
 
         public TagIndex Index { get; }
 
-        private void LoadUnicode(BinaryReader binaryReader,
+        private void LoadUnicode(BlamBinaryReader blamBinaryReader,
             int stringIndexAddress, int stringCount, int stringTableAddress,
             int stringTableLength)
         {
@@ -216,8 +216,8 @@ namespace Moonfish
 
             for (; unicodeCount > 0; --unicodeCount)
             {
-                var key = binaryReader.ReadStringIdent();
-                var start = binaryReader.ReadInt32();
+                var key = blamBinaryReader.ReadStringIdent();
+                var start = blamBinaryReader.ReadInt32();
                 info.Add(new Tuple<StringIdent, int>(key, start));
             }
 
@@ -261,7 +261,7 @@ namespace Moonfish
 
         private GuerillaBlock Deserialize(TagClass @class)
         {
-            var sourceReader = new BinaryReader(BaseStream);
+            var sourceReader = new BlamBinaryReader(BaseStream);
             var instance = GuerillaBlock.CreateInstance(@class);
 
             instance.Read(sourceReader);

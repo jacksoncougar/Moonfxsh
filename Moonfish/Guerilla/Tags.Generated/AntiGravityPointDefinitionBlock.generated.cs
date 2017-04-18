@@ -77,31 +77,31 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MarkerName);
-            queueableBinaryWriter.Write(((int)(this.AntiGravityPointDefinitionFlags)));
-            queueableBinaryWriter.Write(this.AntigravStrength);
-            queueableBinaryWriter.Write(this.AntigravOffset);
-            queueableBinaryWriter.Write(this.AntigravHeight);
-            queueableBinaryWriter.Write(this.AntigravDampFactor);
-            queueableBinaryWriter.Write(this.AntigravNormalK1);
-            queueableBinaryWriter.Write(this.AntigravNormalK0);
-            queueableBinaryWriter.Write(this.Radius);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.DamageSourceRegionName);
-            queueableBinaryWriter.Write(this.DefaultStateError);
-            queueableBinaryWriter.Write(this.MinorDamageError);
-            queueableBinaryWriter.Write(this.MediumDamageError);
-            queueableBinaryWriter.Write(this.MajorDamageError);
-            queueableBinaryWriter.Write(this.DestroyedStateError);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.MarkerName);
+            queueableBlamBinaryWriter.Write(((int)(this.AntiGravityPointDefinitionFlags)));
+            queueableBlamBinaryWriter.Write(this.AntigravStrength);
+            queueableBlamBinaryWriter.Write(this.AntigravOffset);
+            queueableBlamBinaryWriter.Write(this.AntigravHeight);
+            queueableBlamBinaryWriter.Write(this.AntigravDampFactor);
+            queueableBlamBinaryWriter.Write(this.AntigravNormalK1);
+            queueableBlamBinaryWriter.Write(this.AntigravNormalK0);
+            queueableBlamBinaryWriter.Write(this.Radius);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.DamageSourceRegionName);
+            queueableBlamBinaryWriter.Write(this.DefaultStateError);
+            queueableBlamBinaryWriter.Write(this.MinorDamageError);
+            queueableBlamBinaryWriter.Write(this.MediumDamageError);
+            queueableBlamBinaryWriter.Write(this.MajorDamageError);
+            queueableBlamBinaryWriter.Write(this.DestroyedStateError);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

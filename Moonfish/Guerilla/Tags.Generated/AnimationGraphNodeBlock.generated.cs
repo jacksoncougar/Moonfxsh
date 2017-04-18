@@ -59,22 +59,22 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.NextSiblingNodeIndex);
-            queueableBinaryWriter.Write(this.FirstChildNodeIndex);
-            queueableBinaryWriter.Write(this.ParentNodeIndex);
-            queueableBinaryWriter.Write(((byte)(this.AnimationGraphNodeModelFlags)));
-            queueableBinaryWriter.Write(((byte)(this.AnimationGraphNodeNodeJointFlags)));
-            queueableBinaryWriter.Write(this.BaseVector);
-            queueableBinaryWriter.Write(this.VectorRange);
-            queueableBinaryWriter.Write(this.ZPos);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(this.NextSiblingNodeIndex);
+            queueableBlamBinaryWriter.Write(this.FirstChildNodeIndex);
+            queueableBlamBinaryWriter.Write(this.ParentNodeIndex);
+            queueableBlamBinaryWriter.Write(((byte)(this.AnimationGraphNodeModelFlags)));
+            queueableBlamBinaryWriter.Write(((byte)(this.AnimationGraphNodeNodeJointFlags)));
+            queueableBlamBinaryWriter.Write(this.BaseVector);
+            queueableBlamBinaryWriter.Write(this.VectorRange);
+            queueableBlamBinaryWriter.Write(this.ZPos);
         }
         [System.FlagsAttribute()]
         public enum ModelFlags : byte

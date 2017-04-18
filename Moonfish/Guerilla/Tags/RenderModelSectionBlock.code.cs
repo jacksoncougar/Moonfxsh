@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Moonfish.ResourceManagement;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
+
     partial class RenderModelSectionBlock : IResourceBlock<RenderModelSectionDataBlock>,
         IResourceDescriptor<GlobalGeometryBlockResourceBlock>
     {
+        private Stream[] vertexBufferStreams;
+
         ResourcePointer IResourceBlock.GetResourcePointer(int index)
         {
             return GeometryBlockInfo.BlockOffset;
@@ -43,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
 
             var sectionBlock = new RenderModelSectionDataBlock();
 
-            using (var binaryReader = new BinaryReader(stream))
+            using (var binaryReader = new BlamBinaryReader(stream))
             {
                 sectionBlock.Read(binaryReader);
 

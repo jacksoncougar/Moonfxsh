@@ -98,36 +98,36 @@ namespace Moonfish.Guerilla.Tags
             this.Sequences = base.ReadBlockArrayData<BitmapGroupSequenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.Bitmaps = base.ReadBlockArrayData<BitmapDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Sequences);
-            queueableBinaryWriter.QueueWrite(this.Bitmaps);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Sequences);
+            queueableBlamBinaryWriter.QueueWrite(this.Bitmaps);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(((short)(this.Format)));
-            queueableBinaryWriter.Write(((short)(this.Usage)));
-            queueableBinaryWriter.Write(((short)(this.BitmapFlags)));
-            queueableBinaryWriter.Write(this.DetailFadeFactor);
-            queueableBinaryWriter.Write(this.SharpenAmount);
-            queueableBinaryWriter.Write(this.BumpHeight);
-            queueableBinaryWriter.Write(((short)(this.SpriteSize)));
-            queueableBinaryWriter.Write(this.EMPTYSTRING);
-            queueableBinaryWriter.Write(this.ColorPlateWidth);
-            queueableBinaryWriter.Write(this.ColorPlateHeight);
-            queueableBinaryWriter.Write(this.data);
-            queueableBinaryWriter.Write(this.data0);
-            queueableBinaryWriter.Write(this.BlurFilterSize);
-            queueableBinaryWriter.Write(this.AlphaBias);
-            queueableBinaryWriter.Write(this.MipmapCount);
-            queueableBinaryWriter.Write(((short)(this.SpriteUsage)));
-            queueableBinaryWriter.Write(this.SpriteSpacing);
-            queueableBinaryWriter.Write(((short)(this.ForceFormat)));
-            queueableBinaryWriter.WritePointer(this.Sequences);
-            queueableBinaryWriter.WritePointer(this.Bitmaps);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.Type)));
+            queueableBlamBinaryWriter.Write(((short)(this.Format)));
+            queueableBlamBinaryWriter.Write(((short)(this.Usage)));
+            queueableBlamBinaryWriter.Write(((short)(this.BitmapFlags)));
+            queueableBlamBinaryWriter.Write(this.DetailFadeFactor);
+            queueableBlamBinaryWriter.Write(this.SharpenAmount);
+            queueableBlamBinaryWriter.Write(this.BumpHeight);
+            queueableBlamBinaryWriter.Write(((short)(this.SpriteSize)));
+            queueableBlamBinaryWriter.Write(this.EMPTYSTRING);
+            queueableBlamBinaryWriter.Write(this.ColorPlateWidth);
+            queueableBlamBinaryWriter.Write(this.ColorPlateHeight);
+            queueableBlamBinaryWriter.Write(this.data);
+            queueableBlamBinaryWriter.Write(this.data0);
+            queueableBlamBinaryWriter.Write(this.BlurFilterSize);
+            queueableBlamBinaryWriter.Write(this.AlphaBias);
+            queueableBlamBinaryWriter.Write(this.MipmapCount);
+            queueableBlamBinaryWriter.Write(((short)(this.SpriteUsage)));
+            queueableBlamBinaryWriter.Write(this.SpriteSpacing);
+            queueableBlamBinaryWriter.Write(((short)(this.ForceFormat)));
+            queueableBlamBinaryWriter.WritePointer(this.Sequences);
+            queueableBlamBinaryWriter.WritePointer(this.Bitmaps);
         }
         /// <summary>
         /// Type controls bitmap geometry. All dimensions must be a power of 2 except for SPRITES and INTERFACE BITMAPS:

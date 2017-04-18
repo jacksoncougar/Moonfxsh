@@ -75,30 +75,30 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Orientation.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.Orientation.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.Orientation.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.ScenarioNetgameEquipmentFlags)));
-            queueableBinaryWriter.Write(((short)(this.GameType1)));
-            queueableBinaryWriter.Write(((short)(this.GameType2)));
-            queueableBinaryWriter.Write(((short)(this.GameType3)));
-            queueableBinaryWriter.Write(((short)(this.GameType4)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.SpawnTime);
-            queueableBinaryWriter.Write(this.RespawnOnEmptyTime);
-            queueableBinaryWriter.Write(((short)(this.RespawnTimerStarts)));
-            queueableBinaryWriter.Write(((byte)(this.Classification)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.Position);
-            this.Orientation.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ItemVehicleCollection);
-            queueableBinaryWriter.Write(this.fieldpad2);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.ScenarioNetgameEquipmentFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.GameType1)));
+            queueableBlamBinaryWriter.Write(((short)(this.GameType2)));
+            queueableBlamBinaryWriter.Write(((short)(this.GameType3)));
+            queueableBlamBinaryWriter.Write(((short)(this.GameType4)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.SpawnTime);
+            queueableBlamBinaryWriter.Write(this.RespawnOnEmptyTime);
+            queueableBlamBinaryWriter.Write(((short)(this.RespawnTimerStarts)));
+            queueableBlamBinaryWriter.Write(((byte)(this.Classification)));
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.Position);
+            this.Orientation.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.ItemVehicleCollection);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

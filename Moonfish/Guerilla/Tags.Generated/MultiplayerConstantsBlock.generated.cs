@@ -97,39 +97,39 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MaximumRandomSpawnBias);
-            queueableBinaryWriter.Write(this.TeleporterRechargeTime);
-            queueableBinaryWriter.Write(this.GrenadeDangerWeight);
-            queueableBinaryWriter.Write(this.GrenadeDangerInnerRadius);
-            queueableBinaryWriter.Write(this.GrenadeDangerOuterRadius);
-            queueableBinaryWriter.Write(this.GrenadeDangerLeadTime);
-            queueableBinaryWriter.Write(this.VehicleDangerMinSpeed);
-            queueableBinaryWriter.Write(this.VehicleDangerWeight);
-            queueableBinaryWriter.Write(this.VehicleDangerRadius);
-            queueableBinaryWriter.Write(this.VehicleDangerLeadTime);
-            queueableBinaryWriter.Write(this.VehicleNearbyPlayerDist);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.HillShader);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.FlagResetStopDistance);
-            queueableBinaryWriter.Write(this.BombExplodeEffect);
-            queueableBinaryWriter.Write(this.BombExplodeDmgEffect);
-            queueableBinaryWriter.Write(this.BombDefuseEffect);
-            queueableBinaryWriter.Write(this.BombDefusalString);
-            queueableBinaryWriter.Write(this.BlockedTeleporterString);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(this.fieldpad6);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.MaximumRandomSpawnBias);
+            queueableBlamBinaryWriter.Write(this.TeleporterRechargeTime);
+            queueableBlamBinaryWriter.Write(this.GrenadeDangerWeight);
+            queueableBlamBinaryWriter.Write(this.GrenadeDangerInnerRadius);
+            queueableBlamBinaryWriter.Write(this.GrenadeDangerOuterRadius);
+            queueableBlamBinaryWriter.Write(this.GrenadeDangerLeadTime);
+            queueableBlamBinaryWriter.Write(this.VehicleDangerMinSpeed);
+            queueableBlamBinaryWriter.Write(this.VehicleDangerWeight);
+            queueableBlamBinaryWriter.Write(this.VehicleDangerRadius);
+            queueableBlamBinaryWriter.Write(this.VehicleDangerLeadTime);
+            queueableBlamBinaryWriter.Write(this.VehicleNearbyPlayerDist);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.HillShader);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.FlagResetStopDistance);
+            queueableBlamBinaryWriter.Write(this.BombExplodeEffect);
+            queueableBlamBinaryWriter.Write(this.BombExplodeDmgEffect);
+            queueableBlamBinaryWriter.Write(this.BombDefuseEffect);
+            queueableBlamBinaryWriter.Write(this.BombDefusalString);
+            queueableBlamBinaryWriter.Write(this.BlockedTeleporterString);
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
+            queueableBlamBinaryWriter.Write(this.fieldpad4);
+            queueableBlamBinaryWriter.Write(this.fieldpad5);
+            queueableBlamBinaryWriter.Write(this.fieldpad6);
         }
     }
 }

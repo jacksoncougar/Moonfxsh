@@ -48,16 +48,16 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((byte)(this.LeavesFlags)));
-            queueableBinaryWriter.Write(this.BSP2DReferenceCount);
-            queueableBinaryWriter.Write(this.FirstBSP2DReference);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((byte)(this.LeavesFlags)));
+            queueableBlamBinaryWriter.Write(this.BSP2DReferenceCount);
+            queueableBlamBinaryWriter.Write(this.FirstBSP2DReference);
         }
         [System.FlagsAttribute()]
         public enum Flags : byte

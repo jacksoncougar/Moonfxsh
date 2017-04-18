@@ -62,25 +62,25 @@ namespace Moonfish.Guerilla.Tags
             this.Lines = base.ReadBlockArrayData<AiConversationLineBlock>(binaryReader, pointerQueue.Dequeue());
             this.GNullBlock = base.ReadBlockArrayData<GNullBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Participants);
-            queueableBinaryWriter.QueueWrite(this.Lines);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Participants);
+            queueableBlamBinaryWriter.QueueWrite(this.Lines);
+            queueableBlamBinaryWriter.QueueWrite(this.GNullBlock);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((short)(this.AiConversationFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.TriggerDistance);
-            queueableBinaryWriter.Write(this.RuntoplayerDist);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.WritePointer(this.Participants);
-            queueableBinaryWriter.WritePointer(this.Lines);
-            queueableBinaryWriter.WritePointer(this.GNullBlock);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(((short)(this.AiConversationFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.TriggerDistance);
+            queueableBlamBinaryWriter.Write(this.RuntoplayerDist);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.WritePointer(this.Participants);
+            queueableBlamBinaryWriter.WritePointer(this.Lines);
+            queueableBlamBinaryWriter.WritePointer(this.GNullBlock);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

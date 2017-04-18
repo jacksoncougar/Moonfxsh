@@ -73,29 +73,29 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Emitters = base.ReadBlockArrayData<ParticleSystemEmitterDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Emitters);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Emitters);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Particle);
-            queueableBinaryWriter.Write(this.Location);
-            queueableBinaryWriter.Write(((short)(this.CoordinateSystem)));
-            queueableBinaryWriter.Write(((short)(this.Environment)));
-            queueableBinaryWriter.Write(((short)(this.Disposition)));
-            queueableBinaryWriter.Write(((short)(this.CameraMode)));
-            queueableBinaryWriter.Write(this.SortBias);
-            queueableBinaryWriter.Write(((short)(this.ParticleSystemDefinitionNewFlags)));
-            queueableBinaryWriter.Write(this.LODInDistance);
-            queueableBinaryWriter.Write(this.LODFeatherInDelta);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.LODOutDistance);
-            queueableBinaryWriter.Write(this.LODFeatherOutDelta);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.WritePointer(this.Emitters);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Particle);
+            queueableBlamBinaryWriter.Write(this.Location);
+            queueableBlamBinaryWriter.Write(((short)(this.CoordinateSystem)));
+            queueableBlamBinaryWriter.Write(((short)(this.Environment)));
+            queueableBlamBinaryWriter.Write(((short)(this.Disposition)));
+            queueableBlamBinaryWriter.Write(((short)(this.CameraMode)));
+            queueableBlamBinaryWriter.Write(this.SortBias);
+            queueableBlamBinaryWriter.Write(((short)(this.ParticleSystemDefinitionNewFlags)));
+            queueableBlamBinaryWriter.Write(this.LODInDistance);
+            queueableBlamBinaryWriter.Write(this.LODFeatherInDelta);
+            queueableBlamBinaryWriter.Write(this.fieldskip);
+            queueableBlamBinaryWriter.Write(this.LODOutDistance);
+            queueableBlamBinaryWriter.Write(this.LODFeatherOutDelta);
+            queueableBlamBinaryWriter.Write(this.fieldskip0);
+            queueableBlamBinaryWriter.WritePointer(this.Emitters);
         }
         public enum CoordinateSystemEnum : short
         {

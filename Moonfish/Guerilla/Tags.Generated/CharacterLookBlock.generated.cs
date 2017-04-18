@@ -63,24 +63,24 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MaximumAimingDeviation);
-            queueableBinaryWriter.Write(this.MaximumLookingDeviation);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.NoncombatLookDeltaL);
-            queueableBinaryWriter.Write(this.NoncombatLookDeltaR);
-            queueableBinaryWriter.Write(this.CombatLookDeltaL);
-            queueableBinaryWriter.Write(this.CombatLookDeltaR);
-            queueableBinaryWriter.Write(this.NoncombatIdleLooking);
-            queueableBinaryWriter.Write(this.NoncombatIdleAiming);
-            queueableBinaryWriter.Write(this.CombatIdleLooking);
-            queueableBinaryWriter.Write(this.CombatIdleAiming);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.MaximumAimingDeviation);
+            queueableBlamBinaryWriter.Write(this.MaximumLookingDeviation);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.NoncombatLookDeltaL);
+            queueableBlamBinaryWriter.Write(this.NoncombatLookDeltaR);
+            queueableBlamBinaryWriter.Write(this.CombatLookDeltaL);
+            queueableBlamBinaryWriter.Write(this.CombatLookDeltaR);
+            queueableBlamBinaryWriter.Write(this.NoncombatIdleLooking);
+            queueableBlamBinaryWriter.Write(this.NoncombatIdleAiming);
+            queueableBlamBinaryWriter.Write(this.CombatIdleLooking);
+            queueableBlamBinaryWriter.Write(this.CombatIdleAiming);
         }
     }
 }

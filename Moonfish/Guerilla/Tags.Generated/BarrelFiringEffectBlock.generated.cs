@@ -63,21 +63,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ShotCountLowerBound);
-            queueableBinaryWriter.Write(this.ShotCountUpperBound);
-            queueableBinaryWriter.Write(this.FiringEffect);
-            queueableBinaryWriter.Write(this.MisfireEffect);
-            queueableBinaryWriter.Write(this.EmptyEffect);
-            queueableBinaryWriter.Write(this.FiringDamage);
-            queueableBinaryWriter.Write(this.MisfireDamage);
-            queueableBinaryWriter.Write(this.EmptyDamage);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.ShotCountLowerBound);
+            queueableBlamBinaryWriter.Write(this.ShotCountUpperBound);
+            queueableBlamBinaryWriter.Write(this.FiringEffect);
+            queueableBlamBinaryWriter.Write(this.MisfireEffect);
+            queueableBlamBinaryWriter.Write(this.EmptyEffect);
+            queueableBlamBinaryWriter.Write(this.FiringDamage);
+            queueableBlamBinaryWriter.Write(this.MisfireDamage);
+            queueableBlamBinaryWriter.Write(this.EmptyDamage);
         }
     }
 }

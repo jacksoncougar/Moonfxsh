@@ -84,35 +84,35 @@ namespace Moonfish.Guerilla.Tags
             this.PostprocessDefinition = base.ReadBlockArrayData<ShaderPostprocessDefinitionNewBlock>(binaryReader, pointerQueue.Dequeue());
             this.PredictedResources = base.ReadBlockArrayData<PredictedResourceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.RuntimeProperties);
-            queueableBinaryWriter.QueueWrite(this.Parameters);
-            queueableBinaryWriter.QueueWrite(this.PostprocessDefinition);
-            queueableBinaryWriter.QueueWrite(this.PredictedResources);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.RuntimeProperties);
+            queueableBlamBinaryWriter.QueueWrite(this.Parameters);
+            queueableBlamBinaryWriter.QueueWrite(this.PostprocessDefinition);
+            queueableBlamBinaryWriter.QueueWrite(this.PredictedResources);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Template);
-            queueableBinaryWriter.Write(this.MaterialName);
-            queueableBinaryWriter.WritePointer(this.RuntimeProperties);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.ShaderFlags)));
-            queueableBinaryWriter.WritePointer(this.Parameters);
-            queueableBinaryWriter.WritePointer(this.PostprocessDefinition);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.WritePointer(this.PredictedResources);
-            queueableBinaryWriter.Write(this.LightResponse);
-            queueableBinaryWriter.Write(((short)(this.ShaderLODBias)));
-            queueableBinaryWriter.Write(((short)(this.SpecularType)));
-            queueableBinaryWriter.Write(((short)(this.LightmapType)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.LightmapSpecularBrightness);
-            queueableBinaryWriter.Write(this.LightmapAmbientBias);
-            queueableBinaryWriter.Write(this.AddedDepthBiasOffset);
-            queueableBinaryWriter.Write(this.AddedDepthBiasSlopeScale);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Template);
+            queueableBlamBinaryWriter.Write(this.MaterialName);
+            queueableBlamBinaryWriter.WritePointer(this.RuntimeProperties);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(((short)(this.ShaderFlags)));
+            queueableBlamBinaryWriter.WritePointer(this.Parameters);
+            queueableBlamBinaryWriter.WritePointer(this.PostprocessDefinition);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.WritePointer(this.PredictedResources);
+            queueableBlamBinaryWriter.Write(this.LightResponse);
+            queueableBlamBinaryWriter.Write(((short)(this.ShaderLODBias)));
+            queueableBlamBinaryWriter.Write(((short)(this.SpecularType)));
+            queueableBlamBinaryWriter.Write(((short)(this.LightmapType)));
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.LightmapSpecularBrightness);
+            queueableBlamBinaryWriter.Write(this.LightmapAmbientBias);
+            queueableBlamBinaryWriter.Write(this.AddedDepthBiasOffset);
+            queueableBlamBinaryWriter.Write(this.AddedDepthBiasSlopeScale);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

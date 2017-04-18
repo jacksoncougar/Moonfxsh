@@ -61,23 +61,23 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((int)(this.PoweredMassPointFlags)));
-            queueableBinaryWriter.Write(this.AntigravStrength);
-            queueableBinaryWriter.Write(this.AntigravOffset);
-            queueableBinaryWriter.Write(this.AntigravHeight);
-            queueableBinaryWriter.Write(this.AntigravDampFraction);
-            queueableBinaryWriter.Write(this.AntigravNormalK1);
-            queueableBinaryWriter.Write(this.AntigravNormalK0);
-            queueableBinaryWriter.Write(this.DamageSourceRegionName);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(((int)(this.PoweredMassPointFlags)));
+            queueableBlamBinaryWriter.Write(this.AntigravStrength);
+            queueableBlamBinaryWriter.Write(this.AntigravOffset);
+            queueableBlamBinaryWriter.Write(this.AntigravHeight);
+            queueableBlamBinaryWriter.Write(this.AntigravDampFraction);
+            queueableBlamBinaryWriter.Write(this.AntigravNormalK1);
+            queueableBlamBinaryWriter.Write(this.AntigravNormalK0);
+            queueableBlamBinaryWriter.Write(this.DamageSourceRegionName);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

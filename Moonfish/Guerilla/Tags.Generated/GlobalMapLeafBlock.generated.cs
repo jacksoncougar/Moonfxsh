@@ -47,17 +47,17 @@ namespace Moonfish.Guerilla.Tags
             this.Faces = base.ReadBlockArrayData<MapLeafFaceBlock>(binaryReader, pointerQueue.Dequeue());
             this.ConnectionIndices = base.ReadBlockArrayData<MapLeafConnectionIndexBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Faces);
-            queueableBinaryWriter.QueueWrite(this.ConnectionIndices);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Faces);
+            queueableBlamBinaryWriter.QueueWrite(this.ConnectionIndices);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Faces);
-            queueableBinaryWriter.WritePointer(this.ConnectionIndices);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Faces);
+            queueableBlamBinaryWriter.WritePointer(this.ConnectionIndices);
         }
     }
 }

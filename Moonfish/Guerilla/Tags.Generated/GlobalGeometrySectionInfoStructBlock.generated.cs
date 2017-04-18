@@ -83,33 +83,33 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.EMPTYSTRING = base.ReadBlockArrayData<GlobalGeometryCompressionInfoBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.EMPTYSTRING);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.EMPTYSTRING);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.TotalVertexCount);
-            queueableBinaryWriter.Write(this.TotalTriangleCount);
-            queueableBinaryWriter.Write(this.TotalPartCount);
-            queueableBinaryWriter.Write(this.ShadowCastingTriangleCount);
-            queueableBinaryWriter.Write(this.ShadowCastingPartCount);
-            queueableBinaryWriter.Write(this.OpaquePointCount);
-            queueableBinaryWriter.Write(this.OpaqueVertexCount);
-            queueableBinaryWriter.Write(this.OpaquePartCount);
-            queueableBinaryWriter.Write(this.OpaqueMaxNodesVertex);
-            queueableBinaryWriter.Write(this.TransparentMaxNodesVertex);
-            queueableBinaryWriter.Write(this.ShadowCastingRigidTriangleCount);
-            queueableBinaryWriter.Write(((short)(this.GeometryClassification)));
-            queueableBinaryWriter.Write(((short)(this.GlobalGeometrySectionInfoStructGeometryCompressionFlags)));
-            queueableBinaryWriter.WritePointer(this.EMPTYSTRING);
-            queueableBinaryWriter.Write(this.HardwareNodeCount);
-            queueableBinaryWriter.Write(this.NodeMapSize);
-            queueableBinaryWriter.Write(this.SoftwarePlaneCount);
-            queueableBinaryWriter.Write(this.TotalSubpartCont);
-            queueableBinaryWriter.Write(((short)(this.GlobalGeometrySectionInfoStructSectionLightingFlags)));
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.TotalVertexCount);
+            queueableBlamBinaryWriter.Write(this.TotalTriangleCount);
+            queueableBlamBinaryWriter.Write(this.TotalPartCount);
+            queueableBlamBinaryWriter.Write(this.ShadowCastingTriangleCount);
+            queueableBlamBinaryWriter.Write(this.ShadowCastingPartCount);
+            queueableBlamBinaryWriter.Write(this.OpaquePointCount);
+            queueableBlamBinaryWriter.Write(this.OpaqueVertexCount);
+            queueableBlamBinaryWriter.Write(this.OpaquePartCount);
+            queueableBlamBinaryWriter.Write(this.OpaqueMaxNodesVertex);
+            queueableBlamBinaryWriter.Write(this.TransparentMaxNodesVertex);
+            queueableBlamBinaryWriter.Write(this.ShadowCastingRigidTriangleCount);
+            queueableBlamBinaryWriter.Write(((short)(this.GeometryClassification)));
+            queueableBlamBinaryWriter.Write(((short)(this.GlobalGeometrySectionInfoStructGeometryCompressionFlags)));
+            queueableBlamBinaryWriter.WritePointer(this.EMPTYSTRING);
+            queueableBlamBinaryWriter.Write(this.HardwareNodeCount);
+            queueableBlamBinaryWriter.Write(this.NodeMapSize);
+            queueableBlamBinaryWriter.Write(this.SoftwarePlaneCount);
+            queueableBlamBinaryWriter.Write(this.TotalSubpartCont);
+            queueableBlamBinaryWriter.Write(((short)(this.GlobalGeometrySectionInfoStructSectionLightingFlags)));
         }
         public enum GeometryClassificationEnum : short
         {

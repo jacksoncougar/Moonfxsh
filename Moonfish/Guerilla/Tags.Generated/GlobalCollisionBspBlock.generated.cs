@@ -65,29 +65,29 @@ namespace Moonfish.Guerilla.Tags
             this.Edges = base.ReadBlockArrayData<EdgesBlock>(binaryReader, pointerQueue.Dequeue());
             this.Vertices = base.ReadBlockArrayData<VerticesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.BSP3DNodes);
-            queueableBinaryWriter.QueueWrite(this.Planes);
-            queueableBinaryWriter.QueueWrite(this.Leaves);
-            queueableBinaryWriter.QueueWrite(this.BSP2DReferences);
-            queueableBinaryWriter.QueueWrite(this.BSP2DNodes);
-            queueableBinaryWriter.QueueWrite(this.Surfaces);
-            queueableBinaryWriter.QueueWrite(this.Edges);
-            queueableBinaryWriter.QueueWrite(this.Vertices);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.BSP3DNodes);
+            queueableBlamBinaryWriter.QueueWrite(this.Planes);
+            queueableBlamBinaryWriter.QueueWrite(this.Leaves);
+            queueableBlamBinaryWriter.QueueWrite(this.BSP2DReferences);
+            queueableBlamBinaryWriter.QueueWrite(this.BSP2DNodes);
+            queueableBlamBinaryWriter.QueueWrite(this.Surfaces);
+            queueableBlamBinaryWriter.QueueWrite(this.Edges);
+            queueableBlamBinaryWriter.QueueWrite(this.Vertices);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.BSP3DNodes);
-            queueableBinaryWriter.WritePointer(this.Planes);
-            queueableBinaryWriter.WritePointer(this.Leaves);
-            queueableBinaryWriter.WritePointer(this.BSP2DReferences);
-            queueableBinaryWriter.WritePointer(this.BSP2DNodes);
-            queueableBinaryWriter.WritePointer(this.Surfaces);
-            queueableBinaryWriter.WritePointer(this.Edges);
-            queueableBinaryWriter.WritePointer(this.Vertices);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.BSP3DNodes);
+            queueableBlamBinaryWriter.WritePointer(this.Planes);
+            queueableBlamBinaryWriter.WritePointer(this.Leaves);
+            queueableBlamBinaryWriter.WritePointer(this.BSP2DReferences);
+            queueableBlamBinaryWriter.WritePointer(this.BSP2DNodes);
+            queueableBlamBinaryWriter.WritePointer(this.Surfaces);
+            queueableBlamBinaryWriter.WritePointer(this.Edges);
+            queueableBlamBinaryWriter.WritePointer(this.Vertices);
         }
     }
 }

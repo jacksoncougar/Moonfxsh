@@ -7,6 +7,10 @@ using Moonfish.Guerilla.Tags;
 using Moonfish.ResourceManagement;
 using Moonfish.Tags;
 
+namespace Moonfish
+{
+}
+
 namespace Moonfish.Guerilla
 {
     /// <summary>
@@ -25,7 +29,6 @@ namespace Moonfish.Guerilla
         public static void WriteResourceBytes<T>(T resourceBlock, Stream output, int index = 0)
             where T : IResourceBlock<byte[]>
         {
-
             var startAddress = output.Position;
             long endAddress;
             long length;
@@ -124,7 +127,7 @@ namespace Moonfish.Guerilla
             if (stream.Length != block.GetResourceLength())
                 throw new InvalidDataException();
 
-            using (var binaryReader = new BinaryReader(stream))
+            using (var binaryReader = new BlamBinaryReader(stream))
             {
                 resource.Read(binaryReader);
 
@@ -143,7 +146,7 @@ namespace Moonfish.Guerilla
         }
         
 
-        private class ResourceWriter : QueueableBinaryWriter, IEnumerable<QueueItem>
+        private class ResourceWriter : QueueableBlamBinaryWriter, IEnumerable<QueueItem>
         {
             /// <summary>
             /// Event fired before a pointer is written to the output stream.

@@ -71,28 +71,28 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.Shader);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((byte)(this.DecoratorPermutationsFlags)));
-            queueableBinaryWriter.Write(((byte)(this.FadeDistance)));
-            queueableBinaryWriter.Write(this.Index);
-            queueableBinaryWriter.Write(this.DistributionWeight);
-            queueableBinaryWriter.Write(this.Scale);
-            queueableBinaryWriter.Write(this.Tint1);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.Tint2);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.BaseMapTintPercentage);
-            queueableBinaryWriter.Write(this.LightmapTintPercentage);
-            queueableBinaryWriter.Write(this.WindScale);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(this.Shader);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(((byte)(this.DecoratorPermutationsFlags)));
+            queueableBlamBinaryWriter.Write(((byte)(this.FadeDistance)));
+            queueableBlamBinaryWriter.Write(this.Index);
+            queueableBlamBinaryWriter.Write(this.DistributionWeight);
+            queueableBlamBinaryWriter.Write(this.Scale);
+            queueableBlamBinaryWriter.Write(this.Tint1);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.Tint2);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.BaseMapTintPercentage);
+            queueableBlamBinaryWriter.Write(this.LightmapTintPercentage);
+            queueableBlamBinaryWriter.Write(this.WindScale);
         }
         [System.FlagsAttribute()]
         public enum Flags : byte

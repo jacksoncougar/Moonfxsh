@@ -85,36 +85,36 @@ namespace Moonfish.Guerilla.Tags
             this.GNullBlock = base.ReadBlockArrayData<GNullBlock>(binaryReader, pointerQueue.Dequeue());
             this.KingEvents = base.ReadBlockArrayData<GameEngineKingEventBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Vehicles);
-            queueableBinaryWriter.QueueWrite(this.Sounds);
-            queueableBinaryWriter.QueueWrite(this.GeneralEvents);
-            queueableBinaryWriter.QueueWrite(this.SlayerEvents);
-            queueableBinaryWriter.QueueWrite(this.CtfEvents);
-            queueableBinaryWriter.QueueWrite(this.OddballEvents);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock);
-            queueableBinaryWriter.QueueWrite(this.KingEvents);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Vehicles);
+            queueableBlamBinaryWriter.QueueWrite(this.Sounds);
+            queueableBlamBinaryWriter.QueueWrite(this.GeneralEvents);
+            queueableBlamBinaryWriter.QueueWrite(this.SlayerEvents);
+            queueableBlamBinaryWriter.QueueWrite(this.CtfEvents);
+            queueableBlamBinaryWriter.QueueWrite(this.OddballEvents);
+            queueableBlamBinaryWriter.QueueWrite(this.GNullBlock);
+            queueableBlamBinaryWriter.QueueWrite(this.KingEvents);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Flag);
-            queueableBinaryWriter.Write(this.Unit);
-            queueableBinaryWriter.WritePointer(this.Vehicles);
-            queueableBinaryWriter.Write(this.HillShader);
-            queueableBinaryWriter.Write(this.FlagShader);
-            queueableBinaryWriter.Write(this.Ball);
-            queueableBinaryWriter.WritePointer(this.Sounds);
-            queueableBinaryWriter.Write(this.InGameText);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.GeneralEvents);
-            queueableBinaryWriter.WritePointer(this.SlayerEvents);
-            queueableBinaryWriter.WritePointer(this.CtfEvents);
-            queueableBinaryWriter.WritePointer(this.OddballEvents);
-            queueableBinaryWriter.WritePointer(this.GNullBlock);
-            queueableBinaryWriter.WritePointer(this.KingEvents);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Flag);
+            queueableBlamBinaryWriter.Write(this.Unit);
+            queueableBlamBinaryWriter.WritePointer(this.Vehicles);
+            queueableBlamBinaryWriter.Write(this.HillShader);
+            queueableBlamBinaryWriter.Write(this.FlagShader);
+            queueableBlamBinaryWriter.Write(this.Ball);
+            queueableBlamBinaryWriter.WritePointer(this.Sounds);
+            queueableBlamBinaryWriter.Write(this.InGameText);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.WritePointer(this.GeneralEvents);
+            queueableBlamBinaryWriter.WritePointer(this.SlayerEvents);
+            queueableBlamBinaryWriter.WritePointer(this.CtfEvents);
+            queueableBlamBinaryWriter.WritePointer(this.OddballEvents);
+            queueableBlamBinaryWriter.WritePointer(this.GNullBlock);
+            queueableBlamBinaryWriter.WritePointer(this.KingEvents);
         }
     }
 }

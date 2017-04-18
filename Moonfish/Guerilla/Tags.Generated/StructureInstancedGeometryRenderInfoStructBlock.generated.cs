@@ -53,21 +53,21 @@ namespace Moonfish.Guerilla.Tags
             this.RenderData = base.ReadBlockArrayData<StructureBspClusterDataBlockNew>(binaryReader, pointerQueue.Dequeue());
             this.IndexReorderTable = base.ReadBlockArrayData<GlobalGeometrySectionStripIndexBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.SectionInfo.QueueWrites(queueableBinaryWriter);
-            this.GeometryBlockInfo.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.RenderData);
-            queueableBinaryWriter.QueueWrite(this.IndexReorderTable);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.SectionInfo.QueueWrites(queueableBlamBinaryWriter);
+            this.GeometryBlockInfo.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.RenderData);
+            queueableBlamBinaryWriter.QueueWrite(this.IndexReorderTable);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            this.SectionInfo.Write_(queueableBinaryWriter);
-            this.GeometryBlockInfo.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.RenderData);
-            queueableBinaryWriter.WritePointer(this.IndexReorderTable);
+            base.Write_(queueableBlamBinaryWriter);
+            this.SectionInfo.Write_(queueableBlamBinaryWriter);
+            this.GeometryBlockInfo.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.RenderData);
+            queueableBlamBinaryWriter.WritePointer(this.IndexReorderTable);
         }
     }
 }

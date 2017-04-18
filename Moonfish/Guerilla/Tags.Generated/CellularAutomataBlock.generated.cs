@@ -106,44 +106,44 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.UpdatesPerSecond);
-            queueableBinaryWriter.Write(this.X);
-            queueableBinaryWriter.Write(this.Y);
-            queueableBinaryWriter.Write(this.Z);
-            queueableBinaryWriter.Write(this.X0);
-            queueableBinaryWriter.Write(this.Y0);
-            queueableBinaryWriter.Write(this.Z0);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Marker);
-            queueableBinaryWriter.Write(this.CellBirthChance);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.CellGeneMutates1In);
-            queueableBinaryWriter.Write(this.VirusGeneMutations1In);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.InfectedCellLifespan);
-            queueableBinaryWriter.Write(this.MinimumInfectionAge);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.CellInfectionChance);
-            queueableBinaryWriter.Write(this.InfectionThreshold);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.NewCellFilledChance);
-            queueableBinaryWriter.Write(this.NewCellInfectedChance);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.DetailTextureChangeChance);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(this.DetailTextureWidth);
-            queueableBinaryWriter.Write(this.fieldpad6);
-            queueableBinaryWriter.Write(this.DetailTexture);
-            queueableBinaryWriter.Write(this.fieldpad7);
-            queueableBinaryWriter.Write(this.MaskBitmap);
-            queueableBinaryWriter.Write(this.fieldpad8);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.UpdatesPerSecond);
+            queueableBlamBinaryWriter.Write(this.X);
+            queueableBlamBinaryWriter.Write(this.Y);
+            queueableBlamBinaryWriter.Write(this.Z);
+            queueableBlamBinaryWriter.Write(this.X0);
+            queueableBlamBinaryWriter.Write(this.Y0);
+            queueableBlamBinaryWriter.Write(this.Z0);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.Marker);
+            queueableBlamBinaryWriter.Write(this.CellBirthChance);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.CellGeneMutates1In);
+            queueableBlamBinaryWriter.Write(this.VirusGeneMutations1In);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.InfectedCellLifespan);
+            queueableBlamBinaryWriter.Write(this.MinimumInfectionAge);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.CellInfectionChance);
+            queueableBlamBinaryWriter.Write(this.InfectionThreshold);
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
+            queueableBlamBinaryWriter.Write(this.NewCellFilledChance);
+            queueableBlamBinaryWriter.Write(this.NewCellInfectedChance);
+            queueableBlamBinaryWriter.Write(this.fieldpad4);
+            queueableBlamBinaryWriter.Write(this.DetailTextureChangeChance);
+            queueableBlamBinaryWriter.Write(this.fieldpad5);
+            queueableBlamBinaryWriter.Write(this.DetailTextureWidth);
+            queueableBlamBinaryWriter.Write(this.fieldpad6);
+            queueableBlamBinaryWriter.Write(this.DetailTexture);
+            queueableBlamBinaryWriter.Write(this.fieldpad7);
+            queueableBlamBinaryWriter.Write(this.MaskBitmap);
+            queueableBlamBinaryWriter.Write(this.fieldpad8);
         }
     }
 }

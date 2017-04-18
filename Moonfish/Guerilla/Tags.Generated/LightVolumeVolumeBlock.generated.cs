@@ -90,39 +90,39 @@ namespace Moonfish.Guerilla.Tags
             this.Aspect = base.ReadBlockArrayData<LightVolumeAspectBlock>(binaryReader, pointerQueue.Dequeue());
             this.LightVolumeRuntimeOffsetBlock = base.ReadBlockArrayData<LightVolumeRuntimeOffsetBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.OffsetFunction.QueueWrites(queueableBinaryWriter);
-            this.RadiusFunction.QueueWrites(queueableBinaryWriter);
-            this.BrightnessFunction.QueueWrites(queueableBinaryWriter);
-            this.ColorFunction.QueueWrites(queueableBinaryWriter);
-            this.FacingFunction.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Aspect);
-            queueableBinaryWriter.QueueWrite(this.LightVolumeRuntimeOffsetBlock);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.OffsetFunction.QueueWrites(queueableBlamBinaryWriter);
+            this.RadiusFunction.QueueWrites(queueableBlamBinaryWriter);
+            this.BrightnessFunction.QueueWrites(queueableBlamBinaryWriter);
+            this.ColorFunction.QueueWrites(queueableBlamBinaryWriter);
+            this.FacingFunction.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Aspect);
+            queueableBlamBinaryWriter.QueueWrite(this.LightVolumeRuntimeOffsetBlock);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.LightVolumeVolumeFlags)));
-            queueableBinaryWriter.Write(this.Bitmap);
-            queueableBinaryWriter.Write(this.SpriteCount);
-            this.OffsetFunction.Write_(queueableBinaryWriter);
-            this.RadiusFunction.Write_(queueableBinaryWriter);
-            this.BrightnessFunction.Write_(queueableBinaryWriter);
-            this.ColorFunction.Write_(queueableBinaryWriter);
-            this.FacingFunction.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Aspect);
-            queueableBinaryWriter.Write(this.RadiusFracMin);
-            queueableBinaryWriter.Write(this.DEPRECATEDXstepExponent);
-            queueableBinaryWriter.Write(this.DEPRECATEDXbufferLength);
-            queueableBinaryWriter.Write(this.XbufferSpacing);
-            queueableBinaryWriter.Write(this.XbufferMinIterations);
-            queueableBinaryWriter.Write(this.XbufferMaxIterations);
-            queueableBinaryWriter.Write(this.XdeltaMaxError);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.WritePointer(this.LightVolumeRuntimeOffsetBlock);
-            queueableBinaryWriter.Write(this.fieldskip0);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.LightVolumeVolumeFlags)));
+            queueableBlamBinaryWriter.Write(this.Bitmap);
+            queueableBlamBinaryWriter.Write(this.SpriteCount);
+            this.OffsetFunction.Write_(queueableBlamBinaryWriter);
+            this.RadiusFunction.Write_(queueableBlamBinaryWriter);
+            this.BrightnessFunction.Write_(queueableBlamBinaryWriter);
+            this.ColorFunction.Write_(queueableBlamBinaryWriter);
+            this.FacingFunction.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Aspect);
+            queueableBlamBinaryWriter.Write(this.RadiusFracMin);
+            queueableBlamBinaryWriter.Write(this.DEPRECATEDXstepExponent);
+            queueableBlamBinaryWriter.Write(this.DEPRECATEDXbufferLength);
+            queueableBlamBinaryWriter.Write(this.XbufferSpacing);
+            queueableBlamBinaryWriter.Write(this.XbufferMinIterations);
+            queueableBlamBinaryWriter.Write(this.XbufferMaxIterations);
+            queueableBlamBinaryWriter.Write(this.XdeltaMaxError);
+            queueableBlamBinaryWriter.Write(this.fieldskip);
+            queueableBlamBinaryWriter.WritePointer(this.LightVolumeRuntimeOffsetBlock);
+            queueableBlamBinaryWriter.Write(this.fieldskip0);
         }
         /// <summary>
         /// If no bitmap is selected, the default glow bitmap will be used. Sprite count controls how many sprites are used to render this volume. Using more sprites will result in a smoother and brighter effect, at a slight performance penalty. Don't touch the flags unless you know what you're doing (they should be off by default).

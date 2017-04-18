@@ -47,17 +47,17 @@ namespace Moonfish.Guerilla.Tags
             this.InitialPermutations = base.ReadBlockArrayData<ObjectChangeColorInitialPermutation>(binaryReader, pointerQueue.Dequeue());
             this.Functions = base.ReadBlockArrayData<ObjectChangeColorFunction>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.InitialPermutations);
-            queueableBinaryWriter.QueueWrite(this.Functions);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.InitialPermutations);
+            queueableBlamBinaryWriter.QueueWrite(this.Functions);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.InitialPermutations);
-            queueableBinaryWriter.WritePointer(this.Functions);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.InitialPermutations);
+            queueableBlamBinaryWriter.WritePointer(this.Functions);
         }
     }
 }

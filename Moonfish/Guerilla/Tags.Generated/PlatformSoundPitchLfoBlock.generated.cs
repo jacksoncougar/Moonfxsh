@@ -50,19 +50,19 @@ namespace Moonfish.Guerilla.Tags
             this.Frequency.ReadInstances(binaryReader, pointerQueue);
             this.PitchModulation.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.Delay.QueueWrites(queueableBinaryWriter);
-            this.Frequency.QueueWrites(queueableBinaryWriter);
-            this.PitchModulation.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.Delay.QueueWrites(queueableBlamBinaryWriter);
+            this.Frequency.QueueWrites(queueableBlamBinaryWriter);
+            this.PitchModulation.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            this.Delay.Write_(queueableBinaryWriter);
-            this.Frequency.Write_(queueableBinaryWriter);
-            this.PitchModulation.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            this.Delay.Write_(queueableBlamBinaryWriter);
+            this.Frequency.Write_(queueableBlamBinaryWriter);
+            this.PitchModulation.Write_(queueableBlamBinaryWriter);
         }
     }
 }

@@ -49,18 +49,18 @@ namespace Moonfish.Guerilla.Tags
             this.SoundPromotionRules = base.ReadBlockArrayData<SoundPromotionRuleBlock>(binaryReader, pointerQueue.Dequeue());
             this.SoundPromotionRuntimeTimers = base.ReadBlockArrayData<SoundPromotionRuntimeTimerBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.SoundPromotionRules);
-            queueableBinaryWriter.QueueWrite(this.SoundPromotionRuntimeTimers);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.SoundPromotionRules);
+            queueableBlamBinaryWriter.QueueWrite(this.SoundPromotionRuntimeTimers);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.SoundPromotionRules);
-            queueableBinaryWriter.WritePointer(this.SoundPromotionRuntimeTimers);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.SoundPromotionRules);
+            queueableBlamBinaryWriter.WritePointer(this.SoundPromotionRuntimeTimers);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
         }
     }
 }

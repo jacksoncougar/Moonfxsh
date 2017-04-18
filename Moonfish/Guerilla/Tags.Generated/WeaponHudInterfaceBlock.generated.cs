@@ -106,48 +106,48 @@ namespace Moonfish.Guerilla.Tags
             this.GNullBlock = base.ReadBlockArrayData<GNullBlock>(binaryReader, pointerQueue.Dequeue());
             this.ScreenEffect = base.ReadBlockArrayData<GlobalHudScreenEffectDefinition>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.StaticElements);
-            queueableBinaryWriter.QueueWrite(this.MeterElements);
-            queueableBinaryWriter.QueueWrite(this.NumberElements);
-            queueableBinaryWriter.QueueWrite(this.Crosshairs);
-            queueableBinaryWriter.QueueWrite(this.OverlayElements);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock);
-            queueableBinaryWriter.QueueWrite(this.ScreenEffect);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.StaticElements);
+            queueableBlamBinaryWriter.QueueWrite(this.MeterElements);
+            queueableBlamBinaryWriter.QueueWrite(this.NumberElements);
+            queueableBlamBinaryWriter.QueueWrite(this.Crosshairs);
+            queueableBlamBinaryWriter.QueueWrite(this.OverlayElements);
+            queueableBlamBinaryWriter.QueueWrite(this.GNullBlock);
+            queueableBlamBinaryWriter.QueueWrite(this.ScreenEffect);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ChildHud);
-            queueableBinaryWriter.Write(((short)(this.WeaponHudInterfaceFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.InventoryAmmoCutoff);
-            queueableBinaryWriter.Write(this.LoadedAmmoCutoff);
-            queueableBinaryWriter.Write(this.HeatCutoff);
-            queueableBinaryWriter.Write(this.AgeCutoff);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(((short)(this.Anchor)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.WritePointer(this.StaticElements);
-            queueableBinaryWriter.WritePointer(this.MeterElements);
-            queueableBinaryWriter.WritePointer(this.NumberElements);
-            queueableBinaryWriter.WritePointer(this.Crosshairs);
-            queueableBinaryWriter.WritePointer(this.OverlayElements);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.WritePointer(this.GNullBlock);
-            queueableBinaryWriter.WritePointer(this.ScreenEffect);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.SequenceIndex);
-            queueableBinaryWriter.Write(this.WidthOffset);
-            queueableBinaryWriter.Write(this.OffsetFromReferenceCorner);
-            queueableBinaryWriter.Write(this.OverrideIconColor);
-            queueableBinaryWriter.Write(this.FrameRate030);
-            queueableBinaryWriter.Write(((byte)(this.WeaponHudInterfaceWeaponHudInterfaceFlags0)));
-            queueableBinaryWriter.Write(this.TextIndex);
-            queueableBinaryWriter.Write(this.fieldpad5);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.ChildHud);
+            queueableBlamBinaryWriter.Write(((short)(this.WeaponHudInterfaceFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.InventoryAmmoCutoff);
+            queueableBlamBinaryWriter.Write(this.LoadedAmmoCutoff);
+            queueableBlamBinaryWriter.Write(this.HeatCutoff);
+            queueableBlamBinaryWriter.Write(this.AgeCutoff);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(((short)(this.Anchor)));
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.WritePointer(this.StaticElements);
+            queueableBlamBinaryWriter.WritePointer(this.MeterElements);
+            queueableBlamBinaryWriter.WritePointer(this.NumberElements);
+            queueableBlamBinaryWriter.WritePointer(this.Crosshairs);
+            queueableBlamBinaryWriter.WritePointer(this.OverlayElements);
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
+            queueableBlamBinaryWriter.WritePointer(this.GNullBlock);
+            queueableBlamBinaryWriter.WritePointer(this.ScreenEffect);
+            queueableBlamBinaryWriter.Write(this.fieldpad4);
+            queueableBlamBinaryWriter.Write(this.SequenceIndex);
+            queueableBlamBinaryWriter.Write(this.WidthOffset);
+            queueableBlamBinaryWriter.Write(this.OffsetFromReferenceCorner);
+            queueableBlamBinaryWriter.Write(this.OverrideIconColor);
+            queueableBlamBinaryWriter.Write(this.FrameRate030);
+            queueableBlamBinaryWriter.Write(((byte)(this.WeaponHudInterfaceWeaponHudInterfaceFlags0)));
+            queueableBlamBinaryWriter.Write(this.TextIndex);
+            queueableBlamBinaryWriter.Write(this.fieldpad5);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

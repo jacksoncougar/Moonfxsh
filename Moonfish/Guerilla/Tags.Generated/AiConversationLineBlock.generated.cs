@@ -73,26 +73,26 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.AiConversationLineFlags)));
-            queueableBinaryWriter.Write(this.Participant);
-            queueableBinaryWriter.Write(((short)(this.Addressee)));
-            queueableBinaryWriter.Write(this.AddresseeParticipant);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.LineDelayTime);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.Variant1);
-            queueableBinaryWriter.Write(this.Variant2);
-            queueableBinaryWriter.Write(this.Variant3);
-            queueableBinaryWriter.Write(this.Variant4);
-            queueableBinaryWriter.Write(this.Variant5);
-            queueableBinaryWriter.Write(this.Variant6);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((short)(this.AiConversationLineFlags)));
+            queueableBlamBinaryWriter.Write(this.Participant);
+            queueableBlamBinaryWriter.Write(((short)(this.Addressee)));
+            queueableBlamBinaryWriter.Write(this.AddresseeParticipant);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.LineDelayTime);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.Variant1);
+            queueableBlamBinaryWriter.Write(this.Variant2);
+            queueableBlamBinaryWriter.Write(this.Variant3);
+            queueableBlamBinaryWriter.Write(this.Variant4);
+            queueableBlamBinaryWriter.Write(this.Variant5);
+            queueableBlamBinaryWriter.Write(this.Variant6);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

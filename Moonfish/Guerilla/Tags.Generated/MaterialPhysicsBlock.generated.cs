@@ -55,18 +55,18 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.GroundFrictionScale);
-            queueableBinaryWriter.Write(this.GroundFrictionNormalK1Scale);
-            queueableBinaryWriter.Write(this.GroundFrictionNormalK0Scale);
-            queueableBinaryWriter.Write(this.GroundDepthScale);
-            queueableBinaryWriter.Write(this.GroundDampFractionScale);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.GroundFrictionScale);
+            queueableBlamBinaryWriter.Write(this.GroundFrictionNormalK1Scale);
+            queueableBlamBinaryWriter.Write(this.GroundFrictionNormalK0Scale);
+            queueableBlamBinaryWriter.Write(this.GroundDepthScale);
+            queueableBlamBinaryWriter.Write(this.GroundDampFractionScale);
         }
     }
 }

@@ -140,63 +140,63 @@ namespace Moonfish.Guerilla.Tags
             this.Eh.ReadInstances(binaryReader, pointerQueue);
             this.FiringEffects = base.ReadBlockArrayData<BarrelFiringEffectBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.Eh.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.FiringEffects);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.Eh.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.FiringEffects);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.WeaponBarrelsFlags)));
-            queueableBinaryWriter.Write(this.RoundsPerSecond);
-            queueableBinaryWriter.Write(this.AccelerationTime);
-            queueableBinaryWriter.Write(this.DecelerationTime);
-            queueableBinaryWriter.Write(this.BarrelSpinScale);
-            queueableBinaryWriter.Write(this.BlurredRateOfFire);
-            queueableBinaryWriter.Write(this.ShotsPerFire);
-            queueableBinaryWriter.Write(this.FireRecoveryTime);
-            queueableBinaryWriter.Write(this.SoftRecoveryFraction);
-            queueableBinaryWriter.Write(this.Magazine);
-            queueableBinaryWriter.Write(this.RoundsPerShot);
-            queueableBinaryWriter.Write(this.MinimumRoundsLoaded);
-            queueableBinaryWriter.Write(this.RoundsBetweenTracers);
-            queueableBinaryWriter.Write(this.OptionalBarrelMarkerName);
-            queueableBinaryWriter.Write(((short)(this.PredictionType)));
-            queueableBinaryWriter.Write(((short)(this.FiringNoise)));
-            queueableBinaryWriter.Write(this.AccelerationTime0);
-            queueableBinaryWriter.Write(this.DecelerationTime0);
-            queueableBinaryWriter.Write(this.DamageError);
-            queueableBinaryWriter.Write(this.AccelerationTime1);
-            queueableBinaryWriter.Write(this.DecelerationTime1);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.MinimumError);
-            queueableBinaryWriter.Write(this.ErrorAngle);
-            queueableBinaryWriter.Write(this.DualWieldDamageScale);
-            queueableBinaryWriter.Write(((short)(this.DistributionFunction)));
-            queueableBinaryWriter.Write(this.ProjectilesPerShot);
-            queueableBinaryWriter.Write(this.DistributionAngle);
-            queueableBinaryWriter.Write(this.MinimumError0);
-            queueableBinaryWriter.Write(this.ErrorAngle0);
-            queueableBinaryWriter.Write(this.FirstPersonOffset);
-            queueableBinaryWriter.Write(((byte)(this.DamageEffectReportingType)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.Projectile);
-            this.Eh.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.EjectionPortRecoveryTime);
-            queueableBinaryWriter.Write(this.IlluminationRecoveryTime);
-            queueableBinaryWriter.Write(this.HeatGeneratedPerRound);
-            queueableBinaryWriter.Write(this.AgeGeneratedPerRound);
-            queueableBinaryWriter.Write(this.OverloadTime);
-            queueableBinaryWriter.Write(this.AngleChangePerShot);
-            queueableBinaryWriter.Write(this.AccelerationTime2);
-            queueableBinaryWriter.Write(this.DecelerationTime2);
-            queueableBinaryWriter.Write(((short)(this.AngleChangeFunction)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.WritePointer(this.FiringEffects);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.WeaponBarrelsFlags)));
+            queueableBlamBinaryWriter.Write(this.RoundsPerSecond);
+            queueableBlamBinaryWriter.Write(this.AccelerationTime);
+            queueableBlamBinaryWriter.Write(this.DecelerationTime);
+            queueableBlamBinaryWriter.Write(this.BarrelSpinScale);
+            queueableBlamBinaryWriter.Write(this.BlurredRateOfFire);
+            queueableBlamBinaryWriter.Write(this.ShotsPerFire);
+            queueableBlamBinaryWriter.Write(this.FireRecoveryTime);
+            queueableBlamBinaryWriter.Write(this.SoftRecoveryFraction);
+            queueableBlamBinaryWriter.Write(this.Magazine);
+            queueableBlamBinaryWriter.Write(this.RoundsPerShot);
+            queueableBlamBinaryWriter.Write(this.MinimumRoundsLoaded);
+            queueableBlamBinaryWriter.Write(this.RoundsBetweenTracers);
+            queueableBlamBinaryWriter.Write(this.OptionalBarrelMarkerName);
+            queueableBlamBinaryWriter.Write(((short)(this.PredictionType)));
+            queueableBlamBinaryWriter.Write(((short)(this.FiringNoise)));
+            queueableBlamBinaryWriter.Write(this.AccelerationTime0);
+            queueableBlamBinaryWriter.Write(this.DecelerationTime0);
+            queueableBlamBinaryWriter.Write(this.DamageError);
+            queueableBlamBinaryWriter.Write(this.AccelerationTime1);
+            queueableBlamBinaryWriter.Write(this.DecelerationTime1);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.MinimumError);
+            queueableBlamBinaryWriter.Write(this.ErrorAngle);
+            queueableBlamBinaryWriter.Write(this.DualWieldDamageScale);
+            queueableBlamBinaryWriter.Write(((short)(this.DistributionFunction)));
+            queueableBlamBinaryWriter.Write(this.ProjectilesPerShot);
+            queueableBlamBinaryWriter.Write(this.DistributionAngle);
+            queueableBlamBinaryWriter.Write(this.MinimumError0);
+            queueableBlamBinaryWriter.Write(this.ErrorAngle0);
+            queueableBlamBinaryWriter.Write(this.FirstPersonOffset);
+            queueableBlamBinaryWriter.Write(((byte)(this.DamageEffectReportingType)));
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.Projectile);
+            this.Eh.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.EjectionPortRecoveryTime);
+            queueableBlamBinaryWriter.Write(this.IlluminationRecoveryTime);
+            queueableBlamBinaryWriter.Write(this.HeatGeneratedPerRound);
+            queueableBlamBinaryWriter.Write(this.AgeGeneratedPerRound);
+            queueableBlamBinaryWriter.Write(this.OverloadTime);
+            queueableBlamBinaryWriter.Write(this.AngleChangePerShot);
+            queueableBlamBinaryWriter.Write(this.AccelerationTime2);
+            queueableBlamBinaryWriter.Write(this.DecelerationTime2);
+            queueableBlamBinaryWriter.Write(((short)(this.AngleChangeFunction)));
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.fieldpad2);
+            queueableBlamBinaryWriter.Write(this.fieldpad3);
+            queueableBlamBinaryWriter.WritePointer(this.FiringEffects);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

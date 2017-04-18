@@ -91,38 +91,38 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MaxSoundsPerTag116);
-            queueableBinaryWriter.Write(this.MaxSoundsPerObject116);
-            queueableBinaryWriter.Write(this.PreemptionTime);
-            queueableBinaryWriter.Write(((short)(this.SoundClassInternalFlags)));
-            queueableBinaryWriter.Write(((short)(this.SoundClassFlags)));
-            queueableBinaryWriter.Write(this.Priority);
-            queueableBinaryWriter.Write(((short)(this.CacheMissMode)));
-            queueableBinaryWriter.Write(this.ReverbGain);
-            queueableBinaryWriter.Write(this.OverrideSpeakerGain);
-            queueableBinaryWriter.Write(this.DistanceBounds);
-            queueableBinaryWriter.Write(this.GainBounds);
-            queueableBinaryWriter.Write(this.CutsceneDucking);
-            queueableBinaryWriter.Write(this.CutsceneDuckingFadeInTime);
-            queueableBinaryWriter.Write(this.CutsceneDuckingSustainTime);
-            queueableBinaryWriter.Write(this.CutsceneDuckingFadeOutTime);
-            queueableBinaryWriter.Write(this.ScriptedDialogDucking);
-            queueableBinaryWriter.Write(this.ScriptedDialogDuckingFadeInTime);
-            queueableBinaryWriter.Write(this.ScriptedDialogDuckingSustainTime);
-            queueableBinaryWriter.Write(this.ScriptedDialogDuckingFadeOutTime);
-            queueableBinaryWriter.Write(this.DopplerFactor);
-            queueableBinaryWriter.Write(((byte)(this.StereoPlaybackType)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.TransmissionMultiplier);
-            queueableBinaryWriter.Write(this.ObstructionMaxBend);
-            queueableBinaryWriter.Write(this.OcclusionMaxBend);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.MaxSoundsPerTag116);
+            queueableBlamBinaryWriter.Write(this.MaxSoundsPerObject116);
+            queueableBlamBinaryWriter.Write(this.PreemptionTime);
+            queueableBlamBinaryWriter.Write(((short)(this.SoundClassInternalFlags)));
+            queueableBlamBinaryWriter.Write(((short)(this.SoundClassFlags)));
+            queueableBlamBinaryWriter.Write(this.Priority);
+            queueableBlamBinaryWriter.Write(((short)(this.CacheMissMode)));
+            queueableBlamBinaryWriter.Write(this.ReverbGain);
+            queueableBlamBinaryWriter.Write(this.OverrideSpeakerGain);
+            queueableBlamBinaryWriter.Write(this.DistanceBounds);
+            queueableBlamBinaryWriter.Write(this.GainBounds);
+            queueableBlamBinaryWriter.Write(this.CutsceneDucking);
+            queueableBlamBinaryWriter.Write(this.CutsceneDuckingFadeInTime);
+            queueableBlamBinaryWriter.Write(this.CutsceneDuckingSustainTime);
+            queueableBlamBinaryWriter.Write(this.CutsceneDuckingFadeOutTime);
+            queueableBlamBinaryWriter.Write(this.ScriptedDialogDucking);
+            queueableBlamBinaryWriter.Write(this.ScriptedDialogDuckingFadeInTime);
+            queueableBlamBinaryWriter.Write(this.ScriptedDialogDuckingSustainTime);
+            queueableBlamBinaryWriter.Write(this.ScriptedDialogDuckingFadeOutTime);
+            queueableBlamBinaryWriter.Write(this.DopplerFactor);
+            queueableBlamBinaryWriter.Write(((byte)(this.StereoPlaybackType)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.TransmissionMultiplier);
+            queueableBlamBinaryWriter.Write(this.ObstructionMaxBend);
+            queueableBlamBinaryWriter.Write(this.OcclusionMaxBend);
         }
         [System.FlagsAttribute()]
         public enum InternalFlags : short

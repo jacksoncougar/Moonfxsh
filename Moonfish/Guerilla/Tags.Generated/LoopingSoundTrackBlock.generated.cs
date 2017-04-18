@@ -80,29 +80,29 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((int)(this.LoopingSoundTrackFlags)));
-            queueableBinaryWriter.Write(this.Gain);
-            queueableBinaryWriter.Write(this.FadeInDuration);
-            queueableBinaryWriter.Write(this.FadeOutDuration);
-            queueableBinaryWriter.Write(this.In);
-            queueableBinaryWriter.Write(this.Loop);
-            queueableBinaryWriter.Write(this.Out);
-            queueableBinaryWriter.Write(this.AltLoop);
-            queueableBinaryWriter.Write(this.AltOut);
-            queueableBinaryWriter.Write(((short)(this.OutputEffect)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.AltTransIn);
-            queueableBinaryWriter.Write(this.AltTransOut);
-            queueableBinaryWriter.Write(this.AltCrossfadeDuration);
-            queueableBinaryWriter.Write(this.AltFadeOutDuration);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(((int)(this.LoopingSoundTrackFlags)));
+            queueableBlamBinaryWriter.Write(this.Gain);
+            queueableBlamBinaryWriter.Write(this.FadeInDuration);
+            queueableBlamBinaryWriter.Write(this.FadeOutDuration);
+            queueableBlamBinaryWriter.Write(this.In);
+            queueableBlamBinaryWriter.Write(this.Loop);
+            queueableBlamBinaryWriter.Write(this.Out);
+            queueableBlamBinaryWriter.Write(this.AltLoop);
+            queueableBlamBinaryWriter.Write(this.AltOut);
+            queueableBlamBinaryWriter.Write(((short)(this.OutputEffect)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.AltTransIn);
+            queueableBlamBinaryWriter.Write(this.AltTransOut);
+            queueableBlamBinaryWriter.Write(this.AltCrossfadeDuration);
+            queueableBlamBinaryWriter.Write(this.AltFadeOutDuration);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

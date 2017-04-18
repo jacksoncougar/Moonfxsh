@@ -93,40 +93,40 @@ namespace Moonfish.Guerilla.Tags
             this.PoweredMassPoints = base.ReadBlockArrayData<PoweredMassPointBlock>(binaryReader, pointerQueue.Dequeue());
             this.MassPoints = base.ReadBlockArrayData<MassPointBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.InertialMatrixAndInverse);
-            queueableBinaryWriter.QueueWrite(this.PoweredMassPoints);
-            queueableBinaryWriter.QueueWrite(this.MassPoints);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.InertialMatrixAndInverse);
+            queueableBlamBinaryWriter.QueueWrite(this.PoweredMassPoints);
+            queueableBlamBinaryWriter.QueueWrite(this.MassPoints);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Radius);
-            queueableBinaryWriter.Write(this.MomentScale);
-            queueableBinaryWriter.Write(this.Mass);
-            queueableBinaryWriter.Write(this.CenterOfMass);
-            queueableBinaryWriter.Write(this.Density);
-            queueableBinaryWriter.Write(this.GravityScale);
-            queueableBinaryWriter.Write(this.GroundFriction);
-            queueableBinaryWriter.Write(this.GroundDepth);
-            queueableBinaryWriter.Write(this.GroundDampFraction);
-            queueableBinaryWriter.Write(this.GroundNormalK1);
-            queueableBinaryWriter.Write(this.GroundNormalK0);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.WaterFriction);
-            queueableBinaryWriter.Write(this.WaterDepth);
-            queueableBinaryWriter.Write(this.WaterDensity);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.AirFriction);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.XxMoment);
-            queueableBinaryWriter.Write(this.YyMoment);
-            queueableBinaryWriter.Write(this.ZzMoment);
-            queueableBinaryWriter.WritePointer(this.InertialMatrixAndInverse);
-            queueableBinaryWriter.WritePointer(this.PoweredMassPoints);
-            queueableBinaryWriter.WritePointer(this.MassPoints);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Radius);
+            queueableBlamBinaryWriter.Write(this.MomentScale);
+            queueableBlamBinaryWriter.Write(this.Mass);
+            queueableBlamBinaryWriter.Write(this.CenterOfMass);
+            queueableBlamBinaryWriter.Write(this.Density);
+            queueableBlamBinaryWriter.Write(this.GravityScale);
+            queueableBlamBinaryWriter.Write(this.GroundFriction);
+            queueableBlamBinaryWriter.Write(this.GroundDepth);
+            queueableBlamBinaryWriter.Write(this.GroundDampFraction);
+            queueableBlamBinaryWriter.Write(this.GroundNormalK1);
+            queueableBlamBinaryWriter.Write(this.GroundNormalK0);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.WaterFriction);
+            queueableBlamBinaryWriter.Write(this.WaterDepth);
+            queueableBlamBinaryWriter.Write(this.WaterDensity);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            queueableBlamBinaryWriter.Write(this.AirFriction);
+            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            queueableBlamBinaryWriter.Write(this.XxMoment);
+            queueableBlamBinaryWriter.Write(this.YyMoment);
+            queueableBlamBinaryWriter.Write(this.ZzMoment);
+            queueableBlamBinaryWriter.WritePointer(this.InertialMatrixAndInverse);
+            queueableBlamBinaryWriter.WritePointer(this.PoweredMassPoints);
+            queueableBlamBinaryWriter.WritePointer(this.MassPoints);
         }
     }
 }

@@ -76,27 +76,27 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MinimumDistance);
-            queueableBinaryWriter.Write(this.MaximumDistance);
-            queueableBinaryWriter.Write(this.SkipFraction);
-            queueableBinaryWriter.Write(this.MaximumBendPerSecond);
-            queueableBinaryWriter.Write(this.GainBase);
-            queueableBinaryWriter.Write(this.GainVariance);
-            queueableBinaryWriter.Write(this.RandomPitchBounds);
-            queueableBinaryWriter.Write(this.InnerConeAngle);
-            queueableBinaryWriter.Write(this.OuterConeAngle);
-            queueableBinaryWriter.Write(this.OuterConeGain);
-            queueableBinaryWriter.Write(((int)(this.SoundPlaybackParametersStructFlags)));
-            queueableBinaryWriter.Write(this.Azimuth);
-            queueableBinaryWriter.Write(this.PositionalGain);
-            queueableBinaryWriter.Write(this.FirstPersonGain);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.MinimumDistance);
+            queueableBlamBinaryWriter.Write(this.MaximumDistance);
+            queueableBlamBinaryWriter.Write(this.SkipFraction);
+            queueableBlamBinaryWriter.Write(this.MaximumBendPerSecond);
+            queueableBlamBinaryWriter.Write(this.GainBase);
+            queueableBlamBinaryWriter.Write(this.GainVariance);
+            queueableBlamBinaryWriter.Write(this.RandomPitchBounds);
+            queueableBlamBinaryWriter.Write(this.InnerConeAngle);
+            queueableBlamBinaryWriter.Write(this.OuterConeAngle);
+            queueableBlamBinaryWriter.Write(this.OuterConeGain);
+            queueableBlamBinaryWriter.Write(((int)(this.SoundPlaybackParametersStructFlags)));
+            queueableBlamBinaryWriter.Write(this.Azimuth);
+            queueableBlamBinaryWriter.Write(this.PositionalGain);
+            queueableBlamBinaryWriter.Write(this.FirstPersonGain);
         }
         /// <summary>
         /// NOTE: this will only apply when the sound is started via script

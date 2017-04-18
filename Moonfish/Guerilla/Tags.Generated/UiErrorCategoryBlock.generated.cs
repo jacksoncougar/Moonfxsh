@@ -66,24 +66,24 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.ErrorBlock = base.ReadBlockArrayData<UiErrorBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ErrorBlock);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.ErrorBlock);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.CategoryName);
-            queueableBinaryWriter.Write(((short)(this.UiErrorCategoryFlags)));
-            queueableBinaryWriter.Write(((byte)(this.DefaultButton)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.StringTag);
-            queueableBinaryWriter.Write(this.DefaultTitle);
-            queueableBinaryWriter.Write(this.DefaultMessage);
-            queueableBinaryWriter.Write(this.DefaultOk);
-            queueableBinaryWriter.Write(this.DefaultCancel);
-            queueableBinaryWriter.WritePointer(this.ErrorBlock);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.CategoryName);
+            queueableBlamBinaryWriter.Write(((short)(this.UiErrorCategoryFlags)));
+            queueableBlamBinaryWriter.Write(((byte)(this.DefaultButton)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.StringTag);
+            queueableBlamBinaryWriter.Write(this.DefaultTitle);
+            queueableBlamBinaryWriter.Write(this.DefaultMessage);
+            queueableBlamBinaryWriter.Write(this.DefaultOk);
+            queueableBlamBinaryWriter.Write(this.DefaultCancel);
+            queueableBlamBinaryWriter.WritePointer(this.ErrorBlock);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

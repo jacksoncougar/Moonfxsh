@@ -99,48 +99,48 @@ namespace Moonfish.Guerilla.Tags
                 this.UnusedCreateNewVariants00[i].ReadInstances(binaryReader, pointerQueue);
             }
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.GameEngineSettings);
-            queueableBinaryWriter.QueueWrite(this.DefaultVariants);
-            this.CreateNewVariantStruct.QueueWrites(queueableBinaryWriter);
-            this.CreateNewVariantStruct0.QueueWrites(queueableBinaryWriter);
-            this.CreateNewVariantStruct1.QueueWrites(queueableBinaryWriter);
-            this.CreateNewVariantStruct2.QueueWrites(queueableBinaryWriter);
-            this.CreateNewVariantStruct3.QueueWrites(queueableBinaryWriter);
-            this.CreateNewVariantStruct4.QueueWrites(queueableBinaryWriter);
-            this.CreateNewVariantStruct5.QueueWrites(queueableBinaryWriter);
-            this.CreateNewVariantStruct6.QueueWrites(queueableBinaryWriter);
-            this.CreateNewVariantStruct7.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.GameEngineSettings);
+            queueableBlamBinaryWriter.QueueWrite(this.DefaultVariants);
+            this.CreateNewVariantStruct.QueueWrites(queueableBlamBinaryWriter);
+            this.CreateNewVariantStruct0.QueueWrites(queueableBlamBinaryWriter);
+            this.CreateNewVariantStruct1.QueueWrites(queueableBlamBinaryWriter);
+            this.CreateNewVariantStruct2.QueueWrites(queueableBlamBinaryWriter);
+            this.CreateNewVariantStruct3.QueueWrites(queueableBlamBinaryWriter);
+            this.CreateNewVariantStruct4.QueueWrites(queueableBlamBinaryWriter);
+            this.CreateNewVariantStruct5.QueueWrites(queueableBlamBinaryWriter);
+            this.CreateNewVariantStruct6.QueueWrites(queueableBlamBinaryWriter);
+            this.CreateNewVariantStruct7.QueueWrites(queueableBlamBinaryWriter);
             int i;
             for (i = 0; (i < 7); i = (i + 1))
             {
-                this.UnusedCreateNewVariants00[i].QueueWrites(queueableBinaryWriter);
+                this.UnusedCreateNewVariants00[i].QueueWrites(queueableBlamBinaryWriter);
             }
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.TagReference);
-            queueableBinaryWriter.Write(this.TagReference0);
-            queueableBinaryWriter.Write(this.TagReference1);
-            queueableBinaryWriter.WritePointer(this.GameEngineSettings);
-            queueableBinaryWriter.Write(this.DefaultVariantStrings);
-            queueableBinaryWriter.WritePointer(this.DefaultVariants);
-            this.CreateNewVariantStruct.Write_(queueableBinaryWriter);
-            this.CreateNewVariantStruct0.Write_(queueableBinaryWriter);
-            this.CreateNewVariantStruct1.Write_(queueableBinaryWriter);
-            this.CreateNewVariantStruct2.Write_(queueableBinaryWriter);
-            this.CreateNewVariantStruct3.Write_(queueableBinaryWriter);
-            this.CreateNewVariantStruct4.Write_(queueableBinaryWriter);
-            this.CreateNewVariantStruct5.Write_(queueableBinaryWriter);
-            this.CreateNewVariantStruct6.Write_(queueableBinaryWriter);
-            this.CreateNewVariantStruct7.Write_(queueableBinaryWriter);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.TagReference);
+            queueableBlamBinaryWriter.Write(this.TagReference0);
+            queueableBlamBinaryWriter.Write(this.TagReference1);
+            queueableBlamBinaryWriter.WritePointer(this.GameEngineSettings);
+            queueableBlamBinaryWriter.Write(this.DefaultVariantStrings);
+            queueableBlamBinaryWriter.WritePointer(this.DefaultVariants);
+            this.CreateNewVariantStruct.Write_(queueableBlamBinaryWriter);
+            this.CreateNewVariantStruct0.Write_(queueableBlamBinaryWriter);
+            this.CreateNewVariantStruct1.Write_(queueableBlamBinaryWriter);
+            this.CreateNewVariantStruct2.Write_(queueableBlamBinaryWriter);
+            this.CreateNewVariantStruct3.Write_(queueableBlamBinaryWriter);
+            this.CreateNewVariantStruct4.Write_(queueableBlamBinaryWriter);
+            this.CreateNewVariantStruct5.Write_(queueableBlamBinaryWriter);
+            this.CreateNewVariantStruct6.Write_(queueableBlamBinaryWriter);
+            this.CreateNewVariantStruct7.Write_(queueableBlamBinaryWriter);
             int i;
             for (i = 0; (i < 7); i = (i + 1))
             {
-                this.UnusedCreateNewVariants00[i].Write_(queueableBinaryWriter);
+                this.UnusedCreateNewVariants00[i].Write_(queueableBlamBinaryWriter);
             }
         }
         public class UnusedCreateNewVariantsBlock : GuerillaBlock, IWriteQueueable
@@ -171,15 +171,15 @@ namespace Moonfish.Guerilla.Tags
                 base.ReadInstances(binaryReader, pointerQueue);
                 this.CreateNewVariantStruct.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.QueueWrites(queueableBinaryWriter);
-                this.CreateNewVariantStruct.QueueWrites(queueableBinaryWriter);
+                base.QueueWrites(queueableBlamBinaryWriter);
+                this.CreateNewVariantStruct.QueueWrites(queueableBlamBinaryWriter);
             }
-            public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+            public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
             {
-                base.Write_(queueableBinaryWriter);
-                this.CreateNewVariantStruct.Write_(queueableBinaryWriter);
+                base.Write_(queueableBlamBinaryWriter);
+                this.CreateNewVariantStruct.Write_(queueableBlamBinaryWriter);
             }
         }
     }

@@ -55,18 +55,18 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.SoundClasses);
-            queueableBinaryWriter.Write(this.SoundEffects);
-            queueableBinaryWriter.Write(this.SoundMix);
-            queueableBinaryWriter.Write(this.SoundCombatDialogueConstants);
-            queueableBinaryWriter.Write(this.FieldLongInteger);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.SoundClasses);
+            queueableBlamBinaryWriter.Write(this.SoundEffects);
+            queueableBlamBinaryWriter.Write(this.SoundMix);
+            queueableBlamBinaryWriter.Write(this.SoundCombatDialogueConstants);
+            queueableBlamBinaryWriter.Write(this.FieldLongInteger);
         }
     }
 }

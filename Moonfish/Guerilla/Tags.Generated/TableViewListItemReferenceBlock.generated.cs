@@ -58,21 +58,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.TableViewListItemReferenceTextFlags)));
-            queueableBinaryWriter.Write(this.CellWidth);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.BitmapTopleft);
-            queueableBinaryWriter.Write(this.BitmapTag);
-            queueableBinaryWriter.Write(this.StringId);
-            queueableBinaryWriter.Write(this.RenderDepthBias);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.TableViewListItemReferenceTextFlags)));
+            queueableBlamBinaryWriter.Write(this.CellWidth);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.BitmapTopleft);
+            queueableBlamBinaryWriter.Write(this.BitmapTag);
+            queueableBlamBinaryWriter.Write(this.StringId);
+            queueableBlamBinaryWriter.Write(this.RenderDepthBias);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
         }
         [System.FlagsAttribute()]
         public enum TextFlags : int

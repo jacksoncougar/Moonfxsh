@@ -53,19 +53,19 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.Parameters);
-            queueableBinaryWriter.Write(this.EncodedPermutationData);
-            queueableBinaryWriter.Write(this.FirstRuntimePermutationFlagIndex);
-            queueableBinaryWriter.Write(this.FirstPermutation);
-            queueableBinaryWriter.Write(this.PermutationCount);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.Name);
+            queueableBlamBinaryWriter.Write(this.Parameters);
+            queueableBlamBinaryWriter.Write(this.EncodedPermutationData);
+            queueableBlamBinaryWriter.Write(this.FirstRuntimePermutationFlagIndex);
+            queueableBlamBinaryWriter.Write(this.FirstPermutation);
+            queueableBlamBinaryWriter.Write(this.PermutationCount);
         }
     }
 }

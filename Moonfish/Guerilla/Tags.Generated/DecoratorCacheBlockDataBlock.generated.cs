@@ -64,27 +64,27 @@ namespace Moonfish.Guerilla.Tags
             this.SpriteVertices = base.ReadBlockArrayData<SpriteVerticesBlock>(binaryReader, pointerQueue.Dequeue());
             this.SpriteIndices = base.ReadBlockArrayData<IndicesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Placements);
-            queueableBinaryWriter.QueueWrite(this.DecalVertices);
-            queueableBinaryWriter.QueueWrite(this.DecalIndices);
-            queueableBinaryWriter.QueueWrite(this.SpriteVertices);
-            queueableBinaryWriter.QueueWrite(this.SpriteIndices);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Placements);
+            queueableBlamBinaryWriter.QueueWrite(this.DecalVertices);
+            queueableBlamBinaryWriter.QueueWrite(this.DecalIndices);
+            queueableBlamBinaryWriter.QueueWrite(this.SpriteVertices);
+            queueableBlamBinaryWriter.QueueWrite(this.SpriteIndices);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Placements);
-            queueableBinaryWriter.WritePointer(this.DecalVertices);
-            queueableBinaryWriter.WritePointer(this.DecalIndices);
-            queueableBinaryWriter.Write(this.DecalVertexBuffer);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.SpriteVertices);
-            queueableBinaryWriter.WritePointer(this.SpriteIndices);
-            queueableBinaryWriter.Write(this.SpriteVertexBuffer);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Placements);
+            queueableBlamBinaryWriter.WritePointer(this.DecalVertices);
+            queueableBlamBinaryWriter.WritePointer(this.DecalIndices);
+            queueableBlamBinaryWriter.Write(this.DecalVertexBuffer);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.WritePointer(this.SpriteVertices);
+            queueableBlamBinaryWriter.WritePointer(this.SpriteIndices);
+            queueableBlamBinaryWriter.Write(this.SpriteVertexBuffer);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
         }
     }
 }

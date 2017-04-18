@@ -74,25 +74,25 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MonoUnspatializedGain);
-            queueableBinaryWriter.Write(this.StereoTo3dGain);
-            queueableBinaryWriter.Write(this.RearSurroundToFrontStereoGain);
-            queueableBinaryWriter.Write(this.FrontSpeakerGain);
-            queueableBinaryWriter.Write(this.CenterSpeakerGain);
-            queueableBinaryWriter.Write(this.FrontSpeakerGain0);
-            queueableBinaryWriter.Write(this.CenterSpeakerGain0);
-            queueableBinaryWriter.Write(this.StereoUnspatializedGain);
-            queueableBinaryWriter.Write(this.SoloPlayerFadeOutDelay);
-            queueableBinaryWriter.Write(this.SoloPlayerFadeOutTime);
-            queueableBinaryWriter.Write(this.SoloPlayerFadeInTime);
-            queueableBinaryWriter.Write(this.GameMusicFadeOutTime);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.MonoUnspatializedGain);
+            queueableBlamBinaryWriter.Write(this.StereoTo3dGain);
+            queueableBlamBinaryWriter.Write(this.RearSurroundToFrontStereoGain);
+            queueableBlamBinaryWriter.Write(this.FrontSpeakerGain);
+            queueableBlamBinaryWriter.Write(this.CenterSpeakerGain);
+            queueableBlamBinaryWriter.Write(this.FrontSpeakerGain0);
+            queueableBlamBinaryWriter.Write(this.CenterSpeakerGain0);
+            queueableBlamBinaryWriter.Write(this.StereoUnspatializedGain);
+            queueableBlamBinaryWriter.Write(this.SoloPlayerFadeOutDelay);
+            queueableBlamBinaryWriter.Write(this.SoloPlayerFadeOutTime);
+            queueableBlamBinaryWriter.Write(this.SoloPlayerFadeInTime);
+            queueableBlamBinaryWriter.Write(this.GameMusicFadeOutTime);
         }
     }
 }

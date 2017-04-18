@@ -95,36 +95,36 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.PredictedBitmaps = base.ReadBlockArrayData<PredictedBitmapsBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.PredictedBitmaps);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.PredictedBitmaps);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.ItemItemFlags)));
-            queueableBinaryWriter.Write(this.OLDMessageIndex);
-            queueableBinaryWriter.Write(this.SortOrder);
-            queueableBinaryWriter.Write(this.MultiplayerOngroundScale);
-            queueableBinaryWriter.Write(this.CampaignOngroundScale);
-            queueableBinaryWriter.Write(this.PickupMessage);
-            queueableBinaryWriter.Write(this.SwapMessage);
-            queueableBinaryWriter.Write(this.PickupOrDualMsg);
-            queueableBinaryWriter.Write(this.SwapOrDualMsg);
-            queueableBinaryWriter.Write(this.DualonlyMsg);
-            queueableBinaryWriter.Write(this.PickedUpMsg);
-            queueableBinaryWriter.Write(this.SingluarQuantityMsg);
-            queueableBinaryWriter.Write(this.PluralQuantityMsg);
-            queueableBinaryWriter.Write(this.SwitchtoMsg);
-            queueableBinaryWriter.Write(this.SwitchtoFromAiMsg);
-            queueableBinaryWriter.Write(this.UNUSED);
-            queueableBinaryWriter.Write(this.CollisionSound);
-            queueableBinaryWriter.WritePointer(this.PredictedBitmaps);
-            queueableBinaryWriter.Write(this.DetonationDamageEffect);
-            queueableBinaryWriter.Write(this.DetonationDelay);
-            queueableBinaryWriter.Write(this.DetonatingEffect);
-            queueableBinaryWriter.Write(this.DetonationEffect);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.ItemItemFlags)));
+            queueableBlamBinaryWriter.Write(this.OLDMessageIndex);
+            queueableBlamBinaryWriter.Write(this.SortOrder);
+            queueableBlamBinaryWriter.Write(this.MultiplayerOngroundScale);
+            queueableBlamBinaryWriter.Write(this.CampaignOngroundScale);
+            queueableBlamBinaryWriter.Write(this.PickupMessage);
+            queueableBlamBinaryWriter.Write(this.SwapMessage);
+            queueableBlamBinaryWriter.Write(this.PickupOrDualMsg);
+            queueableBlamBinaryWriter.Write(this.SwapOrDualMsg);
+            queueableBlamBinaryWriter.Write(this.DualonlyMsg);
+            queueableBlamBinaryWriter.Write(this.PickedUpMsg);
+            queueableBlamBinaryWriter.Write(this.SingluarQuantityMsg);
+            queueableBlamBinaryWriter.Write(this.PluralQuantityMsg);
+            queueableBlamBinaryWriter.Write(this.SwitchtoMsg);
+            queueableBlamBinaryWriter.Write(this.SwitchtoFromAiMsg);
+            queueableBlamBinaryWriter.Write(this.UNUSED);
+            queueableBlamBinaryWriter.Write(this.CollisionSound);
+            queueableBlamBinaryWriter.WritePointer(this.PredictedBitmaps);
+            queueableBlamBinaryWriter.Write(this.DetonationDamageEffect);
+            queueableBlamBinaryWriter.Write(this.DetonationDelay);
+            queueableBlamBinaryWriter.Write(this.DetonatingEffect);
+            queueableBlamBinaryWriter.Write(this.DetonationEffect);
         }
         [System.FlagsAttribute()]
         public enum ItemFlags : int

@@ -57,22 +57,22 @@ namespace Moonfish.Guerilla.Tags
             this.LoadedTorqueCurve.ReadInstances(binaryReader, pointerQueue);
             this.CruisingTorqueCurve.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.LoadedTorqueCurve.QueueWrites(queueableBinaryWriter);
-            this.CruisingTorqueCurve.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            this.LoadedTorqueCurve.QueueWrites(queueableBlamBinaryWriter);
+            this.CruisingTorqueCurve.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            this.LoadedTorqueCurve.Write_(queueableBinaryWriter);
-            this.CruisingTorqueCurve.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MinTimeToUpshift);
-            queueableBinaryWriter.Write(this.EngineUpshiftScale);
-            queueableBinaryWriter.Write(this.GearRatio);
-            queueableBinaryWriter.Write(this.MinTimeToDownshift);
-            queueableBinaryWriter.Write(this.EngineDownshiftScale);
+            base.Write_(queueableBlamBinaryWriter);
+            this.LoadedTorqueCurve.Write_(queueableBlamBinaryWriter);
+            this.CruisingTorqueCurve.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.MinTimeToUpshift);
+            queueableBlamBinaryWriter.Write(this.EngineUpshiftScale);
+            queueableBlamBinaryWriter.Write(this.GearRatio);
+            queueableBlamBinaryWriter.Write(this.MinTimeToDownshift);
+            queueableBlamBinaryWriter.Write(this.EngineDownshiftScale);
         }
     }
 }

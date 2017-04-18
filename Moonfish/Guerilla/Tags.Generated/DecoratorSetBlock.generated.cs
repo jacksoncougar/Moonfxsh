@@ -69,30 +69,30 @@ namespace Moonfish.Guerilla.Tags
             this.CachedData = base.ReadBlockArrayData<CachedDataBlock>(binaryReader, pointerQueue.Dequeue());
             this.GeometrySectionInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Shaders);
-            queueableBinaryWriter.QueueWrite(this.Classes);
-            queueableBinaryWriter.QueueWrite(this.Models);
-            queueableBinaryWriter.QueueWrite(this.RawVertices);
-            queueableBinaryWriter.QueueWrite(this.Indices);
-            queueableBinaryWriter.QueueWrite(this.CachedData);
-            this.GeometrySectionInfo.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.Shaders);
+            queueableBlamBinaryWriter.QueueWrite(this.Classes);
+            queueableBlamBinaryWriter.QueueWrite(this.Models);
+            queueableBlamBinaryWriter.QueueWrite(this.RawVertices);
+            queueableBlamBinaryWriter.QueueWrite(this.Indices);
+            queueableBlamBinaryWriter.QueueWrite(this.CachedData);
+            this.GeometrySectionInfo.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Shaders);
-            queueableBinaryWriter.Write(this.LightingMinScale);
-            queueableBinaryWriter.Write(this.LightingMaxScale);
-            queueableBinaryWriter.WritePointer(this.Classes);
-            queueableBinaryWriter.WritePointer(this.Models);
-            queueableBinaryWriter.WritePointer(this.RawVertices);
-            queueableBinaryWriter.WritePointer(this.Indices);
-            queueableBinaryWriter.WritePointer(this.CachedData);
-            this.GeometrySectionInfo.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.Shaders);
+            queueableBlamBinaryWriter.Write(this.LightingMinScale);
+            queueableBlamBinaryWriter.Write(this.LightingMaxScale);
+            queueableBlamBinaryWriter.WritePointer(this.Classes);
+            queueableBlamBinaryWriter.WritePointer(this.Models);
+            queueableBlamBinaryWriter.WritePointer(this.RawVertices);
+            queueableBlamBinaryWriter.WritePointer(this.Indices);
+            queueableBlamBinaryWriter.WritePointer(this.CachedData);
+            this.GeometrySectionInfo.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.fieldpad);
         }
     }
 }

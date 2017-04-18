@@ -59,22 +59,22 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.InstancedGeometryIndex);
-            queueableBinaryWriter.Write(this.BreakableSurfaceIndex);
-            queueableBinaryWriter.Write(this.SeedSurfaceIndex);
-            queueableBinaryWriter.Write(this.x0);
-            queueableBinaryWriter.Write(this.x1);
-            queueableBinaryWriter.Write(this.y0);
-            queueableBinaryWriter.Write(this.y1);
-            queueableBinaryWriter.Write(this.z0);
-            queueableBinaryWriter.Write(this.z1);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(this.InstancedGeometryIndex);
+            queueableBlamBinaryWriter.Write(this.BreakableSurfaceIndex);
+            queueableBlamBinaryWriter.Write(this.SeedSurfaceIndex);
+            queueableBlamBinaryWriter.Write(this.x0);
+            queueableBlamBinaryWriter.Write(this.x1);
+            queueableBlamBinaryWriter.Write(this.y0);
+            queueableBlamBinaryWriter.Write(this.y1);
+            queueableBlamBinaryWriter.Write(this.z0);
+            queueableBlamBinaryWriter.Write(this.z1);
         }
     }
 }

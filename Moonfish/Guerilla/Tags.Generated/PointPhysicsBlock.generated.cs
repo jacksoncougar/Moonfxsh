@@ -58,21 +58,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.QueueWrites(queueableBlamBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.PointPhysicsFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Density);
-            queueableBinaryWriter.Write(this.AirFriction);
-            queueableBinaryWriter.Write(this.WaterFriction);
-            queueableBinaryWriter.Write(this.SurfaceFriction);
-            queueableBinaryWriter.Write(this.Elasticity);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.Write(((int)(this.PointPhysicsFlags)));
+            queueableBlamBinaryWriter.Write(this.fieldpad);
+            queueableBlamBinaryWriter.Write(this.Density);
+            queueableBlamBinaryWriter.Write(this.AirFriction);
+            queueableBlamBinaryWriter.Write(this.WaterFriction);
+            queueableBlamBinaryWriter.Write(this.SurfaceFriction);
+            queueableBlamBinaryWriter.Write(this.Elasticity);
+            queueableBlamBinaryWriter.Write(this.fieldpad0);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

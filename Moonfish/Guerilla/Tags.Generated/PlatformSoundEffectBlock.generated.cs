@@ -52,20 +52,20 @@ namespace Moonfish.Guerilla.Tags
             this.ConstantInputs = base.ReadBlockArrayData<PlatformSoundEffectConstantBlock>(binaryReader, pointerQueue.Dequeue());
             this.TemplateOverrideDescriptors = base.ReadBlockArrayData<PlatformSoundEffectOverrideDescriptorBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.FunctionInputs);
-            queueableBinaryWriter.QueueWrite(this.ConstantInputs);
-            queueableBinaryWriter.QueueWrite(this.TemplateOverrideDescriptors);
+            base.QueueWrites(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.QueueWrite(this.FunctionInputs);
+            queueableBlamBinaryWriter.QueueWrite(this.ConstantInputs);
+            queueableBlamBinaryWriter.QueueWrite(this.TemplateOverrideDescriptors);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
+        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
-            base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.FunctionInputs);
-            queueableBinaryWriter.WritePointer(this.ConstantInputs);
-            queueableBinaryWriter.WritePointer(this.TemplateOverrideDescriptors);
-            queueableBinaryWriter.Write(this.InputOverrides);
+            base.Write_(queueableBlamBinaryWriter);
+            queueableBlamBinaryWriter.WritePointer(this.FunctionInputs);
+            queueableBlamBinaryWriter.WritePointer(this.ConstantInputs);
+            queueableBlamBinaryWriter.WritePointer(this.TemplateOverrideDescriptors);
+            queueableBlamBinaryWriter.Write(this.InputOverrides);
         }
     }
 }

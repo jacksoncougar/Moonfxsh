@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 using JetBrains.Annotations;
@@ -21,6 +22,182 @@ namespace Moonfish.Guerilla
 
         public BlamBinaryWriter(Stream input, Encoding encoding, bool leaveOpen) : base(input, encoding, leaveOpen)
         {
+        }
+
+
+        public void WriteFourCC(string code)
+        {
+            byte[] buffer = new byte[4];
+            byte[] charbytes = Encoding.UTF8.GetBytes(code);
+            Array.Copy(charbytes, buffer, charbytes.Length % 5);
+            Array.Reverse(buffer);
+            Write(buffer);
+        }
+
+        public void WritePadding(int alignment)
+        {
+            Write(new byte[Padding.GetCount(BaseStream.Position, alignment)]);
+        }
+
+        public void Write(TagClass tclass)
+        {
+            Write((int)tclass);
+        }
+
+        public void Write(Range range)
+        {
+            Write(range.Min);
+            Write(range.Max);
+        }
+
+        public static double[] ToArray(Vector3 vector3)
+        {
+            return new double[] { vector3.X, vector3.Y, vector3.Z };
+        }
+
+        public void Write(VertexBuffer value)
+        {
+            Write((int)value.Type);
+            Write(new byte[28]);
+        }
+
+        public void Write(String32 value)
+        {
+            var bytes = Encoding.UTF8.GetBytes(value.value);
+            WriteFixedArray(bytes, 32);
+        }
+
+        public void Write(String256 value)
+        {
+            var bytes = Encoding.UTF8.GetBytes(value.value);
+            WriteFixedArray(bytes, 256);
+        }
+
+        private void WriteFixedArray(byte[] bytes, int fixedArraySize)
+        {
+            var padding = bytes.Length >= fixedArraySize ? 0 : fixedArraySize - bytes.Length;
+            var length = fixedArraySize - padding;
+            Write(bytes, 0, length);
+            Write(new byte[padding]);
+        }
+
+        public void Write(StringIdent value)
+        {
+            Write((int)value);
+        }
+
+        public void Write(ColourR1G1B1 value)
+        {
+            Write(value.R);
+            Write(value.G);
+            Write(value.B);
+        }
+
+        public void Write(TagIdent value)
+        {
+            Write((int)value);
+        }
+
+        public void Write(TagReference value)
+        {
+            Write((int)value.Class);
+            Write((int)value.Ident);
+        }
+
+        public void Write(BlockFlags8 value)
+        {
+            Write(value.flags);
+        }
+
+        public void Write(BlockFlags16 value)
+        {
+            Write((byte)value.Type);
+            Write((byte)value.Source);
+        }
+
+        public void Write(BlockFlags32 value)
+        {
+            Write(value.flags);
+        }
+
+        public void Write(ByteBlockIndex1 value)
+        {
+            Write((byte)value);
+        }
+
+        public void Write(ShortBlockIndex1 value)
+        {
+            Write(value);
+        }
+
+        public void Write(LongBlockIndex1 value)
+        {
+            Write((int)value);
+        }
+
+        public void Write(ByteBlockIndex2 value)
+        {
+            Write((byte)value);
+        }
+
+        public void Write(ShortBlockIndex2 value)
+        {
+            Write((short)value);
+        }
+
+        public void Write(LongBlockIndex2 value)
+        {
+            Write((int)value);
+        }
+
+        public void Write(Quaternion value)
+        {
+            Write(value.W);
+            Write(value.Z);
+            Write(value.Y);
+            Write(value.X);
+        }
+
+        public void Write(Vector4 value)
+        {
+            Write(value.X);
+            Write(value.Y);
+            Write(value.Z);
+            Write(value.W);
+        }
+
+        public void Write(Vector3 value)
+        {
+            Write(value.X);
+            Write(value.Y);
+            Write(value.Z);
+        }
+
+        public void Write(Vector2 value)
+        {
+            Write(value.X);
+            Write(value.Y);
+        }
+
+        public void Write(ColourA1R1G1B1 value)
+        {
+            Write(value.A);
+            Write(value.R);
+            Write(value.G);
+            Write(value.B);
+        }
+
+        public void Write(ColourR8G8B8 value)
+        {
+            Write(value.R);
+            Write(value.G);
+            Write(value.B);
+        }
+
+        public void Write(Point value)
+        {
+            Write(value.X);
+            Write(value.Y);
         }
     };
 

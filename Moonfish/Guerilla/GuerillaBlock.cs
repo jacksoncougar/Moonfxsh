@@ -148,7 +148,17 @@ namespace Moonfish.Guerilla
             return new Queue<BlamPointer>();
         }
 
+        public virtual Queue<BlamPointer> ReadFields(BlamBinaryReader binaryReader)
+        {
+            return new Queue<BlamPointer>();
+        }
+
         public virtual void ReadInstances(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        {
+            return;
+        }
+
+        public virtual void ReadInstances(BlamBinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             return;
         }
@@ -160,6 +170,11 @@ namespace Moonfish.Guerilla
         }
 
         public virtual void Write_(QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        {
+            return;
+        }
+
+        public virtual void Write(QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {
             return;
         }

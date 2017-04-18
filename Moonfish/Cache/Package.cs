@@ -35,7 +35,7 @@ namespace Moonfish
                     foreach (IResourceBlock<object> resourceBlock in resourceBlocks)
                     {
                         var pointer = resourceBlock.GetResourcePointer();
-                        if(pointer.Location >> 30 > 0) continue;
+                        if(pointer.Location > 0) continue;
 
                         var stream = new VirtualStream(pointer.Address);
                         resourceBlock.WriteResource(stream);

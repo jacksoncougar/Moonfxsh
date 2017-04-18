@@ -21,6 +21,13 @@ namespace Moonfish.ResourceManagement
             Resources = blockInfo.Resources;
         }
 
+        public ResourceStreamWrapper(Stream stream, IEnumerable<GlobalGeometryBlockResourceBlock> resources, int headsize)
+        {
+            BaseStream = stream;
+            HeaderSize = headsize;
+            Resources = resources as IList<GlobalGeometryBlockResourceBlock>;
+        }
+
         public byte[] GetResourceData(GlobalGeometryBlockResourceBlock resource)
         {
             Seek(resource.ResourceDataOffset, SeekOrigin.Data);

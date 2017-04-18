@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
-    partial class StructureInstancedGeometryRenderInfoStructBlock : IResourceBlock
+    partial class StructureInstancedGeometryRenderInfoStructBlock : IResourceBlock, IResourceBlock<StructureBspClusterDataBlockNew>, IResourceDescriptor<GlobalGeometryBlockResourceBlock>
     {
         public ResourcePointer GetResourcePointer(int index = 0)
         {
@@ -51,6 +51,31 @@ namespace Moonfish.Guerilla.Tags
                 }
             }
             RenderData = new[] { clusterBlock };
+        }
+
+        StructureBspClusterDataBlockNew IResourceBlock<StructureBspClusterDataBlockNew>.GetResource(int index)
+        {
+            return RenderData[index];
+        }
+
+        void IResourceBlock<StructureBspClusterDataBlockNew>.ReadResource(Func<IResourceBlock, int, Stream> @delegate)
+        {
+            ResourceLinker.ReadResource<StructureInstancedGeometryRenderInfoStructBlock, StructureBspClusterDataBlockNew>(this, @delegate);
+        }
+
+        void IResourceBlock<StructureBspClusterDataBlockNew>.WriteResource(Stream output)
+        {
+            throw new NotImplementedException();
+        }
+
+        GlobalGeometryBlockResourceBlock[] IResourceDescriptor<GlobalGeometryBlockResourceBlock>.GetDescriptors()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IResourceDescriptor<GlobalGeometryBlockResourceBlock>.SetDescriptors(GlobalGeometryBlockResourceBlock[] descriptors)
+        {
+            throw new NotImplementedException();
         }
     }
 }

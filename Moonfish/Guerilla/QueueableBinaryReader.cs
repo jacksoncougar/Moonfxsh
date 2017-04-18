@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Moonfish.Graphics;
 using Moonfish.Tags;
 
 namespace Moonfish.Guerilla
@@ -17,6 +18,13 @@ namespace Moonfish.Guerilla
             queueAddress = serializedSize;
             queue = new Queue<QueueItem>( 100 );
             lookupDictionary = new Dictionary<object, QueueItem>( 100 );
+        }
+
+        public VertexBuffer ReadVertexBuffer(BinaryReader binaryReader)
+        {
+            var buffer = new VertexBuffer { Type = binaryReader.ReadVertexAttributeType() };
+            binaryReader.ReadBytes(30);
+            return buffer;
         }
 
         public void QueueRead( GuerillaBlock[] dataBlocks, BlamPointer dataPointer )

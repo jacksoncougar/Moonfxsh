@@ -49,6 +49,12 @@ namespace Moonfish.Guerilla
             Enqueue( data );
         }
 
+        public virtual void Write(VertexBuffer buffer)
+        {
+            Write((int) buffer.Type);
+            Write(new byte[28]);
+        }
+
         protected BlamPointer GetItemPointer(object key)
         {
             QueueItem value;

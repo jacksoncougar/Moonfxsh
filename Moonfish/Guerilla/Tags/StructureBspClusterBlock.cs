@@ -5,7 +5,8 @@ using Moonfish.ResourceManagement;
 
 namespace Moonfish.Guerilla.Tags
 {
-    partial class StructureBspClusterBlock : IResourceBlock
+    partial class StructureBspClusterBlock : IResourceBlock, IResourceDescriptor<GlobalGeometryBlockResourceBlock>,
+        IResourceBlock<StructureBspClusterDataBlockNew>
     {
         public ResourcePointer GetResourcePointer(int index = 0)
         {
@@ -33,18 +34,18 @@ namespace Moonfish.Guerilla.Tags
         {
             throw new NotImplementedException();
             ResourceStreamWrapper resourceStreamWrapper = null; //GeometryBlockInfo.GetResourceFromCache();
-            if (resourceStreamWrapper == null) return;
+            if (resourceStreamWrapper == null)
+                return;
 
             var clusterBlock = new StructureBspClusterDataBlockNew();
             using (var binaryReader = new BinaryReader(resourceStreamWrapper))
             {
                 clusterBlock.Read(binaryReader);
 
-                var vertexBufferResources = GeometryBlockInfo.Resources.Where(
-                    x => x.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer).ToArray();
-                for (var i = 0;
-                    i < clusterBlock.Section.VertexBuffers.Length && i < vertexBufferResources.Length;
-                    ++i)
+                var vertexBufferResources =
+                    GeometryBlockInfo.Resources.Where(
+                        x => x.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer).ToArray();
+                for (var i = 0; i < clusterBlock.Section.VertexBuffers.Length && i < vertexBufferResources.Length; ++i)
                 {
                     clusterBlock.Section.VertexBuffers[i].VertexBuffer.Data =
                         resourceStreamWrapper.GetResourceData(vertexBufferResources[i]);
@@ -52,14 +53,30 @@ namespace Moonfish.Guerilla.Tags
             }
             ClusterData = new[] {clusterBlock};
         }
-        public void DeleteClusterData()
-        {
-            if ( ClusterData.Length <= 0 ) return;
 
-            foreach ( var globalGeometrySectionVertexBufferBlock in ClusterData[0].Section.VertexBuffers )
-            {
-                globalGeometrySectionVertexBufferBlock.VertexBuffer.Data = null;
-            }
+        GlobalGeometryBlockResourceBlock[] IResourceDescriptor<GlobalGeometryBlockResourceBlock>.GetDescriptors()
+        {
+            return GeometryBlockInfo.Resources;
+        }
+
+        void IResourceDescriptor<GlobalGeometryBlockResourceBlock>.SetDescriptors(GlobalGeometryBlockResourceBlock[] descriptors)
+        {
+            GeometryBlockInfo.Resources = descriptors;
+        }
+
+        StructureBspClusterDataBlockNew IResourceBlock<StructureBspClusterDataBlockNew>.GetResource(int index)
+        {
+            return ClusterData[index];
+        }
+
+        void IResourceBlock<StructureBspClusterDataBlockNew>.ReadResource(Func<IResourceBlock, int, Stream> @delegate)
+        {
+            ResourceLinker.ReadResource<StructureBspClusterBlock, StructureBspClusterDataBlockNew>(this, @delegate);
+        }
+
+        void IResourceBlock<StructureBspClusterDataBlockNew>.WriteResource(Stream output)
+        {
+            throw new NotImplementedException();
         }
     }
 }

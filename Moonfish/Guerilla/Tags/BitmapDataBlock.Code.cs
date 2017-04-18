@@ -104,7 +104,9 @@ namespace Moonfish.Guerilla.Tags
 
         public void WriteResource(Stream output)
         {
-            throw new NotImplementedException();
+            ResourceLinker.WriteResourceBytes(this, output, 0);
+            ResourceLinker.WriteResourceBytes(this, output, 1);
+            ResourceLinker.WriteResourceBytes(this, output, 2);
         }
     }
 }

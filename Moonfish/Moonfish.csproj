@@ -127,9 +127,13 @@
   <ItemGroup>
     <Compile Include="Cache\Package.cs" />
     <Compile Include="Guerilla\ResourceWriter.cs" />
+    <Compile Include="Guerilla\Tags\DecoratorCacheBlockBlock.code.cs" />
+    <Compile Include="Guerilla\Tags\DecoratorSetBlock.code.cs" />
     <Compile Include="Guerilla\Tags\GlobalGeometryBlockInfoStructBlock.cs" />
     <Compile Include="Guerilla\Tags\GlobalGeometryBlockResourceBlock.code.cs" />
+    <Compile Include="Guerilla\Tags\IResourceContainer.cs" />
     <Compile Include="Guerilla\Tags\RenderModelSectionBlock.code.cs" />
+    <Compile Include="Guerilla\Tags\ScenarioStructureBspBlock.cs" />
     <Compile Include="Map\Map.cs" />
     <Compile Include="Map\Map.Header.cs" />
     <Compile Include="Map\Map.PathsInfo.cs" />
@@ -1355,7 +1359,6 @@
     <Compile Include="Guerilla\Reflection\TokenInfo.cs" />
     <Compile Include="Guerilla\Reflection\UsingInfo.cs" />
     <Compile Include="Guerilla\Tags\DecoratorCacheBlockBlock.cs" />
-    <Compile Include="Guerilla\Tags\DecoratorSetBlock.cs" />
     <Compile Include="Guerilla\Tags\GlobalGeometrySectionStructBlock.cs" />
     <Compile Include="Guerilla\Tags\GlobalWaterDefinitionsBlock.cs" />
     <Compile Include="Guerilla\Tags\LightmapGeometrySectionBlock.cs" />

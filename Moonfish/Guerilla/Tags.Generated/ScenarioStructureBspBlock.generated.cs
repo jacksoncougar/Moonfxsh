@@ -13,12 +13,12 @@ namespace Moonfish.Guerilla.Tags
     using Moonfish.Tags;
     using Moonfish.Model;
     using System.IO;
-    using System.Collections.Generic;
     using System.Linq;
-    
+
     [TagClassAttribute("sbsp")]
     public partial class ScenarioStructureBspBlock : GuerillaBlock, IWriteQueueable
     {
+
         public GlobalTagImportInfoBlock[] ImportInfo = new GlobalTagImportInfoBlock[0];
         private byte[] fieldpad = new byte[4];
         public StructureCollisionMaterialsBlock[] CollisionMaterials = new StructureCollisionMaterialsBlock[0];

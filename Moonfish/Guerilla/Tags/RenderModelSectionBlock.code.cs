@@ -2,43 +2,44 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Moonfish.ResourceManagement;
 
 namespace Moonfish.Guerilla.Tags
 {
-    partial class RenderModelSectionBlock : IResourceBlock<RenderModelSectionDataBlock>
+    partial class RenderModelSectionBlock : IResourceBlock<RenderModelSectionDataBlock>,
+        IResourceDescriptor<GlobalGeometryBlockResourceBlock>
     {
-        public ResourcePointer GetResourcePointer(int index = 0)
+        ResourcePointer IResourceBlock.GetResourcePointer(int index)
         {
             return GeometryBlockInfo.BlockOffset;
         }
 
-        public int GetResourceLength(int index = 0)
+        int IResourceBlock.GetResourceLength(int index)
         {
             return GeometryBlockInfo.BlockSize;
         }
 
-        public void SetResourcePointer(ResourcePointer pointer, int index = 0)
+        void IResourceBlock.SetResourcePointer(ResourcePointer pointer, int index)
         {
             GeometryBlockInfo.BlockOffset = pointer;
         }
 
-        public void SetResourceLength(int length, int index = 0)
+        void IResourceBlock.SetResourceLength(int length, int index)
         {
             GeometryBlockInfo.BlockSize = length;
         }
 
-        public RenderModelSectionDataBlock GetResource(int index = 0)
+        RenderModelSectionDataBlock IResourceBlock<RenderModelSectionDataBlock>.GetResource(int index)
         {
-            return SectionData[index];
+            return SectionData.Length > index ? SectionData[index] : null;
         }
 
-        public void ReadResource(Func<IResourceBlock, int, Stream> @delegate)
+        void IResourceBlock<RenderModelSectionDataBlock>.ReadResource(Func<IResourceBlock, int, Stream> @delegate)
         {
             var stream = new ResourceStreamWrapper(@delegate(this, 0), GeometryBlockInfo);
 
-            if (stream.Length != GetResourceLength()) throw new InvalidDataException();
+            if (stream.Length != ((IResourceBlock) this).GetResourceLength())
+                throw new InvalidDataException();
 
             var sectionBlock = new RenderModelSectionDataBlock();
 
@@ -59,9 +60,21 @@ namespace Moonfish.Guerilla.Tags
             SectionData = new[] {sectionBlock};
         }
 
-        public void WriteResource(Stream output)
+        void IResourceBlock<RenderModelSectionDataBlock>.WriteResource(Stream output)
         {
             ResourceLinker.WriteResource(this, output);
+        }
+
+        GlobalGeometryBlockResourceBlock[] IResourceDescriptor<GlobalGeometryBlockResourceBlock>.
+            GetDescriptors()
+        {
+            return GeometryBlockInfo.Resources;
+        }
+
+        void IResourceDescriptor<GlobalGeometryBlockResourceBlock>.SetDescriptors(
+            GlobalGeometryBlockResourceBlock[] descriptors)
+        {
+            GeometryBlockInfo.Resources = descriptors;
         }
     }
 }

@@ -230,7 +230,7 @@ namespace Moonfish.Guerilla
             return (ByteBlockIndex1) ReadByte();
         }
 
-        public ColourR8G8B8 ReadColorR8G8B8()
+        public ColourR8G8B8 ReadColourR8G8B8()
         {
             return new ColourR8G8B8(ReadSingle(), ReadSingle(), ReadSingle());
         }

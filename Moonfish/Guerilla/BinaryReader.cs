@@ -10,7 +10,7 @@ using OpenTK;
 namespace Moonfish.Guerilla
 {
     /// <summary>Writes primitive data types and blam! data types to a stream.</summary>
-    public class BlamBinaryWriter : System.IO.BinaryWriter
+    public class BlamBinaryWriter : BinaryWriter
     {
         public BlamBinaryWriter([NotNull] Stream input) : base(input)
         {
@@ -24,24 +24,14 @@ namespace Moonfish.Guerilla
         {
         }
 
-
-        public void WriteFourCC(string code)
+        public double[] ToArray(Vector3 vector3)
         {
-            byte[] buffer = new byte[4];
-            byte[] charbytes = Encoding.UTF8.GetBytes(code);
-            Array.Copy(charbytes, buffer, charbytes.Length % 5);
-            Array.Reverse(buffer);
-            Write(buffer);
-        }
-
-        public void WritePadding(int alignment)
-        {
-            Write(new byte[Padding.GetCount(BaseStream.Position, alignment)]);
+            return new double[] {vector3.X, vector3.Y, vector3.Z};
         }
 
         public void Write(TagClass tclass)
         {
-            Write((int)tclass);
+            Write((int) tclass);
         }
 
         public void Write(Range range)
@@ -50,40 +40,27 @@ namespace Moonfish.Guerilla
             Write(range.Max);
         }
 
-        public static double[] ToArray(Vector3 vector3)
-        {
-            return new double[] { vector3.X, vector3.Y, vector3.Z };
-        }
-
         public void Write(VertexBuffer value)
         {
-            Write((int)value.Type);
+            Write((int) value.Type);
             Write(new byte[28]);
         }
 
         public void Write(String32 value)
         {
-            var bytes = Encoding.UTF8.GetBytes(value.value);
+            byte[] bytes = Encoding.UTF8.GetBytes(value.value);
             WriteFixedArray(bytes, 32);
         }
 
         public void Write(String256 value)
         {
-            var bytes = Encoding.UTF8.GetBytes(value.value);
+            byte[] bytes = Encoding.UTF8.GetBytes(value.value);
             WriteFixedArray(bytes, 256);
-        }
-
-        private void WriteFixedArray(byte[] bytes, int fixedArraySize)
-        {
-            var padding = bytes.Length >= fixedArraySize ? 0 : fixedArraySize - bytes.Length;
-            var length = fixedArraySize - padding;
-            Write(bytes, 0, length);
-            Write(new byte[padding]);
         }
 
         public void Write(StringIdent value)
         {
-            Write((int)value);
+            Write((int) value);
         }
 
         public void Write(ColourR1G1B1 value)
@@ -95,13 +72,13 @@ namespace Moonfish.Guerilla
 
         public void Write(TagIdent value)
         {
-            Write((int)value);
+            Write((int) value);
         }
 
         public void Write(TagReference value)
         {
-            Write((int)value.Class);
-            Write((int)value.Ident);
+            Write((int) value.Class);
+            Write((int) value.Ident);
         }
 
         public void Write(BlockFlags8 value)
@@ -111,8 +88,8 @@ namespace Moonfish.Guerilla
 
         public void Write(BlockFlags16 value)
         {
-            Write((byte)value.Type);
-            Write((byte)value.Source);
+            Write((byte) value.Type);
+            Write((byte) value.Source);
         }
 
         public void Write(BlockFlags32 value)
@@ -122,7 +99,7 @@ namespace Moonfish.Guerilla
 
         public void Write(ByteBlockIndex1 value)
         {
-            Write((byte)value);
+            Write((byte) value);
         }
 
         public void Write(ShortBlockIndex1 value)
@@ -132,22 +109,22 @@ namespace Moonfish.Guerilla
 
         public void Write(LongBlockIndex1 value)
         {
-            Write((int)value);
+            Write((int) value);
         }
 
         public void Write(ByteBlockIndex2 value)
         {
-            Write((byte)value);
+            Write((byte) value);
         }
 
         public void Write(ShortBlockIndex2 value)
         {
-            Write((short)value);
+            Write((short) value);
         }
 
         public void Write(LongBlockIndex2 value)
         {
-            Write((int)value);
+            Write((int) value);
         }
 
         public void Write(Quaternion value)
@@ -199,7 +176,29 @@ namespace Moonfish.Guerilla
             Write(value.X);
             Write(value.Y);
         }
-    };
+
+        public void WriteFourCC(string code)
+        {
+            var buffer = new byte[4];
+            byte[] charbytes = Encoding.UTF8.GetBytes(code);
+            Array.Copy(charbytes, buffer, charbytes.Length%5);
+            Array.Reverse(buffer);
+            Write(buffer);
+        }
+
+        public void WritePadding(int alignment)
+        {
+            Write(new byte[Padding.GetCount(BaseStream.Position, alignment)]);
+        }
+
+        private void WriteFixedArray(byte[] bytes, int fixedArraySize)
+        {
+            var padding = bytes.Length >= fixedArraySize ? 0 : fixedArraySize - bytes.Length;
+            var length = fixedArraySize - padding;
+            Write(bytes, 0, length);
+            Write(new byte[padding]);
+        }
+    }
 
     /// <summary>Reads primitive data types and blam! data types from a stream.</summary>
     public class BlamBinaryReader : BinaryReader
@@ -313,6 +312,21 @@ namespace Moonfish.Guerilla
         public TagReference ReadTagReference()
         {
             return new TagReference(ReadTagClass(), ReadTagIdent());
+        }
+
+        public Vector2 ReadVector2()
+        {
+            return new Vector2(ReadSingle(), ReadSingle());
+        }
+
+        public Vector3 ReadVector3()
+        {
+            return new Vector3(ReadSingle(), ReadSingle(), ReadSingle());
+        }
+
+        public Vector4 ReadVector4()
+        {
+            return new Vector4(ReadSingle(), ReadSingle(), ReadSingle(), ReadSingle());
         }
 
         public VertexAttributeType ReadVertexAttributeType()

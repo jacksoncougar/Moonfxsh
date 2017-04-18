@@ -125,6 +125,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\Package.cs" />
+    <Compile Include="Guerilla\ResourceWriter.cs" />
     <Compile Include="Guerilla\Tags\GlobalGeometryBlockInfoStructBlock.cs" />
     <Compile Include="Guerilla\Tags\GlobalGeometryBlockResourceBlock.code.cs" />
     <Compile Include="Guerilla\Tags\RenderModelSectionBlock.code.cs" />

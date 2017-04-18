@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Moonfish.ResourceManagement;
 
 namespace Moonfish.Guerilla.Tags
@@ -32,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             return SectionData[index];
         }
 
-        public void LoadResource(Func<IResourceBlock, int, Stream> @delegate)
+        public void ReadResource(Func<IResourceBlock, int, Stream> @delegate)
         {
             var stream = new ResourceStreamWrapper(@delegate(this, 0), GeometryBlockInfo);
 
@@ -55,6 +57,11 @@ namespace Moonfish.Guerilla.Tags
                 }
             }
             SectionData = new[] {sectionBlock};
+        }
+
+        public void WriteResource(Stream output)
+        {
+            ResourceLinker.WriteResource(this, output);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Moonfish
 
         public static void BufferedCopyBytesTo(this Stream stream, int size, Stream output)
         {
-            const int blockSize = 1024*4;
+            const int blockSize = 4096;
 
             var buffer = new byte[blockSize];
 

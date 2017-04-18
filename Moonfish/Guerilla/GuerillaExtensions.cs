@@ -18,7 +18,8 @@ namespace Moonfish.Guerilla
 
         public static void Write(this BinaryWriter binaryWriter, GuerillaBlock block)
         {
-            binaryWriter.WritePadding(block.Alignment);
+            block.Write_(binaryWriter as QueueableBinaryWriter ??
+                         new QueueableBinaryWriter(binaryWriter.BaseStream, block.SerializedSize));
         }
 
         public delegate void PreProcessFieldSet(BinaryReader reader, List<tag_field> fieldSet);

@@ -92,7 +92,7 @@ namespace Moonfish.Guerilla.Tags
             }
         }
 
-        public void LoadResource(Func<IResourceBlock, int, Stream> @delegate)
+        public void ReadResource(Func<IResourceBlock, int, Stream> @delegate)
         {
             data0 = new byte[GetResourceLength()];
             @delegate(this, 0).Read(data0, 0, data0.Length);
@@ -100,6 +100,11 @@ namespace Moonfish.Guerilla.Tags
             @delegate(this, 1).Read(data1, 0, data1.Length);
             data2 = new byte[GetResourceLength(2)];
             @delegate(this, 2).Read(data2, 0, data2.Length);
+        }
+
+        public void WriteResource(Stream output)
+        {
+            throw new NotImplementedException();
         }
     }
 }

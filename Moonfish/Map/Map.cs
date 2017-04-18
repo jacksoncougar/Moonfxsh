@@ -253,7 +253,7 @@ namespace Moonfish
         private string CalculateHash(TagIdent ident)
         {
             var sha1 = new SHA1CryptoServiceProvider();
-            var buffer = sha1.ComputeHash(ReadTagMeta(ident));
+            byte[] buffer = sha1.ComputeHash(ReadTagMeta(ident));
             var hash = Convert.ToBase64String(buffer);
 
             return hash;
@@ -272,7 +272,7 @@ namespace Moonfish
                 if (container != null)
                     foreach (IResourceBlock<object> block in container)
                     {
-                        block.LoadResource(GetResourceData);
+                        block.ReadResource(GetResourceData);
                     }
             }
             catch (NotImplementedException)

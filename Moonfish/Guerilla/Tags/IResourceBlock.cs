@@ -38,7 +38,31 @@ namespace Moonfish.Guerilla.Tags
         /// data at the given index.
         /// </remarks>
         /// <param name="delegate"></param>
-        void LoadResource(Func<IResourceBlock, int, Stream> @delegate);
+        void ReadResource(Func<IResourceBlock, int, Stream> @delegate);
+
+        void WriteResource(Stream output);
+    }
+
+    public static class ResourceBlock
+    {
+        public static void WriteResource<T>(this IResourceBlock block, Stream output, T resource)
+            where T : GuerillaBlock
+        {
+            var startAddress = output.Position;
+            long endAddress;
+            long length;
+
+            using (var writer = new BinaryWriter(output))
+            {
+                writer.Write(resource);
+            }
+
+            endAddress = output.Position;
+            length = endAddress - startAddress;
+
+            block.SetResourceLength((int) length);
+            block.SetResourcePointer((int) startAddress);
+        }
     }
 
     public interface IResourceContainer<out T> : IEnumerable<IResourceBlock<T>>

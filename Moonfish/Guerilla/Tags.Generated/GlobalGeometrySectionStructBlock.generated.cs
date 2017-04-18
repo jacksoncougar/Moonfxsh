@@ -72,7 +72,7 @@ namespace Moonfish.Guerilla.Tags
             base.QueueWrites(queueableBinaryWriter);
             queueableBinaryWriter.QueueWrite(this.Parts);
             queueableBinaryWriter.QueueWrite(this.Subparts);
-            queueableBinaryWriter.QueueWrite(this.VisibilityBounds);
+            queueableBinaryWriter.QueueWrite(VisibilityBounds);
             queueableBinaryWriter.QueueWrite(this.RawVertices);
             queueableBinaryWriter.QueueWrite(this.StripIndices);
             queueableBinaryWriter.QueueWrite(this.VisibilityMoppCode);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Moonfish.Guerilla;
 using Moonfish.Tags;
 
@@ -228,6 +229,13 @@ namespace Moonfish
     }
 
     /// <summary>
+    /// Manifest of all resource streams contained in a package.
+    /// </summary>
+    public class ResourceManifest : ManifestDictionary<ResourcePointer, Stream>
+    {
+    }
+
+    /// <summary>
     ///     Manifest of tag objects contained in this package. (GuerillaBlocks)
     /// </summary>
     public class ObjectManifest : ManifestDictionary<TagIdent, GuerillaBlock>
@@ -259,8 +267,10 @@ namespace Moonfish
             Strings = new StringManifest();
             Objects = new ObjectManifest();
             Localizations = new LocalizationManifest();
+            Resources = new ResourceManifest();
         }
 
+        public ResourceManifest Resources { get; private set; }
         public StringManifest Strings { get; private set; }
         public ObjectManifest Objects { get; private set; }
         public LocalizationManifest Localizations { get; private set; }

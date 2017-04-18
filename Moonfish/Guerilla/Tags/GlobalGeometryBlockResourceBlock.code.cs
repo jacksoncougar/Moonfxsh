@@ -33,10 +33,15 @@ namespace Moonfish.Guerilla.Tags
             return data;
         }
 
-        public void LoadResource(Func<IResourceBlock, int, Stream> @delegate)
+        public void ReadResource(Func<IResourceBlock, int, Stream> @delegate)
         {
             data = new byte[GetResourceLength()];
             @delegate(this, 0).Read(data, 0, data.Length);
+        }
+
+        public void WriteResource(Stream output)
+        {
+            throw new NotImplementedException();
         }
     }
 }

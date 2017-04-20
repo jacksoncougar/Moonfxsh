@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
-using Moonfish.Guerilla.Reflection;
 
-namespace Moonfish.Guerilla
+namespace Moonfish.Guerilla.Reflection
 {
     public static class ReflectionMethods
     {
@@ -19,6 +18,7 @@ namespace Moonfish.Guerilla
             return null;
         }
     }
+
     public static class StaticReflection
     {
         public static string GetMemberName<T>(

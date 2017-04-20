@@ -35,7 +35,7 @@ namespace Moonfish.Guerilla.Reflection
                 do
                 {
                     validToken = Tokens.Contains(validToken)
-                        ? string.Format("{0}{1}", token, salt)
+                        ? $"{token}{salt}"
                         : token;
                     salt++;
                 } while (!string.IsNullOrWhiteSpace(validToken) && Tokens.Contains(validToken));

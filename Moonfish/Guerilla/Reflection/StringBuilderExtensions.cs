@@ -8,7 +8,7 @@ namespace Moonfish.Guerilla.Reflection
         public static void AppendSummary(this StringBuilder stringBuilder, string value)
         {
             stringBuilder.AppendLine("/// <summary>");
-            stringBuilder.AppendLine(string.Format("/// {0}", value));
+            stringBuilder.AppendLine($"/// {value}");
             stringBuilder.AppendLine("/// </summary>");
         }
 

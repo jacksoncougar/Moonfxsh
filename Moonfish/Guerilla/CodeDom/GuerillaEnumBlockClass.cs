@@ -7,7 +7,7 @@ namespace Moonfish.Guerilla.CodeDom
 {
     internal class GuerillaEnumBlockClass : GuerillaBlockClassBase
     {
-        private readonly MoonfishTagField _field;
+        private readonly MoonfishTagField field;
 
         private static string GenerateClassName(GuerillaBlockClassBase parentClass, MoonfishTagField field)
         {
@@ -36,7 +36,7 @@ namespace Moonfish.Guerilla.CodeDom
 
         public string GetFieldName()
         {
-            var typeToken = GetTypeToken(_field);
+            var typeToken = GetTypeToken(field);
             return string.IsNullOrWhiteSpace(typeToken)
                 ? TargetClass.Name
                 : TargetClass.Name.Replace(typeToken, "");
@@ -45,7 +45,7 @@ namespace Moonfish.Guerilla.CodeDom
         internal GuerillaEnumBlockClass(GuerillaBlockClassBase parentClass, MoonfishTagField field)
             : base(GenerateClassName(parentClass, field))
         {
-            _field = field;
+            this.field = field;
             bool isFlags;
             TargetClass = ConstructCodeTypeDeclaration(field, TargetClass.Name, out isFlags);
 

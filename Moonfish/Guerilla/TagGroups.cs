@@ -6,14 +6,6 @@ using System.Linq;
 
 namespace Moonfish.Guerilla
 {
-    public partial class Guerilla
-    {
-        public static int GetAlignmentValue(int alignmentBit)
-        {
-            return alignmentBit > 0 ? 1 << alignmentBit : 4;
-        }
-    }
-
     public enum field_type : short
     {
         _field_string,

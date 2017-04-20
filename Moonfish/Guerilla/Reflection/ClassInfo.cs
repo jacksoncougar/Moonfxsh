@@ -59,7 +59,7 @@ namespace Moonfish.Guerilla.Reflection
                 var hasBaseClass = HasBaseClass;
                 var hasInterfaces = !string.IsNullOrWhiteSpace(Interfaces);
                 return hasBaseClass || hasInterfaces
-                    ? string.Format(": {0}{1}{2}", BaseClass.Name, hasBaseClass ? " " : "", Interfaces)
+                    ? $": {BaseClass.Name}{(hasBaseClass ? " " : "")}{Interfaces}"
                     : "";
             }
         }
@@ -68,12 +68,7 @@ namespace Moonfish.Guerilla.Reflection
         {
             get
             {
-                return
-                    string.Format("{0} class {1} {2}",
-                        AccessModifiers.ToTokenString(),
-                        Name,
-                        InheritanceDeclaration
-                        ).Trim();
+                return $"{AccessModifiers.ToTokenString()} class {Name} {InheritanceDeclaration}".Trim();
             }
         }
 
@@ -184,8 +179,8 @@ namespace Moonfish.Guerilla.Reflection
             var binaryWriter = writeMethod.Arguments.First();
             var addressParam = writeMethod.Arguments[1];
             var bodyBuilder = new StringBuilder();
-            bodyBuilder.AppendLine(string.Format("using({0})",
-                StaticReflection.GetMemberName((BlamBinaryWriter b) => b.BaseStream.Pin(), binaryWriter)));
+            bodyBuilder.AppendLine(
+                $"using({StaticReflection.GetMemberName((BlamBinaryWriter b) => b.BaseStream.Pin(), binaryWriter)})");
             bodyBuilder.AppendLine("{".Tab(ref tab));
             foreach (var item in Fields)
             {
@@ -194,8 +189,7 @@ namespace Moonfish.Guerilla.Reflection
                     // fixed byte array like padding or skip arrays
                     if (item.ArraySize > 0 && Type.GetType(item.FieldTypeName) == typeof (byte))
                     {
-                        bodyBuilder.AppendLine(string.Format("{0}.Write({1}, 0, {2});", binaryWriter.Name,
-                            item.Value.Name, item.ArraySize));
+                        bodyBuilder.AppendLine($"{binaryWriter.Name}.Write({item.Value.Name}, 0, {item.ArraySize});");
                     }
                     // variable byte array (data)
                     else if (Type.GetType(item.FieldTypeName) == typeof (byte))
@@ -214,8 +208,7 @@ namespace Moonfish.Guerilla.Reflection
                     {
                         for (var i = 0; i < item.ArraySize; i++)
                         {
-                            bodyBuilder.AppendLine(string.Format("{0}[{1}].Write({2});", item.Value.Name, i,
-                                binaryWriter.Name));
+                            bodyBuilder.AppendLine($"{item.Value.Name}[{i}].Write({binaryWriter.Name});");
                         }
                     }
                     // assume a TagBlock
@@ -235,25 +228,24 @@ namespace Moonfish.Guerilla.Reflection
                             ? "Byte"
                             : enumDefinition.BaseType == EnumInfo.Type.Short ? "Int16" : "Int32";
 
-                        bodyBuilder.AppendLine(string.Format("{0}.Write(({1}){2});", binaryWriter.Name, type,
-                            item.Value.Name));
+                        bodyBuilder.AppendLine($"{binaryWriter.Name}.Write(({type}){item.Value.Name});");
                     }
                     else if (Type.GetType(item.FieldTypeName) == null)
                     {
-                        bodyBuilder.AppendLine(string.Format("{0}.Write({1});", item.Value.Name, binaryWriter.Name));
+                        bodyBuilder.AppendLine($"{item.Value.Name}.Write({binaryWriter.Name});");
                     }
                     else
                     {
-                        bodyBuilder.AppendLine(string.Format("{0}.Write({1});", binaryWriter.Name, item.Value.Name));
+                        bodyBuilder.AppendLine($"{binaryWriter.Name}.Write({item.Value.Name});");
                     }
                 }
             }
 
-            bodyBuilder.AppendLine(string.Format("return {0};", writeMethod.Arguments[1].Name));
+            bodyBuilder.AppendLine($"return {writeMethod.Arguments[1].Name};");
             bodyBuilder.AppendLine("}".Tab(ref tab));
 
 
-            var baseMethodCall = string.Format("base.{0};\n", writeMethod.GetMethodCallSignature());
+            var baseMethodCall = $"base.{writeMethod.GetMethodCallSignature()};\n";
 
             writeMethod.Body = baseMethodCall + bodyBuilder.ToString().Trim();
             Methods.Add(writeMethod);
@@ -261,8 +253,7 @@ namespace Moonfish.Guerilla.Reflection
 
         public override string ToString()
         {
-            return string.Format("{0}:{1}", "Class",
-                string.IsNullOrEmpty(Namespace) ? _value.Name : string.Format("{0}.{1}", Namespace, _value.Name));
+            return $"{"Class"}:{(string.IsNullOrEmpty(Namespace) ? _value.Name : $"{Namespace}.{_value.Name}")}";
         }
 
         private void FormatFieldNames(TokenDictionary tokenDictionary)

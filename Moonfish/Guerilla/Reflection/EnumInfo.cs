@@ -42,9 +42,8 @@ namespace Moonfish.Guerilla.Reflection
             {
                 stringBuilder.AppendLine(attribute.ToString());
             }
-            stringBuilder.AppendLine(string.Format("{0} enum {1} : {2}",
-                AccessModifiers.ToTokenString(), Value.Name,
-                BaseType.ToString().ToLowerInvariant()).Trim());
+            stringBuilder.AppendLine(
+                $"{AccessModifiers.ToTokenString()} enum {Value.Name} : {BaseType.ToString().ToLowerInvariant()}".Trim());
             stringBuilder.AppendLine("{");
 
             var isFlags = Attributes.Any(x => x.AttributeType == typeof (FlagsAttribute));
@@ -52,7 +51,7 @@ namespace Moonfish.Guerilla.Reflection
             foreach (var item in ValueNames)
             {
                 if (item.HasDescription) stringBuilder.AppendSummary(item.Description);
-                stringBuilder.AppendLine(string.Format("{0} = {1},", Guerilla.ToTypeName(item.Name), value));
+                stringBuilder.AppendLine($"{Guerilla.ToTypeName(item.Name)} = {value},");
                 value = isFlags ? value << 1 : ++value;
             }
             stringBuilder.AppendLine("};");

@@ -8,10 +8,13 @@ namespace Moonfish.Guerilla.Reflection
         {
             var openingBraceCount = value.Trim().Count(x => x == '{');
             var closingBraceCount = value.Trim().Count(x => x == '}');
+
             var netTab = openingBraceCount - closingBraceCount;
             tabCount = netTab < 0 ? tabCount + netTab : tabCount;
+
             var tab = new string(' ', tabCount*tabSize);
             tabCount = netTab > 0 ? tabCount + netTab : tabCount;
+
             return tab + value;
         }
     }

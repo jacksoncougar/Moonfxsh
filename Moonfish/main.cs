@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Moonfish.Guerilla;
+using JetBrains.Annotations;
 using Moonfish.Guerilla.CodeDom;
 using Moonfish.Tags;
 using NDesk.Options;
 
 namespace Moonfish
 {
+    [UsedImplicitly]
     internal class main
     {
         /// <summary>
@@ -33,7 +34,7 @@ namespace Moonfish
                     v => sign = v != null
                 },
                 {
-                    "v|validate", "validates the given map",
+                    "v|validate=", "validates the given map",
                     v => { validate = v != null; }
                 }
             };
@@ -56,11 +57,11 @@ namespace Moonfish
                 Console.WriteLine("Bad File Argument");
                 return;
             }
+
             stream = new Map(extra[0]);
 
             if (validate)
             {
-                new Validator();
                 foreach (var datum in stream)
                 {
                     //validator.Validate(datum, stream);
@@ -78,7 +79,8 @@ namespace Moonfish
             {
                 Console.WriteLine("Rebuilding...");
 
-                GuerillaCodeDom.GenerateGuerillaCode(GuerillaCodeDom.TagClasses.Select(x=>(TagClass)x).ToArray());
+                GuerillaCodeDom.GenerateGuerillaCode(
+                    GuerillaCodeDom.TagClasses.Where(item => item == "bitm").Select(x => (TagClass) x).ToArray());
 
                 Console.WriteLine("Done...");
             }

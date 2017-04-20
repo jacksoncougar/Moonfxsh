@@ -4,7 +4,7 @@
     {
         public UsingInfo(string namespaceString)
         {
-            Value = string.Format("using {0};", namespaceString);
+            Value = $"using {namespaceString};";
         }
     }
 }

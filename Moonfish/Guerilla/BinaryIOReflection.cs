@@ -135,7 +135,7 @@ namespace Moonfish.Guerilla
             var provider = new CSharpCodeProvider();
 
             List<MethodInfo> methods =
-                (from method in typeof(T).GetMethods() where method.ReturnType != typeof (void) select method).Where(
+                (from method in typeof (T).GetMethods() where method.ReturnType != typeof (void) select method).Where(
                     x =>
                     {
                         var typeString = provider.CreateValidIdentifier(x.ReturnType.ToString());
@@ -155,5 +155,5 @@ namespace Moonfish.Guerilla
             binaryWriterMethods = CreateWriteMethodCache<BlamBinaryWriter>();
             BinaryReaderMethodDelegates = CreateMethodDelegateCache<BlamBinaryReader>();
         }
-    }
+    };
 }

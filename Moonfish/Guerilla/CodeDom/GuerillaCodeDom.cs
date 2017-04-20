@@ -9,50 +9,6 @@ namespace Moonfish.Guerilla.CodeDom
 {
     public static class GuerillaCodeDom
     {
-        public static void PrintByteFrequencies()
-        {
-            long[] frequency = new long[256];
-
-            byte[] buffer = new byte[0x2000];
-            var blockLength = 8;
-            foreach (var cacheStream in GetAllMaps())
-            {
-                int length = 0;
-                while ((length = cacheStream.BaseStream.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    var blockCount = length / blockLength;
-                    var remainder = length % blockLength;
-                    for (var index = 0; index < blockCount; ++index)
-                    {
-                        frequency[buffer[index + 0]]++;
-                        frequency[buffer[index + 1]]++;
-                        frequency[buffer[index + 2]]++;
-                        frequency[buffer[index + 3]]++;
-                        frequency[buffer[index + 4]]++;
-                        frequency[buffer[index + 5]]++;
-                        frequency[buffer[index + 6]]++;
-                        frequency[buffer[index + 7]]++;
-                    }
-                    for (var index = 0; index < remainder; ++index)
-                    {
-                        frequency[buffer[index + 0]]++;
-                    }
-                }
-                Console.WriteLine(cacheStream.Header.Scenario);
-            }
-            var values = frequency.Select((i, j) => new { i, j }).ToDictionary(x => x.j, x => x.i);
-            var greatest = values.Aggregate((i, j) => i.Value > j.Value ? i : j);
-            var fewest = values.Aggregate((i, j) => i.Value < j.Value ? i : j);
-            var frequencies = values.Values.ToList();
-            var totalHits = frequencies.Sum();
-            frequencies.Sort();
-            foreach (var l in frequencies)
-            {
-                var item = values.First(x => x.Value == l);
-                Console.WriteLine(@"{0}:({2}){1}", item.Key, item.Value, (float)item.Value / (float)totalHits);
-            }
-        }
-
         public static void GenerateGuerillaCode()
         {
             var tags = Guerilla.H2Tags.Select(x => new MoonfishTagGroup(x)).ToList();
@@ -132,6 +88,9 @@ namespace Moonfish.Guerilla.CodeDom
 
         public static void GenerateGuerillaCode(params TagClass[] classes)
         {
+            if (classes.Length < 1)
+                return;
+
             var tags = Guerilla.H2Tags.Select(x => new MoonfishTagGroup(x)).ToList();
             foreach (
                 var blockClass in
@@ -142,11 +101,11 @@ namespace Moonfish.Guerilla.CodeDom
             }
         }
 
-        public static TagGroupLookup TagClasses = new TagGroupLookup();
+        public static readonly TagGroupLookup TagClasses = new TagGroupLookup();
 
         public class TagGroupLookup : IEnumerable, IEnumerable<string>
         {
-            private static readonly List<string> classes = new List<string>
+            private static readonly List<string> Classes = new List<string>
             {
                 #region Class Strings
                 "$#!+",
@@ -273,14 +232,14 @@ namespace Moonfish.Guerilla.CodeDom
 
             public string this[int index]
             {
-                get { return classes[index]; }
+                get { return Classes[index]; }
             }
 
             #region IEnumerable Members
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return classes.GetEnumerator();
+                return Classes.GetEnumerator();
             }
 
             #endregion
@@ -289,7 +248,7 @@ namespace Moonfish.Guerilla.CodeDom
 
             IEnumerator<string> IEnumerable<string>.GetEnumerator()
             {
-                return classes.GetEnumerator();
+                return Classes.GetEnumerator();
             }
 
             #endregion

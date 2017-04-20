@@ -12,8 +12,8 @@ namespace Moonfish.Guerilla.Reflection
             var values = items.ToString().Split(',').Select(x => x.Trim()).ToList();
             values.TakeWhile(x => x != values.Last())
                 .ToList()
-                .ForEach(x => value.Append(string.Format("{0} ", x.ToLower())));
-            value.Append(string.Format("{0}", values.LastOrDefault() == null ? "" : values.Last().ToLower()));
+                .ForEach(x => value.Append($"{x.ToLower()} "));
+            value.Append($"{(values.LastOrDefault() == null ? "" : values.Last().ToLower())}");
 
             return value.ToString().Trim();
         }

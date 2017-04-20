@@ -39,20 +39,18 @@ namespace Moonfish.Guerilla.Reflection
                 {
                     Parameters.TakeWhile(x => Parameters.Last() != x)
                         .ToList()
-                        .ForEach(x => parametersString.Append(string.Format("{0}, ", x)));
+                        .ForEach(x => parametersString.Append($"{x}, "));
                     parametersString.Append(Parameters.Last());
                 }
                 if (hasParameters && NamedParameters.Count > 0)
                 {
                     NamedParameters.TakeWhile(x => NamedParameters.Last() != x)
                         .ToList()
-                        .ForEach(x => parametersString.Append(string.Format("{0} = {1}, ", x.Item1, x.Item2)));
-                    parametersString.Append(string.Format("{0} = {1}", NamedParameters.Last().Item1,
-                        NamedParameters.Last().Item2));
+                        .ForEach(x => parametersString.Append($"{x.Item1} = {x.Item2}, "));
+                    parametersString.Append($"{NamedParameters.Last().Item1} = {NamedParameters.Last().Item2}");
                 }
 
-                var retval = string.Format("[{0}{1}]", AttributeType.Name,
-                    hasParameters ? string.Format("({0})", parametersString) : "");
+                var retval = $"[{AttributeType.Name}{(hasParameters ? $"({parametersString})" : "")}]";
                 return retval;
             }
         }

@@ -43,7 +43,7 @@ namespace Moonfish.Guerilla
             MaximumElementCount = definition.maximum_element_count;
             Alignment = definition.LatestFieldSet.Alignment;
 
-            var definitionFields = definition.LatestFieldSet.Fields;
+            List<tag_field> definitionFields = definition.LatestFieldSet.Fields;
             Fields = new List<MoonfishTagField>(definitionFields.Count);
             foreach (var field in definitionFields)
             {

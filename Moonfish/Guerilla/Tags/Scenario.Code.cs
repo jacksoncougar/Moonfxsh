@@ -77,23 +77,6 @@ namespace Moonfish.Guerilla.Tags
 
     public partial class ScenarioSceneryBlock : IH2ObjectInstance
     {
-        #region Guerilla Preprocess Functions
-
-        [GuerillaPreProcessMethod(BlockName = "scenario_scenery_block")]
-        [GuerillaPreProcessMethod(BlockName = "scenario_biped_block")]
-        [GuerillaPreProcessMethod(BlockName = "scenario_vehicle_block")]
-        [GuerillaPreProcessMethod(BlockName = "scenario_weapon_block")]
-        [GuerillaPreProcessMethod(BlockName = "scenario_crate_block")]
-        protected static void GuerillaPreProcessMethod(BlamBinaryReader blamBinaryReader, IList<tag_field> fields)
-        {
-            var index = (from field in fields
-                where field.Name == "Object Data"
-                select fields.IndexOf(field)).Single();
-            fields.Insert(++index, new tag_field() {type = field_type._field_pad, Name = "indexer", definition = 4});
-        }
-
-        #endregion
-
         ShortBlockIndex1 IH2ObjectInstance.NameIndex
         {
             get { return Name; }

@@ -37,8 +37,7 @@ namespace Moonfish.Guerilla.Reflection
 
         private string GetMethodCallSignatureFormat(string methodName, StringBuilder argumentString)
         {
-            return string.Format("{0}{1}", String.Format(ClassName, methodName),
-                string.Format("({0})", argumentString));
+            return $"{String.Format(ClassName, methodName)}{string.Format($"({argumentString})", argumentString)}";
         }
 
         private static StringBuilder GetSignature(IList<ParameterInfo> arguments)
@@ -53,8 +52,7 @@ namespace Moonfish.Guerilla.Reflection
                             argumentStringBuilder.AppendFormat("{0} {1}, ", x.ParameterType.Name(), x.Name));
                 var arg = arguments.Last();
                 argumentStringBuilder.Append(
-                    string.Format("{0} {1} {2}", arg.Modifier.GetSignatureModifier(), arg.ParameterType.Name(), arg.Name)
-                        .TrimStart());
+                    $"{arg.Modifier.GetSignatureModifier()} {arg.ParameterType.Name()} {arg.Name}".TrimStart());
             }
             return argumentStringBuilder;
         }

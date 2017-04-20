@@ -30,9 +30,8 @@ namespace Moonfish.Guerilla.Reflection
             var typeString = GetTypeOutput();
 
             // write Field
-            stringBuilder.AppendLine(string.Format("{0} {1}{2} {3};",
-                AccessModifiers.ToTokenString(),
-                typeString, IsArray ? "[]" : "", Value.Name));
+            stringBuilder.AppendLine(
+                $"{AccessModifiers.ToTokenString()} {typeString}{(IsArray ? "[]" : "")} {Value.Name};");
 
             return stringBuilder.ToString().Trim();
         }

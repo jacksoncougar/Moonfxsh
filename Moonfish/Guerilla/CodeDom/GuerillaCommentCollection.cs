@@ -5,18 +5,18 @@ namespace Moonfish.Guerilla.CodeDom
 {
     internal class GuerillaCommentCollection
     {
-        private readonly string[] _itemDescriptions;
+        private readonly string[] itemDescriptions;
 
         public IEnumerable<string> Descriptions
         {
-            get { return _itemDescriptions; }
+            get { return itemDescriptions; }
         }
 
         public string Summary { get; private set; }
             
         public bool HasDescriptions
         {
-            get { return _itemDescriptions.Length > 0; }
+            get { return itemDescriptions.Length > 0; }
         }
 
         public bool HasSummary
@@ -27,28 +27,28 @@ namespace Moonfish.Guerilla.CodeDom
         public GuerillaCommentCollection()
         {
             Summary = "";
-            _itemDescriptions = new string[0];
+            itemDescriptions = new string[0];
         }
 
         public GuerillaCommentCollection CreateCopy()
         {
-            return new GuerillaCommentCollection(Summary, _itemDescriptions);
+            return new GuerillaCommentCollection(Summary, itemDescriptions);
         }
 
         private GuerillaCommentCollection(string summary, string[] itemDescriptionses)
         {
             Summary = summary;
-            _itemDescriptions = itemDescriptionses;
+            itemDescriptions = itemDescriptionses;
         }
 
         public GuerillaCommentCollection(string value)
         {
             var lines = value.Split(new[] {'*'}, StringSplitOptions.RemoveEmptyEntries);
             Summary = lines[0];
-            _itemDescriptions = new string[lines.Length - 1];
+            itemDescriptions = new string[lines.Length - 1];
             for (int u = 0, v = 1; u < lines.Length - 1; ++u, ++v)
             {
-                _itemDescriptions[u] = lines[v];
+                itemDescriptions[u] = lines[v];
             }
         }
     };

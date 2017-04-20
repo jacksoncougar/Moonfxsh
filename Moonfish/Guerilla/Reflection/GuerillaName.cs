@@ -62,10 +62,7 @@ namespace Moonfish.Guerilla.Reflection
 
         public override string ToString()
         {
-            return string.Format("{0}{1}{2}",
-                HasName ? Name : "",
-                HasRange ? Description : "",
-                HasDescription ? Description : "");
+            return $"{(HasName ? Name : "")}{(HasRange ? Description : "")}{(HasDescription ? Description : "")}";
         }
 
         public static implicit operator string(GuerillaName guerillaName)

@@ -1,3 +1,5 @@
+using System;
+
 namespace Moonfish.Guerilla.Reflection
 {
     public class NamespaceInfo : TokenInfo
@@ -10,9 +12,8 @@ namespace Moonfish.Guerilla.Reflection
 
         public NamespaceInfo(string namespaceString)
         {
-            Value = string.Format("namespace {0}", string.IsNullOrWhiteSpace(namespaceString)
-                ? NamespaceBase
-                : string.Format("{0}.{1}", NamespaceBase, namespaceString));
+            Value = String.Format("namespace {0}",
+                string.IsNullOrWhiteSpace(namespaceString) ? NamespaceBase : $"{NamespaceBase}.{namespaceString}");
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using JetBrains.Annotations;
 using Moonfish.Tags;
@@ -13,6 +12,9 @@ namespace Moonfish.Guerilla.Preprocess
     [UsedImplicitly]
     internal class GuerillaPreprocess
     {
+        /// <summary>
+        /// (1) Removes 4 bytes of padding from the end of the block.
+        /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "collision_bsp_physics_block")]
         [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessCollisionBSPPhysicsBlockFields(IList<MoonfishTagField> fields)
@@ -26,6 +28,9 @@ namespace Moonfish.Guerilla.Preprocess
             return fields;
         }
 
+        /// <summary>
+        /// (1) Inserts 4 bytes of padding ("indexer") after the "Object Data" field.
+        /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "scenario_scenery_block")]
         [GuerillaPreProcessFieldsMethod(BlockName = "scenario_biped_block")]
         [GuerillaPreProcessFieldsMethod(BlockName = "scenario_vehicle_block")]
@@ -42,6 +47,11 @@ namespace Moonfish.Guerilla.Preprocess
             return fields;
         }
 
+        /// <summary>
+        /// (1) Removes 8 bytes of padding from the end of the block.
+        /// </summary>
+        /// <param name="fields"></param>
+        /// <returns></returns>
         [GuerillaPreProcessFieldsMethod(BlockName = "decorator_cache_block_block")]
         [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessDecoratorCacheBlockBlockFields(IList<MoonfishTagField> fields)
@@ -60,6 +70,7 @@ namespace Moonfish.Guerilla.Preprocess
         /// (2) Inserts a new padding field of 8 bytes.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "vertex_shader_classification_block")]
+        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessVertexShaderClassificationBlockFields(IList<MoonfishTagField> fields)
         {
             var compiledShaderDataField = fields[1];
@@ -265,6 +276,7 @@ namespace Moonfish.Guerilla.Preprocess
         /// (2) Adds a new raw reference block "Xbox Animation Data Block" to the end of the struct.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "model_animation_graph_block")]
+        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessModelAnimationGraphBlockFields(IList<MoonfishTagField> fields)
         {
             var unknownBlock = new MoonfishTagField(MoonfishFieldType.FieldBlock, "Xbox Unknown Animation Block");
@@ -299,6 +311,7 @@ namespace Moonfish.Guerilla.Preprocess
         /// (1) Inserts a padding byte after the colour rgb field.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "hud_waypoint_arrow_block")]
+        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessHudWaypointArrowBlockFields(IList<MoonfishTagField> fields)
         {
             if (fields[2].Type == MoonfishFieldType.FieldRgbColor)

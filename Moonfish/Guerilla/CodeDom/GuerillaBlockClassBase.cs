@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.CodeDom
         ///     The dictionary to lookup C# types corresponding to underlying guerilla
         ///     types.
         /// </summary>
-        protected static Dictionary<MoonfishFieldType, Type> ValueTypeDictionary;
+        protected static readonly Dictionary<MoonfishFieldType, Type> ValueTypeDictionary;
 
         /// <summary>The comments found while parsing the guerilla fields.</summary>
         private static GuerillaCommentCollection comments = new GuerillaCommentCollection();
@@ -118,6 +118,15 @@ namespace Moonfish.Guerilla.CodeDom
             tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("System.Linq"));
 
             TargetClass = new CodeTypeDeclaration(className) {TypeAttributes = TypeAttributes.Public};
+
+            // [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
+            TargetClass.CustomAttributes.Add(
+                new CodeAttributeDeclaration(new CodeTypeReference(typeof (UsedImplicitlyAttribute)),
+                    new CodeAttributeArgument(
+                        new CodeFieldReferenceExpression(
+                            new CodeTypeReferenceExpression(typeof (ImplicitUseTargetFlags).Name),
+                            StaticReflection.GetMemberName(
+                                (ImplicitUseTargetFlags option) => ImplicitUseTargetFlags.WithMembers)))));
 
             tagsCodeNamespace.Types.Add(TargetClass);
 

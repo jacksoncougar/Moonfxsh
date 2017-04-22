@@ -46,6 +46,7 @@ namespace Moonfish.Guerilla.CodeDom
 
             // Combine the words.
             var result = "";
+
             foreach (var word in words)
             {
                 result +=
@@ -103,7 +104,7 @@ namespace Moonfish.Guerilla.CodeDom
 
         public static readonly TagGroupLookup TagClasses = new TagGroupLookup();
 
-        public class TagGroupLookup : IEnumerable, IEnumerable<string>
+        public class TagGroupLookup : IEnumerable<string>
         {
             private static readonly List<string> Classes = new List<string>
             {

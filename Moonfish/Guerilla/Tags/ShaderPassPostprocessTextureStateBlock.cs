@@ -2,6 +2,9 @@
 {
     public partial class ShaderPassPostprocessTextureStateBlock
     {
+        /// <summary>
+        /// Creates a <see cref="ShaderPassPostprocessTextureStateBlock"/> with the default values.
+        /// </summary>
         public static ShaderPassPostprocessTextureStateBlock Default => new ShaderPassPostprocessTextureStateBlock
         {
             fieldskip = new byte[]

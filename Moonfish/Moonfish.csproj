@@ -1465,7 +1465,6 @@
     <None Include="Documentation\Solution UML hierarchy.pdf" />
     <None Include="Documentation\vertex program documentation.pdf" />
     <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
-    <Compile Include="Guerilla\Tags\Shader.Code.cs" />
     <None Include="packages.config" />
     <None Include="OpenTK.dll.config" />
   </ItemGroup>

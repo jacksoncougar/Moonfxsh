@@ -111,9 +111,12 @@ namespace Moonfish.Guerilla.Reflection
         {
             if (unaryExpression.Operand is MethodCallExpression)
             {
-                var methodExpression =
-                    (MethodCallExpression) unaryExpression.Operand;
+                var methodExpression = (MethodCallExpression) unaryExpression.Operand;
                 return methodExpression.Method.Name;
+            }
+            if (unaryExpression.Operand is ConstantExpression)
+            {
+                return ((ConstantExpression) unaryExpression.Operand).Value.ToString();
             }
 
             return ((MemberExpression) unaryExpression.Operand)

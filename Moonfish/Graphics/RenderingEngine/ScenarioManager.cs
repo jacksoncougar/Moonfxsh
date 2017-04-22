@@ -167,7 +167,6 @@ namespace Moonfish.Graphics
             {
                 if (! cluster.IsClusterDataLoaded )
                 {
-                    cluster.LoadClusterData(  );
                 }
                 var section = cluster.ClusterData[ 0 ].Section;
                 _bucketManager.BufferPartData(section);

@@ -16,7 +16,6 @@ namespace Moonfish.Graphics
 
         public RenderObject( StructureBspClusterBlock item )
         {
-            item.LoadClusterData( );
             sectionBuffers = new List<Mesh>( new[] {new Mesh( item.ClusterData[ 0 ].Section, null )} );
         }
 

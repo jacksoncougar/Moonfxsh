@@ -80,7 +80,7 @@ namespace Moonfish
                 Console.WriteLine("Rebuilding...");
 
                 GuerillaCodeDom.GenerateGuerillaCode(
-                    GuerillaCodeDom.TagClasses.Where(item => item == "bitm").Select(x => (TagClass) x).ToArray());
+                    GuerillaCodeDom.TagClasses.Select(x => (TagClass) x).ToArray());
 
                 Console.WriteLine("Done...");
             }

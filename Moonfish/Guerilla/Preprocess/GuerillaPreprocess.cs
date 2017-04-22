@@ -204,6 +204,7 @@ namespace Moonfish.Guerilla.Preprocess
             fields.RemoveAt(fields.Count - 2);
             fields.RemoveAt(fields.Count - 2);
             fields.RemoveAt(fields.Count - 2);
+            fields.RemoveAt(fields.Count - 2);
 
             return fields;
         }
@@ -495,12 +496,16 @@ namespace Moonfish.Guerilla.Preprocess
         }
 
         /// <summary>
-        /// Convert some padding fields into the bitmap raw offset and address fields.
+        /// (1) Changes the names of the Type enum values.
+        /// (2) Convert some padding fields into the bitmap raw offset and address fields.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "bitmap_data_block")]
         [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessBitmapDataBlockFields(IList<MoonfishTagField> fields)
         {
+            ((MoonfishTagEnumDefinition) fields[5].Definition).Names =
+                new List<string>(new[] {"Texture2D", "Texture3D", "Cubemap"});
+
             fields.RemoveAt(12);
             fields.Insert(12, new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "LOD1TextureDataOffset"));
             fields.Insert(13, new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "LOD2TextureDataOffset"));

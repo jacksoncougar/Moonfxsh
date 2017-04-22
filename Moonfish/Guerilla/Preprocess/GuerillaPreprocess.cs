@@ -114,7 +114,7 @@ namespace Moonfish.Guerilla.Preprocess
         protected static IList<MoonfishTagField> PreprocessShaderPostprocessBitmapNewBlockFields(
             IList<MoonfishTagField> fields)
         {
-            fields[0] = new MoonfishTagField(MoonfishFieldType.FieldTag, fields[0].Strings);
+            fields[0] = new MoonfishTagField(MoonfishFieldType.FieldMoonfishIdent, fields[0].Strings);
 
             return fields;
         }

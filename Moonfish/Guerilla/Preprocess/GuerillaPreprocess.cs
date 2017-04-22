@@ -9,14 +9,13 @@ namespace Moonfish.Guerilla.Preprocess
     /// Collection of Preprocessing functions which are called via reflection on the 
     /// named blocks when they are being created.
     /// </summary>
-    [UsedImplicitly]
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     internal class GuerillaPreprocess
     {
         /// <summary>
         /// (1) Removes 4 bytes of padding from the end of the block.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "collision_bsp_physics_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessCollisionBSPPhysicsBlockFields(IList<MoonfishTagField> fields)
         {
             var field = fields.Last(x => x.Type != MoonfishFieldType.FieldTerminator);
@@ -36,7 +35,6 @@ namespace Moonfish.Guerilla.Preprocess
         [GuerillaPreProcessFieldsMethod(BlockName = "scenario_vehicle_block")]
         [GuerillaPreProcessFieldsMethod(BlockName = "scenario_weapon_block")]
         [GuerillaPreProcessFieldsMethod(BlockName = "scenario_crate_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessItemBlockFields(IList<MoonfishTagField> fields)
         {
             var index = (from field in fields
@@ -53,7 +51,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// <param name="fields"></param>
         /// <returns></returns>
         [GuerillaPreProcessFieldsMethod(BlockName = "decorator_cache_block_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessDecoratorCacheBlockBlockFields(IList<MoonfishTagField> fields)
         {
             var field = fields.Last(x => x.Type != MoonfishFieldType.FieldTerminator);
@@ -70,7 +67,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// (2) Inserts a new padding field of 8 bytes.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "vertex_shader_classification_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessVertexShaderClassificationBlockFields(IList<MoonfishTagField> fields)
         {
             var compiledShaderDataField = fields[1];
@@ -87,7 +83,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// (1) Removes a field from the block.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "vertex_shader_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessVertexShaderBlockFields(IList<MoonfishTagField> fields)
         {
             var outputSwizzlesField = fields[3];
@@ -100,7 +95,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// (1) Removes the Halo 2 vista mouse blocks.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "user_interface_screen_widget_definition_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessUserInterfaceScreenWidgetDefinitionBlockFields(IList<MoonfishTagField> fields)
         {
             var mouseDescriptionField = fields[30];
@@ -112,18 +106,32 @@ namespace Moonfish.Guerilla.Preprocess
         }
 
         /// <summary>
-        /// (1) Replaces the existing layout with a new one containing an Index and Length field.
+        /// (1) Changes the types of the first field to a Ident.
         /// </summary>
-        [GuerillaPreProcessFieldsMethod(BlockName = "tag_block_index_struct_block")]
-        [UsedImplicitly]
-        protected static IList<MoonfishTagField> PreprocessTagBlockIndexStructBlockFields(IList<MoonfishTagField> fields)
+        /// <param name="fields"></param>
+        /// <returns></returns>
+        [GuerillaPreProcessFieldsMethod(BlockName = "shader_postprocess_bitmap_new_block")]
+        protected static IList<MoonfishTagField> PreprocessShaderPostprocessBitmapNewBlockFields(
+            IList<MoonfishTagField> fields)
         {
-            return new []
-            {
-                new MoonfishTagField(MoonfishFieldType.FieldCharInteger, "Index"),
-                new MoonfishTagField(MoonfishFieldType.FieldCharInteger, "Length"),
-                new MoonfishTagField(MoonfishFieldType.FieldTerminator, "")
-            };
+            fields[0] = new MoonfishTagField(MoonfishFieldType.FieldTag, fields[0].Strings);
+
+            return fields;
+        }
+
+        /// <summary>
+        /// (1) Changes a padding field into actual values.
+        /// </summary>
+        [GuerillaPreProcessFieldsMethod(BlockName = "shader_template_postprocess_remapping_new_block")]
+        protected static IList<MoonfishTagField> PreprocessShaderTemlatePostprocessRemappingNewBlockFields(
+            IList<MoonfishTagField> fields)
+        {
+            fields.RemoveAt(0);
+            fields.Insert(0, new MoonfishTagField(MoonfishFieldType.FieldCharInteger, "DestinationIndex"));
+            fields.Insert(1, new MoonfishTagField(MoonfishFieldType.FieldCharInteger, "value0"));
+            fields.Insert(2, new MoonfishTagField(MoonfishFieldType.FieldCharInteger, "value1"));
+
+            return fields;
         }
 
         /// <summary>
@@ -132,7 +140,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// (3) Returns a new fieldset created from those previous two.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "sound_gestalt_promotions_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessSoundGestaltPromotionBlockFields(IList<MoonfishTagField> fields)
         {
             var soundPromotionRuleBlockField = new MoonfishTagField(MoonfishFieldType.FieldBlock,
@@ -171,7 +178,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// (1) Replaces the entire block with a null implementation.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "sound_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessSoundBlockFields(IList<MoonfishTagField> fields)
         {
             var soundField = new MoonfishTagField(MoonfishFieldType.FieldPad, "Sound Fields");
@@ -184,7 +190,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// (1) Updates the type of the first field to a <see cref="TagIdent"/>.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "shader_postprocess_bitmap_new_block")]
-        [UsedImplicitly]
         protected static IList<tag_field> PreprocessShaderPostprocessBitmapNewBlockFields(IList<tag_field> fields)
         {
             var field = fields[0];
@@ -198,7 +203,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// (1) Removes three blocks from the end of the block.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "shader_pass_postprocess_implementation_new_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessShaderPassPostProcessImplementationNewBlockFields(IList<MoonfishTagField> fields)
         {
             fields.RemoveAt(fields.Count - 2);
@@ -213,7 +217,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// (1) Fills out the header of the BSP reference block.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "scenario_structure_bsp_reference_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessScenarioStructureBspReferenceBlockFields(IList<MoonfishTagField> fields)
         {
             var blockInfoStruct = new MoonfishTagField(MoonfishFieldType.FieldStruct, "StructureBlockInfo");
@@ -235,7 +238,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// (1) Inserts 2 padding bytes at the end of the block.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "scenario_cutscene_title_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessScenarioCutsceneTitleBlockFields(IList<MoonfishTagField> fields)
         {
             fields.Insert(fields.Count - 1,
@@ -248,7 +250,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// (1) Inserts a padding byte into the field
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "pixel_shader_fragment_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessPixelShaderFragmentBlockFields(IList<MoonfishTagField> fields)
         {
             fields.Insert(fields.Count - 2, new MoonfishTagField(MoonfishFieldType.FieldPad, "", 1));
@@ -259,7 +260,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// (1) Updates the names of an enum definition so they are valid.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "model_variant_region_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessModelVariantRegionBlockFields(IList<MoonfishTagField> fields)
         {
             ((MoonfishTagEnumDefinition) fields[5].Definition).Names =
@@ -277,7 +277,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// (2) Adds a new raw reference block "Xbox Animation Data Block" to the end of the struct.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "model_animation_graph_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessModelAnimationGraphBlockFields(IList<MoonfishTagField> fields)
         {
             var unknownBlock = new MoonfishTagField(MoonfishFieldType.FieldBlock, "Xbox Unknown Animation Block");
@@ -312,7 +311,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// (1) Inserts a padding byte after the colour rgb field.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "hud_waypoint_arrow_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessHudWaypointArrowBlockFields(IList<MoonfishTagField> fields)
         {
             if (fields[2].Type == MoonfishFieldType.FieldRgbColor)
@@ -324,7 +322,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// (1) Removes the postprocess properties block entirely.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "shader_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessShaderBlockFields(IList<MoonfishTagField> fields)
         {
             var postProcessBlockField = fields[17];
@@ -337,7 +334,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// (2) Partially rewrites unicode table struct.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "globals_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessGlobalsBlockFields(IList<MoonfishTagField> fields)
         {
             var field = new MoonfishTagField(MoonfishFieldType.FieldBlock, "Sounds");
@@ -427,7 +423,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "particle_model_block")]
         [GuerillaPreProcessFieldsMethod(BlockName = "decorator_set_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> GuerillaPreProcessMethod(IList<MoonfishTagField> fields)
         {
             fields.RemoveAt(fields.Count - 2);
@@ -438,7 +433,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// (1) Inserts a padding byte after the RGB colours because padding changed on xbox.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "decorator_permutations_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> ProprocessDecoratorPermutationsBlockFields(IList<MoonfishTagField> fields)
         {
             fields.Insert(10, new MoonfishTagField(MoonfishFieldType.FieldPad, "", 1));
@@ -451,7 +445,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// (2) Removes something called WDPfields.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "bitmap_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessBitmapBlockFields(IList<MoonfishTagField> fields)
         {
             ((MoonfishTagEnumDefinition) fields[2].Definition).Names = new List<string>(new[]
@@ -500,7 +493,6 @@ namespace Moonfish.Guerilla.Preprocess
         /// (2) Convert some padding fields into the bitmap raw offset and address fields.
         /// </summary>
         [GuerillaPreProcessFieldsMethod(BlockName = "bitmap_data_block")]
-        [UsedImplicitly]
         protected static IList<MoonfishTagField> PreprocessBitmapDataBlockFields(IList<MoonfishTagField> fields)
         {
             ((MoonfishTagEnumDefinition) fields[5].Definition).Names =

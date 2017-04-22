@@ -10,12 +10,14 @@
 
 namespace Moonfish.Guerilla.Tags
 {
+    using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
     
+    [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("collision_model_pathfinding_sphere_block")]
     public partial class CollisionModelPathfindingSphereBlock : GuerillaBlock, IWriteQueueable
     {
@@ -37,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
                 return 4;
             }
         }
-        public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(System.IO.BinaryReader binaryReader)
+        public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(Moonfish.Guerilla.BlamBinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.Node = binaryReader.ReadShortBlockIndex1();
@@ -46,21 +48,21 @@ namespace Moonfish.Guerilla.Tags
             this.Radius = binaryReader.ReadSingle();
             return pointerQueue;
         }
-        public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
+        public override void ReadInstances(Moonfish.Guerilla.BlamBinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBlamBinaryWriter);
+            base.QueueWrites(queueableBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.Write_(queueableBlamBinaryWriter);
-            queueableBlamBinaryWriter.Write(this.Node);
-            queueableBlamBinaryWriter.Write(((short)(this.CollisionModelPathfindingSphereFlags)));
-            queueableBlamBinaryWriter.Write(this.Center);
-            queueableBlamBinaryWriter.Write(this.Radius);
+            base.Write(queueableBinaryWriter);
+            queueableBinaryWriter.Write(this.Node);
+            queueableBinaryWriter.Write(((short)(this.CollisionModelPathfindingSphereFlags)));
+            queueableBinaryWriter.Write(this.Center);
+            queueableBinaryWriter.Write(this.Radius);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

@@ -10,12 +10,14 @@
 
 namespace Moonfish.Guerilla.Tags
 {
+    using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
     
+    [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("leaves_block")]
     public partial class LeavesBlock : GuerillaBlock, IWriteQueueable
     {
@@ -36,7 +38,7 @@ namespace Moonfish.Guerilla.Tags
                 return 4;
             }
         }
-        public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(System.IO.BinaryReader binaryReader)
+        public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(Moonfish.Guerilla.BlamBinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.LeavesFlags = ((Flags)(binaryReader.ReadByte()));
@@ -44,20 +46,20 @@ namespace Moonfish.Guerilla.Tags
             this.FirstBSP2DReference = binaryReader.ReadInt16();
             return pointerQueue;
         }
-        public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
+        public override void ReadInstances(Moonfish.Guerilla.BlamBinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBlamBinaryWriter);
+            base.QueueWrites(queueableBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.Write_(queueableBlamBinaryWriter);
-            queueableBlamBinaryWriter.Write(((byte)(this.LeavesFlags)));
-            queueableBlamBinaryWriter.Write(this.BSP2DReferenceCount);
-            queueableBlamBinaryWriter.Write(this.FirstBSP2DReference);
+            base.Write(queueableBinaryWriter);
+            queueableBinaryWriter.Write(((byte)(this.LeavesFlags)));
+            queueableBinaryWriter.Write(this.BSP2DReferenceCount);
+            queueableBinaryWriter.Write(this.FirstBSP2DReference);
         }
         [System.FlagsAttribute()]
         public enum Flags : byte

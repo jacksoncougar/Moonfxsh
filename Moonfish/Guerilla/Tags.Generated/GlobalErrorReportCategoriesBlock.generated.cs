@@ -10,12 +10,14 @@
 
 namespace Moonfish.Guerilla.Tags
 {
+    using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
     
+    [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("global_error_report_categories_block")]
     public partial class GlobalErrorReportCategoriesBlock : GuerillaBlock, IWriteQueueable
     {
@@ -40,7 +42,7 @@ namespace Moonfish.Guerilla.Tags
                 return 4;
             }
         }
-        public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(System.IO.BinaryReader binaryReader)
+        public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(Moonfish.Guerilla.BlamBinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.Name = binaryReader.ReadString256();
@@ -52,26 +54,26 @@ namespace Moonfish.Guerilla.Tags
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(608));
             return pointerQueue;
         }
-        public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
+        public override void ReadInstances(Moonfish.Guerilla.BlamBinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
         {
             base.ReadInstances(binaryReader, pointerQueue);
             this.Reports = base.ReadBlockArrayData<ErrorReportsBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBlamBinaryWriter);
-            queueableBlamBinaryWriter.QueueWrite(this.Reports);
+            base.QueueWrites(queueableBinaryWriter);
+            queueableBinaryWriter.QueueWrite(this.Reports);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.Write_(queueableBlamBinaryWriter);
-            queueableBlamBinaryWriter.Write(this.Name);
-            queueableBlamBinaryWriter.Write(((short)(this.ReportType)));
-            queueableBlamBinaryWriter.Write(((short)(this.GlobalErrorReportCategoriesFlags)));
-            queueableBlamBinaryWriter.Write(this.fieldpad);
-            queueableBlamBinaryWriter.Write(this.fieldpad0);
-            queueableBlamBinaryWriter.Write(this.fieldpad1);
-            queueableBlamBinaryWriter.WritePointer(this.Reports);
+            base.Write(queueableBinaryWriter);
+            queueableBinaryWriter.Write(this.Name);
+            queueableBinaryWriter.Write(((short)(this.ReportType)));
+            queueableBinaryWriter.Write(((short)(this.GlobalErrorReportCategoriesFlags)));
+            queueableBinaryWriter.Write(this.fieldpad);
+            queueableBinaryWriter.Write(this.fieldpad0);
+            queueableBinaryWriter.Write(this.fieldpad1);
+            queueableBinaryWriter.WritePointer(this.Reports);
         }
         public enum ReportTypeEnum : short
         {

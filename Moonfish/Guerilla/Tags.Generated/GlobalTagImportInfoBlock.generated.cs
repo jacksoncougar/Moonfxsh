@@ -10,12 +10,14 @@
 
 namespace Moonfish.Guerilla.Tags
 {
+    using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
     
+    [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("global_tag_import_info_block")]
     public partial class GlobalTagImportInfoBlock : GuerillaBlock, IWriteQueueable
     {
@@ -42,7 +44,7 @@ namespace Moonfish.Guerilla.Tags
                 return 4;
             }
         }
-        public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(System.IO.BinaryReader binaryReader)
+        public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(Moonfish.Guerilla.BlamBinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.Build = binaryReader.ReadInt32();
@@ -56,28 +58,28 @@ namespace Moonfish.Guerilla.Tags
             this.fieldpad1 = binaryReader.ReadBytes(128);
             return pointerQueue;
         }
-        public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
+        public override void ReadInstances(Moonfish.Guerilla.BlamBinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
         {
             base.ReadInstances(binaryReader, pointerQueue);
             this.Files = base.ReadBlockArrayData<TagImportFileBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBlamBinaryWriter);
-            queueableBlamBinaryWriter.QueueWrite(this.Files);
+            base.QueueWrites(queueableBinaryWriter);
+            queueableBinaryWriter.QueueWrite(this.Files);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.Write_(queueableBlamBinaryWriter);
-            queueableBlamBinaryWriter.Write(this.Build);
-            queueableBlamBinaryWriter.Write(this.Version);
-            queueableBlamBinaryWriter.Write(this.ImportDate);
-            queueableBlamBinaryWriter.Write(this.Culprit);
-            queueableBlamBinaryWriter.Write(this.fieldpad);
-            queueableBlamBinaryWriter.Write(this.ImportTime);
-            queueableBlamBinaryWriter.Write(this.fieldpad0);
-            queueableBlamBinaryWriter.WritePointer(this.Files);
-            queueableBlamBinaryWriter.Write(this.fieldpad1);
+            base.Write(queueableBinaryWriter);
+            queueableBinaryWriter.Write(this.Build);
+            queueableBinaryWriter.Write(this.Version);
+            queueableBinaryWriter.Write(this.ImportDate);
+            queueableBinaryWriter.Write(this.Culprit);
+            queueableBinaryWriter.Write(this.fieldpad);
+            queueableBinaryWriter.Write(this.ImportTime);
+            queueableBinaryWriter.Write(this.fieldpad0);
+            queueableBinaryWriter.WritePointer(this.Files);
+            queueableBinaryWriter.Write(this.fieldpad1);
         }
     }
 }

@@ -10,12 +10,14 @@
 
 namespace Moonfish.Guerilla.Tags
 {
+    using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
     
+    [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("coll")]
     [TagBlockOriginalNameAttribute("collision_model_block")]
     public partial class CollisionModelBlock : GuerillaBlock, IWriteQueueable
@@ -41,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
                 return 4;
             }
         }
-        public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(System.IO.BinaryReader binaryReader)
+        public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(Moonfish.Guerilla.BlamBinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(592));
@@ -53,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(12));
             return pointerQueue;
         }
-        public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
+        public override void ReadInstances(Moonfish.Guerilla.BlamBinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
         {
             base.ReadInstances(binaryReader, pointerQueue);
             this.ImportInfo = base.ReadBlockArrayData<GlobalTagImportInfoBlock>(binaryReader, pointerQueue.Dequeue());
@@ -63,26 +65,26 @@ namespace Moonfish.Guerilla.Tags
             this.PathfindingSpheres = base.ReadBlockArrayData<CollisionModelPathfindingSphereBlock>(binaryReader, pointerQueue.Dequeue());
             this.Nodes = base.ReadBlockArrayData<CollisionModelNodeBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBlamBinaryWriter);
-            queueableBlamBinaryWriter.QueueWrite(this.ImportInfo);
-            queueableBlamBinaryWriter.QueueWrite(this.Errors);
-            queueableBlamBinaryWriter.QueueWrite(this.Materials);
-            queueableBlamBinaryWriter.QueueWrite(this.Regions);
-            queueableBlamBinaryWriter.QueueWrite(this.PathfindingSpheres);
-            queueableBlamBinaryWriter.QueueWrite(this.Nodes);
+            base.QueueWrites(queueableBinaryWriter);
+            queueableBinaryWriter.QueueWrite(this.ImportInfo);
+            queueableBinaryWriter.QueueWrite(this.Errors);
+            queueableBinaryWriter.QueueWrite(this.Materials);
+            queueableBinaryWriter.QueueWrite(this.Regions);
+            queueableBinaryWriter.QueueWrite(this.PathfindingSpheres);
+            queueableBinaryWriter.QueueWrite(this.Nodes);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.Write_(queueableBlamBinaryWriter);
-            queueableBlamBinaryWriter.WritePointer(this.ImportInfo);
-            queueableBlamBinaryWriter.WritePointer(this.Errors);
-            queueableBlamBinaryWriter.Write(((int)(this.CollisionModelFlags)));
-            queueableBlamBinaryWriter.WritePointer(this.Materials);
-            queueableBlamBinaryWriter.WritePointer(this.Regions);
-            queueableBlamBinaryWriter.WritePointer(this.PathfindingSpheres);
-            queueableBlamBinaryWriter.WritePointer(this.Nodes);
+            base.Write(queueableBinaryWriter);
+            queueableBinaryWriter.WritePointer(this.ImportInfo);
+            queueableBinaryWriter.WritePointer(this.Errors);
+            queueableBinaryWriter.Write(((int)(this.CollisionModelFlags)));
+            queueableBinaryWriter.WritePointer(this.Materials);
+            queueableBinaryWriter.WritePointer(this.Regions);
+            queueableBinaryWriter.WritePointer(this.PathfindingSpheres);
+            queueableBinaryWriter.WritePointer(this.Nodes);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

@@ -4,7 +4,6 @@ using JetBrains.Annotations;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [UsedImplicitly]
     partial class StructureBspClusterBlock : IResourceDescriptor<GlobalGeometryBlockResourceBlock>,
         IResourceBlock<StructureBspClusterDataBlockNew>
     {

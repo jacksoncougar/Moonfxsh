@@ -10,12 +10,14 @@
 
 namespace Moonfish.Guerilla.Tags
 {
+    using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
     
+    [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("tag_import_file_block")]
     public partial class TagImportFileBlock : GuerillaBlock, IWriteQueueable
     {
@@ -41,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
                 return 4;
             }
         }
-        public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(System.IO.BinaryReader binaryReader)
+        public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(Moonfish.Guerilla.BlamBinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.Path = binaryReader.ReadString256();
@@ -54,27 +56,27 @@ namespace Moonfish.Guerilla.Tags
             this.fieldpad0 = binaryReader.ReadBytes(128);
             return pointerQueue;
         }
-        public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
+        public override void ReadInstances(Moonfish.Guerilla.BlamBinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
         {
             base.ReadInstances(binaryReader, pointerQueue);
             this.ZippedData = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBlamBinaryWriter);
-            queueableBlamBinaryWriter.QueueWrite(this.ZippedData);
+            base.QueueWrites(queueableBinaryWriter);
+            queueableBinaryWriter.QueueWrite(this.ZippedData);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.Write_(queueableBlamBinaryWriter);
-            queueableBlamBinaryWriter.Write(this.Path);
-            queueableBlamBinaryWriter.Write(this.ModificationDate);
-            queueableBlamBinaryWriter.Write(this.fieldskip);
-            queueableBlamBinaryWriter.Write(this.fieldpad);
-            queueableBlamBinaryWriter.Write(this.Checksum);
-            queueableBlamBinaryWriter.Write(this.Size);
-            queueableBlamBinaryWriter.WritePointer(this.ZippedData);
-            queueableBlamBinaryWriter.Write(this.fieldpad0);
+            base.Write(queueableBinaryWriter);
+            queueableBinaryWriter.Write(this.Path);
+            queueableBinaryWriter.Write(this.ModificationDate);
+            queueableBinaryWriter.Write(this.fieldskip);
+            queueableBinaryWriter.Write(this.fieldpad);
+            queueableBinaryWriter.Write(this.Checksum);
+            queueableBinaryWriter.Write(this.Size);
+            queueableBinaryWriter.WritePointer(this.ZippedData);
+            queueableBinaryWriter.Write(this.fieldpad0);
         }
     }
 }

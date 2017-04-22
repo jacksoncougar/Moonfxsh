@@ -10,12 +10,14 @@
 
 namespace Moonfish.Guerilla.Tags
 {
+    using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
     
+    [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("collision_bsp_physics_block")]
     public partial class CollisionBspPhysicsBlock : GuerillaBlock, IWriteQueueable
     {
@@ -52,7 +54,7 @@ namespace Moonfish.Guerilla.Tags
                 return 16;
             }
         }
-        public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(System.IO.BinaryReader binaryReader)
+        public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(Moonfish.Guerilla.BlamBinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.fieldskip = binaryReader.ReadBytes(4);
@@ -76,38 +78,38 @@ namespace Moonfish.Guerilla.Tags
             this.padding = binaryReader.ReadBytes(4);
             return pointerQueue;
         }
-        public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
+        public override void ReadInstances(Moonfish.Guerilla.BlamBinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
         {
             base.ReadInstances(binaryReader, pointerQueue);
             this.MoppCodeData = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBlamBinaryWriter);
-            queueableBlamBinaryWriter.QueueWrite(this.MoppCodeData);
+            base.QueueWrites(queueableBinaryWriter);
+            queueableBinaryWriter.QueueWrite(this.MoppCodeData);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.Write_(queueableBlamBinaryWriter);
-            queueableBlamBinaryWriter.Write(this.fieldskip);
-            queueableBlamBinaryWriter.Write(this.Size);
-            queueableBlamBinaryWriter.Write(this.Count);
-            queueableBlamBinaryWriter.Write(this.fieldskip0);
-            queueableBlamBinaryWriter.Write(this.fieldpad);
-            queueableBlamBinaryWriter.Write(this.fieldskip1);
-            queueableBlamBinaryWriter.Write(this.fieldpad0);
-            queueableBlamBinaryWriter.Write(this.fieldskip2);
-            queueableBlamBinaryWriter.Write(this.Size0);
-            queueableBlamBinaryWriter.Write(this.Count0);
-            queueableBlamBinaryWriter.Write(this.fieldskip3);
-            queueableBlamBinaryWriter.Write(this.fieldpad1);
-            queueableBlamBinaryWriter.Write(this.fieldskip4);
-            queueableBlamBinaryWriter.Write(this.Size1);
-            queueableBlamBinaryWriter.Write(this.Count1);
-            queueableBlamBinaryWriter.Write(this.fieldskip5);
-            queueableBlamBinaryWriter.Write(this.fieldpad2);
-            queueableBlamBinaryWriter.WritePointer(this.MoppCodeData);
-            queueableBlamBinaryWriter.Write(this.padding);
+            base.Write(queueableBinaryWriter);
+            queueableBinaryWriter.Write(this.fieldskip);
+            queueableBinaryWriter.Write(this.Size);
+            queueableBinaryWriter.Write(this.Count);
+            queueableBinaryWriter.Write(this.fieldskip0);
+            queueableBinaryWriter.Write(this.fieldpad);
+            queueableBinaryWriter.Write(this.fieldskip1);
+            queueableBinaryWriter.Write(this.fieldpad0);
+            queueableBinaryWriter.Write(this.fieldskip2);
+            queueableBinaryWriter.Write(this.Size0);
+            queueableBinaryWriter.Write(this.Count0);
+            queueableBinaryWriter.Write(this.fieldskip3);
+            queueableBinaryWriter.Write(this.fieldpad1);
+            queueableBinaryWriter.Write(this.fieldskip4);
+            queueableBinaryWriter.Write(this.Size1);
+            queueableBinaryWriter.Write(this.Count1);
+            queueableBinaryWriter.Write(this.fieldskip5);
+            queueableBinaryWriter.Write(this.fieldpad2);
+            queueableBinaryWriter.WritePointer(this.MoppCodeData);
+            queueableBinaryWriter.Write(this.padding);
         }
     }
 }

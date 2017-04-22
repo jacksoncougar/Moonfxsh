@@ -2,7 +2,6 @@
 
 namespace Moonfish.Guerilla.Tags
 {
-    [UsedImplicitly]
     public partial class SoundPermutationChunkBlock : IResourceBlock
     {
         public ResourcePointer GetResourcePointer(int index = 0)

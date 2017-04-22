@@ -81,14 +81,14 @@ namespace Moonfish.Forms.ShaderForm
                     for ( int j = index; j < index + length; j++ )
                     {
                         var sourceIndex = shaderTemplateBlock.PostprocessDefinition[ 0 ].Remappings[ j ].SourceIndex;
-                        var bytes = shaderTemplateBlock.PostprocessDefinition[ 0 ].Remappings[ j ].fieldskip;
+                        //var bytes = shaderTemplateBlock.PostprocessDefinition[ 0 ].Remappings[ j ].fieldskip;
 
                         var vertexConstant = shaderBlock.PostprocessDefinition[ 0 ].VertexConstants[ sourceIndex ];
 
                         var info = new VertexConstantInfo
                         {
                             source = sourceIndex,
-                            bytes = bytes,
+                            //bytes = bytes,
                             value = new Vector4( vertexConstant.Vector3, vertexConstant.W ),
                             //stringId = Halo2.Strings[new StringIdent(BitConverter.ToInt16( bytes, 0 ), 0)]
                         };

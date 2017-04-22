@@ -1,4 +1,3 @@
-using System.ComponentModel.Design.Serialization;
 using Moonfish.Guerilla.Tags;
 
 namespace Moonfish.Graphics
@@ -17,14 +16,14 @@ namespace Moonfish.Graphics
         public BitmapMapping( ShaderTemplatePostprocessRemappingNewBlock remappingBlock )
         {
             SourceIndex = remappingBlock.SourceIndex;
-            DesinationIndex = remappingBlock.fieldskip[ 0 ];
+            DesinationIndex = remappingBlock.DestinationIndex;
         }
 
         public static implicit operator ShaderTemplatePostprocessRemappingNewBlock( BitmapMapping mapping )
         {
             return new ShaderTemplatePostprocessRemappingNewBlock( )
             {
-                fieldskip = new byte[] {mapping.DesinationIndex, 0, 0},
+                DestinationIndex = mapping.DesinationIndex,
                 SourceIndex = mapping.SourceIndex
             };
         }

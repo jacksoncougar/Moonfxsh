@@ -21,7 +21,7 @@ namespace Moonfish.Guerilla.Tags
     [TagBlockOriginalNameAttribute("shader_postprocess_bitmap_new_block")]
     public partial class ShaderPostprocessBitmapNewBlock : GuerillaBlock, IWriteQueueable
     {
-        public TagIdent BitmapGroup;
+        public Moonfish.Tags.TagIdent BitmapGroup;
         public int BitmapIndex;
         public float LogBitmapDimension;
         public override int SerializedSize

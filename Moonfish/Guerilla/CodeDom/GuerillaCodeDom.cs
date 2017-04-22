@@ -92,7 +92,7 @@ namespace Moonfish.Guerilla.CodeDom
             if (classes.Length < 1)
                 return;
 
-            var tags = Guerilla.H2Tags.Select(x => new MoonfishTagGroup(x)).ToList();
+            List<MoonfishTagGroup> tags = Guerilla.H2Tags.Select(x => new MoonfishTagGroup(x)).ToList();
             foreach (
                 var blockClass in
                     tags.Where(x => classes.Any(y => y == x.Class)).Select(tag => new GuerillaBlockClass(tag, tags)))

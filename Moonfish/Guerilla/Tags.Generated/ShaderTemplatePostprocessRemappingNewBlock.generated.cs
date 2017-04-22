@@ -21,7 +21,9 @@ namespace Moonfish.Guerilla.Tags
     [TagBlockOriginalNameAttribute("shader_template_postprocess_remapping_new_block")]
     public partial class ShaderTemplatePostprocessRemappingNewBlock : GuerillaBlock, IWriteQueueable
     {
-        public byte[] fieldskip = new byte[3];
+        public byte DestinationIndex;
+        public byte Value0;
+        public byte Value1;
         public byte SourceIndex;
         public override int SerializedSize
         {
@@ -40,7 +42,9 @@ namespace Moonfish.Guerilla.Tags
         public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(Moonfish.Guerilla.BlamBinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
-            this.fieldskip = binaryReader.ReadBytes(3);
+            this.DestinationIndex = binaryReader.ReadByte();
+            this.Value0 = binaryReader.ReadByte();
+            this.Value1 = binaryReader.ReadByte();
             this.SourceIndex = binaryReader.ReadByte();
             return pointerQueue;
         }
@@ -55,7 +59,9 @@ namespace Moonfish.Guerilla.Tags
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldskip);
+            queueableBinaryWriter.Write(this.DestinationIndex);
+            queueableBinaryWriter.Write(this.Value0);
+            queueableBinaryWriter.Write(this.Value1);
             queueableBinaryWriter.Write(this.SourceIndex);
         }
     }

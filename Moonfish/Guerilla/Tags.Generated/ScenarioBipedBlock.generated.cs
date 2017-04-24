@@ -71,10 +71,10 @@ namespace Moonfish.Guerilla.Tags
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Type);
             queueableBinaryWriter.Write(this.Name);
-            this.ObjectData.Write_(queueableBinaryWriter);
+            this.ObjectData.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.indexer);
-            this.PermutationData.Write_(queueableBinaryWriter);
-            this.UnitData.Write_(queueableBinaryWriter);
+            this.PermutationData.Write(queueableBinaryWriter);
+            this.UnitData.Write(queueableBinaryWriter);
         }
     }
 }

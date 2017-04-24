@@ -80,9 +80,9 @@ namespace Moonfish.Guerilla.Tags
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
-            this.Resources.Write_(queueableBinaryWriter);
-            this.Content.Write_(queueableBinaryWriter);
-            this.RunTimeData.Write_(queueableBinaryWriter);
+            this.Resources.Write(queueableBinaryWriter);
+            this.Content.Write(queueableBinaryWriter);
+            this.RunTimeData.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.LastImportResults);
             queueableBinaryWriter.WritePointer(this.AdditionalNodeData);
             queueableBinaryWriter.WritePointer(this.XboxAnimationDataBlock);

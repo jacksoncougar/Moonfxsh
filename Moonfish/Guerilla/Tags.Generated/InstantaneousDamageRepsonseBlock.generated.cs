@@ -117,12 +117,12 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(((int)(this.InstantaneousDamageRepsonseFlags)));
             queueableBinaryWriter.Write(this.DamageThreshold);
             queueableBinaryWriter.Write(this.TransitionEffect);
-            this.DamageEffect.Write_(queueableBinaryWriter);
+            this.DamageEffect.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Region);
             queueableBinaryWriter.Write(((short)(this.NewState)));
             queueableBinaryWriter.Write(this.RuntimeRegionIndex);
             queueableBinaryWriter.Write(this.EffectMarkerName);
-            this.DamageEffectMarker.Write_(queueableBinaryWriter);
+            this.DamageEffectMarker.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.ResponseDelay);
             queueableBinaryWriter.Write(this.DelayEffect);
             queueableBinaryWriter.Write(this.DelayEffectMarkerName);

@@ -74,7 +74,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.DONOTUSE);
             queueableBinaryWriter.WritePointer(this.BitmapWidgets);
             queueableBinaryWriter.WritePointer(this.TextWidgets);
-            this.DashlightData.Write_(queueableBinaryWriter);
+            this.DashlightData.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.ScreenEffectWidgets);
         }
     }

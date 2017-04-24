@@ -77,11 +77,11 @@ namespace Moonfish.Guerilla.Tags
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
-            this.RenderInfo.Write_(queueableBinaryWriter);
+            this.RenderInfo.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Checksum);
             queueableBinaryWriter.Write(this.BoundingSphereCenter);
             queueableBinaryWriter.Write(this.BoundingSphereRadius);
-            this.CollisionInfo.Write_(queueableBinaryWriter);
+            this.CollisionInfo.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.BspPhysics);
             queueableBinaryWriter.WritePointer(this.RenderLeaves);
             queueableBinaryWriter.WritePointer(this.SurfaceReferences);

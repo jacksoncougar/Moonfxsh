@@ -61,7 +61,7 @@ namespace Moonfish.Guerilla.Tags
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.EnumIndex);
             queueableBinaryWriter.Write(this.Flags);
-            this.Combiners.Write_(queueableBinaryWriter);
+            this.Combiners.Write(queueableBinaryWriter);
         }
     }
 }

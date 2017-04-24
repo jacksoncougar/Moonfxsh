@@ -60,7 +60,7 @@ namespace Moonfish.Guerilla.Tags
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.DspEffect);
-            this.LowFrequencySound.Write_(queueableBinaryWriter);
+            this.LowFrequencySound.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.TimePeriod);
         }
     }

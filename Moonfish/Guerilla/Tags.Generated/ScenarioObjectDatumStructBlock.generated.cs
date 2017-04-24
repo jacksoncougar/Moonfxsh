@@ -79,7 +79,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.Scale);
             queueableBinaryWriter.Write(((short)(this.ScenarioObjectDatumStructTransformFlags)));
             queueableBinaryWriter.Write(this.ManualBSPFlags);
-            this.ObjectID.Write_(queueableBinaryWriter);
+            this.ObjectID.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((byte)(this.BSPPolicy)));
             queueableBinaryWriter.Write(this.fieldpad);
             queueableBinaryWriter.Write(this.EditorFolder);

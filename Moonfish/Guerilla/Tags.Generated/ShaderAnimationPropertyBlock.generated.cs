@@ -70,7 +70,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.InputName);
             queueableBinaryWriter.Write(this.RangeName);
             queueableBinaryWriter.Write(this.TimePeriod);
-            this.Function.Write_(queueableBinaryWriter);
+            this.Function.Write(queueableBinaryWriter);
         }
         public enum TypeEnum : short
         {

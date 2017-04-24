@@ -188,7 +188,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.DamageLowerBound);
             queueableBinaryWriter.Write(this.DamageUpperBound);
             queueableBinaryWriter.Write(this.DmgInnerConeAngle);
-            this.Blah.Write_(queueableBinaryWriter);
+            this.Blah.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.ActiveCamouflageDamage);
             queueableBinaryWriter.Write(this.Stun);
             queueableBinaryWriter.Write(this.MaximumStun);

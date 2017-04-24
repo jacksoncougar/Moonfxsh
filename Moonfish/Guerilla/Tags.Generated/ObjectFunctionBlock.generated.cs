@@ -72,7 +72,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.ExportName);
             queueableBinaryWriter.Write(this.TurnOffWith);
             queueableBinaryWriter.Write(this.MinValue);
-            this.DefaultFunction.Write_(queueableBinaryWriter);
+            this.DefaultFunction.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.ScaleBy);
         }
         [System.FlagsAttribute()]

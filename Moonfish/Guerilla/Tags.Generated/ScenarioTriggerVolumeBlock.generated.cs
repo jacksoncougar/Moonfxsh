@@ -93,7 +93,7 @@ namespace Moonfish.Guerilla.Tags
             int i;
             for (i = 0; (i < 6); i = (i + 1))
             {
-                this.EMPTYSTRING00[i].Write_(queueableBinaryWriter);
+                this.EMPTYSTRING00[i].Write(queueableBinaryWriter);
             }
             queueableBinaryWriter.Write(this.Position);
             queueableBinaryWriter.Write(this.Extents);

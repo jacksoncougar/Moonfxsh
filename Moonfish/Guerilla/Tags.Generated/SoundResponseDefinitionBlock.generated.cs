@@ -67,7 +67,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(((short)(this.SoundResponseDefinitionSoundFlags)));
             queueableBinaryWriter.Write(this.fieldpad);
             queueableBinaryWriter.Write(this.EnglishSound);
-            this.ExtraSounds.Write_(queueableBinaryWriter);
+            this.ExtraSounds.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Probability);
         }
         [System.FlagsAttribute()]

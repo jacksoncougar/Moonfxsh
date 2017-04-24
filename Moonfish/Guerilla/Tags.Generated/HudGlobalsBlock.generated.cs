@@ -349,7 +349,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.CheckpointEndText);
             queueableBinaryWriter.Write(this.CheckpointSound);
             queueableBinaryWriter.Write(this.fieldpad14);
-            this.NewGlobals.Write_(queueableBinaryWriter);
+            this.NewGlobals.Write(queueableBinaryWriter);
         }
         public enum AnchorEnum : short
         {

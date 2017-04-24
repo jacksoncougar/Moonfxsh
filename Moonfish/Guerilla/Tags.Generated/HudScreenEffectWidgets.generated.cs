@@ -90,13 +90,13 @@ namespace Moonfish.Guerilla.Tags
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Name);
-            this.HudWidgetInputsStruct.Write_(queueableBinaryWriter);
-            this.HudWidgetStateDefinitionStruct.Write_(queueableBinaryWriter);
+            this.HudWidgetInputsStruct.Write(queueableBinaryWriter);
+            this.HudWidgetStateDefinitionStruct.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.Anchor)));
             queueableBinaryWriter.Write(((short)(this.HudScreenEffectWidgetsFlags)));
             queueableBinaryWriter.Write(this.Bitmap);
             queueableBinaryWriter.Write(this.FullscreenScreenEffect);
-            this.Waa.Write_(queueableBinaryWriter);
+            this.Waa.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.FullscreenSequenceIndex);
             queueableBinaryWriter.Write(this.HalfscreenSequenceIndex);
             queueableBinaryWriter.Write(this.QuarterscreenSequenceIndex);

@@ -99,16 +99,16 @@ namespace Moonfish.Guerilla.Tags
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.ParticlePhysics);
-            this.ParticleEmissionRate.Write_(queueableBinaryWriter);
-            this.ParticleLifespan.Write_(queueableBinaryWriter);
-            this.ParticleVelocity.Write_(queueableBinaryWriter);
-            this.ParticleAngularVelocity.Write_(queueableBinaryWriter);
-            this.ParticleSize.Write_(queueableBinaryWriter);
-            this.ParticleTint.Write_(queueableBinaryWriter);
-            this.ParticleAlpha.Write_(queueableBinaryWriter);
+            this.ParticleEmissionRate.Write(queueableBinaryWriter);
+            this.ParticleLifespan.Write(queueableBinaryWriter);
+            this.ParticleVelocity.Write(queueableBinaryWriter);
+            this.ParticleAngularVelocity.Write(queueableBinaryWriter);
+            this.ParticleSize.Write(queueableBinaryWriter);
+            this.ParticleTint.Write(queueableBinaryWriter);
+            this.ParticleAlpha.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.EmissionShape)));
-            this.EmissionRadius.Write_(queueableBinaryWriter);
-            this.EmissionAngle.Write_(queueableBinaryWriter);
+            this.EmissionRadius.Write(queueableBinaryWriter);
+            this.EmissionAngle.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.TranslationalOffset);
             queueableBinaryWriter.Write(this.RelativeDirection);
             queueableBinaryWriter.Write(this.fieldpad);

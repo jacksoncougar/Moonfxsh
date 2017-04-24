@@ -298,7 +298,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.VehicleSpericalLimitCenter);
             queueableBinaryWriter.WritePointer(this.DebugInfo);
             queueableBinaryWriter.Write(this.Decorators);
-            this.StructurePhysics.Write_(queueableBinaryWriter);
+            this.StructurePhysics.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.WaterDefinitions);
             queueableBinaryWriter.WritePointer(this.portaldeviceMapping);
             queueableBinaryWriter.WritePointer(this.Audibility);

@@ -144,11 +144,11 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.CameraVerticalMovementScale);
             queueableBinaryWriter.Write(this.CameraExclusionDistance);
             queueableBinaryWriter.Write(this.AutoaimWidth);
-            this.LockonData.Write_(queueableBinaryWriter);
+            this.LockonData.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.fieldpad4);
             queueableBinaryWriter.Write(this.HeadShotAccScale);
             queueableBinaryWriter.Write(this.AreaDamageEffect);
-            this.Physics.Write_(queueableBinaryWriter);
+            this.Physics.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.ContactPoints);
             queueableBinaryWriter.Write(this.ReanimationCharacter);
             queueableBinaryWriter.Write(this.DeathSpawnCharacter);

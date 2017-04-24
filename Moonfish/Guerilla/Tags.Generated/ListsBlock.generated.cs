@@ -92,7 +92,7 @@ namespace Moonfish.Guerilla.Tags
             int i;
             for (i = 0; (i < 4); i = (i + 1))
             {
-                this.ChildShapesStorage00[i].Write_(queueableBinaryWriter);
+                this.ChildShapesStorage00[i].Write(queueableBinaryWriter);
             }
         }
         [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]

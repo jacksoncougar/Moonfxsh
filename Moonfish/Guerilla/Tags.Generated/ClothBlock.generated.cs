@@ -97,7 +97,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.GridYDimension);
             queueableBinaryWriter.Write(this.GridSpacingX);
             queueableBinaryWriter.Write(this.GridSpacingY);
-            this.Properties.Write_(queueableBinaryWriter);
+            this.Properties.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.Vertices);
             queueableBinaryWriter.WritePointer(this.Indices);
             queueableBinaryWriter.WritePointer(this.StripIndices);

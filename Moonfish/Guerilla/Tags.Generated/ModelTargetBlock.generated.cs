@@ -73,7 +73,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.DamageSection);
             queueableBinaryWriter.Write(this.Variant);
             queueableBinaryWriter.Write(this.TargetingRelevance);
-            this.LockonData.Write_(queueableBinaryWriter);
+            this.LockonData.Write(queueableBinaryWriter);
         }
     }
 }

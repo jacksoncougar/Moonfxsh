@@ -102,7 +102,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.WritePointer(this.ClusterBasis);
             queueableBinaryWriter.WritePointer(this.RawPcaData);
             queueableBinaryWriter.WritePointer(this.VertexBuffers);
-            this.GeometryBlockInfo.Write_(queueableBinaryWriter);
+            this.GeometryBlockInfo.Write(queueableBinaryWriter);
         }
     }
 }

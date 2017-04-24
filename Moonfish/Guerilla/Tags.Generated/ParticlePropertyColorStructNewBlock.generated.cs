@@ -67,7 +67,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(((short)(this.RangeVariable)));
             queueableBinaryWriter.Write(((short)(this.OutputModifier)));
             queueableBinaryWriter.Write(((short)(this.OutputModifierInput)));
-            this.Mapping.Write_(queueableBinaryWriter);
+            this.Mapping.Write(queueableBinaryWriter);
         }
         public enum InputVariableEnum : short
         {

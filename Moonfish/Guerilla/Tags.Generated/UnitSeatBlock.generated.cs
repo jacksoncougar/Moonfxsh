@@ -140,7 +140,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.BoardingMeleeString);
             queueableBinaryWriter.Write(this.PingScale);
             queueableBinaryWriter.Write(this.TurnoverTime);
-            this.Acceleration.Write_(queueableBinaryWriter);
+            this.Acceleration.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.AIScariness);
             queueableBinaryWriter.Write(((short)(this.AiSeatType)));
             queueableBinaryWriter.Write(this.BoardingSeat);
@@ -150,7 +150,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.MinSpeedReference);
             queueableBinaryWriter.Write(this.MaxSpeedReference);
             queueableBinaryWriter.Write(this.SpeedExponent);
-            this.UnitCamera.Write_(queueableBinaryWriter);
+            this.UnitCamera.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.UnitHudInterface);
             queueableBinaryWriter.Write(this.EnterSeatString);
             queueableBinaryWriter.Write(this.YawMinimum);

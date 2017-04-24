@@ -124,7 +124,7 @@ namespace Moonfish.Guerilla.Tags
             int i;
             for (i = 0; (i < 4); i = (i + 1))
             {
-                this.ChildShapesStorage00[i].Write_(queueableBinaryWriter);
+                this.ChildShapesStorage00[i].Write(queueableBinaryWriter);
             }
             queueableBinaryWriter.Write(this.MultisphereCount);
             queueableBinaryWriter.Write(((int)(this.VehiclePhantomShapeFlags)));
@@ -137,7 +137,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.Z1);
             for (i = 0; (i < 4); i = (i + 1))
             {
-                this.Multispheres00[i].Write_(queueableBinaryWriter);
+                this.Multispheres00[i].Write(queueableBinaryWriter);
             }
         }
         [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
@@ -277,7 +277,7 @@ namespace Moonfish.Guerilla.Tags
                 int i;
                 for (i = 0; (i < 8); i = (i + 1))
                 {
-                    this.FourVectorsStorage00[i].Write_(queueableBinaryWriter);
+                    this.FourVectorsStorage00[i].Write(queueableBinaryWriter);
                 }
             }
             [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]

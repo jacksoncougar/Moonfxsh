@@ -77,11 +77,11 @@ namespace Moonfish.Guerilla.Tags
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.HudWidgetEffectFlags)));
             queueableBinaryWriter.Write(this.fieldpad);
-            this.YourMom.Write_(queueableBinaryWriter);
-            this.YourMom0.Write_(queueableBinaryWriter);
-            this.YourMom1.Write_(queueableBinaryWriter);
-            this.YourMom2.Write_(queueableBinaryWriter);
-            this.YourMom3.Write_(queueableBinaryWriter);
+            this.YourMom.Write(queueableBinaryWriter);
+            this.YourMom0.Write(queueableBinaryWriter);
+            this.YourMom1.Write(queueableBinaryWriter);
+            this.YourMom2.Write(queueableBinaryWriter);
+            this.YourMom3.Write(queueableBinaryWriter);
         }
         /// <summary>
         /// allow the scaling, rotation, and offsetting of widgets

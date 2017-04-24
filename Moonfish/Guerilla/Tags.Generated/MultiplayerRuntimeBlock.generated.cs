@@ -325,7 +325,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.TagReference3);
             queueableBinaryWriter.WritePointer(this.Weapons);
             queueableBinaryWriter.WritePointer(this.Vehicles);
-            this.Arr.Write_(queueableBinaryWriter);
+            this.Arr.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.InGameText);
             queueableBinaryWriter.WritePointer(this.Sounds);
             queueableBinaryWriter.WritePointer(this.GeneralEvents);

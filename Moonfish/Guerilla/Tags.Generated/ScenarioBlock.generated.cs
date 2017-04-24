@@ -583,7 +583,7 @@ namespace Moonfish.Guerilla.Tags
             int i;
             for (i = 0; (i < 32); i = (i + 1))
             {
-                this.ObjectSalts00[i].Write_(queueableBinaryWriter);
+                this.ObjectSalts00[i].Write(queueableBinaryWriter);
             }
             queueableBinaryWriter.WritePointer(this.SpawnData);
             queueableBinaryWriter.Write(this.SoundEffectCollection);

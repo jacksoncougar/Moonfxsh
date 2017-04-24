@@ -177,8 +177,8 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.IntegratedLightToggle);
             queueableBinaryWriter.Write(this.CameraFieldOfView);
             queueableBinaryWriter.Write(this.CameraStiffness);
-            this.UnitCamera.Write_(queueableBinaryWriter);
-            this.Acceleration.Write_(queueableBinaryWriter);
+            this.UnitCamera.Write(queueableBinaryWriter);
+            this.Acceleration.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.SoftPingThreshold);
             queueableBinaryWriter.Write(this.SoftPingInterruptTime);
             queueableBinaryWriter.Write(this.HardPingThreshold);
@@ -201,9 +201,9 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.LookingAccelerationMaximum);
             queueableBinaryWriter.Write(this.RightHandNode);
             queueableBinaryWriter.Write(this.LeftHandNode);
-            this.MoreDamnNodes.Write_(queueableBinaryWriter);
+            this.MoreDamnNodes.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.MeleeDamage);
-            this.YourMomma.Write_(queueableBinaryWriter);
+            this.YourMomma.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.MotionSensorBlipSize)));
             queueableBinaryWriter.Write(this.fieldpad3);
             queueableBinaryWriter.WritePointer(this.Postures);
@@ -215,8 +215,8 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.WritePointer(this.PoweredSeats);
             queueableBinaryWriter.WritePointer(this.Weapons);
             queueableBinaryWriter.WritePointer(this.Seats);
-            this.Boost.Write_(queueableBinaryWriter);
-            this.Lipsync.Write_(queueableBinaryWriter);
+            this.Boost.Write(queueableBinaryWriter);
+            this.Lipsync.Write(queueableBinaryWriter);
         }
         [System.FlagsAttribute()]
         public enum UnitFlags : int

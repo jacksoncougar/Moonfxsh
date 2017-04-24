@@ -67,7 +67,7 @@ namespace Moonfish.Guerilla.Tags
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
-            this.Data.Write_(queueableBinaryWriter);
+            this.Data.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Position);
             queueableBinaryWriter.Write(this.LowerHeight);
             queueableBinaryWriter.Write(this.UpperHeight);

@@ -73,11 +73,11 @@ namespace Moonfish.Guerilla.Tags
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.GlobalGeometryClassificationEnumDefinition)));
             queueableBinaryWriter.Write(this.fieldpad);
-            this.SectionInfo.Write_(queueableBinaryWriter);
+            this.SectionInfo.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.RigidNode);
             queueableBinaryWriter.Write(((short)(this.RenderModelSectionFlags)));
             queueableBinaryWriter.WritePointer(this.SectionData);
-            this.GeometryBlockInfo.Write_(queueableBinaryWriter);
+            this.GeometryBlockInfo.Write(queueableBinaryWriter);
         }
         public enum GlobalGeometryClassificationEnumDefinitionEnum : short
         {

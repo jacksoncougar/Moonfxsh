@@ -106,10 +106,10 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.WritePointer(this.DeadSphereShapes);
             queueableBinaryWriter.WritePointer(this.PillShapes);
             queueableBinaryWriter.WritePointer(this.SphereShapes);
-            this.GroundPhysics.Write_(queueableBinaryWriter);
-            this.FlyingPhysics.Write_(queueableBinaryWriter);
-            this.DeadPhysics.Write_(queueableBinaryWriter);
-            this.SentinelPhysics.Write_(queueableBinaryWriter);
+            this.GroundPhysics.Write(queueableBinaryWriter);
+            this.FlyingPhysics.Write(queueableBinaryWriter);
+            this.DeadPhysics.Write(queueableBinaryWriter);
+            this.SentinelPhysics.Write(queueableBinaryWriter);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

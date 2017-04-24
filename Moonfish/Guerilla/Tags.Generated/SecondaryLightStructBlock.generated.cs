@@ -73,7 +73,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.MinDiffuseSample);
             queueableBinaryWriter.Write(this.MaxDiffuseSample);
             queueableBinaryWriter.Write(this.ZAxisRotation);
-            this.Function.Write_(queueableBinaryWriter);
+            this.Function.Write(queueableBinaryWriter);
         }
     }
 }

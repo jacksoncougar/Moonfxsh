@@ -195,7 +195,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.WritePointer(this.RuntimeLevelData);
             queueableBinaryWriter.WritePointer(this.UiLevelData);
             queueableBinaryWriter.Write(this.DefaultGlobalLighting);
-            this.UnicodeBlockInfo.Write_(queueableBinaryWriter);
+            this.UnicodeBlockInfo.Write(queueableBinaryWriter);
         }
         public enum LanguageEnum : int
         {

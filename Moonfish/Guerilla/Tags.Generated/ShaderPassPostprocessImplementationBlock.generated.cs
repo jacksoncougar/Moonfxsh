@@ -116,10 +116,10 @@ namespace Moonfish.Guerilla.Tags
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
-            this.GPUState.Write_(queueableBinaryWriter);
-            this.GPUConstantState.Write_(queueableBinaryWriter);
-            this.GPUVolatileState.Write_(queueableBinaryWriter);
-            this.GPUDefaultState.Write_(queueableBinaryWriter);
+            this.GPUState.Write(queueableBinaryWriter);
+            this.GPUConstantState.Write(queueableBinaryWriter);
+            this.GPUVolatileState.Write(queueableBinaryWriter);
+            this.GPUDefaultState.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.VertexShader);
             queueableBinaryWriter.Write(this.fieldskip);
             queueableBinaryWriter.Write(this.fieldskip0);

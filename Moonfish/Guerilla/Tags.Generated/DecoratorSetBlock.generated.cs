@@ -94,7 +94,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.WritePointer(this.RawVertices);
             queueableBinaryWriter.WritePointer(this.Indices);
             queueableBinaryWriter.WritePointer(this.CachedData);
-            this.GeometrySectionInfo.Write_(queueableBinaryWriter);
+            this.GeometrySectionInfo.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.fieldpad);
         }
     }

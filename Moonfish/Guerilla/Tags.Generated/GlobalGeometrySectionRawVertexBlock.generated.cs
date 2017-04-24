@@ -130,15 +130,15 @@ namespace Moonfish.Guerilla.Tags
             int i;
             for (i = 0; (i < 4); i = (i + 1))
             {
-                this.NodeIndices00[i].Write_(queueableBinaryWriter);
+                this.NodeIndices00[i].Write(queueableBinaryWriter);
             }
             for (i = 0; (i < 4); i = (i + 1))
             {
-                this.NodeWeights00[i].Write_(queueableBinaryWriter);
+                this.NodeWeights00[i].Write(queueableBinaryWriter);
             }
             for (i = 0; (i < 4); i = (i + 1))
             {
-                this.NodeIndices20[i].Write_(queueableBinaryWriter);
+                this.NodeIndices20[i].Write(queueableBinaryWriter);
             }
             queueableBinaryWriter.Write(this.UseNewNodeIndices);
             queueableBinaryWriter.Write(this.AdjustedCompoundNodeIndex);

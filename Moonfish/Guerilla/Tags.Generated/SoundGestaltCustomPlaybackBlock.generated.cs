@@ -55,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
-            this.PlaybackDefinition.Write_(queueableBinaryWriter);
+            this.PlaybackDefinition.Write(queueableBinaryWriter);
         }
     }
 }

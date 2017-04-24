@@ -76,10 +76,10 @@ namespace Moonfish.Guerilla.Tags
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.LightingVariablesObjectAffected)));
             queueableBinaryWriter.Write(this.LightmapBrightnessOffset);
-            this.PrimaryLight.Write_(queueableBinaryWriter);
-            this.SecondaryLight.Write_(queueableBinaryWriter);
-            this.AmbientLight.Write_(queueableBinaryWriter);
-            this.LightmapShadows.Write_(queueableBinaryWriter);
+            this.PrimaryLight.Write(queueableBinaryWriter);
+            this.SecondaryLight.Write(queueableBinaryWriter);
+            this.AmbientLight.Write(queueableBinaryWriter);
+            this.LightmapShadows.Write(queueableBinaryWriter);
         }
         [System.FlagsAttribute()]
         public enum ObjectAffected : int

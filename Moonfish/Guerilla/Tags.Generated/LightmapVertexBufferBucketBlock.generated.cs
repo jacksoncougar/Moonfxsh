@@ -70,7 +70,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(((short)(this.LightmapVertexBufferBucketFlags)));
             queueableBinaryWriter.Write(this.fieldpad);
             queueableBinaryWriter.WritePointer(this.RawVertices);
-            this.GeometryBlockInfo.Write_(queueableBinaryWriter);
+            this.GeometryBlockInfo.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.CacheData);
         }
         [System.FlagsAttribute()]

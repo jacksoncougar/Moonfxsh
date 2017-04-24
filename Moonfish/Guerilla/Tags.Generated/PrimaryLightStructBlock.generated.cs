@@ -67,7 +67,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.MinLightmapColor);
             queueableBinaryWriter.Write(this.MaxLightmapColor);
             queueableBinaryWriter.Write(this.ExclusionAngleFromUp);
-            this.Function.Write_(queueableBinaryWriter);
+            this.Function.Write(queueableBinaryWriter);
         }
     }
 }

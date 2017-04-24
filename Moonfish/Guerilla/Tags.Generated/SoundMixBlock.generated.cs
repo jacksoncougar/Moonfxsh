@@ -95,7 +95,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.RearSpeakerGain);
             queueableBinaryWriter.Write(this.FrontSpeakerGain0);
             queueableBinaryWriter.Write(this.RearSpeakerGain0);
-            this.GlobalMix.Write_(queueableBinaryWriter);
+            this.GlobalMix.Write(queueableBinaryWriter);
         }
     }
 }

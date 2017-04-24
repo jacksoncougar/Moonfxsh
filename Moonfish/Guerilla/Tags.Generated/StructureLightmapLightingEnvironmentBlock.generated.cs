@@ -126,15 +126,15 @@ namespace Moonfish.Guerilla.Tags
             int i;
             for (i = 0; (i < 9); i = (i + 1))
             {
-                this.RedCoefficients00[i].Write_(queueableBinaryWriter);
+                this.RedCoefficients00[i].Write(queueableBinaryWriter);
             }
             for (i = 0; (i < 9); i = (i + 1))
             {
-                this.GreenCoefficients00[i].Write_(queueableBinaryWriter);
+                this.GreenCoefficients00[i].Write(queueableBinaryWriter);
             }
             for (i = 0; (i < 9); i = (i + 1))
             {
-                this.BlueCoefficients00[i].Write_(queueableBinaryWriter);
+                this.BlueCoefficients00[i].Write(queueableBinaryWriter);
             }
             queueableBinaryWriter.Write(this.MeanIncomingLightDirection);
             queueableBinaryWriter.Write(this.IncomingLightIntensity);

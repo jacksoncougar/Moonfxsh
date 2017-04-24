@@ -147,10 +147,10 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.MaterialEffects);
             queueableBinaryWriter.Write(this.Bitmap);
             queueableBinaryWriter.Write(this.fieldpad1);
-            this.HorizontalRange.Write_(queueableBinaryWriter);
-            this.VerticalRange.Write_(queueableBinaryWriter);
+            this.HorizontalRange.Write(queueableBinaryWriter);
+            this.VerticalRange.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.VerticalNegativeScale);
-            this.Roughness.Write_(queueableBinaryWriter);
+            this.Roughness.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.fieldpad2);
             queueableBinaryWriter.Write(this.Octave1Frequency);
             queueableBinaryWriter.Write(this.Octave2Frequency);
@@ -165,8 +165,8 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(((short)(this.LiquidArcOctaveFlags)));
             queueableBinaryWriter.Write(this.fieldpad4);
             queueableBinaryWriter.WritePointer(this.Cores);
-            this.Rangescale.Write_(queueableBinaryWriter);
-            this.Brightnessscale.Write_(queueableBinaryWriter);
+            this.Rangescale.Write(queueableBinaryWriter);
+            this.Brightnessscale.Write(queueableBinaryWriter);
         }
         /// <summary>
         /// Note that if the type is not STANDARD, then the 'collide_with_stuff' and material effects will not have any effect. In addition, the 'natural_length' will not have an effect except as a means to compute the collision fraction.

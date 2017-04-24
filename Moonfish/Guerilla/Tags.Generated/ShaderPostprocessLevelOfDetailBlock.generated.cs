@@ -116,7 +116,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.WritePointer(this.ValueOverlays);
             queueableBinaryWriter.WritePointer(this.ColorOverlays);
             queueableBinaryWriter.WritePointer(this.VertexShaderConstants);
-            this.GPUState.Write_(queueableBinaryWriter);
+            this.GPUState.Write(queueableBinaryWriter);
         }
     }
 }

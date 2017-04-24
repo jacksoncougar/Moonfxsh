@@ -64,7 +64,7 @@ namespace Moonfish.Guerilla.Tags
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.MinLightmapSample);
             queueableBinaryWriter.Write(this.MaxLightmapSample);
-            this.Function.Write_(queueableBinaryWriter);
+            this.Function.Write(queueableBinaryWriter);
         }
     }
 }

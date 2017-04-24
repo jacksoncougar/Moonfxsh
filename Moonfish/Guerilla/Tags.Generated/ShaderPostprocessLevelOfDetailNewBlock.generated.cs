@@ -58,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.AvailableLayerFlags);
-            this.Layers.Write_(queueableBinaryWriter);
+            this.Layers.Write(queueableBinaryWriter);
         }
     }
 }

@@ -91,16 +91,16 @@ namespace Moonfish.Guerilla.Tags
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
-            this.GPUConstantState.Write_(queueableBinaryWriter);
-            this.GPUVolatileState.Write_(queueableBinaryWriter);
-            this.BitmapParameters.Write_(queueableBinaryWriter);
-            this.BitmapTransforms.Write_(queueableBinaryWriter);
-            this.ValueParameters.Write_(queueableBinaryWriter);
-            this.ColorParameters.Write_(queueableBinaryWriter);
-            this.BitmapTransformOverlays.Write_(queueableBinaryWriter);
-            this.ValueOverlays.Write_(queueableBinaryWriter);
-            this.ColorOverlays.Write_(queueableBinaryWriter);
-            this.VertexShaderConstants.Write_(queueableBinaryWriter);
+            this.GPUConstantState.Write(queueableBinaryWriter);
+            this.GPUVolatileState.Write(queueableBinaryWriter);
+            this.BitmapParameters.Write(queueableBinaryWriter);
+            this.BitmapTransforms.Write(queueableBinaryWriter);
+            this.ValueParameters.Write(queueableBinaryWriter);
+            this.ColorParameters.Write(queueableBinaryWriter);
+            this.BitmapTransformOverlays.Write(queueableBinaryWriter);
+            this.ValueOverlays.Write(queueableBinaryWriter);
+            this.ColorOverlays.Write(queueableBinaryWriter);
+            this.VertexShaderConstants.Write(queueableBinaryWriter);
         }
     }
 }

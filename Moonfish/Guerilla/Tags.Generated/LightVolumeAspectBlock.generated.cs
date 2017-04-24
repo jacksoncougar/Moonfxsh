@@ -68,8 +68,8 @@ namespace Moonfish.Guerilla.Tags
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
-            this.AlongAxis.Write_(queueableBinaryWriter);
-            this.AwayFromAxis.Write_(queueableBinaryWriter);
+            this.AlongAxis.Write(queueableBinaryWriter);
+            this.AwayFromAxis.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.ParallelScale);
             queueableBinaryWriter.Write(this.ParallelThresholdAngle);
             queueableBinaryWriter.Write(this.ParallelExponent);

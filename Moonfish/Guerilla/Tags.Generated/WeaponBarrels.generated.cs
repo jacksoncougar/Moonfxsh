@@ -186,7 +186,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(((byte)(this.DamageEffectReportingType)));
             queueableBinaryWriter.Write(this.fieldpad0);
             queueableBinaryWriter.Write(this.Projectile);
-            this.Eh.Write_(queueableBinaryWriter);
+            this.Eh.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.EjectionPortRecoveryTime);
             queueableBinaryWriter.Write(this.IlluminationRecoveryTime);
             queueableBinaryWriter.Write(this.HeatGeneratedPerRound);

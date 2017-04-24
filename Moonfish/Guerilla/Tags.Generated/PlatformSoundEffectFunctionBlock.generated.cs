@@ -63,7 +63,7 @@ namespace Moonfish.Guerilla.Tags
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.Input)));
             queueableBinaryWriter.Write(((short)(this.Range)));
-            this.Function.Write_(queueableBinaryWriter);
+            this.Function.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.TimePeriod);
         }
         public enum InputEnum : short

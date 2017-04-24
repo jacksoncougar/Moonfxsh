@@ -80,11 +80,11 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.fieldpad);
             queueableBinaryWriter.Write(this.BitmapIndex);
             queueableBinaryWriter.Write(this.fieldpad0);
-            this.Thickness.Write_(queueableBinaryWriter);
-            this.Color.Write_(queueableBinaryWriter);
-            this.Brightnesstime.Write_(queueableBinaryWriter);
-            this.Brightnessfacing.Write_(queueableBinaryWriter);
-            this.AlongaxisScale.Write_(queueableBinaryWriter);
+            this.Thickness.Write(queueableBinaryWriter);
+            this.Color.Write(queueableBinaryWriter);
+            this.Brightnesstime.Write(queueableBinaryWriter);
+            this.Brightnessfacing.Write(queueableBinaryWriter);
+            this.AlongaxisScale.Write(queueableBinaryWriter);
         }
     }
 }

@@ -80,8 +80,8 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.SecondaryBarrel);
             queueableBinaryWriter.Write(((short)(this.Prediction)));
             queueableBinaryWriter.Write(this.fieldpad);
-            this.Autofire.Write_(queueableBinaryWriter);
-            this.Charging.Write_(queueableBinaryWriter);
+            this.Autofire.Write(queueableBinaryWriter);
+            this.Charging.Write(queueableBinaryWriter);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

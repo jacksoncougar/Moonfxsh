@@ -128,28 +128,28 @@ namespace Moonfish.Guerilla.Tags
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
-            this.Textures.Write_(queueableBinaryWriter);
-            this.RenderStates.Write_(queueableBinaryWriter);
-            this.TextureStates.Write_(queueableBinaryWriter);
+            this.Textures.Write(queueableBinaryWriter);
+            this.RenderStates.Write(queueableBinaryWriter);
+            this.TextureStates.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.fieldskip);
-            this.PsFragments.Write_(queueableBinaryWriter);
-            this.PsPermutations.Write_(queueableBinaryWriter);
-            this.PsCombiners.Write_(queueableBinaryWriter);
+            this.PsFragments.Write(queueableBinaryWriter);
+            this.PsPermutations.Write(queueableBinaryWriter);
+            this.PsCombiners.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.VertexShader);
             queueableBinaryWriter.Write(this.fieldskip0);
             queueableBinaryWriter.Write(this.fieldskip1);
             queueableBinaryWriter.Write(this.fieldskip2);
             queueableBinaryWriter.Write(this.fieldskip3);
-            this.DefaultRenderStates.Write_(queueableBinaryWriter);
-            this.RenderStateExterns.Write_(queueableBinaryWriter);
-            this.TextureStateExterns.Write_(queueableBinaryWriter);
-            this.PixelConstantExterns.Write_(queueableBinaryWriter);
-            this.VertexConstantExterns.Write_(queueableBinaryWriter);
-            this.PsConstants.Write_(queueableBinaryWriter);
-            this.VsConstants.Write_(queueableBinaryWriter);
-            this.PixelConstantInfo.Write_(queueableBinaryWriter);
-            this.VertexConstantInfo.Write_(queueableBinaryWriter);
-            this.RenderStateInfo.Write_(queueableBinaryWriter);
+            this.DefaultRenderStates.Write(queueableBinaryWriter);
+            this.RenderStateExterns.Write(queueableBinaryWriter);
+            this.TextureStateExterns.Write(queueableBinaryWriter);
+            this.PixelConstantExterns.Write(queueableBinaryWriter);
+            this.VertexConstantExterns.Write(queueableBinaryWriter);
+            this.PsConstants.Write(queueableBinaryWriter);
+            this.VsConstants.Write(queueableBinaryWriter);
+            this.PixelConstantInfo.Write(queueableBinaryWriter);
+            this.VertexConstantInfo.Write(queueableBinaryWriter);
+            this.RenderStateInfo.Write(queueableBinaryWriter);
         }
     }
 }

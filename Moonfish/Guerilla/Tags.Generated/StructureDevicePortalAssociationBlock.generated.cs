@@ -59,7 +59,7 @@ namespace Moonfish.Guerilla.Tags
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
-            this.DeviceId.Write_(queueableBinaryWriter);
+            this.DeviceId.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.FirstGamePortalIndex);
             queueableBinaryWriter.Write(this.GamePortalCount);
         }

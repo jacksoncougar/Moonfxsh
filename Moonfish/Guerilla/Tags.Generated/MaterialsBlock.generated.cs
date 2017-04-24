@@ -92,10 +92,10 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.fieldpad0);
             queueableBinaryWriter.Write(this.GeneralArmor);
             queueableBinaryWriter.Write(this.SpecificArmor);
-            this.PhysicsProperties.Write_(queueableBinaryWriter);
+            this.PhysicsProperties.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.OldMaterialPhysics);
             queueableBinaryWriter.Write(this.BreakableSurface);
-            this.Sweeteners.Write_(queueableBinaryWriter);
+            this.Sweeteners.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.MaterialEffects);
         }
         [System.FlagsAttribute()]

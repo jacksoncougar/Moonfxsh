@@ -241,13 +241,13 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.DetonationDamageEffect0);
             queueableBinaryWriter.Write(this.PlayerMeleeDamage);
             queueableBinaryWriter.Write(this.PlayerMeleeResponse);
-            this.MeleeAimAssist.Write_(queueableBinaryWriter);
-            this.MeleeDamageParameters.Write_(queueableBinaryWriter);
+            this.MeleeAimAssist.Write(queueableBinaryWriter);
+            this.MeleeDamageParameters.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((byte)(this.MeleeDamageReportingType)));
             queueableBinaryWriter.Write(this.fieldpad3);
             queueableBinaryWriter.Write(this.MagnificationLevels);
             queueableBinaryWriter.Write(this.MagnificationRange);
-            this.WeaponAimAssist.Write_(queueableBinaryWriter);
+            this.WeaponAimAssist.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.MovementPenalized)));
             queueableBinaryWriter.Write(this.fieldpad4);
             queueableBinaryWriter.Write(this.ForwardMovementPenalty);
@@ -271,8 +271,8 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.WeaponName);
             queueableBinaryWriter.Write(((short)(this.MultiplayerWeaponType)));
             queueableBinaryWriter.Write(((short)(this.WeaponType)));
-            this.Tracking.Write_(queueableBinaryWriter);
-            this.PlayerInterface.Write_(queueableBinaryWriter);
+            this.Tracking.Write(queueableBinaryWriter);
+            this.PlayerInterface.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.PredictedResources0);
             queueableBinaryWriter.WritePointer(this.Magazines);
             queueableBinaryWriter.WritePointer(this.NewTriggers);

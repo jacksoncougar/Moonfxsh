@@ -123,11 +123,11 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.SequenceCount);
             queueableBinaryWriter.Write(this.ShaderTemplate);
             queueableBinaryWriter.WritePointer(this.ShaderParameters);
-            this.Color.Write_(queueableBinaryWriter);
-            this.Alpha.Write_(queueableBinaryWriter);
-            this.Scale.Write_(queueableBinaryWriter);
-            this.Rotation.Write_(queueableBinaryWriter);
-            this.FrameIndex.Write_(queueableBinaryWriter);
+            this.Color.Write(queueableBinaryWriter);
+            this.Alpha.Write(queueableBinaryWriter);
+            this.Scale.Write(queueableBinaryWriter);
+            this.Rotation.Write(queueableBinaryWriter);
+            this.FrameIndex.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.CollisionEffect);
             queueableBinaryWriter.Write(this.DeathEffect);
             queueableBinaryWriter.WritePointer(this.Locations);

@@ -64,7 +64,7 @@ namespace Moonfish.Guerilla.Tags
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.EffectName);
             queueableBinaryWriter.Write(this.Duration);
-            this.EffectScaleFunction.Write_(queueableBinaryWriter);
+            this.EffectScaleFunction.Write(queueableBinaryWriter);
         }
     }
 }

@@ -67,7 +67,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(((short)(this.LightType)));
             queueableBinaryWriter.Write(this.AttachmentIndex);
             queueableBinaryWriter.Write(this.ObjectType);
-            this.Visibility.Write_(queueableBinaryWriter);
+            this.Visibility.Write(queueableBinaryWriter);
         }
         public enum LightTypeEnum : short
         {

@@ -42,8 +42,8 @@ namespace Moonfish.Guerilla
 
         public virtual void Write(VertexBuffer value)
         {
-            Write((int) value.Type);
-            Write(new byte[28]);
+            base.Write((int) value.Type);
+            base.Write(new byte[28]);
         }
 
         public virtual void Write(String32 value)
@@ -60,56 +60,56 @@ namespace Moonfish.Guerilla
 
         public virtual void Write(StringIdent value)
         {
-            Write((int) value);
+            base.Write((int) value);
         }
 
         public virtual void Write(ColourR1G1B1 value)
         {
-            Write(value.R);
-            Write(value.G);
-            Write(value.B);
+            base.Write(value.R);
+            base.Write(value.G);
+            base.Write(value.B);
         }
 
         public virtual void Write(TagIdent value)
         {
-            Write((int) value);
+            base.Write((int) value);
         }
 
         public virtual void Write(TagReference value)
         {
-            Write((int) value.Class);
-            Write((int) value.Ident);
+            base.Write((int) value.Class);
+            base.Write((int) value.Ident);
         }
 
         public virtual void Write(BlockFlags8 value)
         {
-            Write(value.flags);
+            base.Write(value.flags);
         }
 
         public virtual void Write(BlockFlags16 value)
         {
-            Write((byte) value.Type);
-            Write((byte) value.Source);
+            base.Write((byte) value.Type);
+            base.Write((byte) value.Source);
         }
 
         public virtual void Write(BlockFlags32 value)
         {
-            Write(value.flags);
+            base.Write(value.flags);
         }
 
         public virtual void Write(ByteBlockIndex1 value)
         {
-            Write((byte) value);
+            base.Write((byte) value);
         }
 
         public virtual void Write(ShortBlockIndex1 value)
         {
-            Write(value);
+            base.Write(value);
         }
 
         public virtual void Write(LongBlockIndex1 value)
         {
-            Write((int) value);
+            base.Write((int) value);
         }
 
         public virtual void Write(ByteBlockIndex2 value)
@@ -129,52 +129,52 @@ namespace Moonfish.Guerilla
 
         public virtual void Write(Quaternion value)
         {
-            Write(value.W);
-            Write(value.Z);
-            Write(value.Y);
-            Write(value.X);
+            base.Write(value.W);
+            base.Write(value.Z);
+            base.Write(value.Y);
+            base.Write(value.X);
         }
 
         public virtual void Write(Vector4 value)
         {
-            Write(value.X);
-            Write(value.Y);
-            Write(value.Z);
-            Write(value.W);
+            base.Write(value.X);
+            base.Write(value.Y);
+            base.Write(value.Z);
+            base.Write(value.W);
         }
 
         public virtual void Write(Vector3 value)
         {
-            Write(value.X);
-            Write(value.Y);
-            Write(value.Z);
+            base.Write(value.X);
+            base.Write(value.Y);
+            base.Write(value.Z);
         }
 
         public virtual void Write(Vector2 value)
         {
-            Write(value.X);
-            Write(value.Y);
+            base.Write(value.X);
+            base.Write(value.Y);
         }
 
         public virtual void Write(ColourA1R1G1B1 value)
         {
-            Write(value.A);
-            Write(value.R);
-            Write(value.G);
-            Write(value.B);
+            base.Write(value.A);
+            base.Write(value.R);
+            base.Write(value.G);
+            base.Write(value.B);
         }
 
         public virtual void Write(ColourR8G8B8 value)
         {
-            Write(value.R);
-            Write(value.G);
-            Write(value.B);
+            base.Write(value.R);
+            base.Write(value.G);
+            base.Write(value.B);
         }
 
         public virtual void Write(Point value)
         {
-            Write(value.X);
-            Write(value.Y);
+            base.Write(value.X);
+            base.Write(value.Y);
         }
 
         public virtual void WriteFourCC(string code)
@@ -183,20 +183,20 @@ namespace Moonfish.Guerilla
             byte[] charbytes = Encoding.UTF8.GetBytes(code);
             Array.Copy(charbytes, buffer, charbytes.Length%5);
             Array.Reverse(buffer);
-            Write(buffer);
+            base.Write(buffer);
         }
 
         public virtual void WritePadding(int alignment)
         {
-            Write(new byte[Padding.GetCount(BaseStream.Position, alignment)]);
+            base.Write(new byte[Padding.GetCount(BaseStream.Position, alignment)]);
         }
 
         private void WriteFixedArray(byte[] bytes, int fixedArraySize)
         {
             var padding = bytes.Length >= fixedArraySize ? 0 : fixedArraySize - bytes.Length;
             var length = fixedArraySize - padding;
-            Write(bytes, 0, length);
-            Write(new byte[padding]);
+            base.Write(bytes, 0, length);
+            base.Write(new byte[padding]);
         }
     }
 

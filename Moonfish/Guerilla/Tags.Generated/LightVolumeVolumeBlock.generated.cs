@@ -110,11 +110,11 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(((int)(this.LightVolumeVolumeFlags)));
             queueableBinaryWriter.Write(this.Bitmap);
             queueableBinaryWriter.Write(this.SpriteCount);
-            this.OffsetFunction.Write_(queueableBinaryWriter);
-            this.RadiusFunction.Write_(queueableBinaryWriter);
-            this.BrightnessFunction.Write_(queueableBinaryWriter);
-            this.ColorFunction.Write_(queueableBinaryWriter);
-            this.FacingFunction.Write_(queueableBinaryWriter);
+            this.OffsetFunction.Write(queueableBinaryWriter);
+            this.RadiusFunction.Write(queueableBinaryWriter);
+            this.BrightnessFunction.Write(queueableBinaryWriter);
+            this.ColorFunction.Write(queueableBinaryWriter);
+            this.FacingFunction.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.Aspect);
             queueableBinaryWriter.Write(this.RadiusFracMin);
             queueableBinaryWriter.Write(this.DEPRECATEDXstepExponent);

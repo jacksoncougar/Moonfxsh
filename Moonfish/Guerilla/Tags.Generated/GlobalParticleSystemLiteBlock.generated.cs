@@ -117,7 +117,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.MaximumNumberOfParticles);
             queueableBinaryWriter.Write(this.InitialVelocity);
             queueableBinaryWriter.Write(this.BitmapAnimationSpeed);
-            this.GeometryBlockInfo.Write_(queueableBinaryWriter);
+            this.GeometryBlockInfo.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.ParticleSystemData);
             queueableBinaryWriter.Write(((short)(this.Type)));
             queueableBinaryWriter.Write(this.fieldpad);

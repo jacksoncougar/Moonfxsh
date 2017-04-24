@@ -142,7 +142,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.ParentAnimation);
             queueableBinaryWriter.Write(this.NextAnimation);
             queueableBinaryWriter.WritePointer(this.AnimationData);
-            this.DataSizes.Write_(queueableBinaryWriter);
+            this.DataSizes.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.FrameEventsABCDCC);
             queueableBinaryWriter.WritePointer(this.SoundEventsABCDCC);
             queueableBinaryWriter.WritePointer(this.EffectEventsABCDCC);

@@ -84,7 +84,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.WritePointer(this.Waypoints);
             queueableBinaryWriter.WritePointer(this.HudSounds);
             queueableBinaryWriter.WritePointer(this.PlayerTrainingData);
-            this.Constants.Write_(queueableBinaryWriter);
+            this.Constants.Write(queueableBinaryWriter);
         }
     }
 }

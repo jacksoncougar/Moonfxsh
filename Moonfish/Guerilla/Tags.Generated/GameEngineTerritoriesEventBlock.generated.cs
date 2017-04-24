@@ -115,7 +115,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(((short)(this.GameEngineTerritoriesEventSoundFlags)));
             queueableBinaryWriter.Write(this.fieldpad3);
             queueableBinaryWriter.Write(this.Sound);
-            this.ExtraSounds.Write_(queueableBinaryWriter);
+            this.ExtraSounds.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.fieldpad4);
             queueableBinaryWriter.Write(this.fieldpad5);
             queueableBinaryWriter.WritePointer(this.SoundPermutations);

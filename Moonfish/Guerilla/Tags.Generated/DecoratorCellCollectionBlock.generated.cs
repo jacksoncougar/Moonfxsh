@@ -77,7 +77,7 @@ namespace Moonfish.Guerilla.Tags
             int i;
             for (i = 0; (i < 8); i = (i + 1))
             {
-                this.ChildIndices00[i].Write_(queueableBinaryWriter);
+                this.ChildIndices00[i].Write(queueableBinaryWriter);
             }
             queueableBinaryWriter.Write(this.CacheBlockIndex);
             queueableBinaryWriter.Write(this.GroupCount);

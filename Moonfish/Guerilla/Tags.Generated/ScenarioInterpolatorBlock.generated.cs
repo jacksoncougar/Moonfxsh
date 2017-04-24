@@ -68,7 +68,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.Name);
             queueableBinaryWriter.Write(this.AcceleratorName);
             queueableBinaryWriter.Write(this.MultiplierName);
-            this.Function.Write_(queueableBinaryWriter);
+            this.Function.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.fieldskip);
             queueableBinaryWriter.Write(this.fieldskip0);
         }

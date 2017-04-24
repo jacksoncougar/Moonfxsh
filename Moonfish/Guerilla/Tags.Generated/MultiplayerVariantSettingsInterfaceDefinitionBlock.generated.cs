@@ -131,19 +131,19 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.WritePointer(this.GameEngineSettings);
             queueableBinaryWriter.Write(this.DefaultVariantStrings);
             queueableBinaryWriter.WritePointer(this.DefaultVariants);
-            this.CreateNewVariantStruct.Write_(queueableBinaryWriter);
-            this.CreateNewVariantStruct0.Write_(queueableBinaryWriter);
-            this.CreateNewVariantStruct1.Write_(queueableBinaryWriter);
-            this.CreateNewVariantStruct2.Write_(queueableBinaryWriter);
-            this.CreateNewVariantStruct3.Write_(queueableBinaryWriter);
-            this.CreateNewVariantStruct4.Write_(queueableBinaryWriter);
-            this.CreateNewVariantStruct5.Write_(queueableBinaryWriter);
-            this.CreateNewVariantStruct6.Write_(queueableBinaryWriter);
-            this.CreateNewVariantStruct7.Write_(queueableBinaryWriter);
+            this.CreateNewVariantStruct.Write(queueableBinaryWriter);
+            this.CreateNewVariantStruct0.Write(queueableBinaryWriter);
+            this.CreateNewVariantStruct1.Write(queueableBinaryWriter);
+            this.CreateNewVariantStruct2.Write(queueableBinaryWriter);
+            this.CreateNewVariantStruct3.Write(queueableBinaryWriter);
+            this.CreateNewVariantStruct4.Write(queueableBinaryWriter);
+            this.CreateNewVariantStruct5.Write(queueableBinaryWriter);
+            this.CreateNewVariantStruct6.Write(queueableBinaryWriter);
+            this.CreateNewVariantStruct7.Write(queueableBinaryWriter);
             int i;
             for (i = 0; (i < 7); i = (i + 1))
             {
-                this.UnusedCreateNewVariants00[i].Write_(queueableBinaryWriter);
+                this.UnusedCreateNewVariants00[i].Write(queueableBinaryWriter);
             }
         }
         [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
@@ -183,7 +183,7 @@ namespace Moonfish.Guerilla.Tags
             public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
             {
                 base.Write(queueableBinaryWriter);
-                this.CreateNewVariantStruct.Write_(queueableBinaryWriter);
+                this.CreateNewVariantStruct.Write(queueableBinaryWriter);
             }
         }
     }

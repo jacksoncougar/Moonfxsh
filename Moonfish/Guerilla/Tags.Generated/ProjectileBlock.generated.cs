@@ -173,7 +173,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.DetonationDamage);
             queueableBinaryWriter.Write(this.AttachedDetonationDamage);
             queueableBinaryWriter.Write(this.SuperDetonation);
-            this.YourMomma.Write_(queueableBinaryWriter);
+            this.YourMomma.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.DetonationSound);
             queueableBinaryWriter.Write(((byte)(this.DamageReportingType)));
             queueableBinaryWriter.Write(this.fieldpad3);
@@ -191,7 +191,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.WaterDamageRange);
             queueableBinaryWriter.Write(this.InitialVelocity);
             queueableBinaryWriter.Write(this.FinalVelocity);
-            this.Blah.Write_(queueableBinaryWriter);
+            this.Blah.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.GuidedAngularVelocity);
             queueableBinaryWriter.Write(this.AccelerationRange);
             queueableBinaryWriter.Write(this.fieldpad4);

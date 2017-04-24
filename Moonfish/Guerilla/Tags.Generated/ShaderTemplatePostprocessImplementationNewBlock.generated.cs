@@ -63,9 +63,9 @@ namespace Moonfish.Guerilla.Tags
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
-            this.Bitmaps.Write_(queueableBinaryWriter);
-            this.PixelConstants.Write_(queueableBinaryWriter);
-            this.VertexConstants.Write_(queueableBinaryWriter);
+            this.Bitmaps.Write(queueableBinaryWriter);
+            this.PixelConstants.Write(queueableBinaryWriter);
+            this.VertexConstants.Write(queueableBinaryWriter);
         }
     }
 }

@@ -69,8 +69,8 @@ namespace Moonfish.Guerilla.Tags
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
-            this.LoadedTorqueCurve.Write_(queueableBinaryWriter);
-            this.CruisingTorqueCurve.Write_(queueableBinaryWriter);
+            this.LoadedTorqueCurve.Write(queueableBinaryWriter);
+            this.CruisingTorqueCurve.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.MinTimeToUpshift);
             queueableBinaryWriter.Write(this.EngineUpshiftScale);
             queueableBinaryWriter.Write(this.GearRatio);

@@ -73,10 +73,10 @@ namespace Moonfish.Guerilla.Tags
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.FilterType)));
             queueableBinaryWriter.Write(this.FilterWidth);
-            this.LeftFilterFrequency.Write_(queueableBinaryWriter);
-            this.LeftFilterGain.Write_(queueableBinaryWriter);
-            this.RightFilterFrequency.Write_(queueableBinaryWriter);
-            this.RightFilterGain.Write_(queueableBinaryWriter);
+            this.LeftFilterFrequency.Write(queueableBinaryWriter);
+            this.LeftFilterGain.Write(queueableBinaryWriter);
+            this.RightFilterFrequency.Write(queueableBinaryWriter);
+            this.RightFilterGain.Write(queueableBinaryWriter);
         }
         /// <summary>
         /// DLS2 filtering:

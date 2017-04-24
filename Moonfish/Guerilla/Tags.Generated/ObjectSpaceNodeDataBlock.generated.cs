@@ -61,7 +61,7 @@ namespace Moonfish.Guerilla.Tags
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.NodeIndex);
             queueableBinaryWriter.Write(((short)(this.ObjectSpaceNodeDataComponentFlags)));
-            this.Orientation.Write_(queueableBinaryWriter);
+            this.Orientation.Write(queueableBinaryWriter);
         }
         [System.FlagsAttribute()]
         public enum ComponentFlags : short

@@ -99,7 +99,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.fieldpad0);
             queueableBinaryWriter.Write(this.fieldpad1);
             queueableBinaryWriter.Write(this.Position);
-            this.Orientation.Write_(queueableBinaryWriter);
+            this.Orientation.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.ItemVehicleCollection);
             queueableBinaryWriter.Write(this.fieldpad2);
         }

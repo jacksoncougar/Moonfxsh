@@ -104,7 +104,7 @@ namespace Moonfish.Guerilla.Tags
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Shader);
             queueableBinaryWriter.WritePointer(this.Section);
-            this.GeometryBlockInfo.Write_(queueableBinaryWriter);
+            this.GeometryBlockInfo.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.SunSpotColor);
             queueableBinaryWriter.Write(this.ReflectionTint);
             queueableBinaryWriter.Write(this.RefractionTint);

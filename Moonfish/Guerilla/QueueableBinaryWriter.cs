@@ -64,7 +64,7 @@ namespace Moonfish.Guerilla
             return value.Pointer;
         }
 
-        public virtual void WritePointer( object instanceFIeld )
+        public virtual void WritePointer<T>( T instanceFIeld )
         {
             QueueItem queueItem;
             this.Write( lookupDictionary.TryGetValue( instanceFIeld, out queueItem )
@@ -154,7 +154,7 @@ namespace Moonfish.Guerilla
                 get { return Data; }
             }
 
-			public override void Write(BlamBinaryWriter writer)
+			public override void Write(QueueableBlamBinaryWriter writer)
 			{
 				writer.Write(Data);
 			}
@@ -175,7 +175,7 @@ namespace Moonfish.Guerilla
                 get { return Data; }
             }
 
-			public override void Write(BlamBinaryWriter writer)
+			public override void Write(QueueableBlamBinaryWriter writer)
 			{
 			    short[] buffer = Data;
 			    foreach (var item in buffer)
@@ -200,11 +200,11 @@ namespace Moonfish.Guerilla
                 get { return DataBlocks; }
             }
 
-			public override void Write(BlamBinaryWriter writer)
+			public override void Write(QueueableBlamBinaryWriter writer)
 			{
 				foreach (var block in DataBlocks)
 				{
-					writer.Write(block);
+                    block.Write(writer);
 				}
 			}
 		};
@@ -228,6 +228,6 @@ namespace Moonfish.Guerilla
         /// </remarks>
         /// <value>The reference field.</value>
         public abstract object ReferenceField { get; }
-        public abstract void Write(BlamBinaryWriter writer); 
+        public abstract void Write(QueueableBlamBinaryWriter writer); 
     };
 }

@@ -68,7 +68,7 @@ namespace Moonfish.Guerilla.Tags
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.ParticleSystem);
             queueableBinaryWriter.WritePointer(this.BackgroundPlates);
-            this.WindModel.Write_(queueableBinaryWriter);
+            this.WindModel.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.FadeRadius);
         }
     }

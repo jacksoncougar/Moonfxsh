@@ -171,7 +171,24 @@ namespace Moonfish.Guerilla
                 {
                     Type = GlobalGeometryBlockResourceBlock.TypeEnum.TagBlock,
                     PrimaryLocator = position,
-                    SecondaryLocator = (short) pointerToResource.ElementSize,
+                    SecondaryLocator = (short)pointerToResource.ElementSize,
+                    ResourceDataOffset = pointerToResource.StartAddress,
+                    ResourceDataSize = pointerToResource.PointedSize
+                };
+
+                ResourceDescriptors.Add(descriptor);
+            }
+
+            private void AddDescriptor([NotNull] byte[] resource, BlamPointer pointerToResource, short position)
+            {
+                if (resource == null)
+                    throw new ArgumentNullException(nameof(resource));
+
+                var descriptor = new GlobalGeometryBlockResourceBlock()
+                {
+                    Type = GlobalGeometryBlockResourceBlock.TypeEnum.TagData,
+                    PrimaryLocator = position,
+                    SecondaryLocator = (short)pointerToResource.ElementSize,
                     ResourceDataOffset = pointerToResource.StartAddress,
                     ResourceDataSize = pointerToResource.PointedSize
                 };
@@ -197,11 +214,24 @@ namespace Moonfish.Guerilla
 
                 ResourceDescriptors.Add(descriptor);
             }
-
-            public override void WritePointer(object instanceFIeld)
+            
+            public override void WritePointer<T>(T instanceFIeld)
             {
-                AddDescriptor(instanceFIeld, GetItemPointer(instanceFIeld), (short)BaseStream.Position);
-                OnWritePointer(BaseStream.Position, GetItemPointer(instanceFIeld));
+                var pointer = GetItemPointer(instanceFIeld);
+                var bytes = instanceFIeld as byte[];
+
+                if (!BlamPointer.IsNull(pointer))
+                {
+                    if (bytes != null)
+                    {
+                        AddDescriptor(bytes, GetItemPointer(bytes), (short) BaseStream.Position);
+                    }
+                    else
+                    {
+                        AddDescriptor(instanceFIeld, GetItemPointer(instanceFIeld), (short) BaseStream.Position);
+                    }
+                    OnWritePointer(BaseStream.Position, GetItemPointer(instanceFIeld));
+                }
 
                 base.WritePointer(instanceFIeld);
             }

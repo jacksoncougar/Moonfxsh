@@ -69,9 +69,9 @@ namespace Moonfish.Guerilla.Tags
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.ResponseType)));
             queueableBinaryWriter.Write(this.fieldpad);
-            this.ScreenFlash.Write_(queueableBinaryWriter);
-            this.Vibration.Write_(queueableBinaryWriter);
-            this.SoundEffect.Write_(queueableBinaryWriter);
+            this.ScreenFlash.Write(queueableBinaryWriter);
+            this.Vibration.Write(queueableBinaryWriter);
+            this.SoundEffect.Write(queueableBinaryWriter);
         }
         public enum ResponseTypeEnum : short
         {

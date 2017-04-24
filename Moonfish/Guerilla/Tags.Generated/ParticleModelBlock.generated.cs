@@ -122,10 +122,10 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(((int)(this.Orientation)));
             queueableBinaryWriter.Write(this.fieldpad);
             queueableBinaryWriter.Write(this.Shader);
-            this.ScaleX.Write_(queueableBinaryWriter);
-            this.ScaleY.Write_(queueableBinaryWriter);
-            this.ScaleZ.Write_(queueableBinaryWriter);
-            this.Rotation.Write_(queueableBinaryWriter);
+            this.ScaleX.Write(queueableBinaryWriter);
+            this.ScaleY.Write(queueableBinaryWriter);
+            this.ScaleZ.Write(queueableBinaryWriter);
+            this.Rotation.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.CollisionEffect);
             queueableBinaryWriter.Write(this.DeathEffect);
             queueableBinaryWriter.WritePointer(this.Locations);
@@ -134,7 +134,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.WritePointer(this.RawVertices);
             queueableBinaryWriter.WritePointer(this.Indices);
             queueableBinaryWriter.WritePointer(this.CachedData);
-            this.GeometrySectionInfo.Write_(queueableBinaryWriter);
+            this.GeometrySectionInfo.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.fieldpad0);
             queueableBinaryWriter.Write(this.fieldpad1);
         }

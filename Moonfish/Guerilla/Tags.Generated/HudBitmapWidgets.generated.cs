@@ -100,8 +100,8 @@ namespace Moonfish.Guerilla.Tags
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Name);
-            this.HudWidgetInputsStruct.Write_(queueableBinaryWriter);
-            this.HudWidgetStateDefinitionStruct.Write_(queueableBinaryWriter);
+            this.HudWidgetInputsStruct.Write(queueableBinaryWriter);
+            this.HudWidgetStateDefinitionStruct.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.Anchor)));
             queueableBinaryWriter.Write(((short)(this.HudBitmapWidgetsFlags)));
             queueableBinaryWriter.Write(this.Bitmap);

@@ -77,7 +77,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.HardwareOffset);
             queueableBinaryWriter.Write(this.DefaultEnumIntegerValue);
             queueableBinaryWriter.Write(this.DefaultScalarValue);
-            this.DefaultFunction.Write_(queueableBinaryWriter);
+            this.DefaultFunction.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.MinimumScalarValue);
             queueableBinaryWriter.Write(this.MaximumScalarValue);
         }

@@ -217,11 +217,11 @@ namespace Moonfish.Guerilla.Tags
             int i;
             for (i = 0; (i < 32); i = (i + 1))
             {
-                this.RenderonlyNodeFlags00[i].Write_(queueableBinaryWriter);
+                this.RenderonlyNodeFlags00[i].Write(queueableBinaryWriter);
             }
             for (i = 0; (i < 32); i = (i + 1))
             {
-                this.RenderonlySectionFlags00[i].Write_(queueableBinaryWriter);
+                this.RenderonlySectionFlags00[i].Write(queueableBinaryWriter);
             }
             queueableBinaryWriter.Write(((int)(this.ModelRuntimeFlags)));
             queueableBinaryWriter.WritePointer(this.ScenarioLoadParameters);

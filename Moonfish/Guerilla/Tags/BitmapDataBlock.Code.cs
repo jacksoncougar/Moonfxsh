@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using JetBrains.Annotations;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -10,6 +9,14 @@ namespace Moonfish.Guerilla.Tags
         private byte[] data1;
         private byte[] data2;
 
+        /// <summary>
+        /// Gets the resource pointer for the resource at the given index.
+        /// </summary>
+        /// <param name="index">The index of the resource.</param>
+        /// <returns>
+        /// The resource pointer.
+        /// </returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">index</exception>
         public ResourcePointer GetResourcePointer(int index = 0)
         {
             switch (index)
@@ -25,6 +32,14 @@ namespace Moonfish.Guerilla.Tags
             }
         }
 
+        /// <summary>
+        /// Gets the length of the resource stream at the given index.
+        /// </summary>
+        /// <param name="index">The index of the resource.</param>
+        /// <returns>
+        /// The length of the resource stream.
+        /// </returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">index</exception>
         public int GetResourceLength(int index = 0)
         {
             switch (index)
@@ -40,6 +55,12 @@ namespace Moonfish.Guerilla.Tags
             }
         }
 
+        /// <summary>
+        /// Sets the resource pointer for the resource at the given index.
+        /// </summary>
+        /// <param name="pointer">The value to set to the internal resource pointer.</param>
+        /// <param name="index">The index of the resource.</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">index</exception>
         public void SetResourcePointer(ResourcePointer pointer, int index = 0)
         {
             switch (index)
@@ -58,6 +79,12 @@ namespace Moonfish.Guerilla.Tags
             }
         }
 
+        /// <summary>
+        /// Sets the length of the resource stream for the resource at the given index.
+        /// </summary>
+        /// <param name="length">The value to set as the length for the resource stream.</param>
+        /// <param name="index">The index of the resource.</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">index</exception>
         public void SetResourceLength(int length, int index = 0)
         {
             switch (index)
@@ -76,6 +103,12 @@ namespace Moonfish.Guerilla.Tags
             }
         }
 
+        /// <summary>
+        /// Returns the resource object contained by this block if it is loaded.
+        /// </summary>
+        /// <param name="index">resource index</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">index</exception>
         public byte[] GetResource(int index = 0)
         {
             switch (index)
@@ -91,9 +124,19 @@ namespace Moonfish.Guerilla.Tags
             }
         }
 
+        /// <summary>
+        /// Loads this resource block from the given delegate return value.
+        /// </summary>
+        /// <param name="delegate"></param>
+        /// <remarks>
+        /// Internally the implementation will call the delegate passing itself and the
+        /// resource index as arguments. When the delegate returns it is expected to
+        /// contain a stream containing the resource data at the given index.
+        /// </remarks>
         public void ReadResource(Func<IResourceBlock, int, Stream> @delegate)
         {
-            data0 = new byte[GetResourceLength()];
+            // ReSharper disable once RedundantArgumentDefaultValue
+            data0 = new byte[GetResourceLength(0)];
             @delegate(this, 0).Read(data0, 0, data0.Length);
             data1 = new byte[GetResourceLength(1)];
             @delegate(this, 1).Read(data1, 0, data1.Length);
@@ -101,6 +144,10 @@ namespace Moonfish.Guerilla.Tags
             @delegate(this, 2).Read(data2, 0, data2.Length);
         }
 
+        /// <summary>
+        /// Writes the resource to the given stream.
+        /// </summary>
+        /// <param name="output">The stream to write the resource to.</param>
         public void WriteResource(Stream output)
         {
             ResourceLinker.WriteResourceBytes(this, output, 0);

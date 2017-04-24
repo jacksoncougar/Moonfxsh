@@ -40,7 +40,7 @@ namespace Moonfish
         ///     Gets or sets the position of the stream
         /// </summary>
         /// <value>The position.</value>
-        public override long Position
+        public sealed override long Position
         {
             get
             {
@@ -170,12 +170,12 @@ namespace Moonfish
         ///     A value of type <see cref="SeekOrigin" /> indicating the reference point used to obtain the new
         ///     position.
         /// </param>
-        public override long Seek(long offset, SeekOrigin origin)
+        public sealed override long Seek(long offset, SeekOrigin origin)
         {
             long position;
 
             // if this is an absolute position and not contained in the stream it could be an address.
-            if (origin == SeekOrigin.Begin && !(0 <= offset && offset < Length))
+            if (origin == SeekOrigin.Begin)
             {
                 foreach (var sub in ActiveSections)
                 {

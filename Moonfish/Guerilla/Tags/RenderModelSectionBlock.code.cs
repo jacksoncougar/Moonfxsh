@@ -49,6 +49,7 @@ namespace Moonfish.Guerilla.Tags
 
             using (var binaryReader = new BlamBinaryReader(stream))
             {
+                
                 sectionBlock.Read(binaryReader);
 
                 GlobalGeometryBlockResourceBlock[] vertexBufferResources =
@@ -63,6 +64,7 @@ namespace Moonfish.Guerilla.Tags
             }
             SectionData = new[] {sectionBlock};
         }
+
 
         void IResourceBlock<RenderModelSectionDataBlock>.WriteResource(Stream output)
         {

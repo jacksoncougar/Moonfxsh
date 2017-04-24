@@ -8,6 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System;
+
 namespace Moonfish.Guerilla.Tags
 {
     using Moonfish.Tags;
@@ -44,8 +46,9 @@ namespace Moonfish.Guerilla.Tags
         }
         public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
         {
+            throw new NotImplementedException();
             base.ReadInstances(binaryReader, pointerQueue);
-            this.MouseCursorBitmaps = base.ReadBlockArrayData<MouseCursorBitmapReferenceBlock>(binaryReader, pointerQueue.Dequeue());
+            //this.MouseCursorBitmaps = base.ReadBlockArrayData<MouseCursorBitmapReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
         public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
         {

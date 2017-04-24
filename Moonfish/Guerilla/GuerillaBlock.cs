@@ -67,7 +67,7 @@ namespace Moonfish.Guerilla
 			return ctor();
 		}
 
-        public T[] ReadBlockArrayData<T>(BinaryReader binaryReader, BlamPointer blamPointer)
+        public T[] ReadBlockArrayData<T>(BlamBinaryReader binaryReader, BlamPointer blamPointer)
             where T : GuerillaBlock
         {
 			var blocks = new T[blamPointer.ElementCount];
@@ -105,7 +105,7 @@ namespace Moonfish.Guerilla
             return ctor;
         }
 
-        public byte[] ReadDataByteArray(BinaryReader binaryReader, BlamPointer blamPointer)
+        public byte[] ReadDataByteArray(BlamBinaryReader binaryReader, BlamPointer blamPointer)
         {
 			byte[] data;
 
@@ -123,7 +123,7 @@ namespace Moonfish.Guerilla
 			return data;
         }
 
-        public short[] ReadDataShortArray(BinaryReader binaryReader, BlamPointer blamPointer)
+        public short[] ReadDataShortArray(BlamBinaryReader binaryReader, BlamPointer blamPointer)
         {
 			short[] data;
 
@@ -163,7 +163,7 @@ namespace Moonfish.Guerilla
             return;
         }
 
-        public void Read(BinaryReader binaryReader)
+        public void Read(BlamBinaryReader binaryReader)
         {
             Queue<BlamPointer> pointers = ReadFields(binaryReader);
             ReadInstances(binaryReader, pointers);

@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using Moonfish.Guerilla.CodeDom;
 using Moonfish.Tags;
 using NDesk.Options;
+using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish
 {
@@ -22,21 +23,14 @@ namespace Moonfish
             var rebuild = true;
             var sign = false;
             var validate = false;
+            var generate = false;
 
             var p = new OptionSet
             {
-                {
-                    "r|rebuild=", "rebuilds the given map.",
-                    v => rebuild = v != null
-                },
-                {
-                    "s|sign=", "signs the given map",
-                    v => sign = v != null
-                },
-                {
-                    "v|validate=", "validates the given map",
-                    v => { validate = v != null; }
-                }
+                {"r|rebuild=", "rebuilds the given map.", v => rebuild = v != null},
+                {"s|sign=", "signs the given map", v => sign = v != null},
+                {"v|validate=", "validates the given map", v => { validate = v != null; }},
+                {"g|generate=", "generates C# classes from guerilla", v => { generate = v != null; }}
             };
 
             p.WriteOptionDescriptions(Console.Out);
@@ -68,16 +62,19 @@ namespace Moonfish
                 }
             }
 
-            //if (rebuild)
+            if (rebuild)
+            {
+                Package package = new Package(stream);
+            }
             //{
             //	Console.WriteLine("Rebuilding...");
             //	CacheStream.Save(stream);
             //	Console.WriteLine("Finished...");
             //}
 
-            if (rebuild)
+            if (generate)
             {
-                Console.WriteLine("Rebuilding...");
+                Console.WriteLine("Generating C# classes...");
 
                 GuerillaCodeDom.GenerateGuerillaCode(
                     GuerillaCodeDom.TagClasses.Select(x => (TagClass) x).ToArray());

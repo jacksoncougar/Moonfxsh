@@ -593,7 +593,7 @@ namespace Moonfish.Guerilla.CodeDom
 					else if (field.UserData.Contains("GuerillaBlock") && arraySize > 0)
 					{
 						var methodName =
-							StaticReflection.GetMemberName((GuerillaBlock item) => item.Write_(null));
+							StaticReflection.GetMemberName((GuerillaBlock item) => item.Write(null));
 
 						//  add loop iterator variable if needed
 						if (!method.Statements.Contains(loopVariableDeclaration))
@@ -650,7 +650,7 @@ namespace Moonfish.Guerilla.CodeDom
 				{
 					var methodName =
 						StaticReflection.GetMemberName(
-							(GuerillaBlock item) => item.Write_(null));
+							(GuerillaBlock item) => item.Write(null));
 
 					method.Statements.Add(new CodeMethodInvokeExpression(fieldReference, methodName,
 						queueableBinaryWriterArgument));

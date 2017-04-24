@@ -29,105 +29,105 @@ namespace Moonfish.Guerilla
             return new double[] {vector3.X, vector3.Y, vector3.Z};
         }
 
-        public void Write(TagClass tclass)
+        public virtual void Write(TagClass tclass)
         {
             Write((int) tclass);
         }
 
-        public void Write(Range range)
+        public virtual void Write(Range range)
         {
             Write(range.Min);
             Write(range.Max);
         }
 
-        public void Write(VertexBuffer value)
+        public virtual void Write(VertexBuffer value)
         {
             Write((int) value.Type);
             Write(new byte[28]);
         }
 
-        public void Write(String32 value)
+        public virtual void Write(String32 value)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(value.value);
             WriteFixedArray(bytes, 32);
         }
 
-        public void Write(String256 value)
+        public virtual void Write(String256 value)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(value.value);
             WriteFixedArray(bytes, 256);
         }
 
-        public void Write(StringIdent value)
+        public virtual void Write(StringIdent value)
         {
             Write((int) value);
         }
 
-        public void Write(ColourR1G1B1 value)
+        public virtual void Write(ColourR1G1B1 value)
         {
             Write(value.R);
             Write(value.G);
             Write(value.B);
         }
 
-        public void Write(TagIdent value)
+        public virtual void Write(TagIdent value)
         {
             Write((int) value);
         }
 
-        public void Write(TagReference value)
+        public virtual void Write(TagReference value)
         {
             Write((int) value.Class);
             Write((int) value.Ident);
         }
 
-        public void Write(BlockFlags8 value)
+        public virtual void Write(BlockFlags8 value)
         {
             Write(value.flags);
         }
 
-        public void Write(BlockFlags16 value)
+        public virtual void Write(BlockFlags16 value)
         {
             Write((byte) value.Type);
             Write((byte) value.Source);
         }
 
-        public void Write(BlockFlags32 value)
+        public virtual void Write(BlockFlags32 value)
         {
             Write(value.flags);
         }
 
-        public void Write(ByteBlockIndex1 value)
+        public virtual void Write(ByteBlockIndex1 value)
         {
             Write((byte) value);
         }
 
-        public void Write(ShortBlockIndex1 value)
+        public virtual void Write(ShortBlockIndex1 value)
         {
             Write(value);
         }
 
-        public void Write(LongBlockIndex1 value)
+        public virtual void Write(LongBlockIndex1 value)
         {
             Write((int) value);
         }
 
-        public void Write(ByteBlockIndex2 value)
+        public virtual void Write(ByteBlockIndex2 value)
         {
             Write((byte) value);
         }
 
-        public void Write(ShortBlockIndex2 value)
+        public virtual void Write(ShortBlockIndex2 value)
         {
             Write((short) value);
         }
 
-        public void Write(LongBlockIndex2 value)
+        public virtual void Write(LongBlockIndex2 value)
         {
             Write((int) value);
         }
 
-        public void Write(Quaternion value)
+        public virtual void Write(Quaternion value)
         {
             Write(value.W);
             Write(value.Z);
@@ -135,7 +135,7 @@ namespace Moonfish.Guerilla
             Write(value.X);
         }
 
-        public void Write(Vector4 value)
+        public virtual void Write(Vector4 value)
         {
             Write(value.X);
             Write(value.Y);
@@ -143,20 +143,20 @@ namespace Moonfish.Guerilla
             Write(value.W);
         }
 
-        public void Write(Vector3 value)
+        public virtual void Write(Vector3 value)
         {
             Write(value.X);
             Write(value.Y);
             Write(value.Z);
         }
 
-        public void Write(Vector2 value)
+        public virtual void Write(Vector2 value)
         {
             Write(value.X);
             Write(value.Y);
         }
 
-        public void Write(ColourA1R1G1B1 value)
+        public virtual void Write(ColourA1R1G1B1 value)
         {
             Write(value.A);
             Write(value.R);
@@ -164,20 +164,20 @@ namespace Moonfish.Guerilla
             Write(value.B);
         }
 
-        public void Write(ColourR8G8B8 value)
+        public virtual void Write(ColourR8G8B8 value)
         {
             Write(value.R);
             Write(value.G);
             Write(value.B);
         }
 
-        public void Write(Point value)
+        public virtual void Write(Point value)
         {
             Write(value.X);
             Write(value.Y);
         }
 
-        public void WriteFourCC(string code)
+        public virtual void WriteFourCC(string code)
         {
             var buffer = new byte[4];
             byte[] charbytes = Encoding.UTF8.GetBytes(code);
@@ -186,7 +186,7 @@ namespace Moonfish.Guerilla
             Write(buffer);
         }
 
-        public void WritePadding(int alignment)
+        public virtual void WritePadding(int alignment)
         {
             Write(new byte[Padding.GetCount(BaseStream.Position, alignment)]);
         }
@@ -215,121 +215,121 @@ namespace Moonfish.Guerilla
         {
         }
 
-        public BlockFlags16 ReadBlockFlags16()
+        public virtual BlockFlags16 ReadBlockFlags16()
         {
             return new BlockFlags16(ReadInt16());
         }
 
-        public BlockFlags8 ReadBlockFlags8()
+        public virtual BlockFlags8 ReadBlockFlags8()
         {
             return new BlockFlags8(ReadByte());
         }
 
-        public ByteBlockIndex1 ReadByteBlockIndex1()
+        public virtual ByteBlockIndex1 ReadByteBlockIndex1()
         {
             return (ByteBlockIndex1) ReadByte();
         }
 
-        public ColourR8G8B8 ReadColourR8G8B8()
+        public virtual ColourR8G8B8 ReadColourR8G8B8()
         {
             return new ColourR8G8B8(ReadSingle(), ReadSingle(), ReadSingle());
         }
 
-        public ColourA1R1G1B1 ReadColourA1R1G1B1()
+        public virtual ColourA1R1G1B1 ReadColourA1R1G1B1()
         {
             return new ColourA1R1G1B1(ReadByte(), ReadByte(), ReadByte(), ReadByte());
         }
 
-        public ColourR1G1B1 ReadColourR1G1B1()
+        public virtual ColourR1G1B1 ReadColourR1G1B1()
         {
             var color = new ColourR1G1B1 {R = ReadByte(), G = ReadByte(), B = ReadByte()};
             return color;
         }
 
-        public string ReadFixedString(int length, bool trimNullCharacters = true)
+        public virtual string ReadFixedString(int length, bool trimNullCharacters = true)
         {
             return trimNullCharacters
                 ? Encoding.UTF8.GetString(ReadBytes(length)).Trim(char.MinValue)
                 : Encoding.UTF8.GetString(ReadBytes(length));
         }
 
-        public LongBlockIndex1 ReadLongBlockIndex1()
+        public virtual LongBlockIndex1 ReadLongBlockIndex1()
         {
             return (LongBlockIndex1) ReadInt32();
         }
 
-        public Point ReadPoint()
+        public virtual Point ReadPoint()
         {
             return new Point(ReadInt16(), ReadInt16());
         }
 
-        public Quaternion ReadQuaternion()
+        public virtual Quaternion ReadQuaternion()
         {
             float i = ReadSingle(), j = ReadSingle(), k = ReadSingle(), l = ReadSingle();
             return new Quaternion(l, k, j, i);
         }
 
-        public Range ReadRange()
+        public virtual Range ReadRange()
         {
             return new Range(ReadSingle(), ReadSingle());
         }
 
-        public ShortBlockIndex1 ReadShortBlockIndex1()
+        public virtual ShortBlockIndex1 ReadShortBlockIndex1()
         {
             return ReadInt16();
         }
 
-        public ShortBlockIndex2 ReadShortBlockIndex2()
+        public virtual ShortBlockIndex2 ReadShortBlockIndex2()
         {
             return (ShortBlockIndex2) ReadInt16();
         }
 
-        public String256 ReadString256()
+        public virtual String256 ReadString256()
         {
             return new String256(new string(Encoding.UTF8.GetChars(ReadBytes(256))));
         }
 
-        public String32 ReadString32()
+        public virtual String32 ReadString32()
         {
             return new String32(new string(Encoding.UTF8.GetChars(ReadBytes(32))));
         }
 
-        public StringIdent ReadStringIdent()
+        public virtual StringIdent ReadStringIdent()
         {
             return (StringIdent) ReadInt32();
         }
 
-        public TagClass ReadTagClass()
+        public virtual TagClass ReadTagClass()
         {
             return (TagClass) ReadInt32();
         }
 
-        public TagIdent ReadTagIdent()
+        public virtual TagIdent ReadTagIdent()
         {
             return new TagIdent(ReadInt16(), ReadInt16());
         }
 
-        public TagReference ReadTagReference()
+        public virtual TagReference ReadTagReference()
         {
             return new TagReference(ReadTagClass(), ReadTagIdent());
         }
 
-        public Vector2 ReadVector2()
+        public virtual Vector2 ReadVector2()
         {
             return new Vector2(ReadSingle(), ReadSingle());
         }
 
-        public Vector3 ReadVector3()
+        public virtual Vector3 ReadVector3()
         {
             return new Vector3(ReadSingle(), ReadSingle(), ReadSingle());
         }
 
-        public Vector4 ReadVector4()
+        public virtual Vector4 ReadVector4()
         {
             return new Vector4(ReadSingle(), ReadSingle(), ReadSingle(), ReadSingle());
         }
 
-        public VertexAttributeType ReadVertexAttributeType()
+        public virtual VertexAttributeType ReadVertexAttributeType()
         {
             var msb = ReadByte();
             var lsb = ReadByte();
@@ -337,7 +337,7 @@ namespace Moonfish.Guerilla
             return type;
         }
 
-        public VertexBuffer ReadVertexBuffer()
+        public virtual VertexBuffer ReadVertexBuffer()
         {
             var buffer = new VertexBuffer {Type = ReadVertexAttributeType()};
             ReadBytes(30);

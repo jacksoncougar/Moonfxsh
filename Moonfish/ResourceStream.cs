@@ -1,29 +1,39 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Moonfish.Guerilla.Tags;
 
 namespace Moonfish.ResourceManagement
 {
     using Guerilla.Tags;
 
-    public class ResourceStreamWrapper : Stream
+    public class ResourceStreamWrapper : VirtualStreamWrapper<Stream>
     {
-        private Stream BaseStream { get; }
-
         public IList<GlobalGeometryBlockResourceBlock> Resources { get; private set; }
 
         public int HeaderSize { get; }
 
-        public ResourceStreamWrapper(Stream stream, GlobalGeometryBlockInfoStructBlock blockInfo)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ResourceStreamWrapper"/> class.
+        /// </summary>
+        /// <param name="stream">The stream containing the resource data.</param>
+        /// <param name="blockInfo">The information about the resource data layout.</param>
+        /// <remarks>Creates two virtual maps within the stream: (1) to remap address 0 to address 8.
+        /// (2) to remap address 116 to 124.
+        /// This is needed because the resource stream has some extra data inserted into it.</remarks>
+        public ResourceStreamWrapper(Stream stream, GlobalGeometryBlockInfoStructBlock blockInfo) : base(stream)
         {
-            BaseStream = stream;
             HeaderSize = blockInfo.SectionDataSize;
             Resources = blockInfo.Resources;
+
+            CreateVirtualSection(0, blockInfo.SectionDataSize, 8, true);
+            CreateVirtualSection(blockInfo.SectionDataSize + 4, blockInfo.ResourceDataSize,
+                blockInfo.SectionDataSize + 12, true);
+
+            Seek(0, System.IO.SeekOrigin.Begin);
         }
 
         public ResourceStreamWrapper(Stream stream, IEnumerable<GlobalGeometryBlockResourceBlock> resources, int headsize)
+            :base(stream)
         {
-            BaseStream = stream;
             HeaderSize = headsize;
             Resources = resources as IList<GlobalGeometryBlockResourceBlock>;
         }
@@ -50,18 +60,14 @@ namespace Moonfish.ResourceManagement
                     return Seek(offset, System.IO.SeekOrigin.Begin);
                 case SeekOrigin.Data:
                     return Seek(HeaderSize + offset, System.IO.SeekOrigin.Begin);
+                default:
+                    return Seek(offset, System.IO.SeekOrigin.Begin);
             }
-            return Seek(offset, System.IO.SeekOrigin.Begin);
         }
 
         public override void Flush()
         {
             BaseStream.Flush();
-        }
-
-        public override long Seek(long offset, System.IO.SeekOrigin origin)
-        {
-            return BaseStream.Seek(offset, origin);
         }
 
         public override void SetLength(long value)
@@ -97,12 +103,6 @@ namespace Moonfish.ResourceManagement
         public override long Length
         {
             get { return BaseStream.Length; }
-        }
-
-        public override long Position
-        {
-            get { return BaseStream.Position; }
-            set { BaseStream.Position = value; }
         }
     }
 }

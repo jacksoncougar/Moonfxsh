@@ -13,34 +13,50 @@ namespace Moonfish.Tags
     {
         public static BlamPointer ReadBlamPointer(this BinaryReader binaryReader, int elementSize)
         {
+            BlamPointer pointer;
             var resourceStream = binaryReader.BaseStream as ResourceStreamWrapper;
-            if (resourceStream == null)
-            {
-                return new BlamPointer(binaryReader.ReadInt32(), binaryReader.ReadInt32(), elementSize);
-            }
 
-            var offset = resourceStream.Position;
-            binaryReader.BaseStream.Seek(8, SeekOrigin.Current);
-            var resource =
+            pointer = resourceStream == null
+                ? new BlamPointer(binaryReader.ReadInt32(), binaryReader.ReadInt32(), elementSize)
+                : ReadResourceBlamPointer(binaryReader, elementSize, resourceStream);
+
+            return pointer;
+        }
+
+        private static BlamPointer ReadResourceBlamPointer(BinaryReader binaryReader, int elementSize,
+            ResourceStreamWrapper resourceStream)
+        {
+            BlamPointer pointer;                            // pointer value to initialize and return.
+            var offset = resourceStream.Position;           // location of pointer in the Stream.
+            var expectedCount = binaryReader.ReadInt32();   // the value for the resource count in the stream.
+            int count = 0;                                  // the calculate resource count.
+            // ReSharper disable once RedundantAssignment
+            var address = binaryReader.ReadInt32();         // the address of the resource in the Stream.
+            var resource =                                  // the resource descriptors.
                 resourceStream.Resources.SingleOrDefault(
-                    x => x.PrimaryLocator == offset && x.Type != GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer);
+                    x => x.PrimaryLocator == offset 
+                    && x.Type != GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer);
 
             if (resource == null)
             {
-                return new BlamPointer(0, 0, elementSize);
+                pointer = new BlamPointer(0, 0, elementSize);
             }
-            if (resource.Type == GlobalGeometryBlockResourceBlock.TypeEnum.TagData)
+            else if (resource.Type == GlobalGeometryBlockResourceBlock.TypeEnum.TagData)
             {
-                var count = resource.ResourceDataSize;
-                var address = resource.ResourceDataOffset + resourceStream.HeaderSize;
-                return new BlamPointer(count, address, elementSize);
+                count = resource.ResourceDataSize;
+                address = resource.ResourceDataOffset + resourceStream.HeaderSize;
+                pointer = new BlamPointer(count, address, elementSize);
             }
             else
             {
-                var count = resource.ResourceDataSize/resource.SecondaryLocator;
-                var address = resource.ResourceDataOffset + resourceStream.HeaderSize;
-                return new BlamPointer(count, address, elementSize);
+                count = resource.ResourceDataSize/resource.SecondaryLocator;
+                address = resource.ResourceDataOffset + resourceStream.HeaderSize;
+                pointer = new BlamPointer(count, address, elementSize);
             }
+
+            if(expectedCount != pointer.ElementCount) throw new InvalidDataException();
+            
+            return pointer;
         }
 
         public static BlockFlags16 ReadBlockFlags16(this BinaryReader binaryReader)

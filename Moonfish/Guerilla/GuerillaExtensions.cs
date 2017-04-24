@@ -52,7 +52,7 @@ namespace Moonfish.Guerilla
             where T : IReadDefinition, new()
         {
             // Seek to the tag_block_definition address.
-            reader.BaseStream.Position = field.definition - Guerilla.BaseAddress;
+            reader.BaseStream.Position = field.definition;
 
             return ReadFieldDefinition<T>(reader);
         }

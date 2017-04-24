@@ -191,7 +191,6 @@ namespace Moonfish
 
             position = BaseStream.Seek(offset, origin);
 
-
             return position;
         }
 

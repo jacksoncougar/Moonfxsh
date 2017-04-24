@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla
         ///     The image load address used for translating virtual addresses to
         ///     physical addresses.
         /// </summary>
-        public const int BaseAddress = 0x400000;
+        private const int BaseAddress = 0x400000;
 
         /// <summary>Virtual address of the tag layout table.</summary>
         private const int TagLayoutTableAddress = 0x00901B90;
@@ -273,7 +273,7 @@ namespace Moonfish.Guerilla
             else if (address > BaseAddress && address - BaseAddress < (int) reader.BaseStream.Length)
             {
                 // Seek to the string address.
-                reader.BaseStream.Position = address - BaseAddress;
+                reader.BaseStream.Position = address;
 
                 // Read the string from the executable.
                 char b;

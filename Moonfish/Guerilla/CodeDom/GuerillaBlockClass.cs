@@ -499,7 +499,7 @@ namespace Moonfish.Guerilla.CodeDom
 					{
 					    var codeMemberField = codeObject as CodeMemberField;
 
-					    int alignment = (int) (codeObject.UserData.Contains("alignment") ? codeObject.UserData["alignment"] : 4);
+					    var alignment = (int) (codeObject.UserData.Contains("alignment") ? codeObject.UserData["alignment"] : 4);
 					    var methodName = StaticReflection.GetMemberName((QueueableBlamBinaryWriter item) => item.Defer(new byte[0], 4));
 
                         if (alignment == 4)
@@ -511,11 +511,17 @@ namespace Moonfish.Guerilla.CodeDom
 					}
 					//  instanced Int16 array like data
 					else if (systemType == typeof (short))
-					{
-					    var methodName = StaticReflection.GetMemberName((QueueableBlamBinaryWriter item) => item.Defer(new short[0], 4));
-
-					    method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName, fieldReference));
-					}
+                    {
+                        var alignment = (int)(codeObject.UserData.Contains("alignment") ? codeObject.UserData["alignment"] : 4);
+                        var methodName = StaticReflection.GetMemberName((QueueableBlamBinaryWriter item) => item.Defer(new short[0], 4));
+                        
+                        if (alignment == 4)
+                            method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
+                                fieldReference));
+                        else
+                            method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
+                                fieldReference, new CodePrimitiveExpression(alignment)));
+                    }
 					//  tagBlock array
 					else
 					{
@@ -528,13 +534,22 @@ namespace Moonfish.Guerilla.CodeDom
 				//  like an inline struct where T : GuerillaBlock
 				else if (field.UserData.Contains("GuerillaBlock"))
 				{
-					var methodName =
+                    var alignment = (int)(codeObject.UserData.Contains("alignment") ? codeObject.UserData["alignment"] : 4);
+
+                    var methodName =
 						StaticReflection.GetMemberName(
 							(IWriteQueueable item) => item.Defer(null));
 
 					method.Statements.Add(new CodeMethodInvokeExpression(fieldReference, methodName,
 						queueableBinaryWriterArgument));
-				}
+
+                    if (alignment == 4)
+                        method.Statements.Add(new CodeMethodInvokeExpression(fieldReference, methodName,
+                            queueableBinaryWriterArgument));
+                    else
+                        method.Statements.Add(new CodeMethodInvokeExpression(fieldReference, methodName,
+                            queueableBinaryWriterArgument, new CodePrimitiveExpression(alignment)));
+                }
 			}
 			TargetClass.Members.Add(method);
 		}
@@ -711,7 +726,19 @@ namespace Moonfish.Guerilla.CodeDom
 							member.InitExpression =
 								new CodeArrayCreateExpression(
 									new CodeTypeReference(fieldBlockClass.TargetClass.Name, 1), 0);
-							TargetClass.Members.Add(member);
+
+
+                            if ((field.Definition?.Alignment ?? 4) != 4)
+                            {
+                                member.CustomAttributes.Add(
+                                    new CodeAttributeDeclaration(new CodeTypeReference(typeof(LayoutAttribute)),
+                                       new CodeAttributeArgument(
+                                            StaticReflection.GetMemberName((LayoutAttribute option) => option.Pack),
+                                            new CodePrimitiveExpression(field.Definition?.Alignment ?? 4))));
+                                member.UserData["alignment"] = field.Definition?.Alignment;
+                            }
+
+                            TargetClass.Members.Add(member);
 							break;
 						}
 					case MoonfishFieldType.FieldStruct:
@@ -738,12 +765,9 @@ namespace Moonfish.Guerilla.CodeDom
 				        if ((field.Definition?.Alignment ?? 4) != 4)
 				        {
 				            member.CustomAttributes.Add(
-				                new CodeAttributeDeclaration(new CodeTypeReference(typeof (StructLayoutAttribute)),
-				                    new CodeAttributeArgument(
-				                        new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(typeof (LayoutKind).Name),
-				                            StaticReflection.GetMemberName((LayoutKind option) => LayoutKind.Sequential))),
-				                    new CodeAttributeArgument(
-				                        StaticReflection.GetMemberName((StructLayoutAttribute option) => option.Pack),
+				                new CodeAttributeDeclaration(new CodeTypeReference(typeof (LayoutAttribute)),
+				                   new CodeAttributeArgument(
+				                        StaticReflection.GetMemberName((LayoutAttribute option) => option.Pack),
 				                        new CodePrimitiveExpression(field.Definition?.Alignment ?? 4))));
 				            member.UserData["alignment"] = field.Definition?.Alignment;
 				        }

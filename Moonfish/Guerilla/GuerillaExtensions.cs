@@ -8,8 +8,7 @@ namespace Moonfish.Guerilla
     {
         public static void Write(this Stream output, GuerillaBlock block)
         {
-            var queueableBinaryWriter = new QueueableBlamBinaryWriter(output,
-                (int)output.Position + block.SerializedSize);
+            var queueableBinaryWriter = new QueueableBlamBinaryWriter(output);
 
             block.Defer(queueableBinaryWriter);
             block.Write_(queueableBinaryWriter);

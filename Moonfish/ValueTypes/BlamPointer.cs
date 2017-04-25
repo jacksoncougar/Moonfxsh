@@ -5,11 +5,12 @@ namespace Moonfish.Tags
 {
     public struct BlamPointer : IEnumerable<int>, IEquatable<BlamPointer>
     {
+        public int Alignment { get; set; }
         public readonly int ElementCount;
         public readonly int StartAddress;
         public readonly int ElementSize;
 
-        private readonly int _endAddress;
+        private readonly int endAddress;
 
         public int this[int index]
         {
@@ -18,10 +19,25 @@ namespace Moonfish.Tags
 
         public BlamPointer(int count, int address, int elementsize, int alignment = 4)
         {
+            Alignment = alignment;
             ElementCount = count;
             StartAddress = Padding.Align(address, alignment);
             ElementSize = elementsize;
-            _endAddress = StartAddress + ElementSize * ElementCount;
+            endAddress = StartAddress + ElementSize*ElementCount;
+        }
+
+        private BlamPointer(int count, int elementsize, int startAddress, int endAddress, int alignment)
+        {
+            Alignment = alignment;
+            ElementCount = count;
+            ElementSize = elementsize;
+            StartAddress = startAddress;
+            this.endAddress = endAddress;
+        }
+
+        public BlamPointer Shift(int offset)
+        {
+            return new BlamPointer(ElementCount, ElementSize, StartAddress + offset, endAddress + offset, Alignment);
         }
 
         public int PointedSize
@@ -31,10 +47,10 @@ namespace Moonfish.Tags
 
         public int EndAddress
         {
-            get { return _endAddress; }
+            get { return endAddress; }
         }
 
-        public static BlamPointer Null { get { return new BlamPointer(0, 0, 0, 0); } }
+        public static BlamPointer Null { get { return new BlamPointer(0, 0, 0, 0, 4); } }
 
         public IEnumerator<int> GetEnumerator()
         {

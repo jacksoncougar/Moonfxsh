@@ -186,7 +186,7 @@ namespace Moonfish.Guerilla
             base.Write(buffer);
         }
 
-        public virtual void WritePadding(int alignment)
+        public virtual void WritePadding(long alignment)
         {
             base.Write(new byte[Padding.GetCount(BaseStream.Position, alignment)]);
         }

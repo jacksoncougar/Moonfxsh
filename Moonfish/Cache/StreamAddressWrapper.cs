@@ -20,6 +20,8 @@ namespace Moonfish
         /// <param name="destAddress">The destination address to alias the source address as.</param>
         /// <param name="length">The length in bytes from <param name="srcAddress"> to alias.</param></param>
         void AliasAddressess(int srcAddress, int destAddress, int length);
+
+        void AddAddresses(int address, int length);
     }
 
     /// <summary>
@@ -59,6 +61,11 @@ namespace Moonfish
         public void RemoveAddresses(int address, int length)
         {
             maps.Add(new AddressMapDescription(address, -length, (long value) => value >= address));
+        }
+
+        public void AddAddresses(int address, int length)
+        {
+            maps.Add(new AddressMapDescription(address, length, (long value) => value >= address));
         }
 
         /// <summary>

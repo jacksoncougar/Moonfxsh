@@ -21,7 +21,7 @@ namespace MoonfishUnitTests
             foreach (var datum in map)
             {
                 var block = map.Deserialize(datum.Identifier);
-                var writer = new QueueableBlamBinaryWriter(new TestingStream(), block.SerializedSize);
+                var writer = new QueueableBlamBinaryWriter(new TestingStream());
                 writer.Write(block);
             }
         }

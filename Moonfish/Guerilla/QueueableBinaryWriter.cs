@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Moonfish.Tags;
-using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Guerilla
 {
@@ -11,7 +10,7 @@ namespace Moonfish.Guerilla
         private readonly Dictionary<object, QueueItem> lookupDictionary;
         protected readonly Queue<QueueItem> Queue;
 
-        public QueueableBlamBinaryWriter(Stream output, int serializedSize) : base(output, Encoding.Default, true)
+        public QueueableBlamBinaryWriter(Stream output) : base(output, Encoding.Default, true)
         {
             QueueAddress = 0;
             Queue = new Queue<QueueItem>(100);
@@ -20,7 +19,7 @@ namespace Moonfish.Guerilla
 
         protected int QueueAddress { get; set; }
 
-        /// <summary>Commits the deffered writes to the stream.</summary>
+        /// <summary>Commits all deffered writes to the stream.</summary>
         /// <exception cref="IOException">Wrote more/less data than expected.</exception>
         /// <exception cref="System.IO.IOException">Attempted to write over existing data.</exception>
         public virtual void Commit()
@@ -46,18 +45,27 @@ namespace Moonfish.Guerilla
 
                 item.Write(this);
 
+                if (!BlamPointer.IsNull(item.Pointer))
+                {
+                    if (item.Pointer.Alignment == 16)
+                    {
+                    }
+                    if (BaseStream.Position < item.Pointer.EndAddress)
+                        Write(new byte[item.Pointer.EndAddress - BaseStream.Position]);
 #if DEBUG
-                if (BaseStream.Position != item.Pointer.EndAddress)
-                    throw new IOException("Wrote more/less data than expected.");
+                    if (BaseStream.Position != item.Pointer.EndAddress)
+                        throw new IOException("Wrote more/less data than expected.");
 #endif
+                }
             }
         }
 
         /// <summary>
-        ///     Defers writing the specified <see cref="GuerillaBlock" /> array until
-        ///     after the current allocation.
+        ///     Reserves space in the stream and then defers writing the specified
+        ///     <see cref="GuerillaBlock" />
+        ///     array until after <see cref="Commit" /> has been called.
         /// </summary>
-        /// <param name="blocks">The <see cref="GuerillaBlock" /> array.</param>
+        /// <param name="blocks">The <see cref="GuerillaBlock" /> array to defer.</param>
         public virtual void Defer(GuerillaBlock[] blocks)
         {
             //  if the array is empty there's nothing to write, so return
@@ -72,10 +80,15 @@ namespace Moonfish.Guerilla
         }
 
         /// <summary>
-        ///     Defers the specified data to be written after the current write
-        ///     allocation.
+        ///     Reserves space in the stream and then defers writing the specified
+        ///     <see cref="byte" />
+        ///     array until after <see cref="Commit" /> has been called.
         /// </summary>
-        /// <param name="data">The data.</param>
+        /// <param name="data">The data to defer</param>
+        /// <param name="alignment">
+        ///     The alignment in the destination stream the data should
+        ///     begin on.
+        /// </param>
         public virtual void Defer(byte[] data, int alignment = 4)
         {
             //  if the array is empty there's nothing to write, so return
@@ -85,12 +98,17 @@ namespace Moonfish.Guerilla
             Enqueue(data, alignment);
         }
 
+
         /// <summary>
-        ///     Defers the specified data to be written after the current write
-        ///     allocation.
+        ///     Reserves space in the stream and then defers writing the specified
+        ///     <see cref="short" />
+        ///     array until after <see cref="Commit" /> has been called.
         /// </summary>
-        /// <param name="data">The data.</param>
-        /// <param name="alignment"></param>
+        /// <param name="data">The data to defer</param>
+        /// <param name="alignment">
+        ///     The alignment in the destination stream the data should
+        ///     begin on.
+        /// </param>
         public virtual void Defer(short[] data, int alignment = 4)
         {
             //  if the array is empty there's nothing to write, so return
@@ -109,10 +127,17 @@ namespace Moonfish.Guerilla
             Commit();
         }
 
-        public virtual void WritePointer<T>(T instanceFIeld)
+        /// <summary>Writes the pointer for the given object to the stream.</summary>
+        /// <typeparam name="T">The type of the given object</typeparam>
+        /// <param name="@object">The object to write the pointer for.</param>
+        /// <remarks>
+        ///     If the object is not found then writes <see cref="BlamPointer.Null" />
+        ///     to the stream.
+        /// </remarks>
+        public virtual void WritePointer<T>(T @object)
         {
             QueueItem queueItem;
-            Write(lookupDictionary.TryGetValue(instanceFIeld, out queueItem) ? queueItem.Pointer : BlamPointer.Null);
+            Write(lookupDictionary.TryGetValue(@object, out queueItem) ? queueItem.Pointer : BlamPointer.Null);
         }
 
         protected virtual void Defer(GuerillaBlock guerillaBlock)

@@ -114,6 +114,7 @@ namespace Moonfish.Guerilla.CodeDom
             tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("JetBrains.Annotations"));
             tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("Moonfish.Tags"));
             tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("Moonfish.Model"));
+            tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("Moonfish.Guerilla"));
             tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("System.IO"));
             tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("System.Collections.Generic"));
             tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("System.Linq"));

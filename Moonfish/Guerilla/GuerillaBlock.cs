@@ -181,7 +181,6 @@ namespace Moonfish.Guerilla
 
         public virtual void Defer(QueueableBlamBinaryWriter blamBinaryWriter)
         {
-            blamBinaryWriter.Defer(this);
             return;
         }
     }

@@ -128,31 +128,71 @@ namespace Moonfish.Guerilla.Tags
         /// Loads this resource block from the given delegate return value.
         /// </summary>
         /// <param name="delegate"></param>
+        /// <param name="index"></param>
         /// <remarks>
         /// Internally the implementation will call the delegate passing itself and the
         /// resource index as arguments. When the delegate returns it is expected to
         /// contain a stream containing the resource data at the given index.
         /// </remarks>
-        public void ReadResource(Func<IResourceBlock, int, Stream> @delegate)
+        public void ReadResource(Func<IResourceBlock, int, Stream> @delegate, int index = -1)
         {
-            // ReSharper disable once RedundantArgumentDefaultValue
-            data0 = new byte[GetResourceLength(0)];
-            @delegate(this, 0).Read(data0, 0, data0.Length);
-            data1 = new byte[GetResourceLength(1)];
-            @delegate(this, 1).Read(data1, 0, data1.Length);
-            data2 = new byte[GetResourceLength(2)];
-            @delegate(this, 2).Read(data2, 0, data2.Length);
+            switch (index)
+            {
+                case -1:
+                    data0 = new byte[GetResourceLength(0)];
+                    @delegate(this, 0).Read(data0, 0, data0.Length);
+                    data1 = new byte[GetResourceLength(1)];
+                    @delegate(this, 1).Read(data1, 0, data1.Length);
+                    data2 = new byte[GetResourceLength(2)];
+                    @delegate(this, 2).Read(data2, 0, data2.Length);
+                    break;
+                case 0:
+                    data0 = new byte[GetResourceLength(0)];
+                    @delegate(this, 0).Read(data0, 0, data0.Length);
+                    break;
+
+                case 1:
+                    data1 = new byte[GetResourceLength(1)];
+                    @delegate(this, 1).Read(data1, 1, data1.Length);
+                    break;
+
+                case 2:
+                    data2 = new byte[GetResourceLength(2)];
+                    @delegate(this, 2).Read(data2, 2, data2.Length);
+                    break;
+
+                default: throw new ArgumentOutOfRangeException(nameof(index));
+            }
         }
 
         /// <summary>
         /// Writes the resource to the given stream.
         /// </summary>
         /// <param name="output">The stream to write the resource to.</param>
-        public void WriteResource(Stream output)
+        /// <param name="index"></param>
+        public void WriteResource(Stream output, int index = -1)
         {
-            ResourceLinker.WriteResourceBytes(this, output, 0);
-            ResourceLinker.WriteResourceBytes(this, output, 1);
-            ResourceLinker.WriteResourceBytes(this, output, 2);
+            switch (index)
+            {
+                case -1:
+                    ResourceLinker.WriteResourceBytes(this, output, 0);
+                    ResourceLinker.WriteResourceBytes(this, output, 1);
+                    ResourceLinker.WriteResourceBytes(this, output, 2);
+                    break;
+                case 0:
+                    ResourceLinker.WriteResourceBytes(this, output, 0);
+                    break;
+
+                case 1:
+                    ResourceLinker.WriteResourceBytes(this, output, 1);
+                    break;
+
+                case 2:
+                    ResourceLinker.WriteResourceBytes(this, output, 2);
+                    break;
+
+                default: throw new ArgumentOutOfRangeException(nameof(index));
+            }
         }
     }
 }

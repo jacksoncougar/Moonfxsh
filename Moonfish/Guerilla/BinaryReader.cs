@@ -34,18 +34,18 @@ namespace Moonfish.Guerilla
             Write((int) tclass);
         }
 
+        public virtual void Write(BlamPointer blamPointer)
+        {
+            Write(blamPointer.ElementCount);
+            Write(blamPointer.ElementCount > 0 ? blamPointer.StartAddress : 0);
+        }
+
         public virtual void Write(Range range)
         {
             Write(range.Min);
             Write(range.Max);
         }
-
-        public virtual void Write(VertexBuffer value)
-        {
-            base.Write((int) value.Type);
-            base.Write(new byte[28]);
-        }
-
+        
         public virtual void Write(String32 value)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(value.value);
@@ -142,7 +142,7 @@ namespace Moonfish.Guerilla
             base.Write(value.Z);
             base.Write(value.W);
         }
-
+        
         public virtual void Write(Vector3 value)
         {
             base.Write(value.X);
@@ -197,6 +197,13 @@ namespace Moonfish.Guerilla
             var length = fixedArraySize - padding;
             base.Write(bytes, 0, length);
             base.Write(new byte[padding]);
+        }
+
+        public virtual void Write(VertexBuffer buffer)
+        {
+            Write((byte)(((int)buffer.Type >> 8) & 0xFF));
+            Write((byte)((int)buffer.Type & 0xFF));
+            Write(new byte[30]);
         }
     }
 
@@ -329,7 +336,7 @@ namespace Moonfish.Guerilla
             return new Vector4(ReadSingle(), ReadSingle(), ReadSingle(), ReadSingle());
         }
 
-        public virtual VertexAttributeType ReadVertexAttributeType()
+        public VertexAttributeType ReadVertexAttributeType()
         {
             var msb = ReadByte();
             var lsb = ReadByte();

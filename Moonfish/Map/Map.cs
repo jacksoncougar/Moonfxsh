@@ -268,22 +268,22 @@ namespace Moonfish
             instance.Read(sourceReader);
             var container = instance as IResourceContainer<object>;
 
-            try
-            {
-                if (container != null)
-                    foreach (IResourceBlock<object> block in container)
+            if (container != null)
+                foreach (IResourceBlock<object> block in container)
+                {
+                    try
                     {
                         block.ReadResource(GetResourceData);
                     }
-            }
-            catch (NotImplementedException)
-            {
-            }
+                    catch (NotImplementedException)
+                    {
+                    }
+                }
 
             return instance;
         }
 
-        private Stream GetResourceData(IResourceBlock sender, int index)
+        public Stream GetResourceData(IResourceBlock sender, int index)
         {
             var block = sender;
 

@@ -22,7 +22,7 @@ namespace Moonfish.Graphics
             return type;
         }
 
-        static Dictionary<VertexAttributeType, int> idLookup =new Dictionary<VertexAttributeType, int>();
+        private static readonly Dictionary<VertexAttributeType, int> IdLookup =new Dictionary<VertexAttributeType, int>();
 
         static VertexAttributeTypeExtensions( )
         {
@@ -30,9 +30,9 @@ namespace Moonfish.Graphics
             int index = 1;
             foreach ( var value in values )
             {
-                if ( !idLookup.ContainsKey( ( VertexAttributeType ) value ) )
+                if ( !IdLookup.ContainsKey( ( VertexAttributeType ) value ) )
                 {
-                    idLookup.Add( ( VertexAttributeType ) value, index <<= 1 );
+                    IdLookup.Add( ( VertexAttributeType ) value, index <<= 1 );
                 }
             }
         }
@@ -42,7 +42,7 @@ namespace Moonfish.Graphics
             var id = 0;
             foreach ( var vertexAttributeType in attributes )
             {
-                id |= idLookup.ContainsKey( vertexAttributeType ) ? idLookup[ vertexAttributeType ] : 0;
+                id |= IdLookup.ContainsKey( vertexAttributeType ) ? IdLookup[ vertexAttributeType ] : 0;
             }
             return id;
         }

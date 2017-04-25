@@ -38,7 +38,7 @@ namespace Moonfish.Guerilla.Tags
             return SectionData.Length > index ? SectionData[index] : null;
         }
 
-        void IResourceBlock<RenderModelSectionDataBlock>.ReadResource(Func<IResourceBlock, int, Stream> @delegate)
+        void IResourceBlock<RenderModelSectionDataBlock>.ReadResource(Func<IResourceBlock, int, Stream> @delegate, int index = -1)
         {
             var stream = new ResourceStreamWrapper(@delegate(this, 0), GeometryBlockInfo);
 
@@ -66,7 +66,7 @@ namespace Moonfish.Guerilla.Tags
         }
 
 
-        void IResourceBlock<RenderModelSectionDataBlock>.WriteResource(Stream output)
+        void IResourceBlock<RenderModelSectionDataBlock>.WriteResource(Stream output, int index = -1)
         {
             ResourceLinker.WriteResource(this, output);
         }

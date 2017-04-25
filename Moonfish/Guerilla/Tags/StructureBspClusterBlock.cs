@@ -44,7 +44,7 @@ namespace Moonfish.Guerilla.Tags
             return ClusterData[index];
         }
 
-        void IResourceBlock<StructureBspClusterDataBlockNew>.ReadResource(Func<IResourceBlock, int, Stream> @delegate)
+        void IResourceBlock<StructureBspClusterDataBlockNew>.ReadResource(Func<IResourceBlock, int, Stream> @delegate, int index = -1)
         {
             ClusterData = new[]
             {
@@ -53,7 +53,7 @@ namespace Moonfish.Guerilla.Tags
             };
         }
 
-        void IResourceBlock<StructureBspClusterDataBlockNew>.WriteResource(Stream output)
+        void IResourceBlock<StructureBspClusterDataBlockNew>.WriteResource(Stream output, int index = -1)
         {
             ResourceLinker.WriteResource(this, output);
         }

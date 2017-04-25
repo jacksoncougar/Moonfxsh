@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moonfish;
 using Moonfish.Guerilla;
 using Moonfish.Guerilla.CodeDom;
+using Moonfish.Guerilla.Tags;
 
 namespace MoonfishUnitTests
 {
@@ -21,6 +23,51 @@ namespace MoonfishUnitTests
                 var block = map.Deserialize(datum.Identifier);
                 var writer = new QueueableBlamBinaryWriter(new TestingStream(), block.SerializedSize);
                 writer.Write(block);
+            }
+        }
+    }
+
+    [TestClass]
+    public class UnitTestResourceWriterTests
+    {
+        [TestMethod]
+        public void TestWritePreservesData()
+        {
+            var map = GuerillaCodeDom.GetAllMaps().First();
+            Assert.IsNotNull(map);
+            foreach (var datum in map)
+            {
+                var block = map.Deserialize(datum.Identifier) as IResourceContainer<object>;
+                if (block == null)
+                    continue;
+
+                foreach (IResourceBlock<object> resourceBlock in block)
+                {
+                    MemoryStream input;
+                    try
+                    {
+                        input = (MemoryStream) map.GetResourceData(resourceBlock, 0);
+                    }
+                    catch (Exception)
+                    {
+                        continue;
+                    }
+
+                    var output = new VirtualStream(0);
+                    var old = (resourceBlock as IResourceDescriptor<GlobalGeometryBlockResourceBlock>)?.GetDescriptors();
+
+                    resourceBlock.WriteResource(output, 0);
+
+                    byte[] inputBytes = ((MemoryStream)input).ToArray();
+                    byte[] outputBytes = output.ToArray();
+
+                    if (!inputBytes.SequenceEqual(outputBytes))
+                    {
+                        File.WriteAllBytes(Path.Combine(Local.ProjectDirectory, "debug\\input.bin"), inputBytes);
+                        File.WriteAllBytes(Path.Combine(Local.ProjectDirectory, "debug\\output.bin"), outputBytes);
+                        throw new Exception();
+                    }
+                }
             }
         }
     }

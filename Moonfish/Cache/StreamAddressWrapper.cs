@@ -4,13 +4,31 @@ using System.IO;
 
 namespace Moonfish
 {
+    public interface IStreamAddressWrapper
+    {
+        /// <summary>
+        /// Removes the specified address range from the stream addressing.
+        /// </summary>
+        /// <param name="address">The address to start removing from.</param>
+        /// <param name="length">The length in bytes to remove.</param>
+        void RemoveAddresses(int address, int length);
+
+        /// <summary>
+        /// Aliases the specified address range
+        /// </summary>
+        /// <param name="srcAddress">The source address used by the underlying stream.</param>
+        /// <param name="destAddress">The destination address to alias the source address as.</param>
+        /// <param name="length">The length in bytes from <param name="srcAddress"> to alias.</param></param>
+        void AliasAddressess(int srcAddress, int destAddress, int length);
+    }
+
     /// <summary>
     /// Abstract class for manipulating the addresses in a stream. 
     /// Provides methods to remove a range of addresses or alias a range of addresses
     /// </summary>
     /// <typeparam name="T">The the stream object to wrap</typeparam>
     /// <seealso cref="System.IO.Stream" />
-    public class StreamAddressWrapper<T> : Stream where T : Stream
+    public class StreamAddressWrapper<T> : Stream, IStreamAddressWrapper where T : Stream
     {
         /// <summary>
         ///     The virtual addressed sections within the stream.

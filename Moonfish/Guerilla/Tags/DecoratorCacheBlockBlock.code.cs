@@ -41,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             return CacheBlockData[index];
         }
 
-        void IResourceBlock<DecoratorCacheBlockDataBlock>.ReadResource(Func<IResourceBlock, int, Stream> @delegate)
+        void IResourceBlock<DecoratorCacheBlockDataBlock>.ReadResource(Func<IResourceBlock, int, Stream> @delegate, int index = -1)
         {
             CacheBlockData = new[]
             {
@@ -50,7 +50,7 @@ namespace Moonfish.Guerilla.Tags
             };
         }
 
-        void IResourceBlock<DecoratorCacheBlockDataBlock>.WriteResource(Stream output)
+        void IResourceBlock<DecoratorCacheBlockDataBlock>.WriteResource(Stream output, int index = -1)
         {
             throw new NotImplementedException();
         }

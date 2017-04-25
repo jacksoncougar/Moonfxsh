@@ -20,10 +20,10 @@ namespace Moonfish
         {
             Map stream;
 
-            var rebuild = true;
+            var rebuild = false;
             var sign = false;
             var validate = false;
-            var generate = false;
+            var generate = true;
 
             var p = new OptionSet
             {

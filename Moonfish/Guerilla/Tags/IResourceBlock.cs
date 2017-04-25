@@ -69,12 +69,14 @@ namespace Moonfish.Guerilla.Tags
         ///     contain a stream containing the resource data at the given index.
         /// </remarks>
         /// <param name="delegate"></param>
-        void ReadResource(Func<IResourceBlock, int, Stream> @delegate);
+        /// <param name="index"></param>
+        void ReadResource(Func<IResourceBlock, int, Stream> @delegate, int index = -1);
 
         /// <summary>
         /// Writes the resource to the given stream.
         /// </summary>
         /// <param name="output">The stream to write the resource to.</param>
-        void WriteResource(Stream output);
+        /// <param name="index"></param>
+        void WriteResource(Stream output, int index = -1);
     }
 }

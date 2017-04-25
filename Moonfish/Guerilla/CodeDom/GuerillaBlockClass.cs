@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Windows.Forms.VisualStyles;
 using Fasterflect;
 using Microsoft.CSharp;
 using Moonfish.Guerilla.Reflection;
@@ -473,7 +475,7 @@ namespace Moonfish.Guerilla.CodeDom
 					// fixed struct array
 					else if (field.UserData.Contains("GuerillaBlock") && arraySize > 0)
 					{
-						var methodName =
+					    var methodName =
 							StaticReflection.GetMemberName(
 								(IWriteQueueable item) => item.Defer(null));
 
@@ -493,34 +495,34 @@ namespace Moonfish.Guerilla.CodeDom
 											queueableBinaryWriterArgument))));
 					}
 					//  instanced byte array like data
-					else if (systemType == typeof(byte))
+					else if (systemType == typeof (byte))
 					{
-						var methodName =
-							StaticReflection.GetMemberName(
-								(QueueableBlamBinaryWriter item) => item.Defer(new byte[0]));
+					    var codeMemberField = codeObject as CodeMemberField;
 
-						method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
-							fieldReference));
+					    int alignment = (int) (codeObject.UserData.Contains("alignment") ? codeObject.UserData["alignment"] : 4);
+					    var methodName = StaticReflection.GetMemberName((QueueableBlamBinaryWriter item) => item.Defer(new byte[0], 4));
+
+                        if (alignment == 4)
+					        method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
+					            fieldReference));
+					    else
+					        method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
+					            fieldReference, new CodePrimitiveExpression(alignment)));
 					}
 					//  instanced Int16 array like data
-					else if (systemType == typeof(short))
+					else if (systemType == typeof (short))
 					{
-						var methodName =
-							StaticReflection.GetMemberName(
-								(QueueableBlamBinaryWriter item) => item.Defer(new short[0]));
+					    var methodName = StaticReflection.GetMemberName((QueueableBlamBinaryWriter item) => item.Defer(new short[0], 4));
 
-						method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
-							fieldReference));
+					    method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName, fieldReference));
 					}
 					//  tagBlock array
 					else
 					{
-						var methodName =
-							StaticReflection.GetMemberName(
-								(QueueableBlamBinaryWriter item) => item.Defer(new GuerillaBlock[0]));
+					    var methodName =
+					        StaticReflection.GetMemberName((QueueableBlamBinaryWriter item) => item.Defer(new GuerillaBlock[0]));
 
-						method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
-								fieldReference));
+					    method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName, fieldReference));
 					}
 				}
 				//  like an inline struct where T : GuerillaBlock
@@ -726,17 +728,30 @@ namespace Moonfish.Guerilla.CodeDom
 							break;
 						}
 					case MoonfishFieldType.FieldData:
-						{
-							var type = ((MoonfishTagDataDefinition)field.Definition).DataElementSize == 1
-								? typeof(byte[])
-								: typeof(short[]);
-							var member = new CodeMemberField(type, GenerateFieldName(field));
-							GenerateSummary(member);
-							member.Attributes = MemberAttributes.Public;
-							TargetClass.Members.Add(member);
-							break;
-						}
-					case MoonfishFieldType.FieldExplanation:
+				    {
+				        var type = ((MoonfishTagDataDefinition) field.Definition).DataElementSize == 1
+				            ? typeof (byte[])
+				            : typeof (short[]);
+				        var member = new CodeMemberField(type, GenerateFieldName(field));
+				        GenerateSummary(member);
+
+				        if ((field.Definition?.Alignment ?? 4) != 4)
+				        {
+				            member.CustomAttributes.Add(
+				                new CodeAttributeDeclaration(new CodeTypeReference(typeof (StructLayoutAttribute)),
+				                    new CodeAttributeArgument(
+				                        new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(typeof (LayoutKind).Name),
+				                            StaticReflection.GetMemberName((LayoutKind option) => LayoutKind.Sequential))),
+				                    new CodeAttributeArgument(
+				                        StaticReflection.GetMemberName((StructLayoutAttribute option) => option.Pack),
+				                        new CodePrimitiveExpression(field.Definition?.Alignment ?? 4))));
+				            member.UserData["alignment"] = field.Definition?.Alignment;
+				        }
+
+				        TargetClass.Members.Add(member);
+				        break;
+				    }
+				    case MoonfishFieldType.FieldExplanation:
 						{
 							var value = field.Definition as string;
 							if (!string.IsNullOrWhiteSpace(value))

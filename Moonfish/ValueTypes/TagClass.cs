@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -47,8 +46,7 @@ namespace Moonfish.Tags
             }
         }
 
-        public TagClass(int value)
-            : this(BitConverter.GetBytes(value))
+        public TagClass(int value) : this(BitConverter.GetBytes(value))
         {
         }
 
@@ -79,9 +77,14 @@ namespace Moonfish.Tags
             }
         }
 
+        public static readonly TagClass Rsrc = (TagClass) "rsrc";
+        public static readonly TagClass Blkf = (TagClass) "blkf";
+        public static readonly TagClass Blkh = (TagClass) "blkh";
+
         private static void AddClassType(Type type)
         {
-            var attribute = type.GetCustomAttributes(typeof(TagClassAttribute), false).FirstOrDefault() as                             TagClassAttribute;
+            var attribute =
+                type.GetCustomAttributes(typeof (TagClassAttribute), false).FirstOrDefault() as TagClassAttribute;
 
             if (attribute != null)
             {
@@ -121,18 +124,20 @@ namespace Moonfish.Tags
 
         public override bool Equals(object obj)
         {
-            if (!(obj is TagClass)) return false;
+            if (!(obj is TagClass))
+                return false;
             return this == (TagClass) obj;
         }
 
-        public override int GetHashCode( )
+        public override int GetHashCode()
         {
-            return ( int ) this;
+            return (int) this;
         }
 
         public override string ToString()
         {
-            if (a == 0xFF && b == 0xFF && c == 0xFF && d == 0xFF) return "null";
+            if (a == 0xFF && b == 0xFF && c == 0xFF && d == 0xFF)
+                return "null";
             return Encoding.UTF8.GetString(new[] {d, c, b, a});
         }
 
@@ -146,15 +151,13 @@ namespace Moonfish.Tags
             return this == (TagClass) other;
         }
 
-        /// <summary>
-        /// Gets the System.Type of the corresponding GuerillaBlock class.
-        /// </summary>
+        /// <summary>Gets the System.Type of the corresponding GuerillaBlock class.</summary>
         /// <returns>the System.Type type</returns>
         public Type GetClassType()
         {
             var type = classTypes[this];
 
-            return type;    
+            return type;
         }
 
         public string ToTokenString()
@@ -168,7 +171,7 @@ namespace Moonfish.Tags
                     return "cmnt";
             }
 
-            var chars = value.Where(x => (char.IsLetterOrDigit(x))).ToArray();
+            char[] chars = value.Where(char.IsLetterOrDigit).ToArray();
             return new string(chars);
         }
 
@@ -177,7 +180,7 @@ namespace Moonfish.Tags
 
         public static bool IsNullOrZero(TagClass @class)
         {
-            return @class == Null || (int)@class == 0;
+            return @class == Null || (int) @class == 0;
         }
     }
 }

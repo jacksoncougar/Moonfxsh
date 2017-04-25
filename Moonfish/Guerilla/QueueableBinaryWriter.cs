@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using Moonfish.Tags;
 
@@ -10,11 +11,11 @@ namespace Moonfish.Guerilla
     {
         private readonly Dictionary<object, QueueItem> lookupDictionary;
         protected readonly Queue<QueueItem> Queue;
-        private int queueAddress;
+        protected int QueueAddress { get; set; }
 
         public QueueableBlamBinaryWriter(Stream output, int serializedSize) : base(output, Encoding.Default, true)
         {
-            queueAddress = serializedSize;
+            QueueAddress = 0;
             Queue = new Queue<QueueItem>(100);
             lookupDictionary = new Dictionary<object, QueueItem>(100);
         }
@@ -26,7 +27,6 @@ namespace Moonfish.Guerilla
         public void Write(GuerillaBlock guerillaBlock)
         {
             guerillaBlock.Defer(this);
-            guerillaBlock.Write(this);
             Commit();
         }
 
@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla
         /// Defers writing the specified <see cref="GuerillaBlock"/> array until after the current allocation.
         /// </summary>
         /// <param name="blocks">The <see cref="GuerillaBlock"/> array.</param>
-        public void Defer(GuerillaBlock[] blocks)
+        public virtual void Defer(GuerillaBlock[] blocks)
         {
             //  if the array is empty there's nothing to write, so return
             if (blocks.Length <= 0)
@@ -90,7 +90,7 @@ namespace Moonfish.Guerilla
         /// </summary>
         /// <exception cref="IOException">Wrote more/less data than expected.</exception>
         /// <exception cref="System.IO.IOException">Attempted to write over existing data.</exception>
-        public void Commit()
+        public virtual void Commit()
         {
             while (Queue.Count > 0)
             {
@@ -144,32 +144,32 @@ namespace Moonfish.Guerilla
 
         private void Enqueue(byte[] data, int alignment = 4)
         {
-            var blamPointer = new BlamPointer(data.Length, queueAddress, 1, alignment);
+            var blamPointer = new BlamPointer(data.Length, QueueAddress, 1, alignment);
             var dataQueueItem = new ByteDataQueueItem(data) {Pointer = blamPointer};
             lookupDictionary[data] = dataQueueItem;
             Queue.Enqueue(dataQueueItem);
-            queueAddress = blamPointer.EndAddress;
+            QueueAddress = blamPointer.EndAddress;
         }
 
         private void Enqueue(short[] data)
         {
-            var blamPointer = new BlamPointer(data.Length, queueAddress, 2);
+            var blamPointer = new BlamPointer(data.Length, QueueAddress, 2);
             var dataQueueItem = new ShortDataQueueItem(data) {Pointer = blamPointer};
             lookupDictionary[data] = dataQueueItem;
             Queue.Enqueue(dataQueueItem);
-            queueAddress = blamPointer.EndAddress;
+            QueueAddress = blamPointer.EndAddress;
         }
 
         private void Enqueue(GuerillaBlock[] dataBlocks)
         {
             var elementSize = dataBlocks.GetElementSize();
             var alignment = dataBlocks.GetAlignment();
-            var blamPointer = new BlamPointer(dataBlocks.Length, queueAddress, elementSize, alignment);
+            var blamPointer = new BlamPointer(dataBlocks.Length, QueueAddress, elementSize, alignment);
 
             var guerillaQueueItem = new GuerillaQueueItem(dataBlocks) {Pointer = blamPointer};
             lookupDictionary[dataBlocks] = guerillaQueueItem;
             Queue.Enqueue(guerillaQueueItem);
-            queueAddress = blamPointer.EndAddress;
+            QueueAddress = blamPointer.EndAddress;
         }
 
         private class ByteDataQueueItem : QueueItem
@@ -218,8 +218,40 @@ namespace Moonfish.Guerilla
             }
         }
 
+        private class GenericQueueItem : QueueItem
+        {
+            private dynamic Data { get; }
+
+            public GenericQueueItem(dynamic item)
+            {
+                Data = item;
+            }
+
+            /// <summary>Gets or sets the pointer to the allocated space in the stream.</summary>
+            /// <value>The pointer to allocated space in the stream.</value>
+            public override BlamPointer Pointer { get; set; }
+
+            /// <summary>Gets the reference to the queued data.</summary>
+            /// <remarks>This is used as a key to lookup queue items.</remarks>
+            /// <value>The reference field.</value>
+            public override object ReferenceField
+            {
+                get { return Data; }
+            }
+
+            public override void Write(QueueableBlamBinaryWriter writer)
+            {
+                writer.Write(Data);
+            }
+        }
+
         private class GuerillaQueueItem : QueueItem
         {
+            public GuerillaQueueItem(GuerillaBlock guerillaBlock)
+            {
+                DataBlocks = new[] {guerillaBlock};
+            }
+
             public GuerillaQueueItem(GuerillaBlock[] dataBlocks)
             {
                 DataBlocks = dataBlocks;
@@ -241,23 +273,34 @@ namespace Moonfish.Guerilla
                 }
             }
         }
-    }
 
-    /// <summary>
-    ///     Queue item used for allocating space for read and write operations on
-    ///     a stream.
-    /// </summary>
-    public abstract class QueueItem
-    {
-        /// <summary>Gets or sets the pointer to the allocated space in the stream.</summary>
-        /// <value>The pointer to allocated space in the stream.</value>
-        public abstract BlamPointer Pointer { get; set; }
+        /// <summary>
+        ///     Queue item used for allocating space for read and write operations on
+        ///     a stream.
+        /// </summary>
+        public abstract class QueueItem
+        {
+            /// <summary>Gets or sets the pointer to the allocated space in the stream.</summary>
+            /// <value>The pointer to allocated space in the stream.</value>
+            public abstract BlamPointer Pointer { get; set; }
 
-        /// <summary>Gets the reference to the queued data.</summary>
-        /// <remarks>This is used as a key to lookup queue items.</remarks>
-        /// <value>The reference field.</value>
-        public abstract object ReferenceField { get; }
+            /// <summary>Gets the reference to the queued data.</summary>
+            /// <remarks>This is used as a key to lookup queue items.</remarks>
+            /// <value>The reference field.</value>
+            public abstract object ReferenceField { get; }
 
-        public abstract void Write(QueueableBlamBinaryWriter writer);
+            public abstract void Write(QueueableBlamBinaryWriter writer);
+        }
+
+        public void Defer(GuerillaBlock guerillaBlock)
+        {
+            var elementSize = guerillaBlock.SerializedSize;
+            var alignment = guerillaBlock.Alignment;
+            var blamPointer = new BlamPointer(1, QueueAddress, elementSize, alignment);
+
+            var guerillaQueueItem = new GuerillaQueueItem(guerillaBlock) { Pointer = blamPointer };
+            Queue.Enqueue(guerillaQueueItem);
+            QueueAddress = blamPointer.EndAddress;
+        }
     }
 }

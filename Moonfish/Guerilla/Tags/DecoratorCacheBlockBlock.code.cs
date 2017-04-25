@@ -43,7 +43,11 @@ namespace Moonfish.Guerilla.Tags
 
         void IResourceBlock<DecoratorCacheBlockDataBlock>.ReadResource(Func<IResourceBlock, int, Stream> @delegate)
         {
-            ResourceLinker.ReadResource<DecoratorCacheBlockBlock, DecoratorCacheBlockDataBlock>(this, @delegate, GeometryBlockInfo);
+            CacheBlockData = new[]
+            {
+                ResourceLinker.ReadResource<DecoratorCacheBlockBlock, DecoratorCacheBlockDataBlock>(this, @delegate,
+                    GeometryBlockInfo)
+            };
         }
 
         void IResourceBlock<DecoratorCacheBlockDataBlock>.WriteResource(Stream output)

@@ -1,10 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Moonfish.Guerilla;
 
 namespace Moonfish.ResourceManagement
 {
     using Guerilla.Tags;
 
+    /// <summary>
+    /// Wraps a resource stream so it can be read as a <see cref="GuerillaBlock"/> 
+    /// </summary>
+    /// <seealso cref="Stream" />
     public class ResourceStreamWrapper : StreamAddressWrapper<Stream>
     {
         public IList<GlobalGeometryBlockResourceBlock> Resources { get; private set; }

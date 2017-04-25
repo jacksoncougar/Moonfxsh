@@ -41,8 +41,8 @@ namespace Moonfish.Guerilla
             endAddress = output.Position;
             length = endAddress - startAddress;
 
-            resourceBlock.SetResourceLength((int)length);
-            resourceBlock.SetResourcePointer((int)startAddress);
+            resourceBlock.SetResourceLength((int) length);
+            resourceBlock.SetResourcePointer((int) startAddress);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Moonfish.Guerilla
             var resourceObject = block.GetResource(index);
 
             var writer = new ResourceWriter(output, resourceObject.SerializedSize);
-            
+
             writer.Write(resourceObject);
 
             List<GlobalGeometryBlockResourceBlock> resourceBlocks = writer.ResourceDescriptors;
@@ -80,9 +80,9 @@ namespace Moonfish.Guerilla
             block.SetResourcePointer((int) startAddress);
         }
 
-        public static void ReadResource<T, TV>(T block, Func<IResourceBlock, int, Stream> @delegate,
+        public static TV ReadResource<T, TV>(T block, Func<IResourceBlock, int, Stream> @delegate,
             GlobalGeometryBlockInfoStructBlock blockInfo)
-            where T : IResourceBlock, IResourceDescriptor<GlobalGeometryBlockResourceBlock>
+            where T : IResourceBlock<TV>, IResourceDescriptor<GlobalGeometryBlockResourceBlock>
             where TV : GuerillaBlock, new()
         {
             var resource = new TV();
@@ -93,27 +93,55 @@ namespace Moonfish.Guerilla
             if (stream.Length != block.GetResourceLength())
                 throw new InvalidDataException();
 
-            using (var binaryReader = new BlamBinaryReader(stream))
+            using (var binaryReader = new ResourceReader(stream, blockInfo))
             {
                 resource.Read(binaryReader);
+            }
 
-                GlobalGeometryBlockResourceBlock[] vertexBufferResources =
-                    resources.Where(x => x.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer).ToArray();
+            return resource;
+        }
 
-                //    for (var i = 0; i < sectionBlock.Section.VertexBuffers.Length && i < vertexBufferResources.Length; ++i)
-                //    {
-                //        sectionBlock.Section.VertexBuffers[i].VertexBuffer.Data =
-                //            stream.GetResourceData(vertexBufferResources[i]);
-                //    }
-                //}
-                //SectionData = new[] { sectionBlock };
+        private class ResourceReader : QueueableBlamBinaryReader
+        {
+            private readonly GlobalGeometryBlockInfoStructBlock info;
 
+            public ResourceReader(Stream input, GlobalGeometryBlockInfoStructBlock info)
+                : base(input, info.SectionDataSize)
+            {
+                this.info = info;
+            }
+
+            public override VertexBuffer ReadVertexBuffer()
+            {
+                long offset = BaseStream.Position;
+
+                var block = info.Resources.Single(item => item.PrimaryLocator == 56 && item.SecondaryLocator == 32);
+                var index = (int) (offset - block.ResourceDataOffset - info.SectionDataSize)/block.SecondaryLocator;
+
+                var vertexBufferInfo =
+                    info.Resources.Single(item => item.PrimaryLocator == 56 && item.SecondaryLocator == index);
+
+                var vertexBuffer = base.ReadVertexBuffer();
+
+                //TODO: make this linear
+                using (BaseStream.Pin())
+                {
+                    BaseStream.Position = vertexBufferInfo.ResourceDataOffset + info.SectionDataSize;
+                    vertexBuffer.Data = ReadBytes(vertexBufferInfo.ResourceDataSize);
+                    var check = ReadTagClass();
+                    if (check != TagClass.Rsrc && check != TagClass.Blkf)
+                        throw new InvalidDataException("Not a resource!");
+                }
+
+                return vertexBuffer;
             }
         }
 
-
-        private class ResourceWriter : QueueableBlamBinaryWriter, IEnumerable<QueueItem>
+        private class ResourceWriter : QueueableBlamBinaryWriter, IEnumerable<QueueableBlamBinaryWriter.QueueItem>
         {
+            private bool first = true;
+            private bool last = true;
+
             public List<GlobalGeometryBlockResourceBlock> ResourceDescriptors { get; }
 
             public ResourceWriter(Stream output, int serializedSize) : base(output, serializedSize)
@@ -136,6 +164,73 @@ namespace Moonfish.Guerilla
                 ResourceDescriptors.Clear();
             }
 
+            /// <summary>
+            /// Defers writing the specified <see cref="GuerillaBlock"/> array until after the current allocation.
+            /// </summary>
+            /// <param name="blocks">The <see cref="GuerillaBlock"/> array.</param>
+            public override void Defer(GuerillaBlock[] blocks)
+            {
+                base.Defer(blocks);
+                Defer(TagClass.Rsrc);
+            }
+
+            private void Defer(TagClass tagClass)
+            {
+                var blamPointer = new BlamPointer(1, QueueAddress, 4);
+                var classQueueItem = new GenericQueueItem(tagClass) {Pointer = blamPointer};
+                QueueAddress = blamPointer.EndAddress;
+                Queue.Enqueue(new GenericQueueItem(tagClass));
+            }
+
+            /// <summary>
+            /// Commits the deffered writes to the stream.
+            /// </summary>
+            /// <exception cref="IOException">Wrote more/less data than expected.</exception>
+            /// <exception cref="System.IO.IOException">Attempted to write over existing data.</exception>
+            public override void Commit()
+            {
+                var firstItem =
+                    Queue.First(item => item is GenericQueueItem && item.ReferenceField is TagClass) as GenericQueueItem;
+                if (firstItem != null)
+                    firstItem.Data = TagClass.Blkh;
+
+
+                var lastItem =
+                    Queue.Last(item => item is GenericQueueItem && item.ReferenceField is TagClass && item != firstItem) as GenericQueueItem;
+                if (lastItem != null)
+                    lastItem.Data = TagClass.Blkf;
+
+                base.Commit();
+            }
+
+            private class GenericQueueItem : QueueItem
+            {
+                public dynamic Data { get; set; }
+
+                public GenericQueueItem(dynamic item)
+                {
+                    Data = item;
+                }
+
+                /// <summary>Gets or sets the pointer to the allocated space in the stream.</summary>
+                /// <value>The pointer to allocated space in the stream.</value>
+                public override BlamPointer Pointer { get; set; }
+
+                /// <summary>Gets the reference to the queued data.</summary>
+                /// <remarks>This is used as a key to lookup queue items.</remarks>
+                /// <value>The reference field.</value>
+                public override object ReferenceField
+                {
+                    get { return Data; }
+                }
+
+                public override void Write(QueueableBlamBinaryWriter writer)
+                {
+                    writer.Write(Data);
+                }
+            };
+
+
             private void AddDescriptor([NotNull] object resource, BlamPointer pointerToResource, short position)
             {
                 if (resource == null)
@@ -147,7 +242,7 @@ namespace Moonfish.Guerilla
                 {
                     Type = GlobalGeometryBlockResourceBlock.TypeEnum.TagBlock,
                     PrimaryLocator = position,
-                    SecondaryLocator = (short)pointerToResource.ElementSize,
+                    SecondaryLocator = (short) pointerToResource.ElementSize,
                     ResourceDataOffset = pointerToResource.StartAddress,
                     ResourceDataSize = pointerToResource.PointedSize
                 };
@@ -164,7 +259,7 @@ namespace Moonfish.Guerilla
                 {
                     Type = GlobalGeometryBlockResourceBlock.TypeEnum.TagData,
                     PrimaryLocator = position,
-                    SecondaryLocator = (short)pointerToResource.ElementSize,
+                    SecondaryLocator = (short) pointerToResource.ElementSize,
                     ResourceDataOffset = pointerToResource.StartAddress,
                     ResourceDataSize = pointerToResource.PointedSize
                 };

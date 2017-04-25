@@ -60,22 +60,27 @@ namespace Moonfish.Guerilla.Tags
 
         void IResourceBlock<StructureBspClusterDataBlockNew>.ReadResource(Func<IResourceBlock, int, Stream> @delegate)
         {
-            ResourceLinker.ReadResource<StructureInstancedGeometryRenderInfoStructBlock, StructureBspClusterDataBlockNew>(this, @delegate, GeometryBlockInfo);
+            RenderData = new[]
+            {
+                ResourceLinker
+                    .ReadResource<StructureInstancedGeometryRenderInfoStructBlock, StructureBspClusterDataBlockNew>(
+                        this, @delegate, GeometryBlockInfo)
+            };
         }
 
         void IResourceBlock<StructureBspClusterDataBlockNew>.WriteResource(Stream output)
         {
-            throw new NotImplementedException();
+            ResourceLinker.WriteResource(this, output, 0);
         }
 
         GlobalGeometryBlockResourceBlock[] IResourceDescriptor<GlobalGeometryBlockResourceBlock>.GetDescriptors()
         {
-            throw new NotImplementedException();
+            return GeometryBlockInfo.Resources;
         }
 
         void IResourceDescriptor<GlobalGeometryBlockResourceBlock>.SetDescriptors(GlobalGeometryBlockResourceBlock[] descriptors)
         {
-            throw new NotImplementedException();
+            GeometryBlockInfo.Resources = descriptors;
         }
     }
 }

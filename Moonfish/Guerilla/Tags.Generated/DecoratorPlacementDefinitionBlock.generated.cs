@@ -60,13 +60,13 @@ namespace Moonfish.Guerilla.Tags
             this.Cells = base.ReadBlockArrayData<DecoratorCellCollectionBlock>(binaryReader, pointerQueue.Dequeue());
             this.Decals = base.ReadBlockArrayData<DecoratorProjectedDecalBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.CacheBlocks);
-            queueableBinaryWriter.QueueWrite(this.Groups);
-            queueableBinaryWriter.QueueWrite(this.Cells);
-            queueableBinaryWriter.QueueWrite(this.Decals);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.CacheBlocks);
+            queueableBinaryWriter.Defer(this.Groups);
+            queueableBinaryWriter.Defer(this.Cells);
+            queueableBinaryWriter.Defer(this.Decals);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

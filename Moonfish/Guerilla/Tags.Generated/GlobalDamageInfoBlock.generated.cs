@@ -127,13 +127,13 @@ namespace Moonfish.Guerilla.Tags
             this.DamageSeats = base.ReadBlockArrayData<DamageSeatInfoBlock>(binaryReader, pointerQueue.Dequeue());
             this.DamageConstraints = base.ReadBlockArrayData<DamageConstraintInfoBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.DamageSections);
-            queueableBinaryWriter.QueueWrite(this.Nodes);
-            queueableBinaryWriter.QueueWrite(this.DamageSeats);
-            queueableBinaryWriter.QueueWrite(this.DamageConstraints);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.DamageSections);
+            queueableBinaryWriter.Defer(this.Nodes);
+            queueableBinaryWriter.Defer(this.DamageSeats);
+            queueableBinaryWriter.Defer(this.DamageConstraints);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

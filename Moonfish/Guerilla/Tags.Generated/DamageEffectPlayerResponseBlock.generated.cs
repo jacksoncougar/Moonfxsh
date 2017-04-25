@@ -57,12 +57,12 @@ namespace Moonfish.Guerilla.Tags
             this.Vibration.ReadInstances(binaryReader, pointerQueue);
             this.SoundEffect.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.ScreenFlash.QueueWrites(queueableBinaryWriter);
-            this.Vibration.QueueWrites(queueableBinaryWriter);
-            this.SoundEffect.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            this.ScreenFlash.Defer(queueableBinaryWriter);
+            this.Vibration.Defer(queueableBinaryWriter);
+            this.SoundEffect.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

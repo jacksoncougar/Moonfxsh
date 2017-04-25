@@ -50,11 +50,11 @@ namespace Moonfish.Guerilla.Tags
             this.LowFrequencyVibration.ReadInstances(binaryReader, pointerQueue);
             this.HighFrequencyVibration.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.LowFrequencyVibration.QueueWrites(queueableBinaryWriter);
-            this.HighFrequencyVibration.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            this.LowFrequencyVibration.Defer(queueableBinaryWriter);
+            this.HighFrequencyVibration.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

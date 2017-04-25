@@ -66,16 +66,16 @@ namespace Moonfish.Guerilla.Tags
             this.XboxAnimationDataBlock = base.ReadBlockArrayData<MoonfishXboxAnimationRawBlock>(binaryReader, pointerQueue.Dequeue());
             this.XboxUnknownAnimationBlock = base.ReadBlockArrayData<MoonfishXboxAnimationUnknownBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.Resources.QueueWrites(queueableBinaryWriter);
-            this.Content.QueueWrites(queueableBinaryWriter);
-            this.RunTimeData.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.LastImportResults);
-            queueableBinaryWriter.QueueWrite(this.AdditionalNodeData);
-            queueableBinaryWriter.QueueWrite(this.XboxAnimationDataBlock);
-            queueableBinaryWriter.QueueWrite(this.XboxUnknownAnimationBlock);
+            base.Defer(queueableBinaryWriter);
+            this.Resources.Defer(queueableBinaryWriter);
+            this.Content.Defer(queueableBinaryWriter);
+            this.RunTimeData.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.LastImportResults);
+            queueableBinaryWriter.Defer(this.AdditionalNodeData);
+            queueableBinaryWriter.Defer(this.XboxAnimationDataBlock);
+            queueableBinaryWriter.Defer(this.XboxUnknownAnimationBlock);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

@@ -53,12 +53,12 @@ namespace Moonfish.Guerilla.Tags
             this.ModelSceneBlocks = base.ReadBlockArrayData<UiModelSceneReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.BitmapBlocks = base.ReadBlockArrayData<BitmapBlockReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Shapes);
-            queueableBinaryWriter.QueueWrite(this.ModelSceneBlocks);
-            queueableBinaryWriter.QueueWrite(this.BitmapBlocks);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Shapes);
+            queueableBinaryWriter.Defer(this.ModelSceneBlocks);
+            queueableBinaryWriter.Defer(this.BitmapBlocks);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

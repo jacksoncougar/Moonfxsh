@@ -60,13 +60,13 @@ namespace Moonfish.Guerilla.Tags
             this.RightFilterFrequency.ReadInstances(binaryReader, pointerQueue);
             this.RightFilterGain.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.LeftFilterFrequency.QueueWrites(queueableBinaryWriter);
-            this.LeftFilterGain.QueueWrites(queueableBinaryWriter);
-            this.RightFilterFrequency.QueueWrites(queueableBinaryWriter);
-            this.RightFilterGain.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            this.LeftFilterFrequency.Defer(queueableBinaryWriter);
+            this.LeftFilterGain.Defer(queueableBinaryWriter);
+            this.RightFilterFrequency.Defer(queueableBinaryWriter);
+            this.RightFilterGain.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

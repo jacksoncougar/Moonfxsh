@@ -72,16 +72,16 @@ namespace Moonfish.Guerilla.Tags
             this.CachedData = base.ReadBlockArrayData<CachedDataBlock>(binaryReader, pointerQueue.Dequeue());
             this.GeometrySectionInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Shaders);
-            queueableBinaryWriter.QueueWrite(this.Classes);
-            queueableBinaryWriter.QueueWrite(this.Models);
-            queueableBinaryWriter.QueueWrite(this.RawVertices);
-            queueableBinaryWriter.QueueWrite(this.Indices);
-            queueableBinaryWriter.QueueWrite(this.CachedData);
-            this.GeometrySectionInfo.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Shaders);
+            queueableBinaryWriter.Defer(this.Classes);
+            queueableBinaryWriter.Defer(this.Models);
+            queueableBinaryWriter.Defer(this.RawVertices);
+            queueableBinaryWriter.Defer(this.Indices);
+            queueableBinaryWriter.Defer(this.CachedData);
+            this.GeometrySectionInfo.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

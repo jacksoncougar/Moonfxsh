@@ -115,11 +115,11 @@ namespace Moonfish.Guerilla.Tags
             this.Sources = base.ReadBlockArrayData<FlockSourceBlock>(binaryReader, pointerQueue.Dequeue());
             this.Sinks = base.ReadBlockArrayData<FlockSinkBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Sources);
-            queueableBinaryWriter.QueueWrite(this.Sinks);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Sources);
+            queueableBinaryWriter.Defer(this.Sinks);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

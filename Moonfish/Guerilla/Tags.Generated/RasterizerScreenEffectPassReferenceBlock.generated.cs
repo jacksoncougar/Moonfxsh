@@ -84,12 +84,12 @@ namespace Moonfish.Guerilla.Tags
             this.AdvancedControl = base.ReadBlockArrayData<RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock>(binaryReader, pointerQueue.Dequeue());
             this.Convolution = base.ReadBlockArrayData<RasterizerScreenEffectConvolutionBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Explanation);
-            queueableBinaryWriter.QueueWrite(this.AdvancedControl);
-            queueableBinaryWriter.QueueWrite(this.Convolution);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Explanation);
+            queueableBinaryWriter.Defer(this.AdvancedControl);
+            queueableBinaryWriter.Defer(this.Convolution);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

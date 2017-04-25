@@ -50,11 +50,11 @@ namespace Moonfish.Guerilla.Tags
             this.CollisionLeaves = base.ReadBlockArrayData<BspLeafBlock>(binaryReader, pointerQueue.Dequeue());
             this.SurfaceReferences = base.ReadBlockArrayData<BspSurfaceReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.CollisionLeaves);
-            queueableBinaryWriter.QueueWrite(this.SurfaceReferences);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.CollisionLeaves);
+            queueableBinaryWriter.Defer(this.SurfaceReferences);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

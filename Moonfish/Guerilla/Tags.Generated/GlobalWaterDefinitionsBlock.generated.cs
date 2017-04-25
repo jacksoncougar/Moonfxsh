@@ -93,11 +93,11 @@ namespace Moonfish.Guerilla.Tags
             this.Section = base.ReadBlockArrayData<WaterGeometrySectionBlock>(binaryReader, pointerQueue.Dequeue());
             this.GeometryBlockInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Section);
-            this.GeometryBlockInfo.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Section);
+            this.GeometryBlockInfo.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

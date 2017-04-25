@@ -98,20 +98,20 @@ namespace Moonfish.Guerilla.Tags
             this.MiscState = base.ReadBlockArrayData<ShaderStateMiscStateBlock>(binaryReader, pointerQueue.Dequeue());
             this.Constants = base.ReadBlockArrayData<ShaderStateConstantBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Textures);
-            queueableBinaryWriter.QueueWrite(this.VsConstants);
-            queueableBinaryWriter.QueueWrite(this.PixelShaderCodeNOLONGERUSED);
-            queueableBinaryWriter.QueueWrite(this.ChannelState);
-            queueableBinaryWriter.QueueWrite(this.AlphablendState);
-            queueableBinaryWriter.QueueWrite(this.AlphatestState);
-            queueableBinaryWriter.QueueWrite(this.DepthState);
-            queueableBinaryWriter.QueueWrite(this.CullState);
-            queueableBinaryWriter.QueueWrite(this.FillState);
-            queueableBinaryWriter.QueueWrite(this.MiscState);
-            queueableBinaryWriter.QueueWrite(this.Constants);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Textures);
+            queueableBinaryWriter.Defer(this.VsConstants);
+            queueableBinaryWriter.Defer(this.PixelShaderCodeNOLONGERUSED);
+            queueableBinaryWriter.Defer(this.ChannelState);
+            queueableBinaryWriter.Defer(this.AlphablendState);
+            queueableBinaryWriter.Defer(this.AlphatestState);
+            queueableBinaryWriter.Defer(this.DepthState);
+            queueableBinaryWriter.Defer(this.CullState);
+            queueableBinaryWriter.Defer(this.FillState);
+            queueableBinaryWriter.Defer(this.MiscState);
+            queueableBinaryWriter.Defer(this.Constants);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

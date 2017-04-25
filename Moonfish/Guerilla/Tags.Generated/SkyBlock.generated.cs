@@ -117,17 +117,17 @@ namespace Moonfish.Guerilla.Tags
             this.ShaderFunctions = base.ReadBlockArrayData<SkyShaderFunctionBlock>(binaryReader, pointerQueue.Dequeue());
             this.Animations = base.ReadBlockArrayData<SkyAnimationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.CubeMap);
-            queueableBinaryWriter.QueueWrite(this.AtmosphericFog);
-            queueableBinaryWriter.QueueWrite(this.SecondaryFog);
-            queueableBinaryWriter.QueueWrite(this.SkyFog);
-            queueableBinaryWriter.QueueWrite(this.PatchyFog);
-            queueableBinaryWriter.QueueWrite(this.Lights);
-            queueableBinaryWriter.QueueWrite(this.ShaderFunctions);
-            queueableBinaryWriter.QueueWrite(this.Animations);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.CubeMap);
+            queueableBinaryWriter.Defer(this.AtmosphericFog);
+            queueableBinaryWriter.Defer(this.SecondaryFog);
+            queueableBinaryWriter.Defer(this.SkyFog);
+            queueableBinaryWriter.Defer(this.PatchyFog);
+            queueableBinaryWriter.Defer(this.Lights);
+            queueableBinaryWriter.Defer(this.ShaderFunctions);
+            queueableBinaryWriter.Defer(this.Animations);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

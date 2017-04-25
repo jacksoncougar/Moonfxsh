@@ -56,11 +56,11 @@ namespace Moonfish.Guerilla.Tags
             this.moppCode = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
             this.EvironmentObjectIdentifiers = base.ReadBlockArrayData<OldUnusedObjectIdentifiersBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.moppCode);
-            queueableBinaryWriter.QueueWrite(this.EvironmentObjectIdentifiers);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.moppCode);
+            queueableBinaryWriter.Defer(this.EvironmentObjectIdentifiers);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

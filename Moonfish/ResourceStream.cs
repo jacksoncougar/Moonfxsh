@@ -5,7 +5,7 @@ namespace Moonfish.ResourceManagement
 {
     using Guerilla.Tags;
 
-    public class ResourceStreamWrapper : VirtualStreamWrapper<Stream>
+    public class ResourceStreamWrapper : StreamAddressWrapper<Stream>
     {
         public IList<GlobalGeometryBlockResourceBlock> Resources { get; private set; }
 
@@ -24,18 +24,9 @@ namespace Moonfish.ResourceManagement
             HeaderSize = blockInfo.SectionDataSize;
             Resources = blockInfo.Resources;
 
-            CreateVirtualSection(0, blockInfo.SectionDataSize, 8, true);
-            CreateVirtualSection(blockInfo.SectionDataSize + 4, blockInfo.ResourceDataSize,
-                blockInfo.SectionDataSize + 12, true);
+            RemoveAddresses(0, 8);
 
             Seek(0, System.IO.SeekOrigin.Begin);
-        }
-
-        public ResourceStreamWrapper(Stream stream, IEnumerable<GlobalGeometryBlockResourceBlock> resources, int headsize)
-            :base(stream)
-        {
-            HeaderSize = headsize;
-            Resources = resources as IList<GlobalGeometryBlockResourceBlock>;
         }
 
         public byte[] GetResourceData(GlobalGeometryBlockResourceBlock resource)

@@ -89,11 +89,11 @@ namespace Moonfish.Guerilla.Tags
             this.ExtraSounds.ReadInstances(binaryReader, pointerQueue);
             this.SoundPermutations = base.ReadBlockArrayData<SoundResponseDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.ExtraSounds.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.SoundPermutations);
+            base.Defer(queueableBinaryWriter);
+            this.ExtraSounds.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.SoundPermutations);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

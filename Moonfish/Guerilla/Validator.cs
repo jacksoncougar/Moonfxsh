@@ -29,7 +29,7 @@ namespace Moonfish.Guerilla
             var elementArray = CompileElementArray(definition, definitionPool, offset);
             elementArray.Count = 1;
             var binaryReader = new BlamBinaryReader(dataStream);
-            var virtualTagMemory = new VirtualStreamSectionDescription(datum.VirtualAddress, datum.Length, 0);
+            var virtualTagMemory = new AddressMapDescription(datum.VirtualAddress, datum.Length, 0);
 
             isValidDelegate = virtualTagMemory.Contains;
             isPointerOwnedByTagDelegate = virtualTagMemory.Contains;

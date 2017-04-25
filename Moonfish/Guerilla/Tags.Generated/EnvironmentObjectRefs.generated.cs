@@ -58,11 +58,11 @@ namespace Moonfish.Guerilla.Tags
             this.Bsps = base.ReadBlockArrayData<EnvironmentObjectBspRefs>(binaryReader, pointerQueue.Dequeue());
             this.Nodes = base.ReadBlockArrayData<EnvironmentObjectNodes>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Bsps);
-            queueableBinaryWriter.QueueWrite(this.Nodes);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Bsps);
+            queueableBinaryWriter.Defer(this.Nodes);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

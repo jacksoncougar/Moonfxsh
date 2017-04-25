@@ -74,12 +74,12 @@ namespace Moonfish.Guerilla.Tags
             this.Keyframes0 = base.ReadBlockArrayData<ScreenAnimationKeyframeReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.Keyframes1 = base.ReadBlockArrayData<ScreenAnimationKeyframeReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Keyframes);
-            queueableBinaryWriter.QueueWrite(this.Keyframes0);
-            queueableBinaryWriter.QueueWrite(this.Keyframes1);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Keyframes);
+            queueableBinaryWriter.Defer(this.Keyframes0);
+            queueableBinaryWriter.Defer(this.Keyframes1);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

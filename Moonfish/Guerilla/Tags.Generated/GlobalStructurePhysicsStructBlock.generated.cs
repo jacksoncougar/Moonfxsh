@@ -59,12 +59,12 @@ namespace Moonfish.Guerilla.Tags
             this.BreakableSurfacesMoppCode = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
             this.BreakableSurfaceKeyTable = base.ReadBlockArrayData<BreakableSurfaceKeyTableBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.moppCode);
-            queueableBinaryWriter.QueueWrite(this.BreakableSurfacesMoppCode);
-            queueableBinaryWriter.QueueWrite(this.BreakableSurfaceKeyTable);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.moppCode);
+            queueableBinaryWriter.Defer(this.BreakableSurfacesMoppCode);
+            queueableBinaryWriter.Defer(this.BreakableSurfaceKeyTable);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

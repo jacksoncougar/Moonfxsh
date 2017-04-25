@@ -50,11 +50,11 @@ namespace Moonfish.Guerilla.Tags
             this.Grenades = base.ReadBlockArrayData<GrenadeBlock>(binaryReader, pointerQueue.Dequeue());
             this.Powerups = base.ReadBlockArrayData<PowerupBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Grenades);
-            queueableBinaryWriter.QueueWrite(this.Powerups);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Grenades);
+            queueableBinaryWriter.Defer(this.Powerups);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

@@ -79,12 +79,12 @@ namespace Moonfish.Guerilla.Tags
             this.HudWidgetStateDefinitionStruct.ReadInstances(binaryReader, pointerQueue);
             this.Waa.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.HudWidgetInputsStruct.QueueWrites(queueableBinaryWriter);
-            this.HudWidgetStateDefinitionStruct.QueueWrites(queueableBinaryWriter);
-            this.Waa.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            this.HudWidgetInputsStruct.Defer(queueableBinaryWriter);
+            this.HudWidgetStateDefinitionStruct.Defer(queueableBinaryWriter);
+            this.Waa.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

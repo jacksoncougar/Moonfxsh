@@ -68,14 +68,14 @@ namespace Moonfish.Guerilla.Tags
             this.BlendScreensABCDCC = base.ReadBlockArrayData<AnimationBlendScreenBlock>(binaryReader, pointerQueue.Dequeue());
             this.AnimationsABCDCC = base.ReadBlockArrayData<AnimationPoolBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.SkeletonNodesABCDCC);
-            queueableBinaryWriter.QueueWrite(this.SoundReferencesABCDCC);
-            queueableBinaryWriter.QueueWrite(this.EffectReferencesABCDCC);
-            queueableBinaryWriter.QueueWrite(this.BlendScreensABCDCC);
-            queueableBinaryWriter.QueueWrite(this.AnimationsABCDCC);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.SkeletonNodesABCDCC);
+            queueableBinaryWriter.Defer(this.SoundReferencesABCDCC);
+            queueableBinaryWriter.Defer(this.EffectReferencesABCDCC);
+            queueableBinaryWriter.Defer(this.BlendScreensABCDCC);
+            queueableBinaryWriter.Defer(this.AnimationsABCDCC);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

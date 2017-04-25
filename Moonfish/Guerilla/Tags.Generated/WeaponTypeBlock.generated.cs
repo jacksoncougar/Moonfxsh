@@ -64,15 +64,15 @@ namespace Moonfish.Guerilla.Tags
             this.HighPrecacheCCCCC = base.ReadBlockArrayData<PrecacheListBlock>(binaryReader, pointerQueue.Dequeue());
             this.LowPrecacheCCCCC = base.ReadBlockArrayData<PrecacheListBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ActionsAABBCC);
-            queueableBinaryWriter.QueueWrite(this.OverlaysAABBCC);
-            queueableBinaryWriter.QueueWrite(this.DeathAndDamageAABBCC);
-            queueableBinaryWriter.QueueWrite(this.TransitionsAABBCC);
-            queueableBinaryWriter.QueueWrite(this.HighPrecacheCCCCC);
-            queueableBinaryWriter.QueueWrite(this.LowPrecacheCCCCC);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.ActionsAABBCC);
+            queueableBinaryWriter.Defer(this.OverlaysAABBCC);
+            queueableBinaryWriter.Defer(this.DeathAndDamageAABBCC);
+            queueableBinaryWriter.Defer(this.TransitionsAABBCC);
+            queueableBinaryWriter.Defer(this.HighPrecacheCCCCC);
+            queueableBinaryWriter.Defer(this.LowPrecacheCCCCC);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

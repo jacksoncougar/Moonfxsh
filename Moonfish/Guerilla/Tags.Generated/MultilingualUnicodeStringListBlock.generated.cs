@@ -53,11 +53,11 @@ namespace Moonfish.Guerilla.Tags
             this.StringReferences = base.ReadBlockArrayData<MultilingualUnicodeStringReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.StringDataUtf8 = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.StringReferences);
-            queueableBinaryWriter.QueueWrite(this.StringDataUtf8);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.StringReferences);
+            queueableBinaryWriter.Defer(this.StringDataUtf8);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

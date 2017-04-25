@@ -65,15 +65,15 @@ namespace Moonfish.Guerilla.Tags
             this.PathfindingSpheres = base.ReadBlockArrayData<CollisionModelPathfindingSphereBlock>(binaryReader, pointerQueue.Dequeue());
             this.Nodes = base.ReadBlockArrayData<CollisionModelNodeBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ImportInfo);
-            queueableBinaryWriter.QueueWrite(this.Errors);
-            queueableBinaryWriter.QueueWrite(this.Materials);
-            queueableBinaryWriter.QueueWrite(this.Regions);
-            queueableBinaryWriter.QueueWrite(this.PathfindingSpheres);
-            queueableBinaryWriter.QueueWrite(this.Nodes);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.ImportInfo);
+            queueableBinaryWriter.Defer(this.Errors);
+            queueableBinaryWriter.Defer(this.Materials);
+            queueableBinaryWriter.Defer(this.Regions);
+            queueableBinaryWriter.Defer(this.PathfindingSpheres);
+            queueableBinaryWriter.Defer(this.Nodes);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

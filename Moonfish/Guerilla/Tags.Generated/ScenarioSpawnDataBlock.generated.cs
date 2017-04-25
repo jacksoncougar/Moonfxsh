@@ -64,12 +64,12 @@ namespace Moonfish.Guerilla.Tags
             this.StaticRespawnZones = base.ReadBlockArrayData<StaticSpawnZoneBlock>(binaryReader, pointerQueue.Dequeue());
             this.StaticInitialSpawnZones = base.ReadBlockArrayData<StaticSpawnZoneBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.DynamicSpawnOverloads);
-            queueableBinaryWriter.QueueWrite(this.StaticRespawnZones);
-            queueableBinaryWriter.QueueWrite(this.StaticInitialSpawnZones);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.DynamicSpawnOverloads);
+            queueableBinaryWriter.Defer(this.StaticRespawnZones);
+            queueableBinaryWriter.Defer(this.StaticInitialSpawnZones);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

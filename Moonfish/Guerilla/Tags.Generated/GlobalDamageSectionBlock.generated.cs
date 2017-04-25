@@ -69,12 +69,12 @@ namespace Moonfish.Guerilla.Tags
             this.GNullBlock = base.ReadBlockArrayData<GNullBlock>(binaryReader, pointerQueue.Dequeue());
             this.GNullBlock0 = base.ReadBlockArrayData<GNullBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.InstantResponses);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock0);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.InstantResponses);
+            queueableBinaryWriter.Defer(this.GNullBlock);
+            queueableBinaryWriter.Defer(this.GNullBlock0);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

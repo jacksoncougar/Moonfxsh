@@ -146,11 +146,11 @@ namespace Moonfish.Guerilla.Tags
             this.MultitexOverlay = base.ReadBlockArrayData<GlobalHudMultitextureOverlayDefinition>(binaryReader, pointerQueue.Dequeue());
             this.GNullBlock = base.ReadBlockArrayData<GNullBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.MultitexOverlay);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.MultitexOverlay);
+            queueableBinaryWriter.Defer(this.GNullBlock);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

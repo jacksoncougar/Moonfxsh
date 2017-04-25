@@ -81,16 +81,16 @@ namespace Moonfish.Guerilla.Tags
             this.DeadPhysics.ReadInstances(binaryReader, pointerQueue);
             this.SentinelPhysics.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.DeadSphereShapes);
-            queueableBinaryWriter.QueueWrite(this.PillShapes);
-            queueableBinaryWriter.QueueWrite(this.SphereShapes);
-            this.GroundPhysics.QueueWrites(queueableBinaryWriter);
-            this.FlyingPhysics.QueueWrites(queueableBinaryWriter);
-            this.DeadPhysics.QueueWrites(queueableBinaryWriter);
-            this.SentinelPhysics.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.DeadSphereShapes);
+            queueableBinaryWriter.Defer(this.PillShapes);
+            queueableBinaryWriter.Defer(this.SphereShapes);
+            this.GroundPhysics.Defer(queueableBinaryWriter);
+            this.FlyingPhysics.Defer(queueableBinaryWriter);
+            this.DeadPhysics.Defer(queueableBinaryWriter);
+            this.SentinelPhysics.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

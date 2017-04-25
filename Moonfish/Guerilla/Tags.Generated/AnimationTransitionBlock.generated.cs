@@ -52,11 +52,11 @@ namespace Moonfish.Guerilla.Tags
             this.StateInfo.ReadInstances(binaryReader, pointerQueue);
             this.DestinationsAABBCC = base.ReadBlockArrayData<AnimationTransitionDestinationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.StateInfo.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.DestinationsAABBCC);
+            base.Defer(queueableBinaryWriter);
+            this.StateInfo.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.DestinationsAABBCC);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

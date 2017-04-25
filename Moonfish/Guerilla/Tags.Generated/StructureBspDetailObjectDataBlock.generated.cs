@@ -60,13 +60,13 @@ namespace Moonfish.Guerilla.Tags
             this.Counts = base.ReadBlockArrayData<GlobalDetailObjectCountsBlock>(binaryReader, pointerQueue.Dequeue());
             this.ZReferenceVectors = base.ReadBlockArrayData<GlobalZReferenceVectorBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Cells);
-            queueableBinaryWriter.QueueWrite(this.Instances);
-            queueableBinaryWriter.QueueWrite(this.Counts);
-            queueableBinaryWriter.QueueWrite(this.ZReferenceVectors);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Cells);
+            queueableBinaryWriter.Defer(this.Instances);
+            queueableBinaryWriter.Defer(this.Counts);
+            queueableBinaryWriter.Defer(this.ZReferenceVectors);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

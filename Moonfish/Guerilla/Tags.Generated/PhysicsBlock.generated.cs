@@ -96,12 +96,12 @@ namespace Moonfish.Guerilla.Tags
             this.PoweredMassPoints = base.ReadBlockArrayData<PoweredMassPointBlock>(binaryReader, pointerQueue.Dequeue());
             this.MassPoints = base.ReadBlockArrayData<MassPointBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.InertialMatrixAndInverse);
-            queueableBinaryWriter.QueueWrite(this.PoweredMassPoints);
-            queueableBinaryWriter.QueueWrite(this.MassPoints);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.InertialMatrixAndInverse);
+            queueableBinaryWriter.Defer(this.PoweredMassPoints);
+            queueableBinaryWriter.Defer(this.MassPoints);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

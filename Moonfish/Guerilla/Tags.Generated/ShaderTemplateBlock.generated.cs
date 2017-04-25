@@ -98,16 +98,16 @@ namespace Moonfish.Guerilla.Tags
             this.EMPTYSTRING0 = base.ReadBlockArrayData<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryReader, pointerQueue.Dequeue());
             this.PostprocessDefinition = base.ReadBlockArrayData<ShaderTemplatePostprocessDefinitionNewBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Documentation);
-            queueableBinaryWriter.QueueWrite(this.Properties);
-            queueableBinaryWriter.QueueWrite(this.Categories);
-            queueableBinaryWriter.QueueWrite(this.LODs);
-            queueableBinaryWriter.QueueWrite(this.EMPTYSTRING);
-            queueableBinaryWriter.QueueWrite(this.EMPTYSTRING0);
-            queueableBinaryWriter.QueueWrite(this.PostprocessDefinition);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Documentation);
+            queueableBinaryWriter.Defer(this.Properties);
+            queueableBinaryWriter.Defer(this.Categories);
+            queueableBinaryWriter.Defer(this.LODs);
+            queueableBinaryWriter.Defer(this.EMPTYSTRING);
+            queueableBinaryWriter.Defer(this.EMPTYSTRING0);
+            queueableBinaryWriter.Defer(this.PostprocessDefinition);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

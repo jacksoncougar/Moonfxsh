@@ -74,13 +74,13 @@ namespace Moonfish.Guerilla.Tags
                 this.EMPTYSTRING00[i].ReadInstances(binaryReader, pointerQueue);
             }
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
             int i;
             for (i = 0; (i < 6); i = (i + 1))
             {
-                this.EMPTYSTRING00[i].QueueWrites(queueableBinaryWriter);
+                this.EMPTYSTRING00[i].Defer(queueableBinaryWriter);
             }
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
@@ -129,9 +129,9 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+            public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
             {
-                base.QueueWrites(queueableBinaryWriter);
+                base.Defer(queueableBinaryWriter);
             }
             public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
             {

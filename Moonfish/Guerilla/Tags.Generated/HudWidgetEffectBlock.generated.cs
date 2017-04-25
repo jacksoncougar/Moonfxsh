@@ -63,14 +63,14 @@ namespace Moonfish.Guerilla.Tags
             this.YourMom2.ReadInstances(binaryReader, pointerQueue);
             this.YourMom3.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.YourMom.QueueWrites(queueableBinaryWriter);
-            this.YourMom0.QueueWrites(queueableBinaryWriter);
-            this.YourMom1.QueueWrites(queueableBinaryWriter);
-            this.YourMom2.QueueWrites(queueableBinaryWriter);
-            this.YourMom3.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            this.YourMom.Defer(queueableBinaryWriter);
+            this.YourMom0.Defer(queueableBinaryWriter);
+            this.YourMom1.Defer(queueableBinaryWriter);
+            this.YourMom2.Defer(queueableBinaryWriter);
+            this.YourMom3.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

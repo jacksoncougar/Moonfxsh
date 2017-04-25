@@ -54,11 +54,11 @@ namespace Moonfish.Guerilla.Tags
             this.CompiledShader = base.ReadDataShortArray(binaryReader, pointerQueue.Dequeue());
             this.Code = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.CompiledShader);
-            queueableBinaryWriter.QueueWrite(this.Code);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.CompiledShader);
+            queueableBinaryWriter.Defer(this.Code);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

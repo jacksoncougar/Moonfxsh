@@ -53,12 +53,12 @@ namespace Moonfish.Guerilla.Tags
             this.VehicleSuspensionCCAABB = base.ReadBlockArrayData<VehicleSuspensionBlock>(binaryReader, pointerQueue.Dequeue());
             this.ObjectOverlaysCCAABB = base.ReadBlockArrayData<ObjectAnimationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ModesAABBCC);
-            queueableBinaryWriter.QueueWrite(this.VehicleSuspensionCCAABB);
-            queueableBinaryWriter.QueueWrite(this.ObjectOverlaysCCAABB);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.ModesAABBCC);
+            queueableBinaryWriter.Defer(this.VehicleSuspensionCCAABB);
+            queueableBinaryWriter.Defer(this.ObjectOverlaysCCAABB);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

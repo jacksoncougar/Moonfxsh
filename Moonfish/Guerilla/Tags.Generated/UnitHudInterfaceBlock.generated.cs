@@ -412,19 +412,19 @@ namespace Moonfish.Guerilla.Tags
             this.Sounds = base.ReadBlockArrayData<UnitHudSoundBlock>(binaryReader, pointerQueue.Dequeue());
             this.Meters = base.ReadBlockArrayData<UnitHudAuxilaryPanelBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.MultitexOverlay);
-            queueableBinaryWriter.QueueWrite(this.MultitexOverlay0);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock);
-            queueableBinaryWriter.QueueWrite(this.MultitexOverlay1);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock0);
-            queueableBinaryWriter.QueueWrite(this.MultitexOverlay2);
-            queueableBinaryWriter.QueueWrite(this.MultitexOverlay3);
-            queueableBinaryWriter.QueueWrite(this.Overlays);
-            queueableBinaryWriter.QueueWrite(this.Sounds);
-            queueableBinaryWriter.QueueWrite(this.Meters);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.MultitexOverlay);
+            queueableBinaryWriter.Defer(this.MultitexOverlay0);
+            queueableBinaryWriter.Defer(this.GNullBlock);
+            queueableBinaryWriter.Defer(this.MultitexOverlay1);
+            queueableBinaryWriter.Defer(this.GNullBlock0);
+            queueableBinaryWriter.Defer(this.MultitexOverlay2);
+            queueableBinaryWriter.Defer(this.MultitexOverlay3);
+            queueableBinaryWriter.Defer(this.Overlays);
+            queueableBinaryWriter.Defer(this.Sounds);
+            queueableBinaryWriter.Defer(this.Meters);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

@@ -75,11 +75,11 @@ namespace Moonfish.Guerilla.Tags
             this.PhysicsProperties.ReadInstances(binaryReader, pointerQueue);
             this.Sweeteners.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.PhysicsProperties.QueueWrites(queueableBinaryWriter);
-            this.Sweeteners.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            this.PhysicsProperties.Defer(queueableBinaryWriter);
+            this.Sweeteners.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

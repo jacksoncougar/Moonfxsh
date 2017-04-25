@@ -59,14 +59,14 @@ namespace Moonfish.Guerilla.Tags
             this.Implementations = base.ReadBlockArrayData<ShaderTemplatePostprocessImplementationNewBlock>(binaryReader, pointerQueue.Dequeue());
             this.Remappings = base.ReadBlockArrayData<ShaderTemplatePostprocessRemappingNewBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.LevelsOfDetail);
-            queueableBinaryWriter.QueueWrite(this.Layers);
-            queueableBinaryWriter.QueueWrite(this.Passes);
-            queueableBinaryWriter.QueueWrite(this.Implementations);
-            queueableBinaryWriter.QueueWrite(this.Remappings);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.LevelsOfDetail);
+            queueableBinaryWriter.Defer(this.Layers);
+            queueableBinaryWriter.Defer(this.Passes);
+            queueableBinaryWriter.Defer(this.Implementations);
+            queueableBinaryWriter.Defer(this.Remappings);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

@@ -62,13 +62,13 @@ namespace Moonfish.Guerilla.Tags
             this.BoundingFogPlaneIndices = base.ReadBlockArrayData<StructureBspDebugInfoIndicesBlock>(binaryReader, pointerQueue.Dequeue());
             this.CollisionFogPlaneIndices = base.ReadBlockArrayData<StructureBspDebugInfoIndicesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Lines);
-            queueableBinaryWriter.QueueWrite(this.ImmersedClusterIndices);
-            queueableBinaryWriter.QueueWrite(this.BoundingFogPlaneIndices);
-            queueableBinaryWriter.QueueWrite(this.CollisionFogPlaneIndices);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Lines);
+            queueableBinaryWriter.Defer(this.ImmersedClusterIndices);
+            queueableBinaryWriter.Defer(this.BoundingFogPlaneIndices);
+            queueableBinaryWriter.Defer(this.CollisionFogPlaneIndices);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

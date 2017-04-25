@@ -96,7 +96,7 @@ namespace Moonfish.Graphics
             foreach (var structureBspInstancedGeometryInstancesBlock in structureBSP.InstancedGeometryInstances)
             {
                 var instanceMeshArray = new InfoTriangleIndexVertexArray();
-                var structureBspInstancedGeometryDefinitionBlock = structureBSP.InstancedGeometriesDefinitions[structureBspInstancedGeometryInstancesBlock.InstanceDefinition];
+                var structureBspInstancedGeometryDefinitionBlock = structureBSP.InstancedGeometriesDefinitions[(int) structureBspInstancedGeometryInstancesBlock.InstanceDefinition];
                 if (structureBspInstancedGeometryDefinitionBlock.RenderInfo.RenderData.Length < 1) continue;
 
                 var globalGeometrySectionStructBlock = structureBspInstancedGeometryDefinitionBlock.RenderInfo.RenderData[0].Section;

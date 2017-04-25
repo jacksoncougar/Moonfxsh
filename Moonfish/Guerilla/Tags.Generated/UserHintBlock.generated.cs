@@ -71,18 +71,18 @@ namespace Moonfish.Guerilla.Tags
             this.WellHints = base.ReadBlockArrayData<UserHintWellBlock>(binaryReader, pointerQueue.Dequeue());
             this.FlightHints = base.ReadBlockArrayData<UserHintFlightBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.PointGeometry);
-            queueableBinaryWriter.QueueWrite(this.RayGeometry);
-            queueableBinaryWriter.QueueWrite(this.LineSegmentGeometry);
-            queueableBinaryWriter.QueueWrite(this.ParallelogramGeometry);
-            queueableBinaryWriter.QueueWrite(this.PolygonGeometry);
-            queueableBinaryWriter.QueueWrite(this.JumpHints);
-            queueableBinaryWriter.QueueWrite(this.ClimbHints);
-            queueableBinaryWriter.QueueWrite(this.WellHints);
-            queueableBinaryWriter.QueueWrite(this.FlightHints);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.PointGeometry);
+            queueableBinaryWriter.Defer(this.RayGeometry);
+            queueableBinaryWriter.Defer(this.LineSegmentGeometry);
+            queueableBinaryWriter.Defer(this.ParallelogramGeometry);
+            queueableBinaryWriter.Defer(this.PolygonGeometry);
+            queueableBinaryWriter.Defer(this.JumpHints);
+            queueableBinaryWriter.Defer(this.ClimbHints);
+            queueableBinaryWriter.Defer(this.WellHints);
+            queueableBinaryWriter.Defer(this.FlightHints);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

@@ -60,12 +60,12 @@ namespace Moonfish.Guerilla.Tags
             this.FogOpposite = base.ReadBlockArrayData<SkyLightFogBlock>(binaryReader, pointerQueue.Dequeue());
             this.Radiosity = base.ReadBlockArrayData<SkyRadiosityLightBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Fog);
-            queueableBinaryWriter.QueueWrite(this.FogOpposite);
-            queueableBinaryWriter.QueueWrite(this.Radiosity);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Fog);
+            queueableBinaryWriter.Defer(this.FogOpposite);
+            queueableBinaryWriter.Defer(this.Radiosity);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

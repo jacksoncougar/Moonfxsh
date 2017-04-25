@@ -64,13 +64,13 @@ namespace Moonfish.Guerilla.Tags
             this.ClusterRemapTable = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
             this.VisibilityVolumes = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Projections);
-            queueableBinaryWriter.QueueWrite(this.VisibilityClusters);
-            queueableBinaryWriter.QueueWrite(this.ClusterRemapTable);
-            queueableBinaryWriter.QueueWrite(this.VisibilityVolumes);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Projections);
+            queueableBinaryWriter.Defer(this.VisibilityClusters);
+            queueableBinaryWriter.Defer(this.ClusterRemapTable);
+            queueableBinaryWriter.Defer(this.VisibilityVolumes);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

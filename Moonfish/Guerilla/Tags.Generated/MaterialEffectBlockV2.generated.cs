@@ -53,12 +53,12 @@ namespace Moonfish.Guerilla.Tags
             this.Sounds = base.ReadBlockArrayData<MaterialEffectMaterialBlock>(binaryReader, pointerQueue.Dequeue());
             this.Effects = base.ReadBlockArrayData<MaterialEffectMaterialBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.OldMaterials);
-            queueableBinaryWriter.QueueWrite(this.Sounds);
-            queueableBinaryWriter.QueueWrite(this.Effects);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.OldMaterials);
+            queueableBinaryWriter.Defer(this.Sounds);
+            queueableBinaryWriter.Defer(this.Effects);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

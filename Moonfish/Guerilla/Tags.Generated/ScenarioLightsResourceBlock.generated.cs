@@ -65,15 +65,15 @@ namespace Moonfish.Guerilla.Tags
             this.Objects = base.ReadBlockArrayData<ScenarioLightBlock>(binaryReader, pointerQueue.Dequeue());
             this.EditorFolders = base.ReadBlockArrayData<GScenarioEditorFolderBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Names);
-            queueableBinaryWriter.QueueWrite(this.DontUseMeScenarioEnvironmentObjectBlock);
-            queueableBinaryWriter.QueueWrite(this.StructureReferences);
-            queueableBinaryWriter.QueueWrite(this.Palette);
-            queueableBinaryWriter.QueueWrite(this.Objects);
-            queueableBinaryWriter.QueueWrite(this.EditorFolders);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Names);
+            queueableBinaryWriter.Defer(this.DontUseMeScenarioEnvironmentObjectBlock);
+            queueableBinaryWriter.Defer(this.StructureReferences);
+            queueableBinaryWriter.Defer(this.Palette);
+            queueableBinaryWriter.Defer(this.Objects);
+            queueableBinaryWriter.Defer(this.EditorFolders);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

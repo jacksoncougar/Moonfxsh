@@ -62,11 +62,11 @@ namespace Moonfish.Guerilla.Tags
             this.Tracks = base.ReadBlockArrayData<LoopingSoundTrackBlock>(binaryReader, pointerQueue.Dequeue());
             this.DetailSounds = base.ReadBlockArrayData<LoopingSoundDetailBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Tracks);
-            queueableBinaryWriter.QueueWrite(this.DetailSounds);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Tracks);
+            queueableBinaryWriter.Defer(this.DetailSounds);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

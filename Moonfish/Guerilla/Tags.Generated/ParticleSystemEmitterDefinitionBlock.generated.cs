@@ -82,18 +82,18 @@ namespace Moonfish.Guerilla.Tags
             this.EmissionRadius.ReadInstances(binaryReader, pointerQueue);
             this.EmissionAngle.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.ParticleEmissionRate.QueueWrites(queueableBinaryWriter);
-            this.ParticleLifespan.QueueWrites(queueableBinaryWriter);
-            this.ParticleVelocity.QueueWrites(queueableBinaryWriter);
-            this.ParticleAngularVelocity.QueueWrites(queueableBinaryWriter);
-            this.ParticleSize.QueueWrites(queueableBinaryWriter);
-            this.ParticleTint.QueueWrites(queueableBinaryWriter);
-            this.ParticleAlpha.QueueWrites(queueableBinaryWriter);
-            this.EmissionRadius.QueueWrites(queueableBinaryWriter);
-            this.EmissionAngle.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            this.ParticleEmissionRate.Defer(queueableBinaryWriter);
+            this.ParticleLifespan.Defer(queueableBinaryWriter);
+            this.ParticleVelocity.Defer(queueableBinaryWriter);
+            this.ParticleAngularVelocity.Defer(queueableBinaryWriter);
+            this.ParticleSize.Defer(queueableBinaryWriter);
+            this.ParticleTint.Defer(queueableBinaryWriter);
+            this.ParticleAlpha.Defer(queueableBinaryWriter);
+            this.EmissionRadius.Defer(queueableBinaryWriter);
+            this.EmissionAngle.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

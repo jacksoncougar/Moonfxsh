@@ -50,11 +50,11 @@ namespace Moonfish.Guerilla.Tags
             this.ObjectIdentifier.ReadInstances(binaryReader, pointerQueue);
             this.RenderLighting.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.ObjectIdentifier.QueueWrites(queueableBinaryWriter);
-            this.RenderLighting.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            this.ObjectIdentifier.Defer(queueableBinaryWriter);
+            this.RenderLighting.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

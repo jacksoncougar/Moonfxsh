@@ -65,15 +65,15 @@ namespace Moonfish.Guerilla.Tags
             this.PlayerTrainingData = base.ReadBlockArrayData<PlayerTrainingEntryDataBlock>(binaryReader, pointerQueue.Dequeue());
             this.Constants.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Dashlights);
-            queueableBinaryWriter.QueueWrite(this.WaypointArrows);
-            queueableBinaryWriter.QueueWrite(this.Waypoints);
-            queueableBinaryWriter.QueueWrite(this.HudSounds);
-            queueableBinaryWriter.QueueWrite(this.PlayerTrainingData);
-            this.Constants.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Dashlights);
+            queueableBinaryWriter.Defer(this.WaypointArrows);
+            queueableBinaryWriter.Defer(this.Waypoints);
+            queueableBinaryWriter.Defer(this.HudSounds);
+            queueableBinaryWriter.Defer(this.PlayerTrainingData);
+            this.Constants.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

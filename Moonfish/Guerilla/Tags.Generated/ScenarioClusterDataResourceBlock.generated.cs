@@ -60,14 +60,14 @@ namespace Moonfish.Guerilla.Tags
             this.WeatherPalette = base.ReadBlockArrayData<StructureBspWeatherPaletteBlock>(binaryReader, pointerQueue.Dequeue());
             this.AtmosphericFogPalette = base.ReadBlockArrayData<ScenarioAtmosphericFogPalette>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ClusterData);
-            queueableBinaryWriter.QueueWrite(this.BackgroundSoundPalette);
-            queueableBinaryWriter.QueueWrite(this.SoundEnvironmentPalette);
-            queueableBinaryWriter.QueueWrite(this.WeatherPalette);
-            queueableBinaryWriter.QueueWrite(this.AtmosphericFogPalette);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.ClusterData);
+            queueableBinaryWriter.Defer(this.BackgroundSoundPalette);
+            queueableBinaryWriter.Defer(this.SoundEnvironmentPalette);
+            queueableBinaryWriter.Defer(this.WeatherPalette);
+            queueableBinaryWriter.Defer(this.AtmosphericFogPalette);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

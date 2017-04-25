@@ -150,11 +150,11 @@ namespace Moonfish.Guerilla.Tags
             this.Gears = base.ReadBlockArrayData<GearBlock>(binaryReader, pointerQueue.Dequeue());
             this.HavokVehiclePhysics.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Gears);
-            this.HavokVehiclePhysics.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Gears);
+            this.HavokVehiclePhysics.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

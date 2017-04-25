@@ -87,13 +87,13 @@ namespace Moonfish.Guerilla.Tags
             this.PostprocessDefinition = base.ReadBlockArrayData<ShaderPostprocessDefinitionNewBlock>(binaryReader, pointerQueue.Dequeue());
             this.PredictedResources = base.ReadBlockArrayData<PredictedResourceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.RuntimeProperties);
-            queueableBinaryWriter.QueueWrite(this.Parameters);
-            queueableBinaryWriter.QueueWrite(this.PostprocessDefinition);
-            queueableBinaryWriter.QueueWrite(this.PredictedResources);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.RuntimeProperties);
+            queueableBinaryWriter.Defer(this.Parameters);
+            queueableBinaryWriter.Defer(this.PostprocessDefinition);
+            queueableBinaryWriter.Defer(this.PredictedResources);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

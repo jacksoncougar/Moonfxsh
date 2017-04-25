@@ -109,16 +109,16 @@ namespace Moonfish.Guerilla.Tags
             this.GNullBlock = base.ReadBlockArrayData<GNullBlock>(binaryReader, pointerQueue.Dequeue());
             this.ScreenEffect = base.ReadBlockArrayData<GlobalHudScreenEffectDefinition>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.StaticElements);
-            queueableBinaryWriter.QueueWrite(this.MeterElements);
-            queueableBinaryWriter.QueueWrite(this.NumberElements);
-            queueableBinaryWriter.QueueWrite(this.Crosshairs);
-            queueableBinaryWriter.QueueWrite(this.OverlayElements);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock);
-            queueableBinaryWriter.QueueWrite(this.ScreenEffect);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.StaticElements);
+            queueableBinaryWriter.Defer(this.MeterElements);
+            queueableBinaryWriter.Defer(this.NumberElements);
+            queueableBinaryWriter.Defer(this.Crosshairs);
+            queueableBinaryWriter.Defer(this.OverlayElements);
+            queueableBinaryWriter.Defer(this.GNullBlock);
+            queueableBinaryWriter.Defer(this.ScreenEffect);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

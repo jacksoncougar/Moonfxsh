@@ -59,13 +59,13 @@ namespace Moonfish.Guerilla.Tags
             this.DialogueData = base.ReadBlockArrayData<DialogueDataBlock>(binaryReader, pointerQueue.Dequeue());
             this.InvoluntaryData = base.ReadBlockArrayData<InvoluntaryDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Vocalizations);
-            queueableBinaryWriter.QueueWrite(this.Patterns);
-            queueableBinaryWriter.QueueWrite(this.DialogueData);
-            queueableBinaryWriter.QueueWrite(this.InvoluntaryData);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Vocalizations);
+            queueableBinaryWriter.Defer(this.Patterns);
+            queueableBinaryWriter.Defer(this.DialogueData);
+            queueableBinaryWriter.Defer(this.InvoluntaryData);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

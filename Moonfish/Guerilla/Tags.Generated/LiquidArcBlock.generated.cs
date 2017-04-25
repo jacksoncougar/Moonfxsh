@@ -123,15 +123,15 @@ namespace Moonfish.Guerilla.Tags
             this.Rangescale.ReadInstances(binaryReader, pointerQueue);
             this.Brightnessscale.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.HorizontalRange.QueueWrites(queueableBinaryWriter);
-            this.VerticalRange.QueueWrites(queueableBinaryWriter);
-            this.Roughness.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Cores);
-            this.Rangescale.QueueWrites(queueableBinaryWriter);
-            this.Brightnessscale.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            this.HorizontalRange.Defer(queueableBinaryWriter);
+            this.VerticalRange.Defer(queueableBinaryWriter);
+            this.Roughness.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Cores);
+            this.Rangescale.Defer(queueableBinaryWriter);
+            this.Brightnessscale.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

@@ -52,11 +52,11 @@ namespace Moonfish.Guerilla.Tags
             this.WeaponClassAABBCC = base.ReadBlockArrayData<WeaponClassBlock>(binaryReader, pointerQueue.Dequeue());
             this.ModeIkAABBCC = base.ReadBlockArrayData<AnimationIkBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.WeaponClassAABBCC);
-            queueableBinaryWriter.QueueWrite(this.ModeIkAABBCC);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.WeaponClassAABBCC);
+            queueableBinaryWriter.Defer(this.ModeIkAABBCC);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

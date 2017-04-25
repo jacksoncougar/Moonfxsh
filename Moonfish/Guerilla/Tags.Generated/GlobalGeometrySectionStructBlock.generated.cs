@@ -70,17 +70,17 @@ namespace Moonfish.Guerilla.Tags
             this.MoppReorderTable = base.ReadBlockArrayData<GlobalGeometrySectionStripIndexBlock>(binaryReader, pointerQueue.Dequeue());
             this.VertexBuffers = base.ReadBlockArrayData<GlobalGeometrySectionVertexBufferBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Parts);
-            queueableBinaryWriter.QueueWrite(this.Subparts);
-            queueableBinaryWriter.QueueWrite(this.VisibilityBounds);
-            queueableBinaryWriter.QueueWrite(this.RawVertices);
-            queueableBinaryWriter.QueueWrite(this.StripIndices);
-            queueableBinaryWriter.QueueWrite(this.VisibilityMoppCode);
-            queueableBinaryWriter.QueueWrite(this.MoppReorderTable);
-            queueableBinaryWriter.QueueWrite(this.VertexBuffers);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Parts);
+            queueableBinaryWriter.Defer(this.Subparts);
+            queueableBinaryWriter.Defer(this.VisibilityBounds);
+            queueableBinaryWriter.Defer(this.RawVertices);
+            queueableBinaryWriter.Defer(this.StripIndices);
+            queueableBinaryWriter.Defer(this.VisibilityMoppCode);
+            queueableBinaryWriter.Defer(this.MoppReorderTable);
+            queueableBinaryWriter.Defer(this.VertexBuffers);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

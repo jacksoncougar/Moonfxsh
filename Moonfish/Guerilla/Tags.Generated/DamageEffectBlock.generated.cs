@@ -169,11 +169,11 @@ namespace Moonfish.Guerilla.Tags
             this.Blah.ReadInstances(binaryReader, pointerQueue);
             this.PlayerResponses = base.ReadBlockArrayData<DamageEffectPlayerResponseBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.Blah.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.PlayerResponses);
+            base.Defer(queueableBinaryWriter);
+            this.Blah.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.PlayerResponses);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

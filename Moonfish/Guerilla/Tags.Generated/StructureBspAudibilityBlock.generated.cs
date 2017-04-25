@@ -63,14 +63,14 @@ namespace Moonfish.Guerilla.Tags
             this.ClusterDistances = base.ReadBlockArrayData<EncodedClusterDistancesBlock>(binaryReader, pointerQueue.Dequeue());
             this.MachineDoorMapping = base.ReadBlockArrayData<OccluderToMachineDoorMapping>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.EncodedDoorPas);
-            queueableBinaryWriter.QueueWrite(this.ClusterDoorPortalEncodedPas);
-            queueableBinaryWriter.QueueWrite(this.AiDeafeningPas);
-            queueableBinaryWriter.QueueWrite(this.ClusterDistances);
-            queueableBinaryWriter.QueueWrite(this.MachineDoorMapping);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.EncodedDoorPas);
+            queueableBinaryWriter.Defer(this.ClusterDoorPortalEncodedPas);
+            queueableBinaryWriter.Defer(this.AiDeafeningPas);
+            queueableBinaryWriter.Defer(this.ClusterDistances);
+            queueableBinaryWriter.Defer(this.MachineDoorMapping);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

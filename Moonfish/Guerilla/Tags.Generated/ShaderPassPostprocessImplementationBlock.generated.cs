@@ -98,20 +98,20 @@ namespace Moonfish.Guerilla.Tags
             this.PixelShaderCombiners = base.ReadBlockArrayData<PixelShaderCombinerBlock>(binaryReader, pointerQueue.Dequeue());
             this.PixelShaderConstants = base.ReadBlockArrayData<PixelShaderConstantBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.GPUState.QueueWrites(queueableBinaryWriter);
-            this.GPUConstantState.QueueWrites(queueableBinaryWriter);
-            this.GPUVolatileState.QueueWrites(queueableBinaryWriter);
-            this.GPUDefaultState.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ValueExterns);
-            queueableBinaryWriter.QueueWrite(this.ColorExterns);
-            queueableBinaryWriter.QueueWrite(this.SwitchExterns);
-            queueableBinaryWriter.QueueWrite(this.PixelShaderFragments);
-            queueableBinaryWriter.QueueWrite(this.PixelShaderPermutations);
-            queueableBinaryWriter.QueueWrite(this.PixelShaderCombiners);
-            queueableBinaryWriter.QueueWrite(this.PixelShaderConstants);
+            base.Defer(queueableBinaryWriter);
+            this.GPUState.Defer(queueableBinaryWriter);
+            this.GPUConstantState.Defer(queueableBinaryWriter);
+            this.GPUVolatileState.Defer(queueableBinaryWriter);
+            this.GPUDefaultState.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.ValueExterns);
+            queueableBinaryWriter.Defer(this.ColorExterns);
+            queueableBinaryWriter.Defer(this.SwitchExterns);
+            queueableBinaryWriter.Defer(this.PixelShaderFragments);
+            queueableBinaryWriter.Defer(this.PixelShaderPermutations);
+            queueableBinaryWriter.Defer(this.PixelShaderCombiners);
+            queueableBinaryWriter.Defer(this.PixelShaderConstants);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

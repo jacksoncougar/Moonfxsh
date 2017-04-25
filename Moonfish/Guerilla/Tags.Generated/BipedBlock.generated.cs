@@ -113,12 +113,12 @@ namespace Moonfish.Guerilla.Tags
             this.Physics.ReadInstances(binaryReader, pointerQueue);
             this.ContactPoints = base.ReadBlockArrayData<ContactPointBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.LockonData.QueueWrites(queueableBinaryWriter);
-            this.Physics.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ContactPoints);
+            base.Defer(queueableBinaryWriter);
+            this.LockonData.Defer(queueableBinaryWriter);
+            this.Physics.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.ContactPoints);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

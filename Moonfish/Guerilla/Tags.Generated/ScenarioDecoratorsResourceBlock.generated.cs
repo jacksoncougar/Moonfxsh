@@ -51,11 +51,11 @@ namespace Moonfish.Guerilla.Tags
             this.Decorator = base.ReadBlockArrayData<DecoratorPlacementDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
             this.DecoratorPalette = base.ReadBlockArrayData<ScenarioDecoratorSetPaletteEntryBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Decorator);
-            queueableBinaryWriter.QueueWrite(this.DecoratorPalette);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Decorator);
+            queueableBinaryWriter.Defer(this.DecoratorPalette);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

@@ -56,12 +56,12 @@ namespace Moonfish.Guerilla.Tags
             this.BackgroundPlates = base.ReadBlockArrayData<GlobalWeatherBackgroundPlateBlock>(binaryReader, pointerQueue.Dequeue());
             this.WindModel.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ParticleSystem);
-            queueableBinaryWriter.QueueWrite(this.BackgroundPlates);
-            this.WindModel.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.ParticleSystem);
+            queueableBinaryWriter.Defer(this.BackgroundPlates);
+            this.WindModel.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

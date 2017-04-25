@@ -1,4 +1,7 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using JetBrains.Annotations;
 using Moonfish.Guerilla;
 
 namespace Moonfish.Tags
@@ -14,7 +17,7 @@ namespace Moonfish.Tags
             return shortBlockIndex.index;
         }
 
-        public static implicit operator ShortBlockIndex1(short value)
+        public static explicit operator ShortBlockIndex1(short value)
         {
             return new ShortBlockIndex1 {index = value};
         }

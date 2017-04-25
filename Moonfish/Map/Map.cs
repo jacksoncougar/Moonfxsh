@@ -28,7 +28,7 @@ namespace Moonfish
         private readonly Dictionary<TagIdent, GuerillaBlock> tagCache;
         private readonly Dictionary<TagIdent, string> tagHashs;
 
-        private readonly VirtualStreamIndex activeAllocation =
+        private VirtualStreamIndex activeAllocation =
             VirtualStreamIndex.VirtualStream1;
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Moonfish
             BaseStream.CreateVirtualSection(
                 Index[Index.GlobalsIdent].VirtualAddress,
                 Header.IndexInfo.MetaAllocationLength,
-                new AddressModifier(secondaryMagic), true);
+                new AddressMapFunction(secondaryMagic), true);
 
             /* Intent: read the sbsp and lightmap address and lengths from the scenario tag 
              * and store them in the Tags array.
@@ -248,6 +248,7 @@ namespace Moonfish
         {
             BaseStream.DisableVirtualSection(activeAllocation);
             BaseStream.EnableVirtualSection(allocation);
+            activeAllocation = allocation;
         }
 
         private string CalculateHash(TagIdent ident)

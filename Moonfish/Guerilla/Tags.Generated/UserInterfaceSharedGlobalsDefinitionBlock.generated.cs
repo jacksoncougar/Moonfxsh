@@ -248,15 +248,15 @@ namespace Moonfish.Guerilla.Tags
             this.ListItemSkins = base.ReadBlockArrayData<ListSkinReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.SkillMappings = base.ReadBlockArrayData<SkillToRankMappingBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Errors);
-            queueableBinaryWriter.QueueWrite(this.ScreenAnimations);
-            queueableBinaryWriter.QueueWrite(this.ShapeGroups);
-            queueableBinaryWriter.QueueWrite(this.Animations);
-            queueableBinaryWriter.QueueWrite(this.ListItemSkins);
-            queueableBinaryWriter.QueueWrite(this.SkillMappings);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Errors);
+            queueableBinaryWriter.Defer(this.ScreenAnimations);
+            queueableBinaryWriter.Defer(this.ShapeGroups);
+            queueableBinaryWriter.Defer(this.Animations);
+            queueableBinaryWriter.Defer(this.ListItemSkins);
+            queueableBinaryWriter.Defer(this.SkillMappings);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

@@ -102,28 +102,28 @@ namespace Moonfish.Guerilla.Tags
             this.Flocks = base.ReadBlockArrayData<FlockDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
             this.TriggerVolumeReferences = base.ReadBlockArrayData<ScenarioTriggerVolumeBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.StylePalette);
-            queueableBinaryWriter.QueueWrite(this.SquadGroups);
-            queueableBinaryWriter.QueueWrite(this.Squads);
-            queueableBinaryWriter.QueueWrite(this.Zones);
-            queueableBinaryWriter.QueueWrite(this.CharacterPalette);
-            queueableBinaryWriter.QueueWrite(this.AIAnimationReferences);
-            queueableBinaryWriter.QueueWrite(this.AIScriptReferences);
-            queueableBinaryWriter.QueueWrite(this.AIRecordingReferences);
-            queueableBinaryWriter.QueueWrite(this.AIConversations);
-            queueableBinaryWriter.QueueWrite(this.ScriptingData);
-            queueableBinaryWriter.QueueWrite(this.Orders);
-            queueableBinaryWriter.QueueWrite(this.Triggers);
-            queueableBinaryWriter.QueueWrite(this.BSPPreferences);
-            queueableBinaryWriter.QueueWrite(this.WeaponReferences);
-            queueableBinaryWriter.QueueWrite(this.VehicleReferences);
-            queueableBinaryWriter.QueueWrite(this.VehicleDatumReferences);
-            queueableBinaryWriter.QueueWrite(this.MissionDialogueScenes);
-            queueableBinaryWriter.QueueWrite(this.Flocks);
-            queueableBinaryWriter.QueueWrite(this.TriggerVolumeReferences);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.StylePalette);
+            queueableBinaryWriter.Defer(this.SquadGroups);
+            queueableBinaryWriter.Defer(this.Squads);
+            queueableBinaryWriter.Defer(this.Zones);
+            queueableBinaryWriter.Defer(this.CharacterPalette);
+            queueableBinaryWriter.Defer(this.AIAnimationReferences);
+            queueableBinaryWriter.Defer(this.AIScriptReferences);
+            queueableBinaryWriter.Defer(this.AIRecordingReferences);
+            queueableBinaryWriter.Defer(this.AIConversations);
+            queueableBinaryWriter.Defer(this.ScriptingData);
+            queueableBinaryWriter.Defer(this.Orders);
+            queueableBinaryWriter.Defer(this.Triggers);
+            queueableBinaryWriter.Defer(this.BSPPreferences);
+            queueableBinaryWriter.Defer(this.WeaponReferences);
+            queueableBinaryWriter.Defer(this.VehicleReferences);
+            queueableBinaryWriter.Defer(this.VehicleDatumReferences);
+            queueableBinaryWriter.Defer(this.MissionDialogueScenes);
+            queueableBinaryWriter.Defer(this.Flocks);
+            queueableBinaryWriter.Defer(this.TriggerVolumeReferences);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

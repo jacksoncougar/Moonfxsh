@@ -67,14 +67,14 @@ namespace Moonfish.Guerilla.Tags
             this.SpriteVertices = base.ReadBlockArrayData<SpriteVerticesBlock>(binaryReader, pointerQueue.Dequeue());
             this.SpriteIndices = base.ReadBlockArrayData<IndicesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Placements);
-            queueableBinaryWriter.QueueWrite(this.DecalVertices);
-            queueableBinaryWriter.QueueWrite(this.DecalIndices);
-            queueableBinaryWriter.QueueWrite(this.SpriteVertices);
-            queueableBinaryWriter.QueueWrite(this.SpriteIndices);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Placements);
+            queueableBinaryWriter.Defer(this.DecalVertices);
+            queueableBinaryWriter.Defer(this.DecalIndices);
+            queueableBinaryWriter.Defer(this.SpriteVertices);
+            queueableBinaryWriter.Defer(this.SpriteIndices);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

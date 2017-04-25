@@ -152,21 +152,21 @@ namespace Moonfish.Guerilla.Tags
             this.Boost.ReadInstances(binaryReader, pointerQueue);
             this.Lipsync.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.UnitCamera.QueueWrites(queueableBinaryWriter);
-            this.Acceleration.QueueWrites(queueableBinaryWriter);
-            this.MoreDamnNodes.QueueWrites(queueableBinaryWriter);
-            this.YourMomma.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Postures);
-            queueableBinaryWriter.QueueWrite(this.NEWHUDINTERFACES);
-            queueableBinaryWriter.QueueWrite(this.DialogueVariants);
-            queueableBinaryWriter.QueueWrite(this.PoweredSeats);
-            queueableBinaryWriter.QueueWrite(this.Weapons);
-            queueableBinaryWriter.QueueWrite(this.Seats);
-            this.Boost.QueueWrites(queueableBinaryWriter);
-            this.Lipsync.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            this.UnitCamera.Defer(queueableBinaryWriter);
+            this.Acceleration.Defer(queueableBinaryWriter);
+            this.MoreDamnNodes.Defer(queueableBinaryWriter);
+            this.YourMomma.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Postures);
+            queueableBinaryWriter.Defer(this.NEWHUDINTERFACES);
+            queueableBinaryWriter.Defer(this.DialogueVariants);
+            queueableBinaryWriter.Defer(this.PoweredSeats);
+            queueableBinaryWriter.Defer(this.Weapons);
+            queueableBinaryWriter.Defer(this.Seats);
+            this.Boost.Defer(queueableBinaryWriter);
+            this.Lipsync.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

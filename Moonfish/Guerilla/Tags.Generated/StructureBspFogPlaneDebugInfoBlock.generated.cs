@@ -59,12 +59,12 @@ namespace Moonfish.Guerilla.Tags
             this.IntersectedClusterIndices = base.ReadBlockArrayData<StructureBspDebugInfoIndicesBlock>(binaryReader, pointerQueue.Dequeue());
             this.InfExtentClusterIndices = base.ReadBlockArrayData<StructureBspDebugInfoIndicesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Lines);
-            queueableBinaryWriter.QueueWrite(this.IntersectedClusterIndices);
-            queueableBinaryWriter.QueueWrite(this.InfExtentClusterIndices);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Lines);
+            queueableBinaryWriter.Defer(this.IntersectedClusterIndices);
+            queueableBinaryWriter.Defer(this.InfExtentClusterIndices);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

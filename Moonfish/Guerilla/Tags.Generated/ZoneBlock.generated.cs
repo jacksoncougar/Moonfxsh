@@ -58,11 +58,11 @@ namespace Moonfish.Guerilla.Tags
             this.FiringPositions = base.ReadBlockArrayData<FiringPositionsBlock>(binaryReader, pointerQueue.Dequeue());
             this.Areas = base.ReadBlockArrayData<AreasBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.FiringPositions);
-            queueableBinaryWriter.QueueWrite(this.Areas);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.FiringPositions);
+            queueableBinaryWriter.Defer(this.Areas);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

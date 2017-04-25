@@ -74,11 +74,11 @@ namespace Moonfish.Guerilla.Tags
             this.Objects = base.ReadBlockArrayData<UiObjectReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.Lights = base.ReadBlockArrayData<UiLightReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Objects);
-            queueableBinaryWriter.QueueWrite(this.Lights);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Objects);
+            queueableBinaryWriter.Defer(this.Lights);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

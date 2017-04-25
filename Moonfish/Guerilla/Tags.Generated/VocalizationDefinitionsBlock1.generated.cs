@@ -100,11 +100,11 @@ namespace Moonfish.Guerilla.Tags
             this.Reponses = base.ReadBlockArrayData<ResponseBlock>(binaryReader, pointerQueue.Dequeue());
             this.Children = base.ReadBlockArrayData<VocalizationDefinitionsBlock2>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Reponses);
-            queueableBinaryWriter.QueueWrite(this.Children);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Reponses);
+            queueableBinaryWriter.Defer(this.Children);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

@@ -276,7 +276,7 @@ namespace Moonfish.Guerilla
 
         public virtual ShortBlockIndex1 ReadShortBlockIndex1()
         {
-            return ReadInt16();
+            return (ShortBlockIndex1) ReadInt16();
         }
 
         public virtual ShortBlockIndex2 ReadShortBlockIndex2()

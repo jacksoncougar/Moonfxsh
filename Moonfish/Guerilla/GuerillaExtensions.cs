@@ -11,15 +11,9 @@ namespace Moonfish.Guerilla
             var queueableBinaryWriter = new QueueableBlamBinaryWriter(output,
                 (int)output.Position + block.SerializedSize);
 
-            block.QueueWrites(queueableBinaryWriter);
+            block.Defer(queueableBinaryWriter);
             block.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.WriteQueue();
-        }
-
-        public static void Write(this BlamBinaryWriter blamBinaryWriter, GuerillaBlock block)
-        {
-            block.Write_(blamBinaryWriter as QueueableBlamBinaryWriter ??
-                         new QueueableBlamBinaryWriter(blamBinaryWriter.BaseStream, block.SerializedSize));
+            queueableBinaryWriter.Commit();
         }
 
         public delegate void PreProcessFieldSet(BlamBinaryReader reader, List<tag_field> fieldSet);

@@ -78,19 +78,19 @@ namespace Moonfish.Guerilla.Tags
             this.InstancedGeometryRefs = base.ReadBlockArrayData<InstancedGeometryReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.UserplacedHints = base.ReadBlockArrayData<UserHintBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Sectors);
-            queueableBinaryWriter.QueueWrite(this.Links);
-            queueableBinaryWriter.QueueWrite(this.Refs);
-            queueableBinaryWriter.QueueWrite(this.Bsp2dNodes);
-            queueableBinaryWriter.QueueWrite(this.SurfaceFlags);
-            queueableBinaryWriter.QueueWrite(this.Vertices);
-            queueableBinaryWriter.QueueWrite(this.ObjectRefs);
-            queueableBinaryWriter.QueueWrite(this.PathfindingHints);
-            queueableBinaryWriter.QueueWrite(this.InstancedGeometryRefs);
-            queueableBinaryWriter.QueueWrite(this.UserplacedHints);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Sectors);
+            queueableBinaryWriter.Defer(this.Links);
+            queueableBinaryWriter.Defer(this.Refs);
+            queueableBinaryWriter.Defer(this.Bsp2dNodes);
+            queueableBinaryWriter.Defer(this.SurfaceFlags);
+            queueableBinaryWriter.Defer(this.Vertices);
+            queueableBinaryWriter.Defer(this.ObjectRefs);
+            queueableBinaryWriter.Defer(this.PathfindingHints);
+            queueableBinaryWriter.Defer(this.InstancedGeometryRefs);
+            queueableBinaryWriter.Defer(this.UserplacedHints);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

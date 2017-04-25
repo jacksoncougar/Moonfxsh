@@ -51,11 +51,11 @@ namespace Moonfish.Guerilla.Tags
             this.KillTriggerVolumes = base.ReadBlockArrayData<ScenarioTriggerVolumeBlock>(binaryReader, pointerQueue.Dequeue());
             this.ObjectNames = base.ReadBlockArrayData<ScenarioObjectNamesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.KillTriggerVolumes);
-            queueableBinaryWriter.QueueWrite(this.ObjectNames);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.KillTriggerVolumes);
+            queueableBinaryWriter.Defer(this.ObjectNames);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

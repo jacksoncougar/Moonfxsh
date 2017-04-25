@@ -63,13 +63,13 @@ namespace Moonfish.Guerilla.Tags
             this.AmbientLight.ReadInstances(binaryReader, pointerQueue);
             this.LightmapShadows.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.PrimaryLight.QueueWrites(queueableBinaryWriter);
-            this.SecondaryLight.QueueWrites(queueableBinaryWriter);
-            this.AmbientLight.QueueWrites(queueableBinaryWriter);
-            this.LightmapShadows.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            this.PrimaryLight.Defer(queueableBinaryWriter);
+            this.SecondaryLight.Defer(queueableBinaryWriter);
+            this.AmbientLight.Defer(queueableBinaryWriter);
+            this.LightmapShadows.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

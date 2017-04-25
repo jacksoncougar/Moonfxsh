@@ -179,7 +179,7 @@ namespace Moonfish.Guerilla
             return;
         }
 
-        public virtual void QueueWrites(QueueableBlamBinaryWriter blamBinaryWriter)
+        public virtual void Defer(QueueableBlamBinaryWriter blamBinaryWriter)
         {
             return;
         }

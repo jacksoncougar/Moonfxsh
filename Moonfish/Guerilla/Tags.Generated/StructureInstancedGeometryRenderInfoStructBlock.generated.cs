@@ -56,13 +56,13 @@ namespace Moonfish.Guerilla.Tags
             this.RenderData = base.ReadBlockArrayData<StructureBspClusterDataBlockNew>(binaryReader, pointerQueue.Dequeue());
             this.IndexReorderTable = base.ReadBlockArrayData<GlobalGeometrySectionStripIndexBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.SectionInfo.QueueWrites(queueableBinaryWriter);
-            this.GeometryBlockInfo.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.RenderData);
-            queueableBinaryWriter.QueueWrite(this.IndexReorderTable);
+            base.Defer(queueableBinaryWriter);
+            this.SectionInfo.Defer(queueableBinaryWriter);
+            this.GeometryBlockInfo.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.RenderData);
+            queueableBinaryWriter.Defer(this.IndexReorderTable);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

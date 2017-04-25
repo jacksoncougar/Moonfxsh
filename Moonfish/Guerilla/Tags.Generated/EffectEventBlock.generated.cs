@@ -64,13 +64,13 @@ namespace Moonfish.Guerilla.Tags
             this.Accelerations = base.ReadBlockArrayData<EffectAccelerationsBlock>(binaryReader, pointerQueue.Dequeue());
             this.ParticleSystems = base.ReadBlockArrayData<ParticleSystemDefinitionBlockNew>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Parts);
-            queueableBinaryWriter.QueueWrite(this.Beams);
-            queueableBinaryWriter.QueueWrite(this.Accelerations);
-            queueableBinaryWriter.QueueWrite(this.ParticleSystems);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Parts);
+            queueableBinaryWriter.Defer(this.Beams);
+            queueableBinaryWriter.Defer(this.Accelerations);
+            queueableBinaryWriter.Defer(this.ParticleSystems);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

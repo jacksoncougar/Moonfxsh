@@ -77,12 +77,12 @@ namespace Moonfish.Guerilla.Tags
             this.FrictionPoints = base.ReadBlockArrayData<FrictionPointDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
             this.shapePhantomShape = base.ReadBlockArrayData<VehiclePhantomShapeBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.AntiGravityPoints);
-            queueableBinaryWriter.QueueWrite(this.FrictionPoints);
-            queueableBinaryWriter.QueueWrite(this.shapePhantomShape);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.AntiGravityPoints);
+            queueableBinaryWriter.Defer(this.FrictionPoints);
+            queueableBinaryWriter.Defer(this.shapePhantomShape);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

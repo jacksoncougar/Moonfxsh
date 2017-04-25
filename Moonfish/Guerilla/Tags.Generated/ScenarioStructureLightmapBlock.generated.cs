@@ -116,11 +116,11 @@ namespace Moonfish.Guerilla.Tags
             this.LightmapGroups = base.ReadBlockArrayData<StructureLightmapGroupBlock>(binaryReader, pointerQueue.Dequeue());
             this.Errors = base.ReadBlockArrayData<GlobalErrorReportCategoriesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.LightmapGroups);
-            queueableBinaryWriter.QueueWrite(this.Errors);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.LightmapGroups);
+            queueableBinaryWriter.Defer(this.Errors);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

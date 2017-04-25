@@ -70,11 +70,11 @@ namespace Moonfish.Guerilla.Tags
             this.Locations = base.ReadBlockArrayData<EffectLocationsBlock>(binaryReader, pointerQueue.Dequeue());
             this.Events = base.ReadBlockArrayData<EffectEventBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Locations);
-            queueableBinaryWriter.QueueWrite(this.Events);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Locations);
+            queueableBinaryWriter.Defer(this.Events);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

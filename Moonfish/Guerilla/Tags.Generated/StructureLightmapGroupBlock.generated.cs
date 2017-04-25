@@ -86,20 +86,20 @@ namespace Moonfish.Guerilla.Tags
             this.SceneryObjectInfo = base.ReadBlockArrayData<LightmapSceneryObjectInfoBlock>(binaryReader, pointerQueue.Dequeue());
             this.SceneryObjectBucketRefs = base.ReadBlockArrayData<LightmapInstanceBucketReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.SectionPalette);
-            queueableBinaryWriter.QueueWrite(this.WritablePalettes);
-            queueableBinaryWriter.QueueWrite(this.Clusters);
-            queueableBinaryWriter.QueueWrite(this.ClusterRenderInfo);
-            queueableBinaryWriter.QueueWrite(this.PoopDefinitions);
-            queueableBinaryWriter.QueueWrite(this.LightingEnvironments);
-            queueableBinaryWriter.QueueWrite(this.GeometryBuckets);
-            queueableBinaryWriter.QueueWrite(this.InstanceRenderInfo);
-            queueableBinaryWriter.QueueWrite(this.InstanceBucketRefs);
-            queueableBinaryWriter.QueueWrite(this.SceneryObjectInfo);
-            queueableBinaryWriter.QueueWrite(this.SceneryObjectBucketRefs);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.SectionPalette);
+            queueableBinaryWriter.Defer(this.WritablePalettes);
+            queueableBinaryWriter.Defer(this.Clusters);
+            queueableBinaryWriter.Defer(this.ClusterRenderInfo);
+            queueableBinaryWriter.Defer(this.PoopDefinitions);
+            queueableBinaryWriter.Defer(this.LightingEnvironments);
+            queueableBinaryWriter.Defer(this.GeometryBuckets);
+            queueableBinaryWriter.Defer(this.InstanceRenderInfo);
+            queueableBinaryWriter.Defer(this.InstanceBucketRefs);
+            queueableBinaryWriter.Defer(this.SceneryObjectInfo);
+            queueableBinaryWriter.Defer(this.SceneryObjectBucketRefs);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

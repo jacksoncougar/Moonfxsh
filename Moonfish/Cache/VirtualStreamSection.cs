@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics.Contracts;
 using Moonfish.Tags;
 
@@ -6,12 +7,22 @@ namespace Moonfish
     /// <summary>
     ///     Describes a section of a stream as a stream of memory at a given base address.
     /// </summary>
-    public class VirtualStreamSectionDescription
+    public class AddressMapDescription
     {
         private readonly long length;
-        private readonly AddressModifier magic;
+        private readonly AddressMapFunction function;
 
         private readonly int start;
+
+        private Func<long, bool> predicate;
+
+        public AddressMapDescription(int address, int offset,
+         Func<long, bool> predicate)
+        {
+            start = address;
+            function = new AddressMapFunction(offset);
+            this.predicate = predicate;
+        }
 
         /// <summary>
         ///     Creates a description of a virtual stream section.
@@ -24,20 +35,20 @@ namespace Moonfish
         /// <param name="address">The virtual address the beginning of the section maps to.</param>
         /// <param name="length">The length of the section to map to the virtual address.</param>
         /// <param name="position">The position in the basestream to begin mapping from.</param>
-        public VirtualStreamSectionDescription(int address, int length,
+        public AddressMapDescription(int address, int length,
             int position)
         {
             start = address;
             this.length = length;
-            magic = new AddressModifier(position, address);
+            function = new AddressMapFunction(position, address);
         }
 
-        public VirtualStreamSectionDescription(int address, int length,
-            AddressModifier magic)
+        public AddressMapDescription(int address, int length,
+            AddressMapFunction function)
         {
             start = address;
             this.length = length;
-            this.magic = magic;
+            this.function = function;
         }
 
         /// <summary>
@@ -47,51 +58,61 @@ namespace Moonfish
         /// <param name="pointer">Pointer to arbitrary data.</param>
         public bool Contains(BlamPointer pointer)
         {
-            var contained = Contains(pointer.StartAddress) &&
-                            Contains(pointer.EndAddress - 1);
+            var contained = Contains(pointer.StartAddress, AddressType.Mapped) &&
+                            Contains(pointer.EndAddress - 1, AddressType.Mapped);
 
             return contained;
         }
 
+
+        public enum AddressType
+        {
+            /// <summary>
+            /// A base stream address value
+            /// </summary>
+            Raw,
+            /// <summary>
+            /// A mapped address value.
+            /// </summary>
+            Mapped
+        }
+        
         /// <summary>
         ///     Contains the specified address.
         /// </summary>
-        /// <param name="address">The address to check</param>
-        /// <param name="isVirtualAddress">True if this address a virtual address or false otherwise</param>
+        /// <param name="address">The address to check.</param>
+        /// <param name="type">The type of address being passed to the function.</param>
         /// <returns></returns>
-        public bool Contains(long address, bool isVirtualAddress = true)
+        public bool Contains(long address, AddressType type)
         {
-            address = isVirtualAddress
+            address = type == AddressType.Mapped
                 ? address
-                : magic.ToVirtualAddress(address);
+                : function.Map(address);
 
-            return start <= address && address < start + length;
+            return predicate?.Invoke(address)?? start <= address && address < start + length;
+        }
+
+        public AddressMapFunction GetFunction()
+        {
+            return function;
         }
 
         /// <summary>
-        ///     Converts the given value between a virtual memory address and absolute stream position
-        /// </summary>
-        /// <returns>virtual memory address if <paramref name="returnVirtual" /> is <c>true</c>, otherwise the stream position</returns>
-        /// <param name="value">value to convert.</param>
-        /// <param name="isvirtual">
-        ///     If set to <c>true</c> the given <paramref name="value" /> is a virtual memory address,
-        ///     otherwise it is a stream position.
-        /// </param>
-        /// <param name="returnVirtual">
-        ///     If set to <c>true</c> returns the virtual memory address, otherwise returns the stream
-        ///     position.
-        /// </param>
+        ///     Converts the given address value between <see cref="AddressType"/> types.
+        /// </summary>/// <param name="value">The address to convert.</param>
+        /// <param name="type">The type of address being passed to the function.</param>
+        /// <param name="returnType">The type of address to return from the function.</param>
         [Pure]
-        public long ConvertPosition(long value, bool isvirtual = true,
-            bool returnVirtual = false)
+        public long ConvertPosition(long value, AddressType type,
+            AddressType returnType)
         {
-            if (isvirtual)
+            if (type == AddressType.Mapped)
             {
-                value = returnVirtual ? value : magic.ToStreamPosition(value);
+                value = returnType == AddressType.Mapped ? value : function.Inverse().Map(value);
             }
             else
             {
-                value = returnVirtual ? magic.ToVirtualAddress(value) : value;
+                value = returnType == AddressType.Mapped ? function.Map(value) : value;
             }
             return value;
         }

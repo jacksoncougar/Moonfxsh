@@ -89,12 +89,12 @@ namespace Moonfish.Guerilla.Tags
             this.HudWidgetStateDefinitionStruct.ReadInstances(binaryReader, pointerQueue);
             this.Effect = base.ReadBlockArrayData<HudWidgetEffectBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.HudWidgetInputsStruct.QueueWrites(queueableBinaryWriter);
-            this.HudWidgetStateDefinitionStruct.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Effect);
+            base.Defer(queueableBinaryWriter);
+            this.HudWidgetInputsStruct.Defer(queueableBinaryWriter);
+            this.HudWidgetStateDefinitionStruct.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Effect);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

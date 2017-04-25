@@ -53,11 +53,11 @@ namespace Moonfish.Guerilla.Tags
             this.CampaignLevelData = base.ReadBlockArrayData<GlobalUiCampaignLevelBlock>(binaryReader, pointerQueue.Dequeue());
             this.Multiplayer = base.ReadBlockArrayData<GlobalUiMultiplayerLevelBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.CampaignLevelData);
-            queueableBinaryWriter.QueueWrite(this.Multiplayer);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.CampaignLevelData);
+            queueableBinaryWriter.Defer(this.Multiplayer);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

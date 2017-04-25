@@ -55,11 +55,11 @@ namespace Moonfish.Guerilla.Tags
             this.Categories = base.ReadBlockArrayData<ShaderTemplateCategoryBlock>(binaryReader, pointerQueue.Dequeue());
             this.ShaderLODs = base.ReadBlockArrayData<ShaderTemplateLevelOfDetailBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Categories);
-            queueableBinaryWriter.QueueWrite(this.ShaderLODs);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Categories);
+            queueableBinaryWriter.Defer(this.ShaderLODs);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

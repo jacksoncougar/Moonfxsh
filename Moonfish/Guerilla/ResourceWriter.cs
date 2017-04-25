@@ -67,16 +67,8 @@ namespace Moonfish.Guerilla
             var resourceObject = block.GetResource(index);
 
             var writer = new ResourceWriter(output, resourceObject.SerializedSize);
-
-            var argList = new List<ResourceWriter.PointerEventArg>();
-            var vertexBuffers = new List<ResourceWriter.VertexBufferArg>();
-
-            writer.OnWritePointerEvent += (sender, arg) => { argList.Add(arg); };
-            writer.OnVertexBufferWriteEvent += (sender, arg) => { vertexBuffers.Add(arg); };
-
-            resourceObject.QueueWrites(writer);
-            resourceObject.Write(writer);
-            writer.WriteQueue();
+            
+            writer.Write(resourceObject);
 
             List<GlobalGeometryBlockResourceBlock> resourceBlocks = writer.ResourceDescriptors;
 
@@ -88,14 +80,15 @@ namespace Moonfish.Guerilla
             block.SetResourcePointer((int) startAddress);
         }
 
-        public static void ReadResource<T, TV>(T block, Func<IResourceBlock, int, Stream> @delegate) 
+        public static void ReadResource<T, TV>(T block, Func<IResourceBlock, int, Stream> @delegate,
+            GlobalGeometryBlockInfoStructBlock blockInfo)
             where T : IResourceBlock, IResourceDescriptor<GlobalGeometryBlockResourceBlock>
-            where TV: GuerillaBlock, new()
+            where TV : GuerillaBlock, new()
         {
             var resource = new TV();
             GlobalGeometryBlockResourceBlock[] resources = block.GetDescriptors();
 
-            var stream = new ResourceStreamWrapper(@delegate(block, 0), resources, resource.SerializedSize);
+            var stream = new ResourceStreamWrapper(@delegate(block, 0), blockInfo);
 
             if (stream.Length != block.GetResourceLength())
                 throw new InvalidDataException();
@@ -117,28 +110,11 @@ namespace Moonfish.Guerilla
 
             }
         }
-        
+
 
         private class ResourceWriter : QueueableBlamBinaryWriter, IEnumerable<QueueItem>
         {
-            /// <summary>
-            /// Event fired before a pointer is written to the output stream.
-            /// </summary>
-            public event EventHandler<PointerEventArg> OnWritePointerEvent;
-
             public List<GlobalGeometryBlockResourceBlock> ResourceDescriptors { get; }
-
-            public struct PointerEventArg
-            {
-                public readonly long Position;
-                public readonly BlamPointer Pointer;
-
-                public PointerEventArg(long position, BlamPointer pointer)
-                {
-                    Position = position;
-                    Pointer = pointer;
-                }
-            }
 
             public ResourceWriter(Stream output, int serializedSize) : base(output, serializedSize)
             {
@@ -200,21 +176,27 @@ namespace Moonfish.Guerilla
             private void AddDescriptor(VertexBuffer vertexBuffer, BlamPointer pointerToResource)
             {
                 var index =
-                    (short)ResourceDescriptors.Count(
-                        item => item.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer);
+                    (short)
+                        ResourceDescriptors.Count(
+                            item => item.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer);
 
                 var descriptor = new GlobalGeometryBlockResourceBlock()
                 {
-                    Type = GlobalGeometryBlockResourceBlock.TypeEnum.TagBlock,
+                    Type = GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer,
                     PrimaryLocator = index,
-                    SecondaryLocator = (short)pointerToResource.ElementSize,
+                    SecondaryLocator = (short) pointerToResource.ElementSize,
                     ResourceDataOffset = pointerToResource.StartAddress,
                     ResourceDataSize = pointerToResource.PointedSize
                 };
 
-                ResourceDescriptors.Add(descriptor);
+                var lastIndex =
+                    ResourceDescriptors.FindLastIndex(
+                        item =>
+                            item.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer ||
+                            item.PrimaryLocator == 56);
+                ResourceDescriptors.Insert(lastIndex + 1, descriptor);
             }
-            
+
             public override void WritePointer<T>(T instanceFIeld)
             {
                 var pointer = GetItemPointer(instanceFIeld);
@@ -230,40 +212,17 @@ namespace Moonfish.Guerilla
                     {
                         AddDescriptor(instanceFIeld, GetItemPointer(instanceFIeld), (short) BaseStream.Position);
                     }
-                    OnWritePointer(BaseStream.Position, GetItemPointer(instanceFIeld));
                 }
 
                 base.WritePointer(instanceFIeld);
             }
 
-            public struct VertexBufferArg
-            {
-                public VertexBuffer VertexBuffer;
-                public BlamPointer Pointer;
-
-                public VertexBufferArg(BlamPointer pointer, VertexBuffer vertexBuffer)
-                {
-                    Pointer = pointer;
-                    VertexBuffer = vertexBuffer;
-                }
-            };
-
-            public event EventHandler<VertexBufferArg> OnVertexBufferWriteEvent;
-
             public override void Write(VertexBuffer buffer)
             {
-                QueueWrite(buffer.Data);
+                Defer(buffer.Data);
                 AddDescriptor(buffer, GetItemPointer(buffer));
 
-                OnVertexBufferWriteEvent?.Invoke(buffer,
-                    new VertexBufferArg(this.Last()?.Pointer ?? BlamPointer.Null, buffer));
-
                 base.Write(buffer);
-            }
-
-            private void OnWritePointer(long position, BlamPointer pointer)
-            {
-                OnWritePointerEvent?.Invoke(this, new PointerEventArg(position, pointer));
             }
         }
     }

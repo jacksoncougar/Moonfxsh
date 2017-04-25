@@ -50,11 +50,11 @@ namespace Moonfish.Guerilla.Tags
             this.DevicePortalAssociations = base.ReadBlockArrayData<StructureDevicePortalAssociationBlock>(binaryReader, pointerQueue.Dequeue());
             this.GamePortalToPortalMap = base.ReadBlockArrayData<GamePortalToPortalMappingBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.DevicePortalAssociations);
-            queueableBinaryWriter.QueueWrite(this.GamePortalToPortalMap);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.DevicePortalAssociations);
+            queueableBinaryWriter.Defer(this.GamePortalToPortalMap);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

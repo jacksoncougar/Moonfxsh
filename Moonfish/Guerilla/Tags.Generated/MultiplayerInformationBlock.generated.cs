@@ -88,17 +88,17 @@ namespace Moonfish.Guerilla.Tags
             this.GNullBlock = base.ReadBlockArrayData<GNullBlock>(binaryReader, pointerQueue.Dequeue());
             this.KingEvents = base.ReadBlockArrayData<GameEngineKingEventBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Vehicles);
-            queueableBinaryWriter.QueueWrite(this.Sounds);
-            queueableBinaryWriter.QueueWrite(this.GeneralEvents);
-            queueableBinaryWriter.QueueWrite(this.SlayerEvents);
-            queueableBinaryWriter.QueueWrite(this.CtfEvents);
-            queueableBinaryWriter.QueueWrite(this.OddballEvents);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock);
-            queueableBinaryWriter.QueueWrite(this.KingEvents);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Vehicles);
+            queueableBinaryWriter.Defer(this.Sounds);
+            queueableBinaryWriter.Defer(this.GeneralEvents);
+            queueableBinaryWriter.Defer(this.SlayerEvents);
+            queueableBinaryWriter.Defer(this.CtfEvents);
+            queueableBinaryWriter.Defer(this.OddballEvents);
+            queueableBinaryWriter.Defer(this.GNullBlock);
+            queueableBinaryWriter.Defer(this.KingEvents);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

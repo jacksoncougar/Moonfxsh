@@ -59,12 +59,12 @@ namespace Moonfish.Guerilla.Tags
             this.PermutationData.ReadInstances(binaryReader, pointerQueue);
             this.WeaponData.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.ObjectData.QueueWrites(queueableBinaryWriter);
-            this.PermutationData.QueueWrites(queueableBinaryWriter);
-            this.WeaponData.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            this.ObjectData.Defer(queueableBinaryWriter);
+            this.PermutationData.Defer(queueableBinaryWriter);
+            this.WeaponData.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

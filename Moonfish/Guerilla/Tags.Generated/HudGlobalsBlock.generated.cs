@@ -247,12 +247,12 @@ namespace Moonfish.Guerilla.Tags
             this.WaypointArrows = base.ReadBlockArrayData<HudWaypointArrowBlock>(binaryReader, pointerQueue.Dequeue());
             this.NewGlobals.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ButtonIcons);
-            queueableBinaryWriter.QueueWrite(this.WaypointArrows);
-            this.NewGlobals.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.ButtonIcons);
+            queueableBinaryWriter.Defer(this.WaypointArrows);
+            this.NewGlobals.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

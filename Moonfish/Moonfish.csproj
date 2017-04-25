@@ -126,6 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\Package.cs" />
+    <Compile Include="Cache\StreamAddressWrapper.cs" />
     <Compile Include="Guerilla\BinaryReader.cs" />
     <Compile Include="Guerilla\ResourceWriter.cs" />
     <Compile Include="Guerilla\Tags\DecoratorCacheBlockBlock.code.cs" />

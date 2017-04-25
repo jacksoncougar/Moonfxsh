@@ -142,38 +142,38 @@ namespace Moonfish.Guerilla.Tags
             this.PrismaticConstraints = base.ReadBlockArrayData<PrismaticConstraintsBlock>(binaryReader, pointerQueue.Dequeue());
             this.Phantoms = base.ReadBlockArrayData<PhantomsBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.PhantomTypes);
-            queueableBinaryWriter.QueueWrite(this.NodeEdges);
-            queueableBinaryWriter.QueueWrite(this.RigidBodies);
-            queueableBinaryWriter.QueueWrite(this.Materials);
-            queueableBinaryWriter.QueueWrite(this.Spheres);
-            queueableBinaryWriter.QueueWrite(this.MultiSpheres);
-            queueableBinaryWriter.QueueWrite(this.Pills);
-            queueableBinaryWriter.QueueWrite(this.Boxes);
-            queueableBinaryWriter.QueueWrite(this.Triangles);
-            queueableBinaryWriter.QueueWrite(this.Polyhedra);
-            queueableBinaryWriter.QueueWrite(this.PolyhedronFourVectors);
-            queueableBinaryWriter.QueueWrite(this.PolyhedronPlaneEquations);
-            queueableBinaryWriter.QueueWrite(this.MassDistributions);
-            queueableBinaryWriter.QueueWrite(this.Lists);
-            queueableBinaryWriter.QueueWrite(this.ListShapes);
-            queueableBinaryWriter.QueueWrite(this.Mopps);
-            queueableBinaryWriter.QueueWrite(this.MoppCodes);
-            queueableBinaryWriter.QueueWrite(this.HingeConstraints);
-            queueableBinaryWriter.QueueWrite(this.RagdollConstraints);
-            queueableBinaryWriter.QueueWrite(this.Regions);
-            queueableBinaryWriter.QueueWrite(this.Nodes);
-            queueableBinaryWriter.QueueWrite(this.ImportInfo);
-            queueableBinaryWriter.QueueWrite(this.Errors);
-            queueableBinaryWriter.QueueWrite(this.PointToPathCurves);
-            queueableBinaryWriter.QueueWrite(this.LimitedHingeConstraints);
-            queueableBinaryWriter.QueueWrite(this.BallAndSocketConstraints);
-            queueableBinaryWriter.QueueWrite(this.StiffSpringConstraints);
-            queueableBinaryWriter.QueueWrite(this.PrismaticConstraints);
-            queueableBinaryWriter.QueueWrite(this.Phantoms);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.PhantomTypes);
+            queueableBinaryWriter.Defer(this.NodeEdges);
+            queueableBinaryWriter.Defer(this.RigidBodies);
+            queueableBinaryWriter.Defer(this.Materials);
+            queueableBinaryWriter.Defer(this.Spheres);
+            queueableBinaryWriter.Defer(this.MultiSpheres);
+            queueableBinaryWriter.Defer(this.Pills);
+            queueableBinaryWriter.Defer(this.Boxes);
+            queueableBinaryWriter.Defer(this.Triangles);
+            queueableBinaryWriter.Defer(this.Polyhedra);
+            queueableBinaryWriter.Defer(this.PolyhedronFourVectors);
+            queueableBinaryWriter.Defer(this.PolyhedronPlaneEquations);
+            queueableBinaryWriter.Defer(this.MassDistributions);
+            queueableBinaryWriter.Defer(this.Lists);
+            queueableBinaryWriter.Defer(this.ListShapes);
+            queueableBinaryWriter.Defer(this.Mopps);
+            queueableBinaryWriter.Defer(this.MoppCodes);
+            queueableBinaryWriter.Defer(this.HingeConstraints);
+            queueableBinaryWriter.Defer(this.RagdollConstraints);
+            queueableBinaryWriter.Defer(this.Regions);
+            queueableBinaryWriter.Defer(this.Nodes);
+            queueableBinaryWriter.Defer(this.ImportInfo);
+            queueableBinaryWriter.Defer(this.Errors);
+            queueableBinaryWriter.Defer(this.PointToPathCurves);
+            queueableBinaryWriter.Defer(this.LimitedHingeConstraints);
+            queueableBinaryWriter.Defer(this.BallAndSocketConstraints);
+            queueableBinaryWriter.Defer(this.StiffSpringConstraints);
+            queueableBinaryWriter.Defer(this.PrismaticConstraints);
+            queueableBinaryWriter.Defer(this.Phantoms);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

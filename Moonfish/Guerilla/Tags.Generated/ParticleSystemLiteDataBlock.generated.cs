@@ -52,11 +52,11 @@ namespace Moonfish.Guerilla.Tags
             this.ParticlesRenderData = base.ReadBlockArrayData<ParticlesRenderDataBlock>(binaryReader, pointerQueue.Dequeue());
             this.ParticlesOtherData = base.ReadBlockArrayData<ParticlesUpdateDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ParticlesRenderData);
-            queueableBinaryWriter.QueueWrite(this.ParticlesOtherData);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.ParticlesRenderData);
+            queueableBinaryWriter.Defer(this.ParticlesOtherData);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

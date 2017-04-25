@@ -107,17 +107,17 @@ namespace Moonfish.Guerilla.Tags
             this.IndexReorderTable = base.ReadBlockArrayData<GlobalGeometrySectionStripIndexBlock>(binaryReader, pointerQueue.Dequeue());
             this.CollisionMoppCode = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.SectionInfo.QueueWrites(queueableBinaryWriter);
-            this.GeometryBlockInfo.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ClusterData);
-            queueableBinaryWriter.QueueWrite(this.PredictedResources);
-            queueableBinaryWriter.QueueWrite(this.Portals);
-            queueableBinaryWriter.QueueWrite(this.InstancedGeometryIndices);
-            queueableBinaryWriter.QueueWrite(this.IndexReorderTable);
-            queueableBinaryWriter.QueueWrite(this.CollisionMoppCode);
+            base.Defer(queueableBinaryWriter);
+            this.SectionInfo.Defer(queueableBinaryWriter);
+            this.GeometryBlockInfo.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.ClusterData);
+            queueableBinaryWriter.Defer(this.PredictedResources);
+            queueableBinaryWriter.Defer(this.Portals);
+            queueableBinaryWriter.Defer(this.InstancedGeometryIndices);
+            queueableBinaryWriter.Defer(this.IndexReorderTable);
+            queueableBinaryWriter.Defer(this.CollisionMoppCode);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

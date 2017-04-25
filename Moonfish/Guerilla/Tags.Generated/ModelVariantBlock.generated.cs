@@ -61,11 +61,11 @@ namespace Moonfish.Guerilla.Tags
             this.Regions = base.ReadBlockArrayData<ModelVariantRegionBlock>(binaryReader, pointerQueue.Dequeue());
             this.Objects = base.ReadBlockArrayData<ModelVariantObjectBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Regions);
-            queueableBinaryWriter.QueueWrite(this.Objects);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Regions);
+            queueableBinaryWriter.Defer(this.Objects);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

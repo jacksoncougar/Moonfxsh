@@ -110,22 +110,22 @@ namespace Moonfish.Guerilla.Tags
             this.PRTInfo = base.ReadBlockArrayData<PrtInfoBlock>(binaryReader, pointerQueue.Dequeue());
             this.SectionRenderLeaves = base.ReadBlockArrayData<SectionRenderLeavesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ImportInfo);
-            queueableBinaryWriter.QueueWrite(this.CompressionInfo);
-            queueableBinaryWriter.QueueWrite(this.Regions);
-            queueableBinaryWriter.QueueWrite(this.Sections);
-            queueableBinaryWriter.QueueWrite(this.InvalidSectionPairBits);
-            queueableBinaryWriter.QueueWrite(this.SectionGroups);
-            queueableBinaryWriter.QueueWrite(this.Nodes);
-            queueableBinaryWriter.QueueWrite(this.NodeMap);
-            queueableBinaryWriter.QueueWrite(this.MarkerGroups);
-            queueableBinaryWriter.QueueWrite(this.Materials);
-            queueableBinaryWriter.QueueWrite(this.Errors);
-            queueableBinaryWriter.QueueWrite(this.PRTInfo);
-            queueableBinaryWriter.QueueWrite(this.SectionRenderLeaves);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.ImportInfo);
+            queueableBinaryWriter.Defer(this.CompressionInfo);
+            queueableBinaryWriter.Defer(this.Regions);
+            queueableBinaryWriter.Defer(this.Sections);
+            queueableBinaryWriter.Defer(this.InvalidSectionPairBits);
+            queueableBinaryWriter.Defer(this.SectionGroups);
+            queueableBinaryWriter.Defer(this.Nodes);
+            queueableBinaryWriter.Defer(this.NodeMap);
+            queueableBinaryWriter.Defer(this.MarkerGroups);
+            queueableBinaryWriter.Defer(this.Materials);
+            queueableBinaryWriter.Defer(this.Errors);
+            queueableBinaryWriter.Defer(this.PRTInfo);
+            queueableBinaryWriter.Defer(this.SectionRenderLeaves);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

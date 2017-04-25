@@ -65,14 +65,14 @@ namespace Moonfish.Guerilla.Tags
             this.Brightnessfacing.ReadInstances(binaryReader, pointerQueue);
             this.AlongaxisScale.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.Thickness.QueueWrites(queueableBinaryWriter);
-            this.Color.QueueWrites(queueableBinaryWriter);
-            this.Brightnesstime.QueueWrites(queueableBinaryWriter);
-            this.Brightnessfacing.QueueWrites(queueableBinaryWriter);
-            this.AlongaxisScale.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            this.Thickness.Defer(queueableBinaryWriter);
+            this.Color.Defer(queueableBinaryWriter);
+            this.Brightnesstime.Defer(queueableBinaryWriter);
+            this.Brightnessfacing.Defer(queueableBinaryWriter);
+            this.AlongaxisScale.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

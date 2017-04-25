@@ -52,11 +52,11 @@ namespace Moonfish.Guerilla.Tags
             this.Bsps = base.ReadBlockArrayData<CollisionModelBspBlock>(binaryReader, pointerQueue.Dequeue());
             this.BspPhysics = base.ReadBlockArrayData<CollisionBspPhysicsBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Bsps);
-            queueableBinaryWriter.QueueWrite(this.BspPhysics);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Bsps);
+            queueableBinaryWriter.Defer(this.BspPhysics);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

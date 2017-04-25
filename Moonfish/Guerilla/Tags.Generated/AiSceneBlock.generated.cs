@@ -54,11 +54,11 @@ namespace Moonfish.Guerilla.Tags
             this.TriggerConditions = base.ReadBlockArrayData<AiSceneTriggerBlock>(binaryReader, pointerQueue.Dequeue());
             this.Roles = base.ReadBlockArrayData<AiSceneRoleBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.TriggerConditions);
-            queueableBinaryWriter.QueueWrite(this.Roles);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.TriggerConditions);
+            queueableBinaryWriter.Defer(this.Roles);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

@@ -59,13 +59,13 @@ namespace Moonfish.Guerilla.Tags
             this.SoundEffectHardwareFormatDataDefinition = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
             this.PlatformSoundEffectCollectionBlock = base.ReadBlockArrayData<PlatformSoundEffectCollectionBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Components);
-            queueableBinaryWriter.QueueWrite(this.SoundEffectOverridesBlock);
-            queueableBinaryWriter.QueueWrite(this.SoundEffectHardwareFormatDataDefinition);
-            queueableBinaryWriter.QueueWrite(this.PlatformSoundEffectCollectionBlock);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Components);
+            queueableBinaryWriter.Defer(this.SoundEffectOverridesBlock);
+            queueableBinaryWriter.Defer(this.SoundEffectHardwareFormatDataDefinition);
+            queueableBinaryWriter.Defer(this.PlatformSoundEffectCollectionBlock);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

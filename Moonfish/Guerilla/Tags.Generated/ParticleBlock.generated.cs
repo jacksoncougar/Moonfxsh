@@ -100,18 +100,18 @@ namespace Moonfish.Guerilla.Tags
             this.AttachedParticleSystems = base.ReadBlockArrayData<ParticleSystemDefinitionBlockNew>(binaryReader, pointerQueue.Dequeue());
             this.ShaderPostprocessDefinitionNewBlock = base.ReadBlockArrayData<ShaderPostprocessDefinitionNewBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ShaderParameters);
-            this.Color.QueueWrites(queueableBinaryWriter);
-            this.Alpha.QueueWrites(queueableBinaryWriter);
-            this.Scale.QueueWrites(queueableBinaryWriter);
-            this.Rotation.QueueWrites(queueableBinaryWriter);
-            this.FrameIndex.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Locations);
-            queueableBinaryWriter.QueueWrite(this.AttachedParticleSystems);
-            queueableBinaryWriter.QueueWrite(this.ShaderPostprocessDefinitionNewBlock);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.ShaderParameters);
+            this.Color.Defer(queueableBinaryWriter);
+            this.Alpha.Defer(queueableBinaryWriter);
+            this.Scale.Defer(queueableBinaryWriter);
+            this.Rotation.Defer(queueableBinaryWriter);
+            this.FrameIndex.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Locations);
+            queueableBinaryWriter.Defer(this.AttachedParticleSystems);
+            queueableBinaryWriter.Defer(this.ShaderPostprocessDefinitionNewBlock);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

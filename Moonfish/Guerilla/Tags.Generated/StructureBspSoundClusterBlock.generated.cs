@@ -54,11 +54,11 @@ namespace Moonfish.Guerilla.Tags
             this.EnclosingPortalDesignators = base.ReadBlockArrayData<StructureSoundClusterPortalDesignators>(binaryReader, pointerQueue.Dequeue());
             this.InteriorClusterIndices = base.ReadBlockArrayData<StructureSoundClusterInteriorClusterIndices>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.EnclosingPortalDesignators);
-            queueableBinaryWriter.QueueWrite(this.InteriorClusterIndices);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.EnclosingPortalDesignators);
+            queueableBinaryWriter.Defer(this.InteriorClusterIndices);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

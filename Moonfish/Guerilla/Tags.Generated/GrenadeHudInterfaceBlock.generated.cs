@@ -206,13 +206,13 @@ namespace Moonfish.Guerilla.Tags
             this.Overlays = base.ReadBlockArrayData<GrenadeHudOverlayBlock>(binaryReader, pointerQueue.Dequeue());
             this.WarningSounds = base.ReadBlockArrayData<GrenadeHudSoundBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.MultitexOverlay);
-            queueableBinaryWriter.QueueWrite(this.MultitexOverlay0);
-            queueableBinaryWriter.QueueWrite(this.Overlays);
-            queueableBinaryWriter.QueueWrite(this.WarningSounds);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.MultitexOverlay);
+            queueableBinaryWriter.Defer(this.MultitexOverlay0);
+            queueableBinaryWriter.Defer(this.Overlays);
+            queueableBinaryWriter.Defer(this.WarningSounds);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

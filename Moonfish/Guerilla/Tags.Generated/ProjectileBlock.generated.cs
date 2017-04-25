@@ -145,12 +145,12 @@ namespace Moonfish.Guerilla.Tags
             this.Blah.ReadInstances(binaryReader, pointerQueue);
             this.MaterialResponses = base.ReadBlockArrayData<ProjectileMaterialResponseBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.YourMomma.QueueWrites(queueableBinaryWriter);
-            this.Blah.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.MaterialResponses);
+            base.Defer(queueableBinaryWriter);
+            this.YourMomma.Defer(queueableBinaryWriter);
+            this.Blah.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.MaterialResponses);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

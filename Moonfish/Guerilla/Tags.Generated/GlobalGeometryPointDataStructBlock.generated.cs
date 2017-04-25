@@ -56,13 +56,13 @@ namespace Moonfish.Guerilla.Tags
             this.RigidPointGroups = base.ReadBlockArrayData<GlobalGeometryRigidPointGroupBlock>(binaryReader, pointerQueue.Dequeue());
             this.VertexPointIndices = base.ReadBlockArrayData<GlobalGeometryPointDataIndexBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.RawPoints);
-            queueableBinaryWriter.QueueWrite(this.RuntimePointData);
-            queueableBinaryWriter.QueueWrite(this.RigidPointGroups);
-            queueableBinaryWriter.QueueWrite(this.VertexPointIndices);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.RawPoints);
+            queueableBinaryWriter.Defer(this.RuntimePointData);
+            queueableBinaryWriter.Defer(this.RigidPointGroups);
+            queueableBinaryWriter.Defer(this.VertexPointIndices);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

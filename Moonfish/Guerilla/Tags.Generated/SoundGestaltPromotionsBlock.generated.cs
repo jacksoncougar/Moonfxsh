@@ -52,11 +52,11 @@ namespace Moonfish.Guerilla.Tags
             this.SoundPromotionRules = base.ReadBlockArrayData<SoundPromotionRuleBlock>(binaryReader, pointerQueue.Dequeue());
             this.SoundPromotionRuntimeTimers = base.ReadBlockArrayData<SoundPromotionRuntimeTimerBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.SoundPromotionRules);
-            queueableBinaryWriter.QueueWrite(this.SoundPromotionRuntimeTimers);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.SoundPromotionRules);
+            queueableBinaryWriter.Defer(this.SoundPromotionRuntimeTimers);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

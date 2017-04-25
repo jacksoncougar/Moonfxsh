@@ -1,54 +1,53 @@
+using JetBrains.Annotations;
+
 namespace Moonfish
 {
     /// <summary>
-    ///     Address modifier that when added to a stream position value results in a virtual address,
-    ///     and when subtracted from a virtual address results in a stream position value.
-    ///     Known as magic.
+    ///     Allows mapping between address values in the domain to address values in the codomain
     /// </summary>
-    public struct AddressModifier
+    public struct AddressMapFunction
     {
-        private readonly int magic;
+        private readonly int modifier;
 
         /// <summary>
         ///     Creates the translation constant for virtual to position address conversion.
         /// </summary>
         /// <param name="position">Position.</param>
         /// <param name="address">Address.</param>
-        public AddressModifier(long position, long address)
+        public AddressMapFunction(long position, long address)
         {
-            magic = (int) address - (int) position;
+            modifier = (int) address - (int) position;
         }
 
         /// <summary>
         ///     Creates the translation constant for virtual to position address conversion.
         /// </summary>
-        public AddressModifier(int magic)
+        public AddressMapFunction(int modifier)
         {
-            this.magic = magic;
+            this.modifier = modifier;
         }
 
         /// <summary>
-        ///     Translates the given stream position into equivilent virtual address.
+        ///     Maps the given address value to codomain.
         /// </summary>
-        /// <returns>The virtual address.</returns>
-        /// <param name="position">The stream position.</param>
-        public long ToVirtualAddress(long position)
+        /// <returns>The address mapped to the codomain.</returns>
+        /// <param name="position">The address from the domain.</param>
+        [Pure]
+        public long Map(long position)
         {
-            var address = (int) (position + magic);
+            var address = (int) (position + modifier);
 
             return address;
         }
 
         /// <summary>
-        ///     Translates the given virtual address into an equivilent stream position.
+        /// Inverses the mapping function.
         /// </summary>
-        /// <returns>The stream position.</returns>
-        /// <param name="address">The virtual address.</param>
-        public long ToStreamPosition(long address)
+        /// <returns>The inverse function.</returns>
+        [Pure]
+        public AddressMapFunction Inverse()
         {
-            var position = (int) (address - magic);
-
-            return position;
+            return new AddressMapFunction(-modifier);
         }
     }
 }

@@ -89,16 +89,16 @@ namespace Moonfish.Guerilla.Tags
             this.Quads = base.ReadBlockArrayData<ErrorReportQuadsBlock>(binaryReader, pointerQueue.Dequeue());
             this.Comments = base.ReadBlockArrayData<ErrorReportCommentsBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Text);
-            queueableBinaryWriter.QueueWrite(this.Vertices);
-            queueableBinaryWriter.QueueWrite(this.Vectors);
-            queueableBinaryWriter.QueueWrite(this.Lines);
-            queueableBinaryWriter.QueueWrite(this.Triangles);
-            queueableBinaryWriter.QueueWrite(this.Quads);
-            queueableBinaryWriter.QueueWrite(this.Comments);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Text);
+            queueableBinaryWriter.Defer(this.Vertices);
+            queueableBinaryWriter.Defer(this.Vectors);
+            queueableBinaryWriter.Defer(this.Lines);
+            queueableBinaryWriter.Defer(this.Triangles);
+            queueableBinaryWriter.Defer(this.Quads);
+            queueableBinaryWriter.Defer(this.Comments);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

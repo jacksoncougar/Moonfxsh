@@ -93,16 +93,16 @@ namespace Moonfish.Guerilla.Tags
             this.Aspect = base.ReadBlockArrayData<LightVolumeAspectBlock>(binaryReader, pointerQueue.Dequeue());
             this.LightVolumeRuntimeOffsetBlock = base.ReadBlockArrayData<LightVolumeRuntimeOffsetBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.OffsetFunction.QueueWrites(queueableBinaryWriter);
-            this.RadiusFunction.QueueWrites(queueableBinaryWriter);
-            this.BrightnessFunction.QueueWrites(queueableBinaryWriter);
-            this.ColorFunction.QueueWrites(queueableBinaryWriter);
-            this.FacingFunction.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Aspect);
-            queueableBinaryWriter.QueueWrite(this.LightVolumeRuntimeOffsetBlock);
+            base.Defer(queueableBinaryWriter);
+            this.OffsetFunction.Defer(queueableBinaryWriter);
+            this.RadiusFunction.Defer(queueableBinaryWriter);
+            this.BrightnessFunction.Defer(queueableBinaryWriter);
+            this.ColorFunction.Defer(queueableBinaryWriter);
+            this.FacingFunction.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Aspect);
+            queueableBinaryWriter.Defer(this.LightVolumeRuntimeOffsetBlock);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

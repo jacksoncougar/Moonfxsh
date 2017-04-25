@@ -5,6 +5,6 @@ namespace Moonfish.Guerilla
     /// </summary>
     public interface IWriteQueueable
     {
-        void QueueWrites(QueueableBlamBinaryWriter blamBinaryWriter);
+        void Defer(QueueableBlamBinaryWriter blamBinaryWriter);
     }
 }

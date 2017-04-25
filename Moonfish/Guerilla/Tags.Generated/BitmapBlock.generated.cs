@@ -103,13 +103,13 @@ namespace Moonfish.Guerilla.Tags
             this.Sequences = base.ReadBlockArrayData<BitmapGroupSequenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.Bitmaps = base.ReadBlockArrayData<BitmapDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.CompressedColorPlateData);
-            queueableBinaryWriter.QueueWrite(this.ProcessedPixelData);
-            queueableBinaryWriter.QueueWrite(this.Sequences);
-            queueableBinaryWriter.QueueWrite(this.Bitmaps);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.CompressedColorPlateData);
+            queueableBinaryWriter.Defer(this.ProcessedPixelData);
+            queueableBinaryWriter.Defer(this.Sequences);
+            queueableBinaryWriter.Defer(this.Bitmaps);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

@@ -54,12 +54,12 @@ namespace Moonfish.Guerilla.Tags
             this.CameraPoints = base.ReadBlockArrayData<ScenarioCutsceneCameraPointBlock>(binaryReader, pointerQueue.Dequeue());
             this.RecordedAnimations = base.ReadBlockArrayData<RecordedAnimationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Flags);
-            queueableBinaryWriter.QueueWrite(this.CameraPoints);
-            queueableBinaryWriter.QueueWrite(this.RecordedAnimations);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Flags);
+            queueableBinaryWriter.Defer(this.CameraPoints);
+            queueableBinaryWriter.Defer(this.RecordedAnimations);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

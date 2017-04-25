@@ -15,7 +15,7 @@ namespace Moonfish.Guerilla.CodeDom
 	[SuppressMessage("ReSharper", "BitwiseOperatorOnEnumWithoutFlags")]
 	class GuerillaBlockClass : GuerillaBlockClassBase
 	{
-		readonly string filename;
+	    private readonly string filename;
 
 		public GuerillaBlockClass(MoonfishTagGroup tag, IList<MoonfishTagGroup> tagGroups = null)
 			: this(tag.Definition.Name.ToPascalCase().ToAlphaNumericToken())
@@ -425,7 +425,7 @@ namespace Moonfish.Guerilla.CodeDom
 		{
 			var method = new CodeMemberMethod
 			{
-				Name = "QueueWrites",
+				Name = StaticReflection.GetMemberName((IWriteQueueable item) => item.Defer(null)),
 				Attributes = MemberAttributes.Override | MemberAttributes.Public,
 				ReturnType = new CodeTypeReference(typeof(void))
 			};
@@ -436,7 +436,7 @@ namespace Moonfish.Guerilla.CodeDom
 				loopVariable.VariableName);
 
 			//  add QueueableBinaryWriter parameter
-			const string queueableBinaryWriter = "queueableBinaryWriter";
+			const string queueableBinaryWriter = "writer";
 			var queueableBinaryWriterParameterDeclaration =
 				new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(QueueableBlamBinaryWriter)),
 					queueableBinaryWriter);
@@ -462,7 +462,7 @@ namespace Moonfish.Guerilla.CodeDom
 				if (field.Type.ArrayRank == 1)
 				{
 					var fieldInitializer = (CodeArrayCreateExpression)field.InitExpression;
-					var arraySize = fieldInitializer == null ? 0 : fieldInitializer.Size;
+					var arraySize = fieldInitializer?.Size ?? 0;
 
 					//  fixed byte array like padding or skip data
 					if (systemType == typeof(byte) && arraySize > 0)
@@ -475,7 +475,7 @@ namespace Moonfish.Guerilla.CodeDom
 					{
 						var methodName =
 							StaticReflection.GetMemberName(
-								(IWriteQueueable item) => item.QueueWrites(null));
+								(IWriteQueueable item) => item.Defer(null));
 
 						//  add loop iterator variable if needed
 						if (!method.Statements.Contains(loopVariableDeclaration))
@@ -497,7 +497,7 @@ namespace Moonfish.Guerilla.CodeDom
 					{
 						var methodName =
 							StaticReflection.GetMemberName(
-								(QueueableBlamBinaryWriter item) => item.QueueWrite(new byte[0]));
+								(QueueableBlamBinaryWriter item) => item.Defer(new byte[0]));
 
 						method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
 							fieldReference));
@@ -507,7 +507,7 @@ namespace Moonfish.Guerilla.CodeDom
 					{
 						var methodName =
 							StaticReflection.GetMemberName(
-								(QueueableBlamBinaryWriter item) => item.QueueWrite(new short[0]));
+								(QueueableBlamBinaryWriter item) => item.Defer(new short[0]));
 
 						method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
 							fieldReference));
@@ -517,7 +517,7 @@ namespace Moonfish.Guerilla.CodeDom
 					{
 						var methodName =
 							StaticReflection.GetMemberName(
-								(QueueableBlamBinaryWriter item) => item.QueueWrite(new GuerillaBlock[0]));
+								(QueueableBlamBinaryWriter item) => item.Defer(new GuerillaBlock[0]));
 
 						method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
 								fieldReference));
@@ -528,7 +528,7 @@ namespace Moonfish.Guerilla.CodeDom
 				{
 					var methodName =
 						StaticReflection.GetMemberName(
-							(IWriteQueueable item) => item.QueueWrites(null));
+							(IWriteQueueable item) => item.Defer(null));
 
 					method.Statements.Add(new CodeMethodInvokeExpression(fieldReference, methodName,
 						queueableBinaryWriterArgument));
@@ -552,7 +552,7 @@ namespace Moonfish.Guerilla.CodeDom
 				loopVariable.VariableName);
 
 			//  add QueueableBinaryWriter parameter
-			const string queueableBinaryWriter = "queueableBinaryWriter";
+			const string queueableBinaryWriter = "writer";
 			var queueableBinaryWriterParameterDeclaration =
 				new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(QueueableBlamBinaryWriter)),
 					queueableBinaryWriter);
@@ -578,7 +578,7 @@ namespace Moonfish.Guerilla.CodeDom
 				if (field.Type.ArrayRank == 1)
 				{
 					var fieldInitializer = (CodeArrayCreateExpression)field.InitExpression;
-					var arraySize = fieldInitializer == null ? 0 : fieldInitializer.Size;
+					var arraySize = fieldInitializer?.Size ?? 0;
 
 					//  fixed byte array like padding or skip data
 					if (systemType == typeof(byte) && arraySize > 0)

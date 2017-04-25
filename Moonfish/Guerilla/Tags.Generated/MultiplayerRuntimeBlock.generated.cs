@@ -282,30 +282,30 @@ namespace Moonfish.Guerilla.Tags
             this.MultiplayerConstants = base.ReadBlockArrayData<MultiplayerConstantsBlock>(binaryReader, pointerQueue.Dequeue());
             this.StateResponses = base.ReadBlockArrayData<GameEngineStatusResponseBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Weapons);
-            queueableBinaryWriter.QueueWrite(this.Vehicles);
-            this.Arr.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Sounds);
-            queueableBinaryWriter.QueueWrite(this.GeneralEvents);
-            queueableBinaryWriter.QueueWrite(this.FlavorEvents);
-            queueableBinaryWriter.QueueWrite(this.SlayerEvents);
-            queueableBinaryWriter.QueueWrite(this.CtfEvents);
-            queueableBinaryWriter.QueueWrite(this.OddballEvents);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock);
-            queueableBinaryWriter.QueueWrite(this.KingEvents);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock0);
-            queueableBinaryWriter.QueueWrite(this.JuggernautEvents);
-            queueableBinaryWriter.QueueWrite(this.TerritoriesEvents);
-            queueableBinaryWriter.QueueWrite(this.InvasionEvents);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock1);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock2);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock3);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock4);
-            queueableBinaryWriter.QueueWrite(this.MultiplayerConstants);
-            queueableBinaryWriter.QueueWrite(this.StateResponses);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Weapons);
+            queueableBinaryWriter.Defer(this.Vehicles);
+            this.Arr.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Sounds);
+            queueableBinaryWriter.Defer(this.GeneralEvents);
+            queueableBinaryWriter.Defer(this.FlavorEvents);
+            queueableBinaryWriter.Defer(this.SlayerEvents);
+            queueableBinaryWriter.Defer(this.CtfEvents);
+            queueableBinaryWriter.Defer(this.OddballEvents);
+            queueableBinaryWriter.Defer(this.GNullBlock);
+            queueableBinaryWriter.Defer(this.KingEvents);
+            queueableBinaryWriter.Defer(this.GNullBlock0);
+            queueableBinaryWriter.Defer(this.JuggernautEvents);
+            queueableBinaryWriter.Defer(this.TerritoriesEvents);
+            queueableBinaryWriter.Defer(this.InvasionEvents);
+            queueableBinaryWriter.Defer(this.GNullBlock1);
+            queueableBinaryWriter.Defer(this.GNullBlock2);
+            queueableBinaryWriter.Defer(this.GNullBlock3);
+            queueableBinaryWriter.Defer(this.GNullBlock4);
+            queueableBinaryWriter.Defer(this.MultiplayerConstants);
+            queueableBinaryWriter.Defer(this.StateResponses);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

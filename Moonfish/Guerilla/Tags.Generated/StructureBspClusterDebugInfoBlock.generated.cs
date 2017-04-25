@@ -65,14 +65,14 @@ namespace Moonfish.Guerilla.Tags
             this.VisFogOmissionClusterIndices = base.ReadBlockArrayData<StructureBspDebugInfoIndicesBlock>(binaryReader, pointerQueue.Dequeue());
             this.ContainingFogZoneIndices = base.ReadBlockArrayData<StructureBspDebugInfoIndicesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Lines);
-            queueableBinaryWriter.QueueWrite(this.FogPlaneIndices);
-            queueableBinaryWriter.QueueWrite(this.VisibleFogPlaneIndices);
-            queueableBinaryWriter.QueueWrite(this.VisFogOmissionClusterIndices);
-            queueableBinaryWriter.QueueWrite(this.ContainingFogZoneIndices);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Lines);
+            queueableBinaryWriter.Defer(this.FogPlaneIndices);
+            queueableBinaryWriter.Defer(this.VisibleFogPlaneIndices);
+            queueableBinaryWriter.Defer(this.VisFogOmissionClusterIndices);
+            queueableBinaryWriter.Defer(this.ContainingFogZoneIndices);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

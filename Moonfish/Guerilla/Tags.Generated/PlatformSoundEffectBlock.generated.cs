@@ -55,12 +55,12 @@ namespace Moonfish.Guerilla.Tags
             this.ConstantInputs = base.ReadBlockArrayData<PlatformSoundEffectConstantBlock>(binaryReader, pointerQueue.Dequeue());
             this.TemplateOverrideDescriptors = base.ReadBlockArrayData<PlatformSoundEffectOverrideDescriptorBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.FunctionInputs);
-            queueableBinaryWriter.QueueWrite(this.ConstantInputs);
-            queueableBinaryWriter.QueueWrite(this.TemplateOverrideDescriptors);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.FunctionInputs);
+            queueableBinaryWriter.Defer(this.ConstantInputs);
+            queueableBinaryWriter.Defer(this.TemplateOverrideDescriptors);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

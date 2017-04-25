@@ -121,12 +121,12 @@ namespace Moonfish.Guerilla.Tags
             this.UnitCamera.ReadInstances(binaryReader, pointerQueue);
             this.UnitHudInterface = base.ReadBlockArrayData<UnitHudReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.Acceleration.QueueWrites(queueableBinaryWriter);
-            this.UnitCamera.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.UnitHudInterface);
+            base.Defer(queueableBinaryWriter);
+            this.Acceleration.Defer(queueableBinaryWriter);
+            this.UnitCamera.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.UnitHudInterface);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

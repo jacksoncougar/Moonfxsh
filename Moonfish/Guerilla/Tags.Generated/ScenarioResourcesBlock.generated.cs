@@ -53,12 +53,12 @@ namespace Moonfish.Guerilla.Tags
             this.ScriptSource = base.ReadBlockArrayData<ScenarioHsSourceReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.AIResources = base.ReadBlockArrayData<ScenarioAiResourceReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.References);
-            queueableBinaryWriter.QueueWrite(this.ScriptSource);
-            queueableBinaryWriter.QueueWrite(this.AIResources);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.References);
+            queueableBinaryWriter.Defer(this.ScriptSource);
+            queueableBinaryWriter.Defer(this.AIResources);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

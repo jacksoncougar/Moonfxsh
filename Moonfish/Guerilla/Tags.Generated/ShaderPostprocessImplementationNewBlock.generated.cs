@@ -59,14 +59,14 @@ namespace Moonfish.Guerilla.Tags
             this.PixelConstants.ReadInstances(binaryReader, pointerQueue);
             this.VertexConstants.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.BitmapTransforms.QueueWrites(queueableBinaryWriter);
-            this.RenderStates.QueueWrites(queueableBinaryWriter);
-            this.TextureStates.QueueWrites(queueableBinaryWriter);
-            this.PixelConstants.QueueWrites(queueableBinaryWriter);
-            this.VertexConstants.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            this.BitmapTransforms.Defer(queueableBinaryWriter);
+            this.RenderStates.Defer(queueableBinaryWriter);
+            this.TextureStates.Defer(queueableBinaryWriter);
+            this.PixelConstants.Defer(queueableBinaryWriter);
+            this.VertexConstants.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

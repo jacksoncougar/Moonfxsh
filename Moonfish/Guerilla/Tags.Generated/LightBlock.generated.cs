@@ -166,12 +166,12 @@ namespace Moonfish.Guerilla.Tags
             this.ColorAnimation = base.ReadBlockArrayData<LightColorAnimationBlock>(binaryReader, pointerQueue.Dequeue());
             this.GelAnimation = base.ReadBlockArrayData<LightGelAnimationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.BrightnessAnimation);
-            queueableBinaryWriter.QueueWrite(this.ColorAnimation);
-            queueableBinaryWriter.QueueWrite(this.GelAnimation);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.BrightnessAnimation);
+            queueableBinaryWriter.Defer(this.ColorAnimation);
+            queueableBinaryWriter.Defer(this.GelAnimation);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

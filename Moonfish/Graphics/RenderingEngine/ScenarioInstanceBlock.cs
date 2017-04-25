@@ -45,12 +45,12 @@ namespace Moonfish.Graphics
 
         ShortBlockIndex1 IH2ObjectInstance.NameIndex
         {
-            get { return -1; }
+            get { return (ShortBlockIndex1) (-1); }
         }
 
         ShortBlockIndex1 IH2ObjectInstance.PaletteIndex
         {
-            get { return -1; }
+            get { return (ShortBlockIndex1) (-1); }
         }
 
         ScenarioObjectDatumStructBlock IH2ObjectInstance.ObjectDatum

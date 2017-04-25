@@ -68,17 +68,17 @@ namespace Moonfish.Guerilla.Tags
             this.Edges = base.ReadBlockArrayData<EdgesBlock>(binaryReader, pointerQueue.Dequeue());
             this.Vertices = base.ReadBlockArrayData<VerticesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.BSP3DNodes);
-            queueableBinaryWriter.QueueWrite(this.Planes);
-            queueableBinaryWriter.QueueWrite(this.Leaves);
-            queueableBinaryWriter.QueueWrite(this.BSP2DReferences);
-            queueableBinaryWriter.QueueWrite(this.BSP2DNodes);
-            queueableBinaryWriter.QueueWrite(this.Surfaces);
-            queueableBinaryWriter.QueueWrite(this.Edges);
-            queueableBinaryWriter.QueueWrite(this.Vertices);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.BSP3DNodes);
+            queueableBinaryWriter.Defer(this.Planes);
+            queueableBinaryWriter.Defer(this.Leaves);
+            queueableBinaryWriter.Defer(this.BSP2DReferences);
+            queueableBinaryWriter.Defer(this.BSP2DNodes);
+            queueableBinaryWriter.Defer(this.Surfaces);
+            queueableBinaryWriter.Defer(this.Edges);
+            queueableBinaryWriter.Defer(this.Vertices);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

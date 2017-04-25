@@ -77,14 +77,14 @@ namespace Moonfish.Guerilla.Tags
             this.MiscState = base.ReadBlockArrayData<ShaderTextureStateMiscStateBlock>(binaryReader, pointerQueue.Dequeue());
             this.Constants = base.ReadBlockArrayData<ShaderTextureStateConstantBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.AddressState);
-            queueableBinaryWriter.QueueWrite(this.FilterState);
-            queueableBinaryWriter.QueueWrite(this.KillState);
-            queueableBinaryWriter.QueueWrite(this.MiscState);
-            queueableBinaryWriter.QueueWrite(this.Constants);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.AddressState);
+            queueableBinaryWriter.Defer(this.FilterState);
+            queueableBinaryWriter.Defer(this.KillState);
+            queueableBinaryWriter.Defer(this.MiscState);
+            queueableBinaryWriter.Defer(this.Constants);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

@@ -91,24 +91,24 @@ namespace Moonfish.Guerilla.Tags
             this.ValueProperties = base.ReadBlockArrayData<ShaderPostprocessValuePropertyBlock>(binaryReader, pointerQueue.Dequeue());
             this.OldLevelsOfDetail = base.ReadBlockArrayData<ShaderPostprocessLevelOfDetailBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Bitmaps);
-            queueableBinaryWriter.QueueWrite(this.PixelConstants);
-            queueableBinaryWriter.QueueWrite(this.VertexConstants);
-            queueableBinaryWriter.QueueWrite(this.LevelsOfDetail);
-            queueableBinaryWriter.QueueWrite(this.Layers);
-            queueableBinaryWriter.QueueWrite(this.Passes);
-            queueableBinaryWriter.QueueWrite(this.Implementations);
-            queueableBinaryWriter.QueueWrite(this.Overlays);
-            queueableBinaryWriter.QueueWrite(this.OverlayReferences);
-            queueableBinaryWriter.QueueWrite(this.AnimatedParameters);
-            queueableBinaryWriter.QueueWrite(this.AnimatedParameterReferences);
-            queueableBinaryWriter.QueueWrite(this.BitmapProperties);
-            queueableBinaryWriter.QueueWrite(this.ColorProperties);
-            queueableBinaryWriter.QueueWrite(this.ValueProperties);
-            queueableBinaryWriter.QueueWrite(this.OldLevelsOfDetail);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Bitmaps);
+            queueableBinaryWriter.Defer(this.PixelConstants);
+            queueableBinaryWriter.Defer(this.VertexConstants);
+            queueableBinaryWriter.Defer(this.LevelsOfDetail);
+            queueableBinaryWriter.Defer(this.Layers);
+            queueableBinaryWriter.Defer(this.Passes);
+            queueableBinaryWriter.Defer(this.Implementations);
+            queueableBinaryWriter.Defer(this.Overlays);
+            queueableBinaryWriter.Defer(this.OverlayReferences);
+            queueableBinaryWriter.Defer(this.AnimatedParameters);
+            queueableBinaryWriter.Defer(this.AnimatedParameterReferences);
+            queueableBinaryWriter.Defer(this.BitmapProperties);
+            queueableBinaryWriter.Defer(this.ColorProperties);
+            queueableBinaryWriter.Defer(this.ValueProperties);
+            queueableBinaryWriter.Defer(this.OldLevelsOfDetail);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

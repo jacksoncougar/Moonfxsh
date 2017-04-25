@@ -65,16 +65,16 @@ namespace Moonfish.Guerilla.Tags
             this.VnConstants = base.ReadBlockArrayData<VertexShaderConstantBlock>(binaryReader, pointerQueue.Dequeue());
             this.CnConstants = base.ReadBlockArrayData<VertexShaderConstantBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.RenderStates);
-            queueableBinaryWriter.QueueWrite(this.TextureStageStates);
-            queueableBinaryWriter.QueueWrite(this.RenderStateParameters);
-            queueableBinaryWriter.QueueWrite(this.TextureStageParameters);
-            queueableBinaryWriter.QueueWrite(this.Textures);
-            queueableBinaryWriter.QueueWrite(this.VnConstants);
-            queueableBinaryWriter.QueueWrite(this.CnConstants);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.RenderStates);
+            queueableBinaryWriter.Defer(this.TextureStageStates);
+            queueableBinaryWriter.Defer(this.RenderStateParameters);
+            queueableBinaryWriter.Defer(this.TextureStageParameters);
+            queueableBinaryWriter.Defer(this.Textures);
+            queueableBinaryWriter.Defer(this.VnConstants);
+            queueableBinaryWriter.Defer(this.CnConstants);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

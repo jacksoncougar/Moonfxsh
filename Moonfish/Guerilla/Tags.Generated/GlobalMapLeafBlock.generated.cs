@@ -50,11 +50,11 @@ namespace Moonfish.Guerilla.Tags
             this.Faces = base.ReadBlockArrayData<MapLeafFaceBlock>(binaryReader, pointerQueue.Dequeue());
             this.ConnectionIndices = base.ReadBlockArrayData<MapLeafConnectionIndexBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Faces);
-            queueableBinaryWriter.QueueWrite(this.ConnectionIndices);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Faces);
+            queueableBinaryWriter.Defer(this.ConnectionIndices);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

@@ -79,14 +79,14 @@ namespace Moonfish.Guerilla.Tags
             this.SpecialMovement = base.ReadBlockArrayData<SpecialMovementBlock>(binaryReader, pointerQueue.Dequeue());
             this.OrderEndings = base.ReadBlockArrayData<OrderEndingBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.PrimaryAreaSet);
-            queueableBinaryWriter.QueueWrite(this.SecondaryAreaSet);
-            queueableBinaryWriter.QueueWrite(this.SecondarySetTrigger);
-            queueableBinaryWriter.QueueWrite(this.SpecialMovement);
-            queueableBinaryWriter.QueueWrite(this.OrderEndings);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.PrimaryAreaSet);
+            queueableBinaryWriter.Defer(this.SecondaryAreaSet);
+            queueableBinaryWriter.Defer(this.SecondarySetTrigger);
+            queueableBinaryWriter.Defer(this.SpecialMovement);
+            queueableBinaryWriter.Defer(this.OrderEndings);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

@@ -60,13 +60,13 @@ namespace Moonfish.Guerilla.Tags
             this.DashlightData.ReadInstances(binaryReader, pointerQueue);
             this.ScreenEffectWidgets = base.ReadBlockArrayData<HudScreenEffectWidgets>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.BitmapWidgets);
-            queueableBinaryWriter.QueueWrite(this.TextWidgets);
-            this.DashlightData.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ScreenEffectWidgets);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.BitmapWidgets);
+            queueableBinaryWriter.Defer(this.TextWidgets);
+            this.DashlightData.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.ScreenEffectWidgets);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

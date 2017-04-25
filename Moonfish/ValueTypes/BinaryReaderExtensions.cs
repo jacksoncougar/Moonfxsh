@@ -129,7 +129,7 @@ namespace Moonfish.Tags
 
         public static ShortBlockIndex1 ReadShortBlockIndex1(this BinaryReader binaryReader)
         {
-            return binaryReader.ReadInt16();
+            return (ShortBlockIndex1) binaryReader.ReadInt16();
         }
 
         public static ShortBlockIndex2 ReadShortBlockIndex2(this BinaryReader binaryReader)

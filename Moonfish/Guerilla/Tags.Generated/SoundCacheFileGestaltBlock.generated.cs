@@ -78,20 +78,20 @@ namespace Moonfish.Guerilla.Tags
             this.Promotions = base.ReadBlockArrayData<SoundGestaltPromotionsBlock>(binaryReader, pointerQueue.Dequeue());
             this.ExtraInfos = base.ReadBlockArrayData<SoundGestaltExtraInfoBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Playbacks);
-            queueableBinaryWriter.QueueWrite(this.Scales);
-            queueableBinaryWriter.QueueWrite(this.ImportNames);
-            queueableBinaryWriter.QueueWrite(this.PitchRangeParameters);
-            queueableBinaryWriter.QueueWrite(this.PitchRanges);
-            queueableBinaryWriter.QueueWrite(this.Permutations);
-            queueableBinaryWriter.QueueWrite(this.CustomPlaybacks);
-            queueableBinaryWriter.QueueWrite(this.RuntimePermutationFlags);
-            queueableBinaryWriter.QueueWrite(this.Chunks);
-            queueableBinaryWriter.QueueWrite(this.Promotions);
-            queueableBinaryWriter.QueueWrite(this.ExtraInfos);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Playbacks);
+            queueableBinaryWriter.Defer(this.Scales);
+            queueableBinaryWriter.Defer(this.ImportNames);
+            queueableBinaryWriter.Defer(this.PitchRangeParameters);
+            queueableBinaryWriter.Defer(this.PitchRanges);
+            queueableBinaryWriter.Defer(this.Permutations);
+            queueableBinaryWriter.Defer(this.CustomPlaybacks);
+            queueableBinaryWriter.Defer(this.RuntimePermutationFlags);
+            queueableBinaryWriter.Defer(this.Chunks);
+            queueableBinaryWriter.Defer(this.Promotions);
+            queueableBinaryWriter.Defer(this.ExtraInfos);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

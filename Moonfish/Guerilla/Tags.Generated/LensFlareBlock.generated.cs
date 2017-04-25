@@ -101,13 +101,13 @@ namespace Moonfish.Guerilla.Tags
             this.Color = base.ReadBlockArrayData<LensFlareColorAnimationBlock>(binaryReader, pointerQueue.Dequeue());
             this.Rotation = base.ReadBlockArrayData<LensFlareScalarAnimationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Reflections);
-            queueableBinaryWriter.QueueWrite(this.Brightness);
-            queueableBinaryWriter.QueueWrite(this.Color);
-            queueableBinaryWriter.QueueWrite(this.Rotation);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Reflections);
+            queueableBinaryWriter.Defer(this.Brightness);
+            queueableBinaryWriter.Defer(this.Color);
+            queueableBinaryWriter.Defer(this.Rotation);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

@@ -50,11 +50,11 @@ namespace Moonfish.Guerilla.Tags
             this.InitialPermutations = base.ReadBlockArrayData<ObjectChangeColorInitialPermutation>(binaryReader, pointerQueue.Dequeue());
             this.Functions = base.ReadBlockArrayData<ObjectChangeColorFunction>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.InitialPermutations);
-            queueableBinaryWriter.QueueWrite(this.Functions);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.InitialPermutations);
+            queueableBinaryWriter.Defer(this.Functions);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

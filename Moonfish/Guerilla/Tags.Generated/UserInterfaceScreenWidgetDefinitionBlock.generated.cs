@@ -95,12 +95,12 @@ namespace Moonfish.Guerilla.Tags
             this.LocalStrings = base.ReadBlockArrayData<LocalStringIdListSectionReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.LocalBitmaps = base.ReadBlockArrayData<LocalBitmapReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Panes);
-            queueableBinaryWriter.QueueWrite(this.LocalStrings);
-            queueableBinaryWriter.QueueWrite(this.LocalBitmaps);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.Panes);
+            queueableBinaryWriter.Defer(this.LocalStrings);
+            queueableBinaryWriter.Defer(this.LocalBitmaps);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

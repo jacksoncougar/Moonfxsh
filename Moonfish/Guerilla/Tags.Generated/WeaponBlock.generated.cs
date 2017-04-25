@@ -204,18 +204,18 @@ namespace Moonfish.Guerilla.Tags
             this.NewTriggers = base.ReadBlockArrayData<WeaponTriggers>(binaryReader, pointerQueue.Dequeue());
             this.Barrels = base.ReadBlockArrayData<WeaponBarrels>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.MeleeAimAssist.QueueWrites(queueableBinaryWriter);
-            this.MeleeDamageParameters.QueueWrites(queueableBinaryWriter);
-            this.WeaponAimAssist.QueueWrites(queueableBinaryWriter);
-            this.Tracking.QueueWrites(queueableBinaryWriter);
-            this.PlayerInterface.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.PredictedResources0);
-            queueableBinaryWriter.QueueWrite(this.Magazines);
-            queueableBinaryWriter.QueueWrite(this.NewTriggers);
-            queueableBinaryWriter.QueueWrite(this.Barrels);
+            base.Defer(queueableBinaryWriter);
+            this.MeleeAimAssist.Defer(queueableBinaryWriter);
+            this.MeleeDamageParameters.Defer(queueableBinaryWriter);
+            this.WeaponAimAssist.Defer(queueableBinaryWriter);
+            this.Tracking.Defer(queueableBinaryWriter);
+            this.PlayerInterface.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.PredictedResources0);
+            queueableBinaryWriter.Defer(this.Magazines);
+            queueableBinaryWriter.Defer(this.NewTriggers);
+            queueableBinaryWriter.Defer(this.Barrels);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

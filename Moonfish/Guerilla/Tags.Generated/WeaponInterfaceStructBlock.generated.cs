@@ -53,11 +53,11 @@ namespace Moonfish.Guerilla.Tags
             this.SharedInterface.ReadInstances(binaryReader, pointerQueue);
             this.FirstPerson = base.ReadBlockArrayData<WeaponFirstPersonInterfaceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.SharedInterface.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.FirstPerson);
+            base.Defer(queueableBinaryWriter);
+            this.SharedInterface.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.FirstPerson);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

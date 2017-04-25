@@ -55,12 +55,12 @@ namespace Moonfish.Guerilla.Tags
             this.PointData.ReadInstances(binaryReader, pointerQueue);
             this.NodeMap = base.ReadBlockArrayData<RenderModelNodeMapBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            this.Section.QueueWrites(queueableBinaryWriter);
-            this.PointData.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.NodeMap);
+            base.Defer(queueableBinaryWriter);
+            this.Section.Defer(queueableBinaryWriter);
+            this.PointData.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.NodeMap);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

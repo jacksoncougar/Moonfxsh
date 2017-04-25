@@ -69,14 +69,14 @@ namespace Moonfish.Guerilla.Tags
             this.HudBlocks = base.ReadBlockArrayData<HudBlockReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.PlayerBlocks = base.ReadBlockArrayData<PlayerBlockReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.ItemAnimations);
-            queueableBinaryWriter.QueueWrite(this.TextBlocks);
-            queueableBinaryWriter.QueueWrite(this.BitmapBlocks);
-            queueableBinaryWriter.QueueWrite(this.HudBlocks);
-            queueableBinaryWriter.QueueWrite(this.PlayerBlocks);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.ItemAnimations);
+            queueableBinaryWriter.Defer(this.TextBlocks);
+            queueableBinaryWriter.Defer(this.BitmapBlocks);
+            queueableBinaryWriter.Defer(this.HudBlocks);
+            queueableBinaryWriter.Defer(this.PlayerBlocks);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

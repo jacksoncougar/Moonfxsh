@@ -133,35 +133,35 @@ namespace Moonfish.Guerilla.Tags
             this.UiLevelData = base.ReadBlockArrayData<UiLevelsDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
             this.UnicodeBlockInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void QueueWrites(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {
-            base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.HavokCleanupResources);
-            queueableBinaryWriter.QueueWrite(this.CollisionDamage);
-            queueableBinaryWriter.QueueWrite(this.SoundGlobals);
-            queueableBinaryWriter.QueueWrite(this.AiGlobals);
-            queueableBinaryWriter.QueueWrite(this.DamageTable);
-            queueableBinaryWriter.QueueWrite(this.GNullBlock);
-            queueableBinaryWriter.QueueWrite(this.Sounds);
-            queueableBinaryWriter.QueueWrite(this.Camera);
-            queueableBinaryWriter.QueueWrite(this.PlayerControl);
-            queueableBinaryWriter.QueueWrite(this.Difficulty);
-            queueableBinaryWriter.QueueWrite(this.Grenades);
-            queueableBinaryWriter.QueueWrite(this.RasterizerData);
-            queueableBinaryWriter.QueueWrite(this.InterfaceTags);
-            queueableBinaryWriter.QueueWrite(this.weaponList);
-            queueableBinaryWriter.QueueWrite(this.cheatPowerups);
-            queueableBinaryWriter.QueueWrite(this.multiplayerInformation);
-            queueableBinaryWriter.QueueWrite(this.playerInformation);
-            queueableBinaryWriter.QueueWrite(this.playerRepresentation);
-            queueableBinaryWriter.QueueWrite(this.FallingDamage);
-            queueableBinaryWriter.QueueWrite(this.OldMaterials);
-            queueableBinaryWriter.QueueWrite(this.Materials);
-            queueableBinaryWriter.QueueWrite(this.MultiplayerUI);
-            queueableBinaryWriter.QueueWrite(this.ProfileColors);
-            queueableBinaryWriter.QueueWrite(this.RuntimeLevelData);
-            queueableBinaryWriter.QueueWrite(this.UiLevelData);
-            this.UnicodeBlockInfo.QueueWrites(queueableBinaryWriter);
+            base.Defer(queueableBinaryWriter);
+            queueableBinaryWriter.Defer(this.HavokCleanupResources);
+            queueableBinaryWriter.Defer(this.CollisionDamage);
+            queueableBinaryWriter.Defer(this.SoundGlobals);
+            queueableBinaryWriter.Defer(this.AiGlobals);
+            queueableBinaryWriter.Defer(this.DamageTable);
+            queueableBinaryWriter.Defer(this.GNullBlock);
+            queueableBinaryWriter.Defer(this.Sounds);
+            queueableBinaryWriter.Defer(this.Camera);
+            queueableBinaryWriter.Defer(this.PlayerControl);
+            queueableBinaryWriter.Defer(this.Difficulty);
+            queueableBinaryWriter.Defer(this.Grenades);
+            queueableBinaryWriter.Defer(this.RasterizerData);
+            queueableBinaryWriter.Defer(this.InterfaceTags);
+            queueableBinaryWriter.Defer(this.weaponList);
+            queueableBinaryWriter.Defer(this.cheatPowerups);
+            queueableBinaryWriter.Defer(this.multiplayerInformation);
+            queueableBinaryWriter.Defer(this.playerInformation);
+            queueableBinaryWriter.Defer(this.playerRepresentation);
+            queueableBinaryWriter.Defer(this.FallingDamage);
+            queueableBinaryWriter.Defer(this.OldMaterials);
+            queueableBinaryWriter.Defer(this.Materials);
+            queueableBinaryWriter.Defer(this.MultiplayerUI);
+            queueableBinaryWriter.Defer(this.ProfileColors);
+            queueableBinaryWriter.Defer(this.RuntimeLevelData);
+            queueableBinaryWriter.Defer(this.UiLevelData);
+            this.UnicodeBlockInfo.Defer(queueableBinaryWriter);
         }
         public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
         {

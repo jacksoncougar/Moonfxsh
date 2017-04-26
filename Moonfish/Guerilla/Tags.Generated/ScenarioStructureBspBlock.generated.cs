@@ -241,7 +241,6 @@ namespace Moonfish.Guerilla.Tags
             writer.Defer(this.TransparentPlanes);
             writer.Defer(this.DebugInfo);
             this.StructurePhysics.DeferReferences(writer);
-            this.StructurePhysics.DeferReferences(writer);
             writer.Defer(this.WaterDefinitions);
             writer.Defer(this.portaldeviceMapping);
             writer.Defer(this.Audibility);

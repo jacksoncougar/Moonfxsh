@@ -118,8 +118,6 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.LockonData.DeferReferences(writer);
-            this.LockonData.DeferReferences(writer);
-            this.Physics.DeferReferences(writer);
             this.Physics.DeferReferences(writer);
             writer.Defer(this.ContactPoints);
         }

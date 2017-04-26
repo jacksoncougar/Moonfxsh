@@ -128,15 +128,10 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.HorizontalRange.DeferReferences(writer);
-            this.HorizontalRange.DeferReferences(writer);
             this.VerticalRange.DeferReferences(writer);
-            this.VerticalRange.DeferReferences(writer);
-            this.Roughness.DeferReferences(writer);
             this.Roughness.DeferReferences(writer);
             writer.Defer(this.Cores);
             this.Rangescale.DeferReferences(writer);
-            this.Rangescale.DeferReferences(writer);
-            this.Brightnessscale.DeferReferences(writer);
             this.Brightnessscale.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

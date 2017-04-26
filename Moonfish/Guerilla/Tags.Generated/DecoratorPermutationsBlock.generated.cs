@@ -31,9 +31,8 @@ namespace Moonfish.Guerilla.Tags
         public byte DistributionWeight;
         public Moonfish.Model.Range Scale;
         public Moonfish.Tags.ColourR1G1B1 Tint1;
-        private byte[] rgb8padding = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 Tint2;
-        private byte[] rgb8padding0 = new byte[1];
+        private byte[] padding = new byte[2];
         public float BaseMapTintPercentage;
         public float LightmapTintPercentage;
         public float WindScale;
@@ -63,9 +62,8 @@ namespace Moonfish.Guerilla.Tags
             this.DistributionWeight = binaryReader.ReadByte();
             this.Scale = binaryReader.ReadRange();
             this.Tint1 = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding = binaryReader.ReadBytes(1);
             this.Tint2 = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding0 = binaryReader.ReadBytes(1);
+            this.padding = binaryReader.ReadBytes(2);
             this.BaseMapTintPercentage = binaryReader.ReadSingle();
             this.LightmapTintPercentage = binaryReader.ReadSingle();
             this.WindScale = binaryReader.ReadSingle();
@@ -91,9 +89,8 @@ namespace Moonfish.Guerilla.Tags
             writer.Write(this.DistributionWeight);
             writer.Write(this.Scale);
             writer.Write(this.Tint1);
-            writer.Write(this.rgb8padding);
             writer.Write(this.Tint2);
-            writer.Write(this.rgb8padding0);
+            writer.Write(this.padding);
             writer.Write(this.BaseMapTintPercentage);
             writer.Write(this.LightmapTintPercentage);
             writer.Write(this.WindScale);

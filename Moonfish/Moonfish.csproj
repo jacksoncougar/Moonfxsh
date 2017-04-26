@@ -1352,7 +1352,6 @@
     <Compile Include="Guerilla\Tags\StructureBspClusterBlock.cs" />
     <Compile Include="Guerilla\Tags\StructureLightmapPaletteColorBlock.cs" />
     <Compile Include="ValueTypes\BinaryWriterExtensions.cs" />
-    <Compile Include="ValueTypes\LayoutAttribute.cs" />
     <Compile Include="ValueTypes\TagBlockFieldAttribute.cs" />
     <Compile Include="ValueTypes\TagClassAttribute.cs" />
     <Compile Include="ValueTypes\TagStructFieldAttribute.cs" />

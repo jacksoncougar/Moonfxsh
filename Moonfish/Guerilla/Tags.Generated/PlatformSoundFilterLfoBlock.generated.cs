@@ -61,12 +61,8 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.Delay.DeferReferences(writer);
-            this.Delay.DeferReferences(writer);
-            this.Frequency.DeferReferences(writer);
             this.Frequency.DeferReferences(writer);
             this.CutoffModulation.DeferReferences(writer);
-            this.CutoffModulation.DeferReferences(writer);
-            this.GainModulation.DeferReferences(writer);
             this.GainModulation.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

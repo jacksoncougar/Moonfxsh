@@ -64,7 +64,6 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.DefaultFunction.DeferReferences(writer);
-            this.DefaultFunction.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {

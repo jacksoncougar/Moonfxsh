@@ -175,15 +175,15 @@ namespace Moonfish.Guerilla.Tags
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(304));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(64));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(36));
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(96));
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(92));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(40));
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(88));
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(84));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(40));
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(88));
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(84));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(40));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(56));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(40));
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(88));
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(84));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(40));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(40));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(72));
@@ -227,7 +227,7 @@ namespace Moonfish.Guerilla.Tags
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(128));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(56));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(64));
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(38));
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(36));
             this.CustomObjectNames = binaryReader.ReadTagReference();
             this.ChapterTitleText = binaryReader.ReadTagReference();
             this.HUDMessages = binaryReader.ReadTagReference();
@@ -256,7 +256,7 @@ namespace Moonfish.Guerilla.Tags
             }
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(96));
             this.SoundEffectCollection = binaryReader.ReadTagReference();
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(80));
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(76));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(40));
             this.GlobalLighting = binaryReader.ReadTagReference();
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(244));

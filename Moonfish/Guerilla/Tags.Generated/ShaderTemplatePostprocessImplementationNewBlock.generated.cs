@@ -58,10 +58,7 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.Bitmaps.DeferReferences(writer);
-            this.Bitmaps.DeferReferences(writer);
             this.PixelConstants.DeferReferences(writer);
-            this.PixelConstants.DeferReferences(writer);
-            this.VertexConstants.DeferReferences(writer);
             this.VertexConstants.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

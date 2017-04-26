@@ -59,7 +59,6 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.EffectScaleFunction.DeferReferences(writer);
-            this.EffectScaleFunction.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {

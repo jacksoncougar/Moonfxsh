@@ -94,7 +94,6 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.ExtraSounds.DeferReferences(writer);
-            this.ExtraSounds.DeferReferences(writer);
             writer.Defer(this.SoundPermutations);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

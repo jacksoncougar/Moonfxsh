@@ -42,6 +42,7 @@ namespace Moonfish.Guerilla
             DisplayName = definition.DisplayName;
             MaximumElementCount = definition.maximum_element_count;
             Alignment = definition.LatestFieldSet.Alignment;
+            ReportedSize = definition.LatestFieldSet.size;
 
             List<tag_field> definitionFields = definition.LatestFieldSet.Fields;
             Fields = new List<MoonfishTagField>(definitionFields.Count);
@@ -85,6 +86,8 @@ namespace Moonfish.Guerilla
             }
             Fields = new List<MoonfishTagField>(Guerilla.PostProcess(Name, Fields));
         }
+
+        public int ReportedSize  { get; set; }
 
         public int CalculateSizeOfFieldSet()
         {

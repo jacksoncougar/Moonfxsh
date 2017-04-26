@@ -77,11 +77,8 @@ namespace Moonfish.Guerilla.Tags
         [Moonfish.Tags.TagReferenceAttribute("bitm")]
         public Moonfish.Tags.TagReference MeterBitmap;
         public Moonfish.Tags.ColourR1G1B1 ColorAtMeterMinimum;
-        private byte[] rgb8padding = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 ColorAtMeterMaximum;
-        private byte[] rgb8padding0 = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 FlashColor;
-        private byte[] rgb8padding1 = new byte[1];
         public Moonfish.Tags.ColourA1R1G1B1 EmptyColor;
         public Flags UnitHudInterfaceFlags;
         public byte MinumumMeterValue;
@@ -95,13 +92,9 @@ namespace Moonfish.Guerilla.Tags
         public GNullBlock[] GNullBlock = new GNullBlock[0];
         private byte[] fieldpad13 = new byte[4];
         public Moonfish.Tags.ColourR1G1B1 OverchargeMinimumColor;
-        private byte[] rgb8padding2 = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 OverchargeMaximumColor;
-        private byte[] rgb8padding3 = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 OverchargeFlashColor;
-        private byte[] rgb8padding4 = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 OverchargeEmptyColor;
-        private byte[] rgb8padding5 = new byte[1];
         private byte[] fieldpad14 = new byte[16];
         public Moonfish.Tags.Point AnchorOffset2;
         public float WidthScale2;
@@ -133,11 +126,8 @@ namespace Moonfish.Guerilla.Tags
         [Moonfish.Tags.TagReferenceAttribute("bitm")]
         public Moonfish.Tags.TagReference MeterBitmap0;
         public Moonfish.Tags.ColourR1G1B1 ColorAtMeterMinimum0;
-        private byte[] rgb8padding6 = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 ColorAtMeterMaximum0;
-        private byte[] rgb8padding7 = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 FlashColor0;
-        private byte[] rgb8padding8 = new byte[1];
         public Moonfish.Tags.ColourA1R1G1B1 EmptyColor0;
         public UnitHudInterfaceFlags0 UnitHudInterfaceUnitHudInterfaceFlags0;
         public byte MinumumMeterValue0;
@@ -151,7 +141,6 @@ namespace Moonfish.Guerilla.Tags
         public GNullBlock[] GNullBlock0 = new GNullBlock[0];
         private byte[] fieldpad22 = new byte[4];
         public Moonfish.Tags.ColourR1G1B1 MediumHealthLeftColor;
-        private byte[] rgb8padding9 = new byte[1];
         public float MaxColorHealthFractionCutoff;
         public float MinColorHealthFractionCutoff;
         private byte[] fieldpad23 = new byte[20];
@@ -222,7 +211,7 @@ namespace Moonfish.Guerilla.Tags
         {
             get
             {
-                return 1300;
+                return 1289;
             }
         }
         public override int Alignment
@@ -286,11 +275,8 @@ namespace Moonfish.Guerilla.Tags
             this.fieldpad12 = binaryReader.ReadBytes(20);
             this.MeterBitmap = binaryReader.ReadTagReference();
             this.ColorAtMeterMinimum = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding = binaryReader.ReadBytes(1);
             this.ColorAtMeterMaximum = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding0 = binaryReader.ReadBytes(1);
             this.FlashColor = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding1 = binaryReader.ReadBytes(1);
             this.EmptyColor = binaryReader.ReadColourA1R1G1B1();
             this.UnitHudInterfaceFlags = ((Flags)(binaryReader.ReadByte()));
             this.MinumumMeterValue = binaryReader.ReadByte();
@@ -304,13 +290,9 @@ namespace Moonfish.Guerilla.Tags
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(0));
             this.fieldpad13 = binaryReader.ReadBytes(4);
             this.OverchargeMinimumColor = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding2 = binaryReader.ReadBytes(1);
             this.OverchargeMaximumColor = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding3 = binaryReader.ReadBytes(1);
             this.OverchargeFlashColor = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding4 = binaryReader.ReadBytes(1);
             this.OverchargeEmptyColor = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding5 = binaryReader.ReadBytes(1);
             this.fieldpad14 = binaryReader.ReadBytes(16);
             this.AnchorOffset2 = binaryReader.ReadPoint();
             this.WidthScale2 = binaryReader.ReadSingle();
@@ -340,11 +322,8 @@ namespace Moonfish.Guerilla.Tags
             this.fieldpad21 = binaryReader.ReadBytes(20);
             this.MeterBitmap0 = binaryReader.ReadTagReference();
             this.ColorAtMeterMinimum0 = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding6 = binaryReader.ReadBytes(1);
             this.ColorAtMeterMaximum0 = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding7 = binaryReader.ReadBytes(1);
             this.FlashColor0 = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding8 = binaryReader.ReadBytes(1);
             this.EmptyColor0 = binaryReader.ReadColourA1R1G1B1();
             this.UnitHudInterfaceUnitHudInterfaceFlags0 = ((UnitHudInterfaceFlags0)(binaryReader.ReadByte()));
             this.MinumumMeterValue0 = binaryReader.ReadByte();
@@ -358,7 +337,6 @@ namespace Moonfish.Guerilla.Tags
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(0));
             this.fieldpad22 = binaryReader.ReadBytes(4);
             this.MediumHealthLeftColor = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding9 = binaryReader.ReadBytes(1);
             this.MaxColorHealthFractionCutoff = binaryReader.ReadSingle();
             this.MinColorHealthFractionCutoff = binaryReader.ReadSingle();
             this.fieldpad23 = binaryReader.ReadBytes(20);
@@ -415,7 +393,7 @@ namespace Moonfish.Guerilla.Tags
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(120));
             this.fieldpad39 = binaryReader.ReadBytes(16);
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(48));
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(300));
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(297));
             this.NewHud = binaryReader.ReadTagReference();
             this.fieldpad40 = binaryReader.ReadBytes(356);
             this.fieldpad41 = binaryReader.ReadBytes(48);
@@ -503,11 +481,8 @@ namespace Moonfish.Guerilla.Tags
             writer.Write(this.fieldpad12);
             writer.Write(this.MeterBitmap);
             writer.Write(this.ColorAtMeterMinimum);
-            writer.Write(this.rgb8padding);
             writer.Write(this.ColorAtMeterMaximum);
-            writer.Write(this.rgb8padding0);
             writer.Write(this.FlashColor);
-            writer.Write(this.rgb8padding1);
             writer.Write(this.EmptyColor);
             writer.Write(((byte)(this.UnitHudInterfaceFlags)));
             writer.Write(this.MinumumMeterValue);
@@ -521,13 +496,9 @@ namespace Moonfish.Guerilla.Tags
             writer.WritePointer(this.GNullBlock);
             writer.Write(this.fieldpad13);
             writer.Write(this.OverchargeMinimumColor);
-            writer.Write(this.rgb8padding2);
             writer.Write(this.OverchargeMaximumColor);
-            writer.Write(this.rgb8padding3);
             writer.Write(this.OverchargeFlashColor);
-            writer.Write(this.rgb8padding4);
             writer.Write(this.OverchargeEmptyColor);
-            writer.Write(this.rgb8padding5);
             writer.Write(this.fieldpad14);
             writer.Write(this.AnchorOffset2);
             writer.Write(this.WidthScale2);
@@ -557,11 +528,8 @@ namespace Moonfish.Guerilla.Tags
             writer.Write(this.fieldpad21);
             writer.Write(this.MeterBitmap0);
             writer.Write(this.ColorAtMeterMinimum0);
-            writer.Write(this.rgb8padding6);
             writer.Write(this.ColorAtMeterMaximum0);
-            writer.Write(this.rgb8padding7);
             writer.Write(this.FlashColor0);
-            writer.Write(this.rgb8padding8);
             writer.Write(this.EmptyColor0);
             writer.Write(((byte)(this.UnitHudInterfaceUnitHudInterfaceFlags0)));
             writer.Write(this.MinumumMeterValue0);
@@ -575,7 +543,6 @@ namespace Moonfish.Guerilla.Tags
             writer.WritePointer(this.GNullBlock0);
             writer.Write(this.fieldpad22);
             writer.Write(this.MediumHealthLeftColor);
-            writer.Write(this.rgb8padding9);
             writer.Write(this.MaxColorHealthFractionCutoff);
             writer.Write(this.MinColorHealthFractionCutoff);
             writer.Write(this.fieldpad23);

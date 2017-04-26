@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
         public OpenTK.Vector2 Texcoord0;
         public OpenTK.Vector2 Texcoord1;
         public Moonfish.Tags.ColourR1G1B1 Color;
-        private byte[] rgb8padding = new byte[1];
+        private byte[] padding = new byte[1];
         public override int SerializedSize
         {
             get
@@ -48,7 +48,7 @@ namespace Moonfish.Guerilla.Tags
             this.Texcoord0 = binaryReader.ReadVector2();
             this.Texcoord1 = binaryReader.ReadVector2();
             this.Color = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding = binaryReader.ReadBytes(1);
+            this.padding = binaryReader.ReadBytes(1);
             return pointerQueue;
         }
         public override void ReadInstances(Moonfish.Guerilla.BlamBinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
@@ -66,7 +66,7 @@ namespace Moonfish.Guerilla.Tags
             writer.Write(this.Texcoord0);
             writer.Write(this.Texcoord1);
             writer.Write(this.Color);
-            writer.Write(this.rgb8padding);
+            writer.Write(this.padding);
         }
     }
 }

@@ -156,7 +156,6 @@ namespace Moonfish.Guerilla.Tags
             base.DeferReferences(writer);
             writer.Defer(this.Gears);
             this.HavokVehiclePhysics.DeferReferences(writer);
-            this.HavokVehiclePhysics.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {

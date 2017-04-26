@@ -113,7 +113,6 @@ namespace Moonfish.Guerilla.Tags
             base.DeferReferences(writer);
             writer.Defer(this.AnimationData, 16);
             this.DataSizes.DeferReferences(writer);
-            this.DataSizes.DeferReferences(writer);
             writer.Defer(this.FrameEventsABCDCC);
             writer.Defer(this.SoundEventsABCDCC);
             writer.Defer(this.EffectEventsABCDCC);

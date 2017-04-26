@@ -55,7 +55,6 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.GeometryBlockInfo.DeferReferences(writer);
-            this.GeometryBlockInfo.DeferReferences(writer);
             writer.Defer(this.CacheBlockData);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

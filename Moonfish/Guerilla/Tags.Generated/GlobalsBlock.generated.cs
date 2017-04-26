@@ -163,7 +163,6 @@ namespace Moonfish.Guerilla.Tags
             writer.Defer(this.RuntimeLevelData);
             writer.Defer(this.UiLevelData);
             this.UnicodeBlockInfo.DeferReferences(writer);
-            this.UnicodeBlockInfo.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {

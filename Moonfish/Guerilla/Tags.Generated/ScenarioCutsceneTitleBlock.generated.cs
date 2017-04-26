@@ -27,18 +27,16 @@ namespace Moonfish.Guerilla.Tags
         public JustificationEnum Justification;
         public FontEnum Font;
         public Moonfish.Tags.ColourR1G1B1 TextColor;
-        private byte[] rgb8padding = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 ShadowColor;
-        private byte[] rgb8padding0 = new byte[1];
+        private byte[] padding = new byte[2];
         public float FadeInTimeseconds;
         public float UpTimeseconds;
         public float FadeOutTimeseconds;
-        private byte[] padding = new byte[2];
         public override int SerializedSize
         {
             get
             {
-                return 38;
+                return 36;
             }
         }
         public override int Alignment
@@ -56,13 +54,11 @@ namespace Moonfish.Guerilla.Tags
             this.Justification = ((JustificationEnum)(binaryReader.ReadInt16()));
             this.Font = ((FontEnum)(binaryReader.ReadInt16()));
             this.TextColor = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding = binaryReader.ReadBytes(1);
             this.ShadowColor = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding0 = binaryReader.ReadBytes(1);
+            this.padding = binaryReader.ReadBytes(2);
             this.FadeInTimeseconds = binaryReader.ReadSingle();
             this.UpTimeseconds = binaryReader.ReadSingle();
             this.FadeOutTimeseconds = binaryReader.ReadSingle();
-            this.padding = binaryReader.ReadBytes(2);
             return pointerQueue;
         }
         public override void ReadInstances(Moonfish.Guerilla.BlamBinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
@@ -81,13 +77,11 @@ namespace Moonfish.Guerilla.Tags
             writer.Write(((short)(this.Justification)));
             writer.Write(((short)(this.Font)));
             writer.Write(this.TextColor);
-            writer.Write(this.rgb8padding);
             writer.Write(this.ShadowColor);
-            writer.Write(this.rgb8padding0);
+            writer.Write(this.padding);
             writer.Write(this.FadeInTimeseconds);
             writer.Write(this.UpTimeseconds);
             writer.Write(this.FadeOutTimeseconds);
-            writer.Write(this.padding);
         }
         public enum JustificationEnum : short
         {

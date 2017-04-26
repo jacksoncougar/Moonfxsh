@@ -49,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.HudText = binaryReader.ReadTagReference();
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(28));
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(36));
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(37));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(24));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(24));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(28));
@@ -74,7 +74,6 @@ namespace Moonfish.Guerilla.Tags
             writer.Defer(this.Waypoints);
             writer.Defer(this.HudSounds);
             writer.Defer(this.PlayerTrainingData);
-            this.Constants.DeferReferences(writer);
             this.Constants.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

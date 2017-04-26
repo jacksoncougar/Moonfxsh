@@ -80,8 +80,6 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.PhysicsProperties.DeferReferences(writer);
-            this.PhysicsProperties.DeferReferences(writer);
-            this.Sweeteners.DeferReferences(writer);
             this.Sweeteners.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

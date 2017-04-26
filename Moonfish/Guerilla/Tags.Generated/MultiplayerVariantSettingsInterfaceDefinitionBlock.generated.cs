@@ -109,22 +109,13 @@ namespace Moonfish.Guerilla.Tags
             writer.Defer(this.GameEngineSettings);
             writer.Defer(this.DefaultVariants);
             this.CreateNewVariantStruct.DeferReferences(writer);
-            this.CreateNewVariantStruct.DeferReferences(writer);
-            this.CreateNewVariantStruct0.DeferReferences(writer);
             this.CreateNewVariantStruct0.DeferReferences(writer);
             this.CreateNewVariantStruct1.DeferReferences(writer);
-            this.CreateNewVariantStruct1.DeferReferences(writer);
-            this.CreateNewVariantStruct2.DeferReferences(writer);
             this.CreateNewVariantStruct2.DeferReferences(writer);
             this.CreateNewVariantStruct3.DeferReferences(writer);
-            this.CreateNewVariantStruct3.DeferReferences(writer);
-            this.CreateNewVariantStruct4.DeferReferences(writer);
             this.CreateNewVariantStruct4.DeferReferences(writer);
             this.CreateNewVariantStruct5.DeferReferences(writer);
-            this.CreateNewVariantStruct5.DeferReferences(writer);
             this.CreateNewVariantStruct6.DeferReferences(writer);
-            this.CreateNewVariantStruct6.DeferReferences(writer);
-            this.CreateNewVariantStruct7.DeferReferences(writer);
             this.CreateNewVariantStruct7.DeferReferences(writer);
             int i;
             for (i = 0; (i < 7); i = (i + 1))
@@ -188,7 +179,6 @@ namespace Moonfish.Guerilla.Tags
             public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
             {
                 base.DeferReferences(writer);
-                this.CreateNewVariantStruct.DeferReferences(writer);
                 this.CreateNewVariantStruct.DeferReferences(writer);
             }
             public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

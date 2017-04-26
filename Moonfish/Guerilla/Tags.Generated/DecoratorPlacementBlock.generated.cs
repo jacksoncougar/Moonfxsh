@@ -25,9 +25,8 @@ namespace Moonfish.Guerilla.Tags
         public int InternalData1;
         public int CompressedPosition;
         public Moonfish.Tags.ColourR1G1B1 TintColor;
-        private byte[] rgb8padding = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 LightmapColor;
-        private byte[] rgb8padding0 = new byte[1];
+        private byte[] padding = new byte[2];
         public int CompressedLightDirection;
         public int CompressedLight2Direction;
         public override int SerializedSize
@@ -50,9 +49,8 @@ namespace Moonfish.Guerilla.Tags
             this.InternalData1 = binaryReader.ReadInt32();
             this.CompressedPosition = binaryReader.ReadInt32();
             this.TintColor = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding = binaryReader.ReadBytes(1);
             this.LightmapColor = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding0 = binaryReader.ReadBytes(1);
+            this.padding = binaryReader.ReadBytes(2);
             this.CompressedLightDirection = binaryReader.ReadInt32();
             this.CompressedLight2Direction = binaryReader.ReadInt32();
             return pointerQueue;
@@ -71,9 +69,8 @@ namespace Moonfish.Guerilla.Tags
             writer.Write(this.InternalData1);
             writer.Write(this.CompressedPosition);
             writer.Write(this.TintColor);
-            writer.Write(this.rgb8padding);
             writer.Write(this.LightmapColor);
-            writer.Write(this.rgb8padding0);
+            writer.Write(this.padding);
             writer.Write(this.CompressedLightDirection);
             writer.Write(this.CompressedLight2Direction);
         }

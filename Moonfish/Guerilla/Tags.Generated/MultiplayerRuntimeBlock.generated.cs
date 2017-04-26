@@ -289,7 +289,6 @@ namespace Moonfish.Guerilla.Tags
             writer.Defer(this.Weapons);
             writer.Defer(this.Vehicles);
             this.Arr.DeferReferences(writer);
-            this.Arr.DeferReferences(writer);
             writer.Defer(this.Sounds);
             writer.Defer(this.GeneralEvents);
             writer.Defer(this.FlavorEvents);

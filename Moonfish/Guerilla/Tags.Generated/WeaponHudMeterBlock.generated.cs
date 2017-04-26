@@ -36,11 +36,8 @@ namespace Moonfish.Guerilla.Tags
         [Moonfish.Tags.TagReferenceAttribute("bitm")]
         public Moonfish.Tags.TagReference MeterBitmap;
         public Moonfish.Tags.ColourR1G1B1 ColorAtMeterMinimum;
-        private byte[] rgb8padding = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 ColorAtMeterMaximum;
-        private byte[] rgb8padding0 = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 FlashColor;
-        private byte[] rgb8padding1 = new byte[1];
         public Moonfish.Tags.ColourA1R1G1B1 EmptyColor;
         public Flags WeaponHudMeterFlags;
         public byte MinumumMeterValue;
@@ -58,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
         {
             get
             {
-                return 168;
+                return 165;
             }
         }
         public override int Alignment
@@ -84,11 +81,8 @@ namespace Moonfish.Guerilla.Tags
             this.fieldpad3 = binaryReader.ReadBytes(20);
             this.MeterBitmap = binaryReader.ReadTagReference();
             this.ColorAtMeterMinimum = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding = binaryReader.ReadBytes(1);
             this.ColorAtMeterMaximum = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding0 = binaryReader.ReadBytes(1);
             this.FlashColor = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding1 = binaryReader.ReadBytes(1);
             this.EmptyColor = binaryReader.ReadColourA1R1G1B1();
             this.WeaponHudMeterFlags = ((Flags)(binaryReader.ReadByte()));
             this.MinumumMeterValue = binaryReader.ReadByte();
@@ -130,11 +124,8 @@ namespace Moonfish.Guerilla.Tags
             writer.Write(this.fieldpad3);
             writer.Write(this.MeterBitmap);
             writer.Write(this.ColorAtMeterMinimum);
-            writer.Write(this.rgb8padding);
             writer.Write(this.ColorAtMeterMaximum);
-            writer.Write(this.rgb8padding0);
             writer.Write(this.FlashColor);
-            writer.Write(this.rgb8padding1);
             writer.Write(this.EmptyColor);
             writer.Write(((byte)(this.WeaponHudMeterFlags)));
             writer.Write(this.MinumumMeterValue);

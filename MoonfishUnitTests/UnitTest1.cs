@@ -36,7 +36,7 @@ namespace MoonfishUnitTests
         {
             var map = GuerillaCodeDom.GetAllMaps().First();
             Assert.IsNotNull(map);
-            foreach (var datum in map.Index.Where(TagClass.Sbsp))
+            foreach (var datum in map)
             {
                 var block = map.Deserialize(datum.Identifier) as IResourceContainer<object>;
                 if (block == null)

@@ -113,8 +113,6 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.SectionInfo.DeferReferences(writer);
-            this.SectionInfo.DeferReferences(writer);
-            this.GeometryBlockInfo.DeferReferences(writer);
             this.GeometryBlockInfo.DeferReferences(writer);
             writer.Defer(this.ClusterData);
             writer.Defer(this.PredictedResources);

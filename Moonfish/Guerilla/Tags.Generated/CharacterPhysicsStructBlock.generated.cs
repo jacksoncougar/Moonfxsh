@@ -92,12 +92,8 @@ namespace Moonfish.Guerilla.Tags
             writer.Defer(this.PillShapes);
             writer.Defer(this.SphereShapes);
             this.GroundPhysics.DeferReferences(writer);
-            this.GroundPhysics.DeferReferences(writer);
-            this.FlyingPhysics.DeferReferences(writer);
             this.FlyingPhysics.DeferReferences(writer);
             this.DeadPhysics.DeferReferences(writer);
-            this.DeadPhysics.DeferReferences(writer);
-            this.SentinelPhysics.DeferReferences(writer);
             this.SentinelPhysics.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

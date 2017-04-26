@@ -67,7 +67,6 @@ namespace Moonfish.Guerilla.Tags
             writer.Defer(this.BitmapWidgets);
             writer.Defer(this.TextWidgets);
             this.DashlightData.DeferReferences(writer);
-            this.DashlightData.DeferReferences(writer);
             writer.Defer(this.ScreenEffectWidgets);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

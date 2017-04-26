@@ -62,10 +62,7 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.ScreenFlash.DeferReferences(writer);
-            this.ScreenFlash.DeferReferences(writer);
             this.Vibration.DeferReferences(writer);
-            this.Vibration.DeferReferences(writer);
-            this.SoundEffect.DeferReferences(writer);
             this.SoundEffect.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

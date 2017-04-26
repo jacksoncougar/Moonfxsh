@@ -105,12 +105,8 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.ScaleX.DeferReferences(writer);
-            this.ScaleX.DeferReferences(writer);
-            this.ScaleY.DeferReferences(writer);
             this.ScaleY.DeferReferences(writer);
             this.ScaleZ.DeferReferences(writer);
-            this.ScaleZ.DeferReferences(writer);
-            this.Rotation.DeferReferences(writer);
             this.Rotation.DeferReferences(writer);
             writer.Defer(this.Locations);
             writer.Defer(this.AttachedParticleSystems);
@@ -118,7 +114,6 @@ namespace Moonfish.Guerilla.Tags
             writer.Defer(this.RawVertices);
             writer.Defer(this.Indices);
             writer.Defer(this.CachedData);
-            this.GeometrySectionInfo.DeferReferences(writer);
             this.GeometrySectionInfo.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

@@ -110,36 +110,20 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.Textures.DeferReferences(writer);
-            this.Textures.DeferReferences(writer);
-            this.RenderStates.DeferReferences(writer);
             this.RenderStates.DeferReferences(writer);
             this.TextureStates.DeferReferences(writer);
-            this.TextureStates.DeferReferences(writer);
-            this.PsFragments.DeferReferences(writer);
             this.PsFragments.DeferReferences(writer);
             this.PsPermutations.DeferReferences(writer);
-            this.PsPermutations.DeferReferences(writer);
-            this.PsCombiners.DeferReferences(writer);
             this.PsCombiners.DeferReferences(writer);
             this.DefaultRenderStates.DeferReferences(writer);
-            this.DefaultRenderStates.DeferReferences(writer);
-            this.RenderStateExterns.DeferReferences(writer);
             this.RenderStateExterns.DeferReferences(writer);
             this.TextureStateExterns.DeferReferences(writer);
-            this.TextureStateExterns.DeferReferences(writer);
-            this.PixelConstantExterns.DeferReferences(writer);
             this.PixelConstantExterns.DeferReferences(writer);
             this.VertexConstantExterns.DeferReferences(writer);
-            this.VertexConstantExterns.DeferReferences(writer);
-            this.PsConstants.DeferReferences(writer);
             this.PsConstants.DeferReferences(writer);
             this.VsConstants.DeferReferences(writer);
-            this.VsConstants.DeferReferences(writer);
-            this.PixelConstantInfo.DeferReferences(writer);
             this.PixelConstantInfo.DeferReferences(writer);
             this.VertexConstantInfo.DeferReferences(writer);
-            this.VertexConstantInfo.DeferReferences(writer);
-            this.RenderStateInfo.DeferReferences(writer);
             this.RenderStateInfo.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

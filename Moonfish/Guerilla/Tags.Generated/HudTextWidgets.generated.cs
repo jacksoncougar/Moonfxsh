@@ -93,8 +93,6 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.HudWidgetInputsStruct.DeferReferences(writer);
-            this.HudWidgetInputsStruct.DeferReferences(writer);
-            this.HudWidgetStateDefinitionStruct.DeferReferences(writer);
             this.HudWidgetStateDefinitionStruct.DeferReferences(writer);
             writer.Defer(this.Effect);
         }

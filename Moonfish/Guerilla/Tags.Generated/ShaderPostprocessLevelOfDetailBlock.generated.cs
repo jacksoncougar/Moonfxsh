@@ -100,7 +100,6 @@ namespace Moonfish.Guerilla.Tags
             writer.Defer(this.ColorOverlays);
             writer.Defer(this.VertexShaderConstants);
             this.GPUState.DeferReferences(writer);
-            this.GPUState.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {

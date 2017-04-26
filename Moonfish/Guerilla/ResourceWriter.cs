@@ -89,7 +89,10 @@ namespace Moonfish.Guerilla
 
         public override void Defer(VertexBuffer vertexBuffer)
         {
-            Defer(vertexBuffer.Data);
+            if (vertexBuffer.Data != null)
+            {
+                Defer(vertexBuffer.Data);
+            }
         }
 
         public override void Write(VertexBuffer buffer)

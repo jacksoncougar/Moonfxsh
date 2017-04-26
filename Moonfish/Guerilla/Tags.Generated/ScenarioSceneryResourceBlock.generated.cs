@@ -54,10 +54,10 @@ namespace Moonfish.Guerilla.Tags
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(64));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(68));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(40));
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(96));
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(92));
             this.NextSceneryObjectIDSalt = binaryReader.ReadInt32();
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(40));
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(80));
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(76));
             this.NextBlockObjectIDSalt = binaryReader.ReadInt32();
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(260));
             return pointerQueue;

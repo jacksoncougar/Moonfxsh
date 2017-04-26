@@ -84,10 +84,7 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.HudWidgetInputsStruct.DeferReferences(writer);
-            this.HudWidgetInputsStruct.DeferReferences(writer);
             this.HudWidgetStateDefinitionStruct.DeferReferences(writer);
-            this.HudWidgetStateDefinitionStruct.DeferReferences(writer);
-            this.Waa.DeferReferences(writer);
             this.Waa.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

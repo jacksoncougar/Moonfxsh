@@ -32,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
         {
             get
             {
-                return 96;
+                return 92;
             }
         }
         public override int Alignment
@@ -64,10 +64,7 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.ObjectData.DeferReferences(writer);
-            this.ObjectData.DeferReferences(writer);
             this.PermutationData.DeferReferences(writer);
-            this.PermutationData.DeferReferences(writer);
-            this.SceneryData.DeferReferences(writer);
             this.SceneryData.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

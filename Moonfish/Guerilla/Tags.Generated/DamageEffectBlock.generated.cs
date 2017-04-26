@@ -174,7 +174,6 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.Blah.DeferReferences(writer);
-            this.Blah.DeferReferences(writer);
             writer.Defer(this.PlayerResponses);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

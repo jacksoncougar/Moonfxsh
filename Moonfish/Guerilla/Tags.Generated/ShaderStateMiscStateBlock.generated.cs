@@ -25,7 +25,7 @@ namespace Moonfish.Guerilla.Tags
         public Flags ShaderStateMiscStateFlags;
         private byte[] fieldpad = new byte[2];
         public Moonfish.Tags.ColourR1G1B1 FogColor;
-        private byte[] rgb8padding = new byte[1];
+        private byte[] padding = new byte[1];
         public override int SerializedSize
         {
             get
@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
             this.ShaderStateMiscStateFlags = ((Flags)(binaryReader.ReadInt16()));
             this.fieldpad = binaryReader.ReadBytes(2);
             this.FogColor = binaryReader.ReadColourR1G1B1();
-            this.rgb8padding = binaryReader.ReadBytes(1);
+            this.padding = binaryReader.ReadBytes(1);
             return pointerQueue;
         }
         public override void ReadInstances(Moonfish.Guerilla.BlamBinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
@@ -63,7 +63,7 @@ namespace Moonfish.Guerilla.Tags
             writer.Write(((short)(this.ShaderStateMiscStateFlags)));
             writer.Write(this.fieldpad);
             writer.Write(this.FogColor);
-            writer.Write(this.rgb8padding);
+            writer.Write(this.padding);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

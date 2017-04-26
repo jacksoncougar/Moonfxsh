@@ -209,14 +209,9 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.MeleeAimAssist.DeferReferences(writer);
-            this.MeleeAimAssist.DeferReferences(writer);
-            this.MeleeDamageParameters.DeferReferences(writer);
             this.MeleeDamageParameters.DeferReferences(writer);
             this.WeaponAimAssist.DeferReferences(writer);
-            this.WeaponAimAssist.DeferReferences(writer);
             this.Tracking.DeferReferences(writer);
-            this.Tracking.DeferReferences(writer);
-            this.PlayerInterface.DeferReferences(writer);
             this.PlayerInterface.DeferReferences(writer);
             writer.Defer(this.PredictedResources0);
             writer.Defer(this.Magazines);

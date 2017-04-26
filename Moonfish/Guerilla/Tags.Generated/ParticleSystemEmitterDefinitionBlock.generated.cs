@@ -87,22 +87,13 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.ParticleEmissionRate.DeferReferences(writer);
-            this.ParticleEmissionRate.DeferReferences(writer);
-            this.ParticleLifespan.DeferReferences(writer);
             this.ParticleLifespan.DeferReferences(writer);
             this.ParticleVelocity.DeferReferences(writer);
-            this.ParticleVelocity.DeferReferences(writer);
-            this.ParticleAngularVelocity.DeferReferences(writer);
             this.ParticleAngularVelocity.DeferReferences(writer);
             this.ParticleSize.DeferReferences(writer);
-            this.ParticleSize.DeferReferences(writer);
-            this.ParticleTint.DeferReferences(writer);
             this.ParticleTint.DeferReferences(writer);
             this.ParticleAlpha.DeferReferences(writer);
-            this.ParticleAlpha.DeferReferences(writer);
             this.EmissionRadius.DeferReferences(writer);
-            this.EmissionRadius.DeferReferences(writer);
-            this.EmissionAngle.DeferReferences(writer);
             this.EmissionAngle.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

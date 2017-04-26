@@ -126,8 +126,6 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.Acceleration.DeferReferences(writer);
-            this.Acceleration.DeferReferences(writer);
-            this.UnitCamera.DeferReferences(writer);
             this.UnitCamera.DeferReferences(writer);
             writer.Defer(this.UnitHudInterface);
         }

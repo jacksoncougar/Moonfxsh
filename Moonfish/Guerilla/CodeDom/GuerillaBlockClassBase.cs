@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.CodeDom
         ///     The dictionary to lookup C# types corresponding to underlying guerilla
         ///     types.
         /// </summary>
-        protected static readonly Dictionary<MoonfishFieldType, Type> ValueTypeDictionary;
+        internal static readonly Dictionary<MoonfishFieldType, Type> ValueTypeDictionary;
 
         /// <summary>The comments found while parsing the guerilla fields.</summary>
         private static GuerillaCommentCollection comments = new GuerillaCommentCollection();

@@ -98,14 +98,9 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.OffsetFunction.DeferReferences(writer);
-            this.OffsetFunction.DeferReferences(writer);
-            this.RadiusFunction.DeferReferences(writer);
             this.RadiusFunction.DeferReferences(writer);
             this.BrightnessFunction.DeferReferences(writer);
-            this.BrightnessFunction.DeferReferences(writer);
             this.ColorFunction.DeferReferences(writer);
-            this.ColorFunction.DeferReferences(writer);
-            this.FacingFunction.DeferReferences(writer);
             this.FacingFunction.DeferReferences(writer);
             writer.Defer(this.Aspect);
             writer.Defer(this.LightVolumeRuntimeOffsetBlock);

@@ -70,14 +70,9 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.Thickness.DeferReferences(writer);
-            this.Thickness.DeferReferences(writer);
-            this.Color.DeferReferences(writer);
             this.Color.DeferReferences(writer);
             this.Brightnesstime.DeferReferences(writer);
-            this.Brightnesstime.DeferReferences(writer);
             this.Brightnessfacing.DeferReferences(writer);
-            this.Brightnessfacing.DeferReferences(writer);
-            this.AlongaxisScale.DeferReferences(writer);
             this.AlongaxisScale.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

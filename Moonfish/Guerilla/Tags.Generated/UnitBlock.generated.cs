@@ -157,12 +157,8 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.UnitCamera.DeferReferences(writer);
-            this.UnitCamera.DeferReferences(writer);
-            this.Acceleration.DeferReferences(writer);
             this.Acceleration.DeferReferences(writer);
             this.MoreDamnNodes.DeferReferences(writer);
-            this.MoreDamnNodes.DeferReferences(writer);
-            this.YourMomma.DeferReferences(writer);
             this.YourMomma.DeferReferences(writer);
             writer.Defer(this.Postures);
             writer.Defer(this.NEWHUDINTERFACES);
@@ -171,8 +167,6 @@ namespace Moonfish.Guerilla.Tags
             writer.Defer(this.Weapons);
             writer.Defer(this.Seats);
             this.Boost.DeferReferences(writer);
-            this.Boost.DeferReferences(writer);
-            this.Lipsync.DeferReferences(writer);
             this.Lipsync.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

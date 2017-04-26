@@ -63,7 +63,6 @@ namespace Moonfish.Guerilla.Tags
             writer.Defer(this.ParticleSystem);
             writer.Defer(this.BackgroundPlates);
             this.WindModel.DeferReferences(writer);
-            this.WindModel.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {

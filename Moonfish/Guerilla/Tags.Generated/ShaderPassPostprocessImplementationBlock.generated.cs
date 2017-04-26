@@ -103,12 +103,8 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.GPUState.DeferReferences(writer);
-            this.GPUState.DeferReferences(writer);
-            this.GPUConstantState.DeferReferences(writer);
             this.GPUConstantState.DeferReferences(writer);
             this.GPUVolatileState.DeferReferences(writer);
-            this.GPUVolatileState.DeferReferences(writer);
-            this.GPUDefaultState.DeferReferences(writer);
             this.GPUDefaultState.DeferReferences(writer);
             writer.Defer(this.ValueExterns);
             writer.Defer(this.ColorExterns);

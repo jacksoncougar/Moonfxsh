@@ -106,14 +106,9 @@ namespace Moonfish.Guerilla.Tags
             base.DeferReferences(writer);
             writer.Defer(this.ShaderParameters);
             this.Color.DeferReferences(writer);
-            this.Color.DeferReferences(writer);
-            this.Alpha.DeferReferences(writer);
             this.Alpha.DeferReferences(writer);
             this.Scale.DeferReferences(writer);
-            this.Scale.DeferReferences(writer);
             this.Rotation.DeferReferences(writer);
-            this.Rotation.DeferReferences(writer);
-            this.FrameIndex.DeferReferences(writer);
             this.FrameIndex.DeferReferences(writer);
             writer.Defer(this.Locations);
             writer.Defer(this.AttachedParticleSystems);

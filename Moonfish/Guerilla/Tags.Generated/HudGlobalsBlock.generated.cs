@@ -254,7 +254,6 @@ namespace Moonfish.Guerilla.Tags
             writer.Defer(this.ButtonIcons);
             writer.Defer(this.WaypointArrows);
             this.NewGlobals.DeferReferences(writer);
-            this.NewGlobals.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {

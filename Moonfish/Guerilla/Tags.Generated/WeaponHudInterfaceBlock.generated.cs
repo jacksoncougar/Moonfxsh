@@ -81,7 +81,7 @@ namespace Moonfish.Guerilla.Tags
             this.fieldpad1 = binaryReader.ReadBytes(2);
             this.fieldpad2 = binaryReader.ReadBytes(32);
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(168));
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(168));
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(165));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(160));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(92));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(92));

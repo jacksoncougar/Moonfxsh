@@ -108,8 +108,6 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.DamageEffect.DeferReferences(writer);
-            this.DamageEffect.DeferReferences(writer);
-            this.DamageEffectMarker.DeferReferences(writer);
             this.DamageEffectMarker.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

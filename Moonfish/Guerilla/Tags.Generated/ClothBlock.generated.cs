@@ -83,7 +83,6 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.Properties.DeferReferences(writer);
-            this.Properties.DeferReferences(writer);
             writer.Defer(this.Vertices);
             writer.Defer(this.Indices);
             writer.Defer(this.StripIndices);

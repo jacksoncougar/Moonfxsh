@@ -68,12 +68,8 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.PrimaryLight.DeferReferences(writer);
-            this.PrimaryLight.DeferReferences(writer);
-            this.SecondaryLight.DeferReferences(writer);
             this.SecondaryLight.DeferReferences(writer);
             this.AmbientLight.DeferReferences(writer);
-            this.AmbientLight.DeferReferences(writer);
-            this.LightmapShadows.DeferReferences(writer);
             this.LightmapShadows.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

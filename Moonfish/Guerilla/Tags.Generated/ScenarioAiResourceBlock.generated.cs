@@ -74,7 +74,7 @@ namespace Moonfish.Guerilla.Tags
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(68));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(40));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(40));
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(88));
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(84));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(24));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(132));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(68));

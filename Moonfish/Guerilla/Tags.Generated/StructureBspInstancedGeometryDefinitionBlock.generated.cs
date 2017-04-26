@@ -71,8 +71,6 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.RenderInfo.DeferReferences(writer);
-            this.RenderInfo.DeferReferences(writer);
-            this.CollisionInfo.DeferReferences(writer);
             this.CollisionInfo.DeferReferences(writer);
             writer.Defer(this.BspPhysics);
             writer.Defer(this.RenderLeaves);

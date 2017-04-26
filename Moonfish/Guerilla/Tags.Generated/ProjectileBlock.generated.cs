@@ -150,8 +150,6 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.YourMomma.DeferReferences(writer);
-            this.YourMomma.DeferReferences(writer);
-            this.Blah.DeferReferences(writer);
             this.Blah.DeferReferences(writer);
             writer.Defer(this.MaterialResponses);
         }

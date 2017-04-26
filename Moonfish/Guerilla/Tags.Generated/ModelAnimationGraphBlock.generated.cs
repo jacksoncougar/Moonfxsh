@@ -71,10 +71,7 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.Resources.DeferReferences(writer);
-            this.Resources.DeferReferences(writer);
             this.Content.DeferReferences(writer);
-            this.Content.DeferReferences(writer);
-            this.RunTimeData.DeferReferences(writer);
             this.RunTimeData.DeferReferences(writer);
             writer.Defer(this.LastImportResults);
             writer.Defer(this.AdditionalNodeData);

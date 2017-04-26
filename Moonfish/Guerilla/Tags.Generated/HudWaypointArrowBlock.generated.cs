@@ -27,6 +27,7 @@ namespace Moonfish.Guerilla.Tags
         [Moonfish.Tags.TagReferenceAttribute("shad")]
         public Moonfish.Tags.TagReference Shader;
         public short SequenceIndex;
+        private byte[] padding = new byte[1];
         private byte[] fieldpad = new byte[2];
         public float SmallestSize;
         public float SmallestDistance;
@@ -36,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
         {
             get
             {
-                return 36;
+                return 37;
             }
         }
         public override int Alignment
@@ -52,6 +53,7 @@ namespace Moonfish.Guerilla.Tags
             this.Bitmap = binaryReader.ReadTagReference();
             this.Shader = binaryReader.ReadTagReference();
             this.SequenceIndex = binaryReader.ReadInt16();
+            this.padding = binaryReader.ReadBytes(1);
             this.fieldpad = binaryReader.ReadBytes(2);
             this.SmallestSize = binaryReader.ReadSingle();
             this.SmallestDistance = binaryReader.ReadSingle();
@@ -72,6 +74,7 @@ namespace Moonfish.Guerilla.Tags
             writer.Write(this.Bitmap);
             writer.Write(this.Shader);
             writer.Write(this.SequenceIndex);
+            writer.Write(this.padding);
             writer.Write(this.fieldpad);
             writer.Write(this.SmallestSize);
             writer.Write(this.SmallestDistance);

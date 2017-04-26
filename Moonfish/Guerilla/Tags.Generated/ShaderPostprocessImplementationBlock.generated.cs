@@ -79,24 +79,14 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.GPUConstantState.DeferReferences(writer);
-            this.GPUConstantState.DeferReferences(writer);
-            this.GPUVolatileState.DeferReferences(writer);
             this.GPUVolatileState.DeferReferences(writer);
             this.BitmapParameters.DeferReferences(writer);
-            this.BitmapParameters.DeferReferences(writer);
-            this.BitmapTransforms.DeferReferences(writer);
             this.BitmapTransforms.DeferReferences(writer);
             this.ValueParameters.DeferReferences(writer);
-            this.ValueParameters.DeferReferences(writer);
-            this.ColorParameters.DeferReferences(writer);
             this.ColorParameters.DeferReferences(writer);
             this.BitmapTransformOverlays.DeferReferences(writer);
-            this.BitmapTransformOverlays.DeferReferences(writer);
-            this.ValueOverlays.DeferReferences(writer);
             this.ValueOverlays.DeferReferences(writer);
             this.ColorOverlays.DeferReferences(writer);
-            this.ColorOverlays.DeferReferences(writer);
-            this.VertexShaderConstants.DeferReferences(writer);
             this.VertexShaderConstants.DeferReferences(writer);
         }
         public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)

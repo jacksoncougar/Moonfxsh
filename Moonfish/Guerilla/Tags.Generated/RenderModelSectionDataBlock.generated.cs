@@ -60,8 +60,6 @@ namespace Moonfish.Guerilla.Tags
         {
             base.DeferReferences(writer);
             this.Section.DeferReferences(writer);
-            this.Section.DeferReferences(writer);
-            this.PointData.DeferReferences(writer);
             this.PointData.DeferReferences(writer);
             writer.Defer(this.NodeMap);
         }

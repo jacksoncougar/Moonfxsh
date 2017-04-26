@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -58,20 +59,20 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.PositionBoundsX);
-            queueableBinaryWriter.Write(this.PositionBoundsY);
-            queueableBinaryWriter.Write(this.PositionBoundsZ);
-            queueableBinaryWriter.Write(this.TexcoordBoundsX);
-            queueableBinaryWriter.Write(this.TexcoordBoundsY);
-            queueableBinaryWriter.Write(this.SecondaryTexcoordBoundsX);
-            queueableBinaryWriter.Write(this.SecondaryTexcoordBoundsY);
+            base.Write(writer);
+            writer.Write(this.PositionBoundsX);
+            writer.Write(this.PositionBoundsY);
+            writer.Write(this.PositionBoundsZ);
+            writer.Write(this.TexcoordBoundsX);
+            writer.Write(this.TexcoordBoundsY);
+            writer.Write(this.SecondaryTexcoordBoundsX);
+            writer.Write(this.SecondaryTexcoordBoundsY);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -31,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
         {
             get
             {
-                return 84;
+                return 88;
             }
         }
         public override int Alignment
@@ -59,22 +60,25 @@ namespace Moonfish.Guerilla.Tags
             this.PermutationData.ReadInstances(binaryReader, pointerQueue);
             this.WeaponData.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.ObjectData.DeferReferences(queueableBinaryWriter);
-            this.PermutationData.DeferReferences(queueableBinaryWriter);
-            this.WeaponData.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.ObjectData.DeferReferences(writer);
+            this.ObjectData.DeferReferences(writer);
+            this.PermutationData.DeferReferences(writer);
+            this.PermutationData.DeferReferences(writer);
+            this.WeaponData.DeferReferences(writer);
+            this.WeaponData.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Type);
-            queueableBinaryWriter.Write(this.Name);
-            this.ObjectData.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.indexer);
-            this.PermutationData.Write(queueableBinaryWriter);
-            this.WeaponData.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(this.Type);
+            writer.Write(this.Name);
+            this.ObjectData.Write(writer);
+            writer.Write(this.indexer);
+            this.PermutationData.Write(writer);
+            this.WeaponData.Write(writer);
         }
     }
 }

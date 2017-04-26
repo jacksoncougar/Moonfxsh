@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -60,21 +61,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.RasterizerScreenEffectTexcoordGenerationAdvancedControlStage0Flags)));
-            queueableBinaryWriter.Write(((short)(this.RasterizerScreenEffectTexcoordGenerationAdvancedControlStage1Flags)));
-            queueableBinaryWriter.Write(((short)(this.RasterizerScreenEffectTexcoordGenerationAdvancedControlStage2Flags)));
-            queueableBinaryWriter.Write(((short)(this.RasterizerScreenEffectTexcoordGenerationAdvancedControlStage3Flags)));
-            queueableBinaryWriter.Write(this.Stage0Offset);
-            queueableBinaryWriter.Write(this.Stage1Offset);
-            queueableBinaryWriter.Write(this.Stage2Offset);
-            queueableBinaryWriter.Write(this.Stage3Offset);
+            base.Write(writer);
+            writer.Write(((short)(this.RasterizerScreenEffectTexcoordGenerationAdvancedControlStage0Flags)));
+            writer.Write(((short)(this.RasterizerScreenEffectTexcoordGenerationAdvancedControlStage1Flags)));
+            writer.Write(((short)(this.RasterizerScreenEffectTexcoordGenerationAdvancedControlStage2Flags)));
+            writer.Write(((short)(this.RasterizerScreenEffectTexcoordGenerationAdvancedControlStage3Flags)));
+            writer.Write(this.Stage0Offset);
+            writer.Write(this.Stage1Offset);
+            writer.Write(this.Stage2Offset);
+            writer.Write(this.Stage3Offset);
         }
         [System.FlagsAttribute()]
         public enum Stage0Flags : short

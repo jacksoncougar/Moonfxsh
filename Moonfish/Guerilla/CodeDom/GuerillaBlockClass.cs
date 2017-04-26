@@ -473,7 +473,7 @@ namespace Moonfish.Guerilla.CodeDom
                             fieldReference, new CodePrimitiveExpression(alignment)));
                 }
                 //  Single dimensional arrays
-                if (field.Type.ArrayRank == 1)
+                else if (field.Type.ArrayRank == 1)
 				{
 					var fieldInitializer = (CodeArrayCreateExpression)field.InitExpression;
 					var arraySize = fieldInitializer?.Size ?? 0;
@@ -552,9 +552,6 @@ namespace Moonfish.Guerilla.CodeDom
                     var methodName =
 						StaticReflection.GetMemberName(
 							(IWriteDeferrable item) => item.DeferReferences(null));
-
-					method.Statements.Add(new CodeMethodInvokeExpression(fieldReference, methodName,
-						queueableBinaryWriterArgument));
 
                     if (alignment == 4)
                         method.Statements.Add(new CodeMethodInvokeExpression(fieldReference, methodName,

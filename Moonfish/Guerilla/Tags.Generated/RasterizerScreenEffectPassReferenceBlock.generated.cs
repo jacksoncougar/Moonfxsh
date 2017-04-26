@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -21,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [TagBlockOriginalNameAttribute("rasterizer_screen_effect_pass_reference_block")]
     public partial class RasterizerScreenEffectPassReferenceBlock : GuerillaBlock, IWriteDeferrable
     {
-        public byte[] Explanation;
+        private byte[] Explanation;
         /// <summary>
         /// Used to control which shader pass implementations are used depending on whether the primary and/or secondary external inputs are greater than zero. An implementation of -1 will not draw anything.
         /// </summary>
@@ -84,33 +85,33 @@ namespace Moonfish.Guerilla.Tags
             this.AdvancedControl = base.ReadBlockArrayData<RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock>(binaryReader, pointerQueue.Dequeue());
             this.Convolution = base.ReadBlockArrayData<RasterizerScreenEffectConvolutionBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Explanation);
-            queueableBinaryWriter.Defer(this.AdvancedControl);
-            queueableBinaryWriter.Defer(this.Convolution);
+            base.DeferReferences(writer);
+            writer.Defer(this.Explanation);
+            writer.Defer(this.AdvancedControl);
+            writer.Defer(this.Convolution);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Explanation);
-            queueableBinaryWriter.Write(this.LayerPassIndex);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Primary0AndSecondary0);
-            queueableBinaryWriter.Write(this.Primary0AndSecondary00);
-            queueableBinaryWriter.Write(this.Primary0AndSecondary01);
-            queueableBinaryWriter.Write(this.Primary0AndSecondary02);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(((short)(this.Stage0Mode)));
-            queueableBinaryWriter.Write(((short)(this.Stage1Mode)));
-            queueableBinaryWriter.Write(((short)(this.Stage2Mode)));
-            queueableBinaryWriter.Write(((short)(this.Stage3Mode)));
-            queueableBinaryWriter.WritePointer(this.AdvancedControl);
-            queueableBinaryWriter.Write(((short)(this.Target)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.WritePointer(this.Convolution);
+            base.Write(writer);
+            writer.WritePointer(this.Explanation);
+            writer.Write(this.LayerPassIndex);
+            writer.Write(this.fieldpad);
+            writer.Write(this.Primary0AndSecondary0);
+            writer.Write(this.Primary0AndSecondary00);
+            writer.Write(this.Primary0AndSecondary01);
+            writer.Write(this.Primary0AndSecondary02);
+            writer.Write(this.fieldpad0);
+            writer.Write(((short)(this.Stage0Mode)));
+            writer.Write(((short)(this.Stage1Mode)));
+            writer.Write(((short)(this.Stage2Mode)));
+            writer.Write(((short)(this.Stage3Mode)));
+            writer.WritePointer(this.AdvancedControl);
+            writer.Write(((short)(this.Target)));
+            writer.Write(this.fieldpad1);
+            writer.Write(this.fieldpad2);
+            writer.WritePointer(this.Convolution);
         }
         /// <summary>
         /// DEFAULT: Use for mask bitmaps that are mirrored and offset through the texcoords supplied to the screen effect (e.g. through the weapon HUD interface). The shader system must handle scaling.

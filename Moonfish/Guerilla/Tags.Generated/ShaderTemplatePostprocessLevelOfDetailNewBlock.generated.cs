@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -51,17 +52,18 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Layers.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.Layers.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.Layers.DeferReferences(writer);
+            this.Layers.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            this.Layers.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.AvailableLayers);
-            queueableBinaryWriter.Write(this.ProjectedHeightPercentage);
+            base.Write(writer);
+            this.Layers.Write(writer);
+            writer.Write(this.AvailableLayers);
+            writer.Write(this.ProjectedHeightPercentage);
         }
     }
 }

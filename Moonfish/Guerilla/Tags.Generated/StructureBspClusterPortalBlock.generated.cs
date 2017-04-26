@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -59,21 +60,21 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Vertices = base.ReadBlockArrayData<StructureBspClusterPortalVertexBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Vertices);
+            base.DeferReferences(writer);
+            writer.Defer(this.Vertices);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.BackCluster);
-            queueableBinaryWriter.Write(this.FrontCluster);
-            queueableBinaryWriter.Write(this.PlaneIndex);
-            queueableBinaryWriter.Write(this.Centroid);
-            queueableBinaryWriter.Write(this.BoundingRadius);
-            queueableBinaryWriter.Write(((int)(this.StructureBspClusterPortalFlags)));
-            queueableBinaryWriter.WritePointer(this.Vertices);
+            base.Write(writer);
+            writer.Write(this.BackCluster);
+            writer.Write(this.FrontCluster);
+            writer.Write(this.PlaneIndex);
+            writer.Write(this.Centroid);
+            writer.Write(this.BoundingRadius);
+            writer.Write(((int)(this.StructureBspClusterPortalFlags)));
+            writer.WritePointer(this.Vertices);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

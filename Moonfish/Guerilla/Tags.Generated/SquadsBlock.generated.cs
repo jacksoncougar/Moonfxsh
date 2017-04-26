@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -92,36 +93,36 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.StartingLocations = base.ReadBlockArrayData<ActorStartingLocationsBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.StartingLocations);
+            base.DeferReferences(writer);
+            writer.Defer(this.StartingLocations);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((int)(this.SquadsFlags)));
-            queueableBinaryWriter.Write(((short)(this.Team)));
-            queueableBinaryWriter.Write(this.Parent);
-            queueableBinaryWriter.Write(this.SquadDelayTime);
-            queueableBinaryWriter.Write(this.NormalDiffCount);
-            queueableBinaryWriter.Write(this.InsaneDiffCount);
-            queueableBinaryWriter.Write(((short)(this.MajorUpgrade)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.VehicleType);
-            queueableBinaryWriter.Write(this.CharacterType);
-            queueableBinaryWriter.Write(this.InitialZone);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.InitialWeapon);
-            queueableBinaryWriter.Write(this.InitialSecondaryWeapon);
-            queueableBinaryWriter.Write(((short)(this.GrenadeType)));
-            queueableBinaryWriter.Write(this.InitialOrder);
-            queueableBinaryWriter.Write(this.VehicleVariant);
-            queueableBinaryWriter.WritePointer(this.StartingLocations);
-            queueableBinaryWriter.Write(this.PlacementScript);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.fieldpad1);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(((int)(this.SquadsFlags)));
+            writer.Write(((short)(this.Team)));
+            writer.Write(this.Parent);
+            writer.Write(this.SquadDelayTime);
+            writer.Write(this.NormalDiffCount);
+            writer.Write(this.InsaneDiffCount);
+            writer.Write(((short)(this.MajorUpgrade)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.VehicleType);
+            writer.Write(this.CharacterType);
+            writer.Write(this.InitialZone);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.InitialWeapon);
+            writer.Write(this.InitialSecondaryWeapon);
+            writer.Write(((short)(this.GrenadeType)));
+            writer.Write(this.InitialOrder);
+            writer.Write(this.VehicleVariant);
+            writer.WritePointer(this.StartingLocations);
+            writer.Write(this.PlacementScript);
+            writer.Write(this.fieldskip);
+            writer.Write(this.fieldpad1);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

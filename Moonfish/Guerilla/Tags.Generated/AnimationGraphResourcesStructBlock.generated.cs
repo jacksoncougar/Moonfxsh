@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -68,27 +69,27 @@ namespace Moonfish.Guerilla.Tags
             this.BlendScreensABCDCC = base.ReadBlockArrayData<AnimationBlendScreenBlock>(binaryReader, pointerQueue.Dequeue());
             this.AnimationsABCDCC = base.ReadBlockArrayData<AnimationPoolBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.SkeletonNodesABCDCC);
-            queueableBinaryWriter.Defer(this.SoundReferencesABCDCC);
-            queueableBinaryWriter.Defer(this.EffectReferencesABCDCC);
-            queueableBinaryWriter.Defer(this.BlendScreensABCDCC);
-            queueableBinaryWriter.Defer(this.AnimationsABCDCC);
+            base.DeferReferences(writer);
+            writer.Defer(this.SkeletonNodesABCDCC);
+            writer.Defer(this.SoundReferencesABCDCC);
+            writer.Defer(this.EffectReferencesABCDCC);
+            writer.Defer(this.BlendScreensABCDCC);
+            writer.Defer(this.AnimationsABCDCC);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ParentAnimationGraph);
-            queueableBinaryWriter.Write(((byte)(this.AnimationGraphResourcesStructInheritanceFlags)));
-            queueableBinaryWriter.Write(((byte)(this.AnimationGraphResourcesStructPrivateFlags)));
-            queueableBinaryWriter.Write(this.AnimationCodecPack);
-            queueableBinaryWriter.WritePointer(this.SkeletonNodesABCDCC);
-            queueableBinaryWriter.WritePointer(this.SoundReferencesABCDCC);
-            queueableBinaryWriter.WritePointer(this.EffectReferencesABCDCC);
-            queueableBinaryWriter.WritePointer(this.BlendScreensABCDCC);
-            queueableBinaryWriter.WritePointer(this.AnimationsABCDCC);
+            base.Write(writer);
+            writer.Write(this.ParentAnimationGraph);
+            writer.Write(((byte)(this.AnimationGraphResourcesStructInheritanceFlags)));
+            writer.Write(((byte)(this.AnimationGraphResourcesStructPrivateFlags)));
+            writer.Write(this.AnimationCodecPack);
+            writer.WritePointer(this.SkeletonNodesABCDCC);
+            writer.WritePointer(this.SoundReferencesABCDCC);
+            writer.WritePointer(this.EffectReferencesABCDCC);
+            writer.WritePointer(this.BlendScreensABCDCC);
+            writer.WritePointer(this.AnimationsABCDCC);
         }
         [System.FlagsAttribute()]
         public enum InheritanceFlags : byte

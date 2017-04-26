@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -60,19 +61,19 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.ValueType)));
-            queueableBinaryWriter.Write(((short)(this.BooleanValue)));
-            queueableBinaryWriter.Write(this.IntegerValue);
-            queueableBinaryWriter.Write(this.FpValue);
-            queueableBinaryWriter.Write(this.TextValueStringId);
-            queueableBinaryWriter.Write(this.TextLabelStringId);
+            base.Write(writer);
+            writer.Write(((short)(this.ValueType)));
+            writer.Write(((short)(this.BooleanValue)));
+            writer.Write(this.IntegerValue);
+            writer.Write(this.FpValue);
+            writer.Write(this.TextValueStringId);
+            writer.Write(this.TextLabelStringId);
         }
         /// <summary>
         /// this is all obsolete

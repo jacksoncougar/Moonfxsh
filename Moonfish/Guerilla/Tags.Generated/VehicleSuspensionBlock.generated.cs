@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -68,24 +69,25 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Animation.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.Animation.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.Animation.DeferReferences(writer);
+            this.Animation.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Label);
-            this.Animation.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MarkerName);
-            queueableBinaryWriter.Write(this.MassPointOffset);
-            queueableBinaryWriter.Write(this.FullExtensionGroundDepth);
-            queueableBinaryWriter.Write(this.FullCompressionGroundDepth);
-            queueableBinaryWriter.Write(this.RegionName);
-            queueableBinaryWriter.Write(this.DestroyedMassPointOffset);
-            queueableBinaryWriter.Write(this.DestroyedFullExtensionGroundDepth);
-            queueableBinaryWriter.Write(this.DestroyedFullCompressionGroundDepth);
+            base.Write(writer);
+            writer.Write(this.Label);
+            this.Animation.Write(writer);
+            writer.Write(this.MarkerName);
+            writer.Write(this.MassPointOffset);
+            writer.Write(this.FullExtensionGroundDepth);
+            writer.Write(this.FullCompressionGroundDepth);
+            writer.Write(this.RegionName);
+            writer.Write(this.DestroyedMassPointOffset);
+            writer.Write(this.DestroyedFullExtensionGroundDepth);
+            writer.Write(this.DestroyedFullCompressionGroundDepth);
         }
     }
 }

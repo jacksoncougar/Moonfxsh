@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -78,30 +79,30 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.PoweredMassPoint);
-            queueableBinaryWriter.Write(this.ModelNode);
-            queueableBinaryWriter.Write(((int)(this.MassPointFlags)));
-            queueableBinaryWriter.Write(this.RelativeMass);
-            queueableBinaryWriter.Write(this.Mass);
-            queueableBinaryWriter.Write(this.RelativeDensity);
-            queueableBinaryWriter.Write(this.Density);
-            queueableBinaryWriter.Write(this.Position);
-            queueableBinaryWriter.Write(this.Forward);
-            queueableBinaryWriter.Write(this.Up);
-            queueableBinaryWriter.Write(((short)(this.FrictionType)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.FrictionParallelScale);
-            queueableBinaryWriter.Write(this.FrictionPerpendicularScale);
-            queueableBinaryWriter.Write(this.Radius);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.PoweredMassPoint);
+            writer.Write(this.ModelNode);
+            writer.Write(((int)(this.MassPointFlags)));
+            writer.Write(this.RelativeMass);
+            writer.Write(this.Mass);
+            writer.Write(this.RelativeDensity);
+            writer.Write(this.Density);
+            writer.Write(this.Position);
+            writer.Write(this.Forward);
+            writer.Write(this.Up);
+            writer.Write(((short)(this.FrictionType)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.FrictionParallelScale);
+            writer.Write(this.FrictionPerpendicularScale);
+            writer.Write(this.Radius);
+            writer.Write(this.fieldpad0);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

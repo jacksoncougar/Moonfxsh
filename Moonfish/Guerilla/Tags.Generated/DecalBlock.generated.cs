@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -89,34 +90,34 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.DecalFlags)));
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(((short)(this.Layer)));
-            queueableBinaryWriter.Write(this.MaxOverlappingCount);
-            queueableBinaryWriter.Write(this.NextDecalInChain);
-            queueableBinaryWriter.Write(this.Radius);
-            queueableBinaryWriter.Write(this.RadiusOverlapRejection);
-            queueableBinaryWriter.Write(this.ColorLowerBounds);
-            queueableBinaryWriter.Write(this.ColorUpperBounds);
-            queueableBinaryWriter.Write(this.Lifetime);
-            queueableBinaryWriter.Write(this.DecayTime);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.Bitmap);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(this.MaximumSpriteExtent);
-            queueableBinaryWriter.Write(this.fieldpad6);
+            base.Write(writer);
+            writer.Write(((short)(this.DecalFlags)));
+            writer.Write(((short)(this.Type)));
+            writer.Write(((short)(this.Layer)));
+            writer.Write(this.MaxOverlappingCount);
+            writer.Write(this.NextDecalInChain);
+            writer.Write(this.Radius);
+            writer.Write(this.RadiusOverlapRejection);
+            writer.Write(this.ColorLowerBounds);
+            writer.Write(this.ColorUpperBounds);
+            writer.Write(this.Lifetime);
+            writer.Write(this.DecayTime);
+            writer.Write(this.fieldpad);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.fieldpad2);
+            writer.Write(this.fieldpad3);
+            writer.Write(this.fieldpad4);
+            writer.Write(this.Bitmap);
+            writer.Write(this.fieldpad5);
+            writer.Write(this.MaximumSpriteExtent);
+            writer.Write(this.fieldpad6);
         }
         /// <summary>
         /// There are several "layers" which decals can be placed into, these layers are drawn in a specific order relative to the shader layers and each layer has its own specific blending mode. In general, the decal bitmap's alpha channel will be used as an opacity mask if it exists.

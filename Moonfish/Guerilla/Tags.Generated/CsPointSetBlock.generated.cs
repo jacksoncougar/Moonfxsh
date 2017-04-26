@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -55,19 +56,19 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Points = base.ReadBlockArrayData<CsPointBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Points);
+            base.DeferReferences(writer);
+            writer.Defer(this.Points);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.WritePointer(this.Points);
-            queueableBinaryWriter.Write(this.BspIndex);
-            queueableBinaryWriter.Write(this.ManualReferenceFrame);
-            queueableBinaryWriter.Write(((int)(this.CsPointSetFlags)));
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.WritePointer(this.Points);
+            writer.Write(this.BspIndex);
+            writer.Write(this.ManualReferenceFrame);
+            writer.Write(((int)(this.CsPointSetFlags)));
         }
         [System.FlagsAttribute()]
         public enum Flags : int

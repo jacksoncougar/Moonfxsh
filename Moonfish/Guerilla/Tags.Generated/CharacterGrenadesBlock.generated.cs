@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -76,29 +77,29 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.CharacterGrenadesGrenadesFlags)));
-            queueableBinaryWriter.Write(((short)(this.GrenadeType)));
-            queueableBinaryWriter.Write(((short)(this.TrajectoryType)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.MinimumEnemyCount);
-            queueableBinaryWriter.Write(this.EnemyRadius);
-            queueableBinaryWriter.Write(this.GrenadeIdealVelocity);
-            queueableBinaryWriter.Write(this.GrenadeVelocity);
-            queueableBinaryWriter.Write(this.GrenadeRanges);
-            queueableBinaryWriter.Write(this.CollateralDamageRadius);
-            queueableBinaryWriter.Write(this.GrenadeChance);
-            queueableBinaryWriter.Write(this.GrenadeThrowDelay);
-            queueableBinaryWriter.Write(this.GrenadeUncoverChance);
-            queueableBinaryWriter.Write(this.AntivehicleGrenadeChance);
-            queueableBinaryWriter.Write(this.GrenadeCount);
-            queueableBinaryWriter.Write(this.DontDropGrenadesChance);
+            base.Write(writer);
+            writer.Write(((int)(this.CharacterGrenadesGrenadesFlags)));
+            writer.Write(((short)(this.GrenadeType)));
+            writer.Write(((short)(this.TrajectoryType)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.MinimumEnemyCount);
+            writer.Write(this.EnemyRadius);
+            writer.Write(this.GrenadeIdealVelocity);
+            writer.Write(this.GrenadeVelocity);
+            writer.Write(this.GrenadeRanges);
+            writer.Write(this.CollateralDamageRadius);
+            writer.Write(this.GrenadeChance);
+            writer.Write(this.GrenadeThrowDelay);
+            writer.Write(this.GrenadeUncoverChance);
+            writer.Write(this.AntivehicleGrenadeChance);
+            writer.Write(this.GrenadeCount);
+            writer.Write(this.DontDropGrenadesChance);
         }
         [System.FlagsAttribute()]
         public enum GrenadesFlags : int

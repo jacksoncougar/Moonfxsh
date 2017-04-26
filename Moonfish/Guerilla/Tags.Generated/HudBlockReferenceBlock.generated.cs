@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -62,21 +63,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.HudReferenceFlags)));
-            queueableBinaryWriter.Write(((short)(this.AnimationIndex)));
-            queueableBinaryWriter.Write(this.IntroAnimationDelayMilliseconds);
-            queueableBinaryWriter.Write(this.RenderDepthBias);
-            queueableBinaryWriter.Write(this.StartingBitmapSequenceIndex);
-            queueableBinaryWriter.Write(this.Bitmap);
-            queueableBinaryWriter.Write(this.Shader);
-            queueableBinaryWriter.Write(this.Bounds);
+            base.Write(writer);
+            writer.Write(((int)(this.HudReferenceFlags)));
+            writer.Write(((short)(this.AnimationIndex)));
+            writer.Write(this.IntroAnimationDelayMilliseconds);
+            writer.Write(this.RenderDepthBias);
+            writer.Write(this.StartingBitmapSequenceIndex);
+            writer.Write(this.Bitmap);
+            writer.Write(this.Shader);
+            writer.Write(this.Bounds);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

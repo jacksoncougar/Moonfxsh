@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -121,47 +122,49 @@ namespace Moonfish.Guerilla.Tags
             this.UnitCamera.ReadInstances(binaryReader, pointerQueue);
             this.UnitHudInterface = base.ReadBlockArrayData<UnitHudReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.Acceleration.DeferReferences(queueableBinaryWriter);
-            this.UnitCamera.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.UnitHudInterface);
+            base.DeferReferences(writer);
+            this.Acceleration.DeferReferences(writer);
+            this.Acceleration.DeferReferences(writer);
+            this.UnitCamera.DeferReferences(writer);
+            this.UnitCamera.DeferReferences(writer);
+            writer.Defer(this.UnitHudInterface);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.UnitSeatFlags)));
-            queueableBinaryWriter.Write(this.Label);
-            queueableBinaryWriter.Write(this.MarkerName);
-            queueableBinaryWriter.Write(this.EntryMarkerName);
-            queueableBinaryWriter.Write(this.BoardingGrenadeMarker);
-            queueableBinaryWriter.Write(this.BoardingGrenadeString);
-            queueableBinaryWriter.Write(this.BoardingMeleeString);
-            queueableBinaryWriter.Write(this.PingScale);
-            queueableBinaryWriter.Write(this.TurnoverTime);
-            this.Acceleration.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.AIScariness);
-            queueableBinaryWriter.Write(((short)(this.AiSeatType)));
-            queueableBinaryWriter.Write(this.BoardingSeat);
-            queueableBinaryWriter.Write(this.ListenerInterpolationFactor);
-            queueableBinaryWriter.Write(this.YawRateBounds);
-            queueableBinaryWriter.Write(this.PitchRateBounds);
-            queueableBinaryWriter.Write(this.MinSpeedReference);
-            queueableBinaryWriter.Write(this.MaxSpeedReference);
-            queueableBinaryWriter.Write(this.SpeedExponent);
-            this.UnitCamera.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.UnitHudInterface);
-            queueableBinaryWriter.Write(this.EnterSeatString);
-            queueableBinaryWriter.Write(this.YawMinimum);
-            queueableBinaryWriter.Write(this.YawMaximum);
-            queueableBinaryWriter.Write(this.BuiltinGunner);
-            queueableBinaryWriter.Write(this.EntryRadius);
-            queueableBinaryWriter.Write(this.EntryMarkerConeAngle);
-            queueableBinaryWriter.Write(this.EntryMarkerFacingAngle);
-            queueableBinaryWriter.Write(this.MaximumRelativeVelocity);
-            queueableBinaryWriter.Write(this.InvisibleSeatRegion);
-            queueableBinaryWriter.Write(this.RuntimeInvisibleSeatRegionIndex);
+            base.Write(writer);
+            writer.Write(((int)(this.UnitSeatFlags)));
+            writer.Write(this.Label);
+            writer.Write(this.MarkerName);
+            writer.Write(this.EntryMarkerName);
+            writer.Write(this.BoardingGrenadeMarker);
+            writer.Write(this.BoardingGrenadeString);
+            writer.Write(this.BoardingMeleeString);
+            writer.Write(this.PingScale);
+            writer.Write(this.TurnoverTime);
+            this.Acceleration.Write(writer);
+            writer.Write(this.AIScariness);
+            writer.Write(((short)(this.AiSeatType)));
+            writer.Write(this.BoardingSeat);
+            writer.Write(this.ListenerInterpolationFactor);
+            writer.Write(this.YawRateBounds);
+            writer.Write(this.PitchRateBounds);
+            writer.Write(this.MinSpeedReference);
+            writer.Write(this.MaxSpeedReference);
+            writer.Write(this.SpeedExponent);
+            this.UnitCamera.Write(writer);
+            writer.WritePointer(this.UnitHudInterface);
+            writer.Write(this.EnterSeatString);
+            writer.Write(this.YawMinimum);
+            writer.Write(this.YawMaximum);
+            writer.Write(this.BuiltinGunner);
+            writer.Write(this.EntryRadius);
+            writer.Write(this.EntryMarkerConeAngle);
+            writer.Write(this.EntryMarkerFacingAngle);
+            writer.Write(this.MaximumRelativeVelocity);
+            writer.Write(this.InvisibleSeatRegion);
+            writer.Write(this.RuntimeInvisibleSeatRegionIndex);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

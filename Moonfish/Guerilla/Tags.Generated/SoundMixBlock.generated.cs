@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -77,25 +78,26 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.GlobalMix.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.GlobalMix.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.GlobalMix.DeferReferences(writer);
+            this.GlobalMix.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.LeftStereoGain);
-            queueableBinaryWriter.Write(this.RightStereoGain);
-            queueableBinaryWriter.Write(this.LeftStereoGain0);
-            queueableBinaryWriter.Write(this.RightStereoGain0);
-            queueableBinaryWriter.Write(this.LeftStereoGain1);
-            queueableBinaryWriter.Write(this.RightStereoGain1);
-            queueableBinaryWriter.Write(this.FrontSpeakerGain);
-            queueableBinaryWriter.Write(this.RearSpeakerGain);
-            queueableBinaryWriter.Write(this.FrontSpeakerGain0);
-            queueableBinaryWriter.Write(this.RearSpeakerGain0);
-            this.GlobalMix.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(this.LeftStereoGain);
+            writer.Write(this.RightStereoGain);
+            writer.Write(this.LeftStereoGain0);
+            writer.Write(this.RightStereoGain0);
+            writer.Write(this.LeftStereoGain1);
+            writer.Write(this.RightStereoGain1);
+            writer.Write(this.FrontSpeakerGain);
+            writer.Write(this.RearSpeakerGain);
+            writer.Write(this.FrontSpeakerGain0);
+            writer.Write(this.RearSpeakerGain0);
+            this.GlobalMix.Write(writer);
         }
     }
 }

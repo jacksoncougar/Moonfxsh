@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -64,23 +65,23 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ScatterKilledCount);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.ScatterRadius);
-            queueableBinaryWriter.Write(this.ScatterTime);
-            queueableBinaryWriter.Write(this.HoundMinDistance);
-            queueableBinaryWriter.Write(this.HoundMaxDistance);
-            queueableBinaryWriter.Write(this.PerlinOffsetScale);
-            queueableBinaryWriter.Write(this.OffsetPeriod);
-            queueableBinaryWriter.Write(this.PerlinIdleMovementThreshold);
-            queueableBinaryWriter.Write(this.PerlinCombatMovementThreshold);
+            base.Write(writer);
+            writer.Write(this.ScatterKilledCount);
+            writer.Write(this.fieldpad);
+            writer.Write(this.ScatterRadius);
+            writer.Write(this.ScatterTime);
+            writer.Write(this.HoundMinDistance);
+            writer.Write(this.HoundMaxDistance);
+            writer.Write(this.PerlinOffsetScale);
+            writer.Write(this.OffsetPeriod);
+            writer.Write(this.PerlinIdleMovementThreshold);
+            writer.Write(this.PerlinCombatMovementThreshold);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -79,31 +80,34 @@ namespace Moonfish.Guerilla.Tags
             this.HudWidgetStateDefinitionStruct.ReadInstances(binaryReader, pointerQueue);
             this.Waa.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.HudWidgetInputsStruct.DeferReferences(queueableBinaryWriter);
-            this.HudWidgetStateDefinitionStruct.DeferReferences(queueableBinaryWriter);
-            this.Waa.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.HudWidgetInputsStruct.DeferReferences(writer);
+            this.HudWidgetInputsStruct.DeferReferences(writer);
+            this.HudWidgetStateDefinitionStruct.DeferReferences(writer);
+            this.HudWidgetStateDefinitionStruct.DeferReferences(writer);
+            this.Waa.DeferReferences(writer);
+            this.Waa.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            this.HudWidgetInputsStruct.Write(queueableBinaryWriter);
-            this.HudWidgetStateDefinitionStruct.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.Anchor)));
-            queueableBinaryWriter.Write(((short)(this.HudScreenEffectWidgetsFlags)));
-            queueableBinaryWriter.Write(this.Bitmap);
-            queueableBinaryWriter.Write(this.FullscreenScreenEffect);
-            this.Waa.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.FullscreenSequenceIndex);
-            queueableBinaryWriter.Write(this.HalfscreenSequenceIndex);
-            queueableBinaryWriter.Write(this.QuarterscreenSequenceIndex);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.FullscreenOffset);
-            queueableBinaryWriter.Write(this.HalfscreenOffset);
-            queueableBinaryWriter.Write(this.QuarterscreenOffset);
+            base.Write(writer);
+            writer.Write(this.Name);
+            this.HudWidgetInputsStruct.Write(writer);
+            this.HudWidgetStateDefinitionStruct.Write(writer);
+            writer.Write(((short)(this.Anchor)));
+            writer.Write(((short)(this.HudScreenEffectWidgetsFlags)));
+            writer.Write(this.Bitmap);
+            writer.Write(this.FullscreenScreenEffect);
+            this.Waa.Write(writer);
+            writer.Write(this.FullscreenSequenceIndex);
+            writer.Write(this.HalfscreenSequenceIndex);
+            writer.Write(this.QuarterscreenSequenceIndex);
+            writer.Write(this.fieldpad);
+            writer.Write(this.FullscreenOffset);
+            writer.Write(this.HalfscreenOffset);
+            writer.Write(this.QuarterscreenOffset);
         }
         public enum AnchorEnum : short
         {

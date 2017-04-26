@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -76,26 +77,26 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.AiConversationLineFlags)));
-            queueableBinaryWriter.Write(this.Participant);
-            queueableBinaryWriter.Write(((short)(this.Addressee)));
-            queueableBinaryWriter.Write(this.AddresseeParticipant);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.LineDelayTime);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.Variant1);
-            queueableBinaryWriter.Write(this.Variant2);
-            queueableBinaryWriter.Write(this.Variant3);
-            queueableBinaryWriter.Write(this.Variant4);
-            queueableBinaryWriter.Write(this.Variant5);
-            queueableBinaryWriter.Write(this.Variant6);
+            base.Write(writer);
+            writer.Write(((short)(this.AiConversationLineFlags)));
+            writer.Write(this.Participant);
+            writer.Write(((short)(this.Addressee)));
+            writer.Write(this.AddresseeParticipant);
+            writer.Write(this.fieldpad);
+            writer.Write(this.LineDelayTime);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.Variant1);
+            writer.Write(this.Variant2);
+            writer.Write(this.Variant3);
+            writer.Write(this.Variant4);
+            writer.Write(this.Variant5);
+            writer.Write(this.Variant6);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

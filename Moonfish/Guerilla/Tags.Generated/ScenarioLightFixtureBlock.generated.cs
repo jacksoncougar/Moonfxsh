@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -57,21 +58,24 @@ namespace Moonfish.Guerilla.Tags
             this.DeviceData.ReadInstances(binaryReader, pointerQueue);
             this.LightFixtureData.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.ObjectData.DeferReferences(queueableBinaryWriter);
-            this.DeviceData.DeferReferences(queueableBinaryWriter);
-            this.LightFixtureData.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.ObjectData.DeferReferences(writer);
+            this.ObjectData.DeferReferences(writer);
+            this.DeviceData.DeferReferences(writer);
+            this.DeviceData.DeferReferences(writer);
+            this.LightFixtureData.DeferReferences(writer);
+            this.LightFixtureData.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Type);
-            queueableBinaryWriter.Write(this.Name);
-            this.ObjectData.Write(queueableBinaryWriter);
-            this.DeviceData.Write(queueableBinaryWriter);
-            this.LightFixtureData.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(this.Type);
+            writer.Write(this.Name);
+            this.ObjectData.Write(writer);
+            this.DeviceData.Write(writer);
+            this.LightFixtureData.Write(writer);
         }
     }
 }

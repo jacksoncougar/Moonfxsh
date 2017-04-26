@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -57,21 +58,22 @@ namespace Moonfish.Guerilla.Tags
             this.GeometryBlockInfo.ReadInstances(binaryReader, pointerQueue);
             this.CacheData = base.ReadBlockArrayData<LightmapVertexBufferBucketCacheDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.RawVertices);
-            this.GeometryBlockInfo.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.CacheData);
+            base.DeferReferences(writer);
+            writer.Defer(this.RawVertices);
+            this.GeometryBlockInfo.DeferReferences(writer);
+            this.GeometryBlockInfo.DeferReferences(writer);
+            writer.Defer(this.CacheData);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.LightmapVertexBufferBucketFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.RawVertices);
-            this.GeometryBlockInfo.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.CacheData);
+            base.Write(writer);
+            writer.Write(((short)(this.LightmapVertexBufferBucketFlags)));
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.RawVertices);
+            this.GeometryBlockInfo.Write(writer);
+            writer.WritePointer(this.CacheData);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

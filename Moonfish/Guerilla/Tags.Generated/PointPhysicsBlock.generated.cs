@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -61,21 +62,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.PointPhysicsFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Density);
-            queueableBinaryWriter.Write(this.AirFriction);
-            queueableBinaryWriter.Write(this.WaterFriction);
-            queueableBinaryWriter.Write(this.SurfaceFriction);
-            queueableBinaryWriter.Write(this.Elasticity);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write(writer);
+            writer.Write(((int)(this.PointPhysicsFlags)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.Density);
+            writer.Write(this.AirFriction);
+            writer.Write(this.WaterFriction);
+            writer.Write(this.SurfaceFriction);
+            writer.Write(this.Elasticity);
+            writer.Write(this.fieldpad0);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

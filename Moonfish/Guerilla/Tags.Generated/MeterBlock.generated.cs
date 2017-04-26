@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -40,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
         public float UnmaskDistance;
         public float MaskDistance;
         private byte[] fieldpad3 = new byte[20];
-        public byte[] EncodedStencil;
+        private byte[] EncodedStencil;
         public override int SerializedSize
         {
             get
@@ -82,31 +83,31 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.EncodedStencil = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.EncodedStencil);
+            base.DeferReferences(writer);
+            writer.Defer(this.EncodedStencil);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.MeterFlags)));
-            queueableBinaryWriter.Write(this.StencilBitmaps);
-            queueableBinaryWriter.Write(this.SourceBitmap);
-            queueableBinaryWriter.Write(this.StencilSequenceIndex);
-            queueableBinaryWriter.Write(this.SourceSequenceIndex);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(((short)(this.InterpolateColors)));
-            queueableBinaryWriter.Write(((short)(this.AnchorColors)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.EmptyColor);
-            queueableBinaryWriter.Write(this.FullColor);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.UnmaskDistance);
-            queueableBinaryWriter.Write(this.MaskDistance);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.WritePointer(this.EncodedStencil);
+            base.Write(writer);
+            writer.Write(((int)(this.MeterFlags)));
+            writer.Write(this.StencilBitmaps);
+            writer.Write(this.SourceBitmap);
+            writer.Write(this.StencilSequenceIndex);
+            writer.Write(this.SourceSequenceIndex);
+            writer.Write(this.fieldpad);
+            writer.Write(this.fieldpad0);
+            writer.Write(((short)(this.InterpolateColors)));
+            writer.Write(((short)(this.AnchorColors)));
+            writer.Write(this.fieldpad1);
+            writer.Write(this.EmptyColor);
+            writer.Write(this.FullColor);
+            writer.Write(this.fieldpad2);
+            writer.Write(this.UnmaskDistance);
+            writer.Write(this.MaskDistance);
+            writer.Write(this.fieldpad3);
+            writer.WritePointer(this.EncodedStencil);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

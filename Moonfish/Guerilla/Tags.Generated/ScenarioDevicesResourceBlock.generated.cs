@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -84,38 +85,38 @@ namespace Moonfish.Guerilla.Tags
             this.LightFixturesPalette = base.ReadBlockArrayData<ScenarioLightFixturePaletteBlock>(binaryReader, pointerQueue.Dequeue());
             this.EditorFolders = base.ReadBlockArrayData<GScenarioEditorFolderBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Names);
-            queueableBinaryWriter.Defer(this.DontUseMeScenarioEnvironmentObjectBlock);
-            queueableBinaryWriter.Defer(this.StructureReferences);
-            queueableBinaryWriter.Defer(this.DeviceGroups);
-            queueableBinaryWriter.Defer(this.Machines);
-            queueableBinaryWriter.Defer(this.MachinesPalette);
-            queueableBinaryWriter.Defer(this.Controls);
-            queueableBinaryWriter.Defer(this.ControlsPalette);
-            queueableBinaryWriter.Defer(this.LightFixtures);
-            queueableBinaryWriter.Defer(this.LightFixturesPalette);
-            queueableBinaryWriter.Defer(this.EditorFolders);
+            base.DeferReferences(writer);
+            writer.Defer(this.Names);
+            writer.Defer(this.DontUseMeScenarioEnvironmentObjectBlock);
+            writer.Defer(this.StructureReferences);
+            writer.Defer(this.DeviceGroups);
+            writer.Defer(this.Machines);
+            writer.Defer(this.MachinesPalette);
+            writer.Defer(this.Controls);
+            writer.Defer(this.ControlsPalette);
+            writer.Defer(this.LightFixtures);
+            writer.Defer(this.LightFixturesPalette);
+            writer.Defer(this.EditorFolders);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Names);
-            queueableBinaryWriter.WritePointer(this.DontUseMeScenarioEnvironmentObjectBlock);
-            queueableBinaryWriter.WritePointer(this.StructureReferences);
-            queueableBinaryWriter.WritePointer(this.DeviceGroups);
-            queueableBinaryWriter.WritePointer(this.Machines);
-            queueableBinaryWriter.WritePointer(this.MachinesPalette);
-            queueableBinaryWriter.WritePointer(this.Controls);
-            queueableBinaryWriter.WritePointer(this.ControlsPalette);
-            queueableBinaryWriter.WritePointer(this.LightFixtures);
-            queueableBinaryWriter.WritePointer(this.LightFixturesPalette);
-            queueableBinaryWriter.Write(this.NextMachineIdSalt);
-            queueableBinaryWriter.Write(this.NextControlIDSalt);
-            queueableBinaryWriter.Write(this.NextLightFixtureIDSalt);
-            queueableBinaryWriter.WritePointer(this.EditorFolders);
+            base.Write(writer);
+            writer.WritePointer(this.Names);
+            writer.WritePointer(this.DontUseMeScenarioEnvironmentObjectBlock);
+            writer.WritePointer(this.StructureReferences);
+            writer.WritePointer(this.DeviceGroups);
+            writer.WritePointer(this.Machines);
+            writer.WritePointer(this.MachinesPalette);
+            writer.WritePointer(this.Controls);
+            writer.WritePointer(this.ControlsPalette);
+            writer.WritePointer(this.LightFixtures);
+            writer.WritePointer(this.LightFixturesPalette);
+            writer.Write(this.NextMachineIdSalt);
+            writer.Write(this.NextControlIDSalt);
+            writer.Write(this.NextLightFixtureIDSalt);
+            writer.WritePointer(this.EditorFolders);
         }
     }
 }

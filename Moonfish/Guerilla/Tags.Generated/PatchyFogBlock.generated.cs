@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -82,31 +83,31 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.PatchyFogFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.RotationMultiplier);
-            queueableBinaryWriter.Write(this.StrafingMultiplier);
-            queueableBinaryWriter.Write(this.ZoomMultiplier);
-            queueableBinaryWriter.Write(this.NoiseMapScale);
-            queueableBinaryWriter.Write(this.NoiseMap);
-            queueableBinaryWriter.Write(this.NoiseVerticalScaleForward);
-            queueableBinaryWriter.Write(this.NoiseVerticalScaleUp);
-            queueableBinaryWriter.Write(this.NoiseOpacityScaleUp);
-            queueableBinaryWriter.Write(this.AnimationPeriod);
-            queueableBinaryWriter.Write(this.WindVelocity);
-            queueableBinaryWriter.Write(this.WindPeriod);
-            queueableBinaryWriter.Write(this.WindAccelerationWeight);
-            queueableBinaryWriter.Write(this.WindPerpendicularWeight);
-            queueableBinaryWriter.Write(this.WindConstantVelocityX);
-            queueableBinaryWriter.Write(this.WindConstantVelocityY);
-            queueableBinaryWriter.Write(this.WindConstantVelocityZ);
+            base.Write(writer);
+            writer.Write(((short)(this.PatchyFogFlags)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.RotationMultiplier);
+            writer.Write(this.StrafingMultiplier);
+            writer.Write(this.ZoomMultiplier);
+            writer.Write(this.NoiseMapScale);
+            writer.Write(this.NoiseMap);
+            writer.Write(this.NoiseVerticalScaleForward);
+            writer.Write(this.NoiseVerticalScaleUp);
+            writer.Write(this.NoiseOpacityScaleUp);
+            writer.Write(this.AnimationPeriod);
+            writer.Write(this.WindVelocity);
+            writer.Write(this.WindPeriod);
+            writer.Write(this.WindAccelerationWeight);
+            writer.Write(this.WindPerpendicularWeight);
+            writer.Write(this.WindConstantVelocityX);
+            writer.Write(this.WindConstantVelocityY);
+            writer.Write(this.WindConstantVelocityZ);
         }
         /// <summary>
         /// Use the separate_layer_depths flag carefully, it's expensive!

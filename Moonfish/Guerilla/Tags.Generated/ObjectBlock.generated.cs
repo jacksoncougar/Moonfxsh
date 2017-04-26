@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -136,55 +137,55 @@ namespace Moonfish.Guerilla.Tags
             this.ChangeColors = base.ReadBlockArrayData<ObjectChangeColors>(binaryReader, pointerQueue.Dequeue());
             this.PredictedResources = base.ReadBlockArrayData<PredictedResourceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.AiProperties);
-            queueableBinaryWriter.Defer(this.Functions);
-            queueableBinaryWriter.Defer(this.Attachments);
-            queueableBinaryWriter.Defer(this.Widgets);
-            queueableBinaryWriter.Defer(this.OldFunctions);
-            queueableBinaryWriter.Defer(this.ChangeColors);
-            queueableBinaryWriter.Defer(this.PredictedResources);
+            base.DeferReferences(writer);
+            writer.Defer(this.AiProperties);
+            writer.Defer(this.Functions);
+            writer.Defer(this.Attachments);
+            writer.Defer(this.Widgets);
+            writer.Defer(this.OldFunctions);
+            writer.Defer(this.ChangeColors);
+            writer.Defer(this.PredictedResources);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.ObjectFlags)));
-            queueableBinaryWriter.Write(this.BoundingRadius);
-            queueableBinaryWriter.Write(this.BoundingOffset);
-            queueableBinaryWriter.Write(this.AccelerationScale);
-            queueableBinaryWriter.Write(((short)(this.LightmapShadowMode)));
-            queueableBinaryWriter.Write(((byte)(this.SweetenerSize)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.DynamicLightSphereRadius);
-            queueableBinaryWriter.Write(this.DynamicLightSphereOffset);
-            queueableBinaryWriter.Write(this.DefaultModelVariant);
-            queueableBinaryWriter.Write(this.Model);
-            queueableBinaryWriter.Write(this.CrateObject);
-            queueableBinaryWriter.Write(this.ModifierShader);
-            queueableBinaryWriter.Write(this.CreationEffect);
-            queueableBinaryWriter.Write(this.MaterialEffects);
-            queueableBinaryWriter.WritePointer(this.AiProperties);
-            queueableBinaryWriter.WritePointer(this.Functions);
-            queueableBinaryWriter.Write(this.ApplyCollisionDamageScale);
-            queueableBinaryWriter.Write(this.MinGameAcc);
-            queueableBinaryWriter.Write(this.MaxGameAcc);
-            queueableBinaryWriter.Write(this.MinGameScale);
-            queueableBinaryWriter.Write(this.MaxGameScale);
-            queueableBinaryWriter.Write(this.MinAbsAcc);
-            queueableBinaryWriter.Write(this.MaxAbsAcc);
-            queueableBinaryWriter.Write(this.MinAbsScale);
-            queueableBinaryWriter.Write(this.MaxAbsScale);
-            queueableBinaryWriter.Write(this.HudTextMessageIndex);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.WritePointer(this.Attachments);
-            queueableBinaryWriter.WritePointer(this.Widgets);
-            queueableBinaryWriter.WritePointer(this.OldFunctions);
-            queueableBinaryWriter.WritePointer(this.ChangeColors);
-            queueableBinaryWriter.WritePointer(this.PredictedResources);
+            base.Write(writer);
+            writer.Write(this.fieldpad);
+            writer.Write(((short)(this.ObjectFlags)));
+            writer.Write(this.BoundingRadius);
+            writer.Write(this.BoundingOffset);
+            writer.Write(this.AccelerationScale);
+            writer.Write(((short)(this.LightmapShadowMode)));
+            writer.Write(((byte)(this.SweetenerSize)));
+            writer.Write(this.fieldpad0);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.DynamicLightSphereRadius);
+            writer.Write(this.DynamicLightSphereOffset);
+            writer.Write(this.DefaultModelVariant);
+            writer.Write(this.Model);
+            writer.Write(this.CrateObject);
+            writer.Write(this.ModifierShader);
+            writer.Write(this.CreationEffect);
+            writer.Write(this.MaterialEffects);
+            writer.WritePointer(this.AiProperties);
+            writer.WritePointer(this.Functions);
+            writer.Write(this.ApplyCollisionDamageScale);
+            writer.Write(this.MinGameAcc);
+            writer.Write(this.MaxGameAcc);
+            writer.Write(this.MinGameScale);
+            writer.Write(this.MaxGameScale);
+            writer.Write(this.MinAbsAcc);
+            writer.Write(this.MaxAbsAcc);
+            writer.Write(this.MinAbsScale);
+            writer.Write(this.MaxAbsScale);
+            writer.Write(this.HudTextMessageIndex);
+            writer.Write(this.fieldpad2);
+            writer.WritePointer(this.Attachments);
+            writer.WritePointer(this.Widgets);
+            writer.WritePointer(this.OldFunctions);
+            writer.WritePointer(this.ChangeColors);
+            writer.WritePointer(this.PredictedResources);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

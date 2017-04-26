@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -50,7 +51,7 @@ namespace Moonfish.Guerilla.Tags
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(64));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(68));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(40));
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(84));
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(88));
             this.NextObjectIDSalt = binaryReader.ReadInt32();
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(260));
             return pointerQueue;
@@ -65,26 +66,26 @@ namespace Moonfish.Guerilla.Tags
             this.Objects = base.ReadBlockArrayData<ScenarioBipedBlock>(binaryReader, pointerQueue.Dequeue());
             this.EditorFolders = base.ReadBlockArrayData<GScenarioEditorFolderBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Names);
-            queueableBinaryWriter.Defer(this.DontUseMeScenarioEnvironmentObjectBlock);
-            queueableBinaryWriter.Defer(this.StructureReferences);
-            queueableBinaryWriter.Defer(this.Palette);
-            queueableBinaryWriter.Defer(this.Objects);
-            queueableBinaryWriter.Defer(this.EditorFolders);
+            base.DeferReferences(writer);
+            writer.Defer(this.Names);
+            writer.Defer(this.DontUseMeScenarioEnvironmentObjectBlock);
+            writer.Defer(this.StructureReferences);
+            writer.Defer(this.Palette);
+            writer.Defer(this.Objects);
+            writer.Defer(this.EditorFolders);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Names);
-            queueableBinaryWriter.WritePointer(this.DontUseMeScenarioEnvironmentObjectBlock);
-            queueableBinaryWriter.WritePointer(this.StructureReferences);
-            queueableBinaryWriter.WritePointer(this.Palette);
-            queueableBinaryWriter.WritePointer(this.Objects);
-            queueableBinaryWriter.Write(this.NextObjectIDSalt);
-            queueableBinaryWriter.WritePointer(this.EditorFolders);
+            base.Write(writer);
+            writer.WritePointer(this.Names);
+            writer.WritePointer(this.DontUseMeScenarioEnvironmentObjectBlock);
+            writer.WritePointer(this.StructureReferences);
+            writer.WritePointer(this.Palette);
+            writer.WritePointer(this.Objects);
+            writer.Write(this.NextObjectIDSalt);
+            writer.WritePointer(this.EditorFolders);
         }
     }
 }

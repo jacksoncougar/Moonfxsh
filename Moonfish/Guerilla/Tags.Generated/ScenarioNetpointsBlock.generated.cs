@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -60,21 +61,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Position);
-            queueableBinaryWriter.Write(this.Facing);
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(((short)(this.TeamDesignator)));
-            queueableBinaryWriter.Write(this.Identifier);
-            queueableBinaryWriter.Write(((short)(this.ScenarioNetpointsFlags)));
-            queueableBinaryWriter.Write(this.EMPTYSTRING);
-            queueableBinaryWriter.Write(this.EMPTYSTRING0);
+            base.Write(writer);
+            writer.Write(this.Position);
+            writer.Write(this.Facing);
+            writer.Write(((short)(this.Type)));
+            writer.Write(((short)(this.TeamDesignator)));
+            writer.Write(this.Identifier);
+            writer.Write(((short)(this.ScenarioNetpointsFlags)));
+            writer.Write(this.EMPTYSTRING);
+            writer.Write(this.EMPTYSTRING0);
         }
         public enum TypeEnum : short
         {

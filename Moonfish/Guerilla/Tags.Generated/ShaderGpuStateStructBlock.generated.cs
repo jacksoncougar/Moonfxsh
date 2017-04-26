@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -65,27 +66,27 @@ namespace Moonfish.Guerilla.Tags
             this.VnConstants = base.ReadBlockArrayData<VertexShaderConstantBlock>(binaryReader, pointerQueue.Dequeue());
             this.CnConstants = base.ReadBlockArrayData<VertexShaderConstantBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.RenderStates);
-            queueableBinaryWriter.Defer(this.TextureStageStates);
-            queueableBinaryWriter.Defer(this.RenderStateParameters);
-            queueableBinaryWriter.Defer(this.TextureStageParameters);
-            queueableBinaryWriter.Defer(this.Textures);
-            queueableBinaryWriter.Defer(this.VnConstants);
-            queueableBinaryWriter.Defer(this.CnConstants);
+            base.DeferReferences(writer);
+            writer.Defer(this.RenderStates);
+            writer.Defer(this.TextureStageStates);
+            writer.Defer(this.RenderStateParameters);
+            writer.Defer(this.TextureStageParameters);
+            writer.Defer(this.Textures);
+            writer.Defer(this.VnConstants);
+            writer.Defer(this.CnConstants);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.RenderStates);
-            queueableBinaryWriter.WritePointer(this.TextureStageStates);
-            queueableBinaryWriter.WritePointer(this.RenderStateParameters);
-            queueableBinaryWriter.WritePointer(this.TextureStageParameters);
-            queueableBinaryWriter.WritePointer(this.Textures);
-            queueableBinaryWriter.WritePointer(this.VnConstants);
-            queueableBinaryWriter.WritePointer(this.CnConstants);
+            base.Write(writer);
+            writer.WritePointer(this.RenderStates);
+            writer.WritePointer(this.TextureStageStates);
+            writer.WritePointer(this.RenderStateParameters);
+            writer.WritePointer(this.TextureStageParameters);
+            writer.WritePointer(this.Textures);
+            writer.WritePointer(this.VnConstants);
+            writer.WritePointer(this.CnConstants);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -56,21 +57,23 @@ namespace Moonfish.Guerilla.Tags
             this.RenderData = base.ReadBlockArrayData<StructureBspClusterDataBlockNew>(binaryReader, pointerQueue.Dequeue());
             this.IndexReorderTable = base.ReadBlockArrayData<GlobalGeometrySectionStripIndexBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.SectionInfo.DeferReferences(queueableBinaryWriter);
-            this.GeometryBlockInfo.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.RenderData);
-            queueableBinaryWriter.Defer(this.IndexReorderTable);
+            base.DeferReferences(writer);
+            this.SectionInfo.DeferReferences(writer);
+            this.SectionInfo.DeferReferences(writer);
+            this.GeometryBlockInfo.DeferReferences(writer);
+            this.GeometryBlockInfo.DeferReferences(writer);
+            writer.Defer(this.RenderData);
+            writer.Defer(this.IndexReorderTable);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            this.SectionInfo.Write(queueableBinaryWriter);
-            this.GeometryBlockInfo.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.RenderData);
-            queueableBinaryWriter.WritePointer(this.IndexReorderTable);
+            base.Write(writer);
+            this.SectionInfo.Write(writer);
+            this.GeometryBlockInfo.Write(writer);
+            writer.WritePointer(this.RenderData);
+            writer.WritePointer(this.IndexReorderTable);
         }
     }
 }

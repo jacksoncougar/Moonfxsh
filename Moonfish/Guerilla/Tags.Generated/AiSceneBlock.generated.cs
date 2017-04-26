@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -54,19 +55,19 @@ namespace Moonfish.Guerilla.Tags
             this.TriggerConditions = base.ReadBlockArrayData<AiSceneTriggerBlock>(binaryReader, pointerQueue.Dequeue());
             this.Roles = base.ReadBlockArrayData<AiSceneRoleBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.TriggerConditions);
-            queueableBinaryWriter.Defer(this.Roles);
+            base.DeferReferences(writer);
+            writer.Defer(this.TriggerConditions);
+            writer.Defer(this.Roles);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((int)(this.AiSceneFlags)));
-            queueableBinaryWriter.WritePointer(this.TriggerConditions);
-            queueableBinaryWriter.WritePointer(this.Roles);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(((int)(this.AiSceneFlags)));
+            writer.WritePointer(this.TriggerConditions);
+            writer.WritePointer(this.Roles);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

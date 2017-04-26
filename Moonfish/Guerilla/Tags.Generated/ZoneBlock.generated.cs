@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -58,21 +59,21 @@ namespace Moonfish.Guerilla.Tags
             this.FiringPositions = base.ReadBlockArrayData<FiringPositionsBlock>(binaryReader, pointerQueue.Dequeue());
             this.Areas = base.ReadBlockArrayData<AreasBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.FiringPositions);
-            queueableBinaryWriter.Defer(this.Areas);
+            base.DeferReferences(writer);
+            writer.Defer(this.FiringPositions);
+            writer.Defer(this.Areas);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((int)(this.ZoneFlags)));
-            queueableBinaryWriter.Write(this.ManualBsp);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.FiringPositions);
-            queueableBinaryWriter.WritePointer(this.Areas);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(((int)(this.ZoneFlags)));
+            writer.Write(this.ManualBsp);
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.FiringPositions);
+            writer.WritePointer(this.Areas);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -39,11 +40,11 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         public short ColorPlateWidth;
         public short ColorPlateHeight;
-        public byte[] CompressedColorPlateData;
+        private byte[] CompressedColorPlateData;
         /// <summary>
         /// Pixel data after being processed by the tool.
         /// </summary>
-        public byte[] ProcessedPixelData;
+        private byte[] ProcessedPixelData;
         /// <summary>
         /// EMPTY STRING
         /// </summary>
@@ -103,38 +104,38 @@ namespace Moonfish.Guerilla.Tags
             this.Sequences = base.ReadBlockArrayData<BitmapGroupSequenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.Bitmaps = base.ReadBlockArrayData<BitmapDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.CompressedColorPlateData);
-            queueableBinaryWriter.Defer(this.ProcessedPixelData);
-            queueableBinaryWriter.Defer(this.Sequences);
-            queueableBinaryWriter.Defer(this.Bitmaps);
+            base.DeferReferences(writer);
+            writer.Defer(this.CompressedColorPlateData);
+            writer.Defer(this.ProcessedPixelData);
+            writer.Defer(this.Sequences);
+            writer.Defer(this.Bitmaps);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(((short)(this.Format)));
-            queueableBinaryWriter.Write(((short)(this.Usage)));
-            queueableBinaryWriter.Write(((short)(this.BitmapFlags)));
-            queueableBinaryWriter.Write(this.DetailFadeFactor);
-            queueableBinaryWriter.Write(this.SharpenAmount);
-            queueableBinaryWriter.Write(this.BumpHeight);
-            queueableBinaryWriter.Write(((short)(this.SpriteSize)));
-            queueableBinaryWriter.Write(this.EMPTYSTRING);
-            queueableBinaryWriter.Write(this.ColorPlateWidth);
-            queueableBinaryWriter.Write(this.ColorPlateHeight);
-            queueableBinaryWriter.WritePointer(this.CompressedColorPlateData);
-            queueableBinaryWriter.WritePointer(this.ProcessedPixelData);
-            queueableBinaryWriter.Write(this.BlurFilterSize);
-            queueableBinaryWriter.Write(this.AlphaBias);
-            queueableBinaryWriter.Write(this.MipmapCount);
-            queueableBinaryWriter.Write(((short)(this.SpriteUsage)));
-            queueableBinaryWriter.Write(this.SpriteSpacing);
-            queueableBinaryWriter.Write(((short)(this.ForceFormat)));
-            queueableBinaryWriter.WritePointer(this.Sequences);
-            queueableBinaryWriter.WritePointer(this.Bitmaps);
+            base.Write(writer);
+            writer.Write(((short)(this.Type)));
+            writer.Write(((short)(this.Format)));
+            writer.Write(((short)(this.Usage)));
+            writer.Write(((short)(this.BitmapFlags)));
+            writer.Write(this.DetailFadeFactor);
+            writer.Write(this.SharpenAmount);
+            writer.Write(this.BumpHeight);
+            writer.Write(((short)(this.SpriteSize)));
+            writer.Write(this.EMPTYSTRING);
+            writer.Write(this.ColorPlateWidth);
+            writer.Write(this.ColorPlateHeight);
+            writer.WritePointer(this.CompressedColorPlateData);
+            writer.WritePointer(this.ProcessedPixelData);
+            writer.Write(this.BlurFilterSize);
+            writer.Write(this.AlphaBias);
+            writer.Write(this.MipmapCount);
+            writer.Write(((short)(this.SpriteUsage)));
+            writer.Write(this.SpriteSpacing);
+            writer.Write(((short)(this.ForceFormat)));
+            writer.WritePointer(this.Sequences);
+            writer.WritePointer(this.Bitmaps);
         }
         /// <summary>
         /// Type controls bitmap geometry. All dimensions must be a power of 2 except for SPRITES and INTERFACE BITMAPS:

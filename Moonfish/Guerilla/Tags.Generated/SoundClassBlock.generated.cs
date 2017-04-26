@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -94,38 +95,38 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MaxSoundsPerTag116);
-            queueableBinaryWriter.Write(this.MaxSoundsPerObject116);
-            queueableBinaryWriter.Write(this.PreemptionTime);
-            queueableBinaryWriter.Write(((short)(this.SoundClassInternalFlags)));
-            queueableBinaryWriter.Write(((short)(this.SoundClassFlags)));
-            queueableBinaryWriter.Write(this.Priority);
-            queueableBinaryWriter.Write(((short)(this.CacheMissMode)));
-            queueableBinaryWriter.Write(this.ReverbGain);
-            queueableBinaryWriter.Write(this.OverrideSpeakerGain);
-            queueableBinaryWriter.Write(this.DistanceBounds);
-            queueableBinaryWriter.Write(this.GainBounds);
-            queueableBinaryWriter.Write(this.CutsceneDucking);
-            queueableBinaryWriter.Write(this.CutsceneDuckingFadeInTime);
-            queueableBinaryWriter.Write(this.CutsceneDuckingSustainTime);
-            queueableBinaryWriter.Write(this.CutsceneDuckingFadeOutTime);
-            queueableBinaryWriter.Write(this.ScriptedDialogDucking);
-            queueableBinaryWriter.Write(this.ScriptedDialogDuckingFadeInTime);
-            queueableBinaryWriter.Write(this.ScriptedDialogDuckingSustainTime);
-            queueableBinaryWriter.Write(this.ScriptedDialogDuckingFadeOutTime);
-            queueableBinaryWriter.Write(this.DopplerFactor);
-            queueableBinaryWriter.Write(((byte)(this.StereoPlaybackType)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.TransmissionMultiplier);
-            queueableBinaryWriter.Write(this.ObstructionMaxBend);
-            queueableBinaryWriter.Write(this.OcclusionMaxBend);
+            base.Write(writer);
+            writer.Write(this.MaxSoundsPerTag116);
+            writer.Write(this.MaxSoundsPerObject116);
+            writer.Write(this.PreemptionTime);
+            writer.Write(((short)(this.SoundClassInternalFlags)));
+            writer.Write(((short)(this.SoundClassFlags)));
+            writer.Write(this.Priority);
+            writer.Write(((short)(this.CacheMissMode)));
+            writer.Write(this.ReverbGain);
+            writer.Write(this.OverrideSpeakerGain);
+            writer.Write(this.DistanceBounds);
+            writer.Write(this.GainBounds);
+            writer.Write(this.CutsceneDucking);
+            writer.Write(this.CutsceneDuckingFadeInTime);
+            writer.Write(this.CutsceneDuckingSustainTime);
+            writer.Write(this.CutsceneDuckingFadeOutTime);
+            writer.Write(this.ScriptedDialogDucking);
+            writer.Write(this.ScriptedDialogDuckingFadeInTime);
+            writer.Write(this.ScriptedDialogDuckingSustainTime);
+            writer.Write(this.ScriptedDialogDuckingFadeOutTime);
+            writer.Write(this.DopplerFactor);
+            writer.Write(((byte)(this.StereoPlaybackType)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.TransmissionMultiplier);
+            writer.Write(this.ObstructionMaxBend);
+            writer.Write(this.OcclusionMaxBend);
         }
         [System.FlagsAttribute()]
         public enum InternalFlags : short

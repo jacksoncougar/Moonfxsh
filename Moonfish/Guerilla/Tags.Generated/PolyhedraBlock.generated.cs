@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -110,50 +111,50 @@ namespace Moonfish.Guerilla.Tags
                 this.FourVectorsStorage00[i].ReadInstances(binaryReader, pointerQueue);
             }
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
             int i;
             for (i = 0; (i < 3); i = (i + 1))
             {
-                this.FourVectorsStorage00[i].DeferReferences(queueableBinaryWriter);
+                this.FourVectorsStorage00[i].DeferReferences(writer);
             }
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.Material);
-            queueableBinaryWriter.Write(((short)(this.PolyhedraFlags)));
-            queueableBinaryWriter.Write(this.RelativeMassScale);
-            queueableBinaryWriter.Write(this.Friction);
-            queueableBinaryWriter.Write(this.Restitution);
-            queueableBinaryWriter.Write(this.Volume);
-            queueableBinaryWriter.Write(this.Mass);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.Phantom);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.Write(this.Size);
-            queueableBinaryWriter.Write(this.Count);
-            queueableBinaryWriter.Write(this.fieldskip1);
-            queueableBinaryWriter.Write(this.Radius);
-            queueableBinaryWriter.Write(this.AabbHalfExtents);
-            queueableBinaryWriter.Write(this.fieldskip2);
-            queueableBinaryWriter.Write(this.AabbCenter);
-            queueableBinaryWriter.Write(this.fieldskip3);
-            queueableBinaryWriter.Write(this.fieldskip4);
-            queueableBinaryWriter.Write(this.FourVectorsSize);
-            queueableBinaryWriter.Write(this.FourVectorsCapacity);
-            queueableBinaryWriter.Write(this.NumVertices);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.Material);
+            writer.Write(((short)(this.PolyhedraFlags)));
+            writer.Write(this.RelativeMassScale);
+            writer.Write(this.Friction);
+            writer.Write(this.Restitution);
+            writer.Write(this.Volume);
+            writer.Write(this.Mass);
+            writer.Write(this.fieldskip);
+            writer.Write(this.Phantom);
+            writer.Write(this.fieldskip0);
+            writer.Write(this.Size);
+            writer.Write(this.Count);
+            writer.Write(this.fieldskip1);
+            writer.Write(this.Radius);
+            writer.Write(this.AabbHalfExtents);
+            writer.Write(this.fieldskip2);
+            writer.Write(this.AabbCenter);
+            writer.Write(this.fieldskip3);
+            writer.Write(this.fieldskip4);
+            writer.Write(this.FourVectorsSize);
+            writer.Write(this.FourVectorsCapacity);
+            writer.Write(this.NumVertices);
             int i;
             for (i = 0; (i < 3); i = (i + 1))
             {
-                this.FourVectorsStorage00[i].Write(queueableBinaryWriter);
+                this.FourVectorsStorage00[i].Write(writer);
             }
-            queueableBinaryWriter.Write(this.fieldskip5);
-            queueableBinaryWriter.Write(this.PlaneEquationsSize);
-            queueableBinaryWriter.Write(this.PlaneEquationsCapacity);
-            queueableBinaryWriter.Write(this.fieldskip6);
+            writer.Write(this.fieldskip5);
+            writer.Write(this.PlaneEquationsSize);
+            writer.Write(this.PlaneEquationsCapacity);
+            writer.Write(this.fieldskip6);
         }
         [System.FlagsAttribute()]
         public enum Flags : short
@@ -199,19 +200,19 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
             {
-                base.DeferReferences(queueableBinaryWriter);
+                base.DeferReferences(writer);
             }
-            public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+            public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
             {
-                base.Write(queueableBinaryWriter);
-                queueableBinaryWriter.Write(this.FourVectorsX);
-                queueableBinaryWriter.Write(this.fieldskip);
-                queueableBinaryWriter.Write(this.FourVectorsY);
-                queueableBinaryWriter.Write(this.fieldskip0);
-                queueableBinaryWriter.Write(this.FourVectorsZ);
-                queueableBinaryWriter.Write(this.fieldskip1);
+                base.Write(writer);
+                writer.Write(this.FourVectorsX);
+                writer.Write(this.fieldskip);
+                writer.Write(this.FourVectorsY);
+                writer.Write(this.fieldskip0);
+                writer.Write(this.FourVectorsZ);
+                writer.Write(this.fieldskip1);
             }
         }
     }

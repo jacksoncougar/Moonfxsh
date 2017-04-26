@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -65,23 +66,23 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.CollisionDamage);
-            queueableBinaryWriter.Write(this.MinGameAcc);
-            queueableBinaryWriter.Write(this.MaxGameAcc);
-            queueableBinaryWriter.Write(this.MinGameScale);
-            queueableBinaryWriter.Write(this.MaxGameScale);
-            queueableBinaryWriter.Write(this.MinAbsAcc);
-            queueableBinaryWriter.Write(this.MaxAbsAcc);
-            queueableBinaryWriter.Write(this.MinAbsScale);
-            queueableBinaryWriter.Write(this.MaxAbsScale);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write(writer);
+            writer.Write(this.CollisionDamage);
+            writer.Write(this.MinGameAcc);
+            writer.Write(this.MaxGameAcc);
+            writer.Write(this.MinGameScale);
+            writer.Write(this.MaxGameScale);
+            writer.Write(this.MinAbsAcc);
+            writer.Write(this.MaxAbsAcc);
+            writer.Write(this.MinAbsScale);
+            writer.Write(this.MaxAbsScale);
+            writer.Write(this.fieldpad);
         }
     }
 }

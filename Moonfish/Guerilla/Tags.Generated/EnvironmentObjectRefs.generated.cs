@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -58,21 +59,21 @@ namespace Moonfish.Guerilla.Tags
             this.Bsps = base.ReadBlockArrayData<EnvironmentObjectBspRefs>(binaryReader, pointerQueue.Dequeue());
             this.Nodes = base.ReadBlockArrayData<EnvironmentObjectNodes>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Bsps);
-            queueableBinaryWriter.Defer(this.Nodes);
+            base.DeferReferences(writer);
+            writer.Defer(this.Bsps);
+            writer.Defer(this.Nodes);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.EnvironmentObjectRefsFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.FirstSector);
-            queueableBinaryWriter.Write(this.LastSector);
-            queueableBinaryWriter.WritePointer(this.Bsps);
-            queueableBinaryWriter.WritePointer(this.Nodes);
+            base.Write(writer);
+            writer.Write(((short)(this.EnvironmentObjectRefsFlags)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.FirstSector);
+            writer.Write(this.LastSector);
+            writer.WritePointer(this.Bsps);
+            writer.WritePointer(this.Nodes);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

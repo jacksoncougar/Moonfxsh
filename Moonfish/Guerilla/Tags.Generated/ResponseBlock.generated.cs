@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -54,18 +55,18 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.VocalizationName);
-            queueableBinaryWriter.Write(((short)(this.ResponseFlags)));
-            queueableBinaryWriter.Write(this.VocalizationIndex);
-            queueableBinaryWriter.Write(((short)(this.ResponseType)));
-            queueableBinaryWriter.Write(this.DialogueIndex);
+            base.Write(writer);
+            writer.Write(this.VocalizationName);
+            writer.Write(((short)(this.ResponseFlags)));
+            writer.Write(this.VocalizationIndex);
+            writer.Write(((short)(this.ResponseType)));
+            writer.Write(this.DialogueIndex);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

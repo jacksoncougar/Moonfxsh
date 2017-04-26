@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -76,23 +77,23 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DamagePyramidAngles);
-            queueableBinaryWriter.Write(this.DamagePyramidDepth);
-            queueableBinaryWriter.Write(this._1stHitMeleeDamage);
-            queueableBinaryWriter.Write(this._1stHitMeleeResponse);
-            queueableBinaryWriter.Write(this._2ndHitMeleeDamage);
-            queueableBinaryWriter.Write(this._2ndHitMeleeResponse);
-            queueableBinaryWriter.Write(this._3rdHitMeleeDamage);
-            queueableBinaryWriter.Write(this._3rdHitMeleeResponse);
-            queueableBinaryWriter.Write(this.LungeMeleeDamage);
-            queueableBinaryWriter.Write(this.LungeMeleeResponse);
+            base.Write(writer);
+            writer.Write(this.DamagePyramidAngles);
+            writer.Write(this.DamagePyramidDepth);
+            writer.Write(this._1stHitMeleeDamage);
+            writer.Write(this._1stHitMeleeResponse);
+            writer.Write(this._2ndHitMeleeDamage);
+            writer.Write(this._2ndHitMeleeResponse);
+            writer.Write(this._3rdHitMeleeDamage);
+            writer.Write(this._3rdHitMeleeResponse);
+            writer.Write(this.LungeMeleeDamage);
+            writer.Write(this.LungeMeleeResponse);
         }
     }
 }

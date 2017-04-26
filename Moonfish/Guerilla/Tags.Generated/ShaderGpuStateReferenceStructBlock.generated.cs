@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -65,27 +66,34 @@ namespace Moonfish.Guerilla.Tags
             this.VnConstants.ReadInstances(binaryReader, pointerQueue);
             this.CnConstants.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.RenderStates.DeferReferences(queueableBinaryWriter);
-            this.TextureStageStates.DeferReferences(queueableBinaryWriter);
-            this.RenderStateParameters.DeferReferences(queueableBinaryWriter);
-            this.TextureStageParameters.DeferReferences(queueableBinaryWriter);
-            this.Textures.DeferReferences(queueableBinaryWriter);
-            this.VnConstants.DeferReferences(queueableBinaryWriter);
-            this.CnConstants.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.RenderStates.DeferReferences(writer);
+            this.RenderStates.DeferReferences(writer);
+            this.TextureStageStates.DeferReferences(writer);
+            this.TextureStageStates.DeferReferences(writer);
+            this.RenderStateParameters.DeferReferences(writer);
+            this.RenderStateParameters.DeferReferences(writer);
+            this.TextureStageParameters.DeferReferences(writer);
+            this.TextureStageParameters.DeferReferences(writer);
+            this.Textures.DeferReferences(writer);
+            this.Textures.DeferReferences(writer);
+            this.VnConstants.DeferReferences(writer);
+            this.VnConstants.DeferReferences(writer);
+            this.CnConstants.DeferReferences(writer);
+            this.CnConstants.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            this.RenderStates.Write(queueableBinaryWriter);
-            this.TextureStageStates.Write(queueableBinaryWriter);
-            this.RenderStateParameters.Write(queueableBinaryWriter);
-            this.TextureStageParameters.Write(queueableBinaryWriter);
-            this.Textures.Write(queueableBinaryWriter);
-            this.VnConstants.Write(queueableBinaryWriter);
-            this.CnConstants.Write(queueableBinaryWriter);
+            base.Write(writer);
+            this.RenderStates.Write(writer);
+            this.TextureStageStates.Write(writer);
+            this.RenderStateParameters.Write(writer);
+            this.TextureStageParameters.Write(writer);
+            this.Textures.Write(writer);
+            this.VnConstants.Write(writer);
+            this.CnConstants.Write(writer);
         }
     }
 }

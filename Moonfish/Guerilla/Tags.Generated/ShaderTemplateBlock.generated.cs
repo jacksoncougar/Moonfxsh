@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -22,7 +23,7 @@ namespace Moonfish.Guerilla.Tags
     [TagBlockOriginalNameAttribute("shader_template_block")]
     public partial class ShaderTemplateBlock : GuerillaBlock, IWriteDeferrable
     {
-        public byte[] Documentation;
+        private byte[] Documentation;
         public Moonfish.Tags.StringIdent DefaultMaterialName;
         /// <summary>
         /// Force Active Camo: Should be used with cautuion, as this causes a backbuffer copy when this shader is rendered.
@@ -98,37 +99,37 @@ namespace Moonfish.Guerilla.Tags
             this.EMPTYSTRING0 = base.ReadBlockArrayData<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryReader, pointerQueue.Dequeue());
             this.PostprocessDefinition = base.ReadBlockArrayData<ShaderTemplatePostprocessDefinitionNewBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Documentation);
-            queueableBinaryWriter.Defer(this.Properties);
-            queueableBinaryWriter.Defer(this.Categories);
-            queueableBinaryWriter.Defer(this.LODs);
-            queueableBinaryWriter.Defer(this.EMPTYSTRING);
-            queueableBinaryWriter.Defer(this.EMPTYSTRING0);
-            queueableBinaryWriter.Defer(this.PostprocessDefinition);
+            base.DeferReferences(writer);
+            writer.Defer(this.Documentation);
+            writer.Defer(this.Properties);
+            writer.Defer(this.Categories);
+            writer.Defer(this.LODs);
+            writer.Defer(this.EMPTYSTRING);
+            writer.Defer(this.EMPTYSTRING0);
+            writer.Defer(this.PostprocessDefinition);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Documentation);
-            queueableBinaryWriter.Write(this.DefaultMaterialName);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.ShaderTemplateFlags)));
-            queueableBinaryWriter.WritePointer(this.Properties);
-            queueableBinaryWriter.WritePointer(this.Categories);
-            queueableBinaryWriter.Write(this.LightResponse);
-            queueableBinaryWriter.WritePointer(this.LODs);
-            queueableBinaryWriter.WritePointer(this.EMPTYSTRING);
-            queueableBinaryWriter.WritePointer(this.EMPTYSTRING0);
-            queueableBinaryWriter.Write(this.Aux1Shader);
-            queueableBinaryWriter.Write(((short)(this.Aux1Layer)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.Aux2Shader);
-            queueableBinaryWriter.Write(((short)(this.Aux2Layer)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.WritePointer(this.PostprocessDefinition);
+            base.Write(writer);
+            writer.WritePointer(this.Documentation);
+            writer.Write(this.DefaultMaterialName);
+            writer.Write(this.fieldpad);
+            writer.Write(((short)(this.ShaderTemplateFlags)));
+            writer.WritePointer(this.Properties);
+            writer.WritePointer(this.Categories);
+            writer.Write(this.LightResponse);
+            writer.WritePointer(this.LODs);
+            writer.WritePointer(this.EMPTYSTRING);
+            writer.WritePointer(this.EMPTYSTRING0);
+            writer.Write(this.Aux1Shader);
+            writer.Write(((short)(this.Aux1Layer)));
+            writer.Write(this.fieldpad0);
+            writer.Write(this.Aux2Shader);
+            writer.Write(((short)(this.Aux2Layer)));
+            writer.Write(this.fieldpad1);
+            writer.WritePointer(this.PostprocessDefinition);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

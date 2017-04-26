@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -51,17 +52,17 @@ namespace Moonfish.Guerilla.Tags
             this.Decorator = base.ReadBlockArrayData<DecoratorPlacementDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
             this.DecoratorPalette = base.ReadBlockArrayData<ScenarioDecoratorSetPaletteEntryBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Decorator);
-            queueableBinaryWriter.Defer(this.DecoratorPalette);
+            base.DeferReferences(writer);
+            writer.Defer(this.Decorator);
+            writer.Defer(this.DecoratorPalette);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Decorator);
-            queueableBinaryWriter.WritePointer(this.DecoratorPalette);
+            base.Write(writer);
+            writer.WritePointer(this.Decorator);
+            writer.WritePointer(this.DecoratorPalette);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -61,21 +62,21 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.TextValuePairs = base.ReadBlockArrayData<TextValuePairReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.TextValuePairs);
+            base.DeferReferences(writer);
+            writer.Defer(this.TextValuePairs);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.Parameter)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.StringList);
-            queueableBinaryWriter.Write(this.TitleText);
-            queueableBinaryWriter.Write(this.HeaderText);
-            queueableBinaryWriter.Write(this.DescriptionText);
-            queueableBinaryWriter.WritePointer(this.TextValuePairs);
+            base.Write(writer);
+            writer.Write(((int)(this.Parameter)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.StringList);
+            writer.Write(this.TitleText);
+            writer.Write(this.HeaderText);
+            writer.Write(this.DescriptionText);
+            writer.WritePointer(this.TextValuePairs);
         }
         public enum ParameterEnum : int
         {

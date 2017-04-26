@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -77,35 +78,35 @@ namespace Moonfish.Guerilla.Tags
             this.ConstantInfo = base.ReadBlockArrayData<ShaderPassPostprocessConstantInfoNewBlock>(binaryReader, pointerQueue.Dequeue());
             this.OldImplementations = base.ReadBlockArrayData<ShaderPassPostprocessImplementationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Implementations);
-            queueableBinaryWriter.Defer(this.Textures);
-            queueableBinaryWriter.Defer(this.RenderStates);
-            queueableBinaryWriter.Defer(this.TextureStates);
-            queueableBinaryWriter.Defer(this.PsFragments);
-            queueableBinaryWriter.Defer(this.PsPermutations);
-            queueableBinaryWriter.Defer(this.PsCombiners);
-            queueableBinaryWriter.Defer(this.Externs);
-            queueableBinaryWriter.Defer(this.Constants);
-            queueableBinaryWriter.Defer(this.ConstantInfo);
-            queueableBinaryWriter.Defer(this.OldImplementations);
+            base.DeferReferences(writer);
+            writer.Defer(this.Implementations);
+            writer.Defer(this.Textures);
+            writer.Defer(this.RenderStates);
+            writer.Defer(this.TextureStates);
+            writer.Defer(this.PsFragments);
+            writer.Defer(this.PsPermutations);
+            writer.Defer(this.PsCombiners);
+            writer.Defer(this.Externs);
+            writer.Defer(this.Constants);
+            writer.Defer(this.ConstantInfo);
+            writer.Defer(this.OldImplementations);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Implementations);
-            queueableBinaryWriter.WritePointer(this.Textures);
-            queueableBinaryWriter.WritePointer(this.RenderStates);
-            queueableBinaryWriter.WritePointer(this.TextureStates);
-            queueableBinaryWriter.WritePointer(this.PsFragments);
-            queueableBinaryWriter.WritePointer(this.PsPermutations);
-            queueableBinaryWriter.WritePointer(this.PsCombiners);
-            queueableBinaryWriter.WritePointer(this.Externs);
-            queueableBinaryWriter.WritePointer(this.Constants);
-            queueableBinaryWriter.WritePointer(this.ConstantInfo);
-            queueableBinaryWriter.WritePointer(this.OldImplementations);
+            base.Write(writer);
+            writer.WritePointer(this.Implementations);
+            writer.WritePointer(this.Textures);
+            writer.WritePointer(this.RenderStates);
+            writer.WritePointer(this.TextureStates);
+            writer.WritePointer(this.PsFragments);
+            writer.WritePointer(this.PsPermutations);
+            writer.WritePointer(this.PsCombiners);
+            writer.WritePointer(this.Externs);
+            writer.WritePointer(this.Constants);
+            writer.WritePointer(this.ConstantInfo);
+            writer.WritePointer(this.OldImplementations);
         }
     }
 }

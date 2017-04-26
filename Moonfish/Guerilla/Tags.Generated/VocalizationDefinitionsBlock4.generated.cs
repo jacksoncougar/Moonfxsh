@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -100,42 +101,42 @@ namespace Moonfish.Guerilla.Tags
             this.Reponses = base.ReadBlockArrayData<ResponseBlock>(binaryReader, pointerQueue.Dequeue());
             this.Children = base.ReadBlockArrayData<VocalizationDefinitionsBlock5>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Reponses);
-            queueableBinaryWriter.Defer(this.Children);
+            base.DeferReferences(writer);
+            writer.Defer(this.Reponses);
+            writer.Defer(this.Children);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Vocalization);
-            queueableBinaryWriter.Write(this.ParentVocalization);
-            queueableBinaryWriter.Write(this.ParentIndex);
-            queueableBinaryWriter.Write(((short)(this.Priority)));
-            queueableBinaryWriter.Write(((int)(this.VocalizationDefinitions4Flags)));
-            queueableBinaryWriter.Write(((short)(this.GlanceBehavior)));
-            queueableBinaryWriter.Write(((short)(this.GlanceRecipientBehavior)));
-            queueableBinaryWriter.Write(((short)(this.PerceptionType)));
-            queueableBinaryWriter.Write(((short)(this.MaxCombatStatus)));
-            queueableBinaryWriter.Write(((short)(this.AnimationImpulse)));
-            queueableBinaryWriter.Write(((short)(this.OverlapPriority)));
-            queueableBinaryWriter.Write(this.SoundRepetitionDelay);
-            queueableBinaryWriter.Write(this.AllowableQueueDelay);
-            queueableBinaryWriter.Write(this.PreVocDelay);
-            queueableBinaryWriter.Write(this.NotificationDelay);
-            queueableBinaryWriter.Write(this.PostVocDelay);
-            queueableBinaryWriter.Write(this.RepeatDelay);
-            queueableBinaryWriter.Write(this.Weight);
-            queueableBinaryWriter.Write(this.SpeakerFreezeTime);
-            queueableBinaryWriter.Write(this.ListenerFreezeTime);
-            queueableBinaryWriter.Write(((short)(this.SpeakerEmotion)));
-            queueableBinaryWriter.Write(((short)(this.ListenerEmotion)));
-            queueableBinaryWriter.Write(this.PlayerSkipFraction);
-            queueableBinaryWriter.Write(this.SkipFraction);
-            queueableBinaryWriter.Write(this.SampleLine);
-            queueableBinaryWriter.WritePointer(this.Reponses);
-            queueableBinaryWriter.WritePointer(this.Children);
+            base.Write(writer);
+            writer.Write(this.Vocalization);
+            writer.Write(this.ParentVocalization);
+            writer.Write(this.ParentIndex);
+            writer.Write(((short)(this.Priority)));
+            writer.Write(((int)(this.VocalizationDefinitions4Flags)));
+            writer.Write(((short)(this.GlanceBehavior)));
+            writer.Write(((short)(this.GlanceRecipientBehavior)));
+            writer.Write(((short)(this.PerceptionType)));
+            writer.Write(((short)(this.MaxCombatStatus)));
+            writer.Write(((short)(this.AnimationImpulse)));
+            writer.Write(((short)(this.OverlapPriority)));
+            writer.Write(this.SoundRepetitionDelay);
+            writer.Write(this.AllowableQueueDelay);
+            writer.Write(this.PreVocDelay);
+            writer.Write(this.NotificationDelay);
+            writer.Write(this.PostVocDelay);
+            writer.Write(this.RepeatDelay);
+            writer.Write(this.Weight);
+            writer.Write(this.SpeakerFreezeTime);
+            writer.Write(this.ListenerFreezeTime);
+            writer.Write(((short)(this.SpeakerEmotion)));
+            writer.Write(((short)(this.ListenerEmotion)));
+            writer.Write(this.PlayerSkipFraction);
+            writer.Write(this.SkipFraction);
+            writer.Write(this.SampleLine);
+            writer.WritePointer(this.Reponses);
+            writer.WritePointer(this.Children);
         }
         public enum PriorityEnum : short
         {

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -22,7 +23,7 @@ namespace Moonfish.Guerilla.Tags
     public partial class ShaderTemplateParameterBlock : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Tags.StringIdent Name;
-        public byte[] Explanation;
+        private byte[] Explanation;
         public TypeEnum Type;
         public Flags ShaderTemplateParameterFlags;
         [Moonfish.Tags.TagReferenceAttribute("bitm")]
@@ -70,26 +71,26 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Explanation = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Explanation);
+            base.DeferReferences(writer);
+            writer.Defer(this.Explanation);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.WritePointer(this.Explanation);
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(((short)(this.ShaderTemplateParameterFlags)));
-            queueableBinaryWriter.Write(this.DefaultBitmap);
-            queueableBinaryWriter.Write(this.DefaultConstValue);
-            queueableBinaryWriter.Write(this.DefaultConstColor);
-            queueableBinaryWriter.Write(((short)(this.BitmapType)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.ShaderTemplateParameterBitmapAnimationFlags)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.BitmapScale);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.WritePointer(this.Explanation);
+            writer.Write(((short)(this.Type)));
+            writer.Write(((short)(this.ShaderTemplateParameterFlags)));
+            writer.Write(this.DefaultBitmap);
+            writer.Write(this.DefaultConstValue);
+            writer.Write(this.DefaultConstColor);
+            writer.Write(((short)(this.BitmapType)));
+            writer.Write(this.fieldpad);
+            writer.Write(((short)(this.ShaderTemplateParameterBitmapAnimationFlags)));
+            writer.Write(this.fieldpad0);
+            writer.Write(this.BitmapScale);
         }
         public enum TypeEnum : short
         {

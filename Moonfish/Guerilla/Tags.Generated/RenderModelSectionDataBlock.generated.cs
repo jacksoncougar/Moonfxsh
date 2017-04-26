@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -55,20 +56,22 @@ namespace Moonfish.Guerilla.Tags
             this.PointData.ReadInstances(binaryReader, pointerQueue);
             this.NodeMap = base.ReadBlockArrayData<RenderModelNodeMapBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.Section.DeferReferences(queueableBinaryWriter);
-            this.PointData.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.NodeMap);
+            base.DeferReferences(writer);
+            this.Section.DeferReferences(writer);
+            this.Section.DeferReferences(writer);
+            this.PointData.DeferReferences(writer);
+            this.PointData.DeferReferences(writer);
+            writer.Defer(this.NodeMap);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            this.Section.Write(queueableBinaryWriter);
-            this.PointData.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.NodeMap);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write(writer);
+            this.Section.Write(writer);
+            this.PointData.Write(writer);
+            writer.WritePointer(this.NodeMap);
+            writer.Write(this.fieldpad);
         }
     }
 }

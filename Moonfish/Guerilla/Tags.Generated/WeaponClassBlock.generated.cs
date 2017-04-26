@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -52,18 +53,18 @@ namespace Moonfish.Guerilla.Tags
             this.WeaponTypeAABBCC = base.ReadBlockArrayData<WeaponTypeBlock>(binaryReader, pointerQueue.Dequeue());
             this.WeaponIkAABBCC = base.ReadBlockArrayData<AnimationIkBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.WeaponTypeAABBCC);
-            queueableBinaryWriter.Defer(this.WeaponIkAABBCC);
+            base.DeferReferences(writer);
+            writer.Defer(this.WeaponTypeAABBCC);
+            writer.Defer(this.WeaponIkAABBCC);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Label);
-            queueableBinaryWriter.WritePointer(this.WeaponTypeAABBCC);
-            queueableBinaryWriter.WritePointer(this.WeaponIkAABBCC);
+            base.Write(writer);
+            writer.Write(this.Label);
+            writer.WritePointer(this.WeaponTypeAABBCC);
+            writer.WritePointer(this.WeaponIkAABBCC);
         }
     }
 }

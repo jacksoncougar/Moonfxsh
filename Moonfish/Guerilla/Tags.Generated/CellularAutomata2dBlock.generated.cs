@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -103,42 +104,42 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Rules = base.ReadBlockArrayData<RulesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Rules);
+            base.DeferReferences(writer);
+            writer.Defer(this.Rules);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.UpdatesPerSecond);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.DeadCellPenalty);
-            queueableBinaryWriter.Write(this.LiveCellBonus);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.Width);
-            queueableBinaryWriter.Write(this.Height);
-            queueableBinaryWriter.Write(this.CellWidth);
-            queueableBinaryWriter.Write(this.Height0);
-            queueableBinaryWriter.Write(this.Velocity);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.Marker);
-            queueableBinaryWriter.Write(((int)(this.CellularAutomata2dInterpolationFlags)));
-            queueableBinaryWriter.Write(this.BaseColor);
-            queueableBinaryWriter.Write(this.PeakColor);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.Width0);
-            queueableBinaryWriter.Write(this.Height1);
-            queueableBinaryWriter.Write(this.CellWidth0);
-            queueableBinaryWriter.Write(this.Velocity0);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.Marker0);
-            queueableBinaryWriter.Write(this.TextureWidth);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(this.Texture);
-            queueableBinaryWriter.Write(this.fieldpad6);
-            queueableBinaryWriter.WritePointer(this.Rules);
+            base.Write(writer);
+            writer.Write(this.UpdatesPerSecond);
+            writer.Write(this.fieldpad);
+            writer.Write(this.DeadCellPenalty);
+            writer.Write(this.LiveCellBonus);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.Width);
+            writer.Write(this.Height);
+            writer.Write(this.CellWidth);
+            writer.Write(this.Height0);
+            writer.Write(this.Velocity);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.Marker);
+            writer.Write(((int)(this.CellularAutomata2dInterpolationFlags)));
+            writer.Write(this.BaseColor);
+            writer.Write(this.PeakColor);
+            writer.Write(this.fieldpad2);
+            writer.Write(this.Width0);
+            writer.Write(this.Height1);
+            writer.Write(this.CellWidth0);
+            writer.Write(this.Velocity0);
+            writer.Write(this.fieldpad3);
+            writer.Write(this.Marker0);
+            writer.Write(this.TextureWidth);
+            writer.Write(this.fieldpad4);
+            writer.Write(this.fieldpad5);
+            writer.Write(this.Texture);
+            writer.Write(this.fieldpad6);
+            writer.WritePointer(this.Rules);
         }
         [System.FlagsAttribute()]
         public enum InterpolationFlags : int

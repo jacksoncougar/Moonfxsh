@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -77,29 +78,29 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Priority);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.RoomIntensity);
-            queueableBinaryWriter.Write(this.RoomIntensityHf);
-            queueableBinaryWriter.Write(this.RoomRolloff);
-            queueableBinaryWriter.Write(this.DecayTime);
-            queueableBinaryWriter.Write(this.DecayHfRatio);
-            queueableBinaryWriter.Write(this.ReflectionsIntensity);
-            queueableBinaryWriter.Write(this.ReflectionsDelay);
-            queueableBinaryWriter.Write(this.ReverbIntensity);
-            queueableBinaryWriter.Write(this.ReverbDelay);
-            queueableBinaryWriter.Write(this.Diffusion);
-            queueableBinaryWriter.Write(this.Density);
-            queueableBinaryWriter.Write(this.HfReference);
-            queueableBinaryWriter.Write(this.fieldpad1);
+            base.Write(writer);
+            writer.Write(this.fieldpad);
+            writer.Write(this.Priority);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.RoomIntensity);
+            writer.Write(this.RoomIntensityHf);
+            writer.Write(this.RoomRolloff);
+            writer.Write(this.DecayTime);
+            writer.Write(this.DecayHfRatio);
+            writer.Write(this.ReflectionsIntensity);
+            writer.Write(this.ReflectionsDelay);
+            writer.Write(this.ReverbIntensity);
+            writer.Write(this.ReverbDelay);
+            writer.Write(this.Diffusion);
+            writer.Write(this.Density);
+            writer.Write(this.HfReference);
+            writer.Write(this.fieldpad1);
         }
     }
 }

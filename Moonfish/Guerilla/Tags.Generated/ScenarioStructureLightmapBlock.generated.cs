@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -116,34 +117,34 @@ namespace Moonfish.Guerilla.Tags
             this.LightmapGroups = base.ReadBlockArrayData<StructureLightmapGroupBlock>(binaryReader, pointerQueue.Dequeue());
             this.Errors = base.ReadBlockArrayData<GlobalErrorReportCategoriesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.LightmapGroups);
-            queueableBinaryWriter.Defer(this.Errors);
+            base.DeferReferences(writer);
+            writer.Defer(this.LightmapGroups);
+            writer.Defer(this.Errors);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.SearchDistanceLowerBound);
-            queueableBinaryWriter.Write(this.SearchDistanceUpperBound);
-            queueableBinaryWriter.Write(this.LuminelsPerWorldUnit);
-            queueableBinaryWriter.Write(this.OutputWhiteReference);
-            queueableBinaryWriter.Write(this.OutputBlackReference);
-            queueableBinaryWriter.Write(this.OutputSchlickParameter);
-            queueableBinaryWriter.Write(this.DiffuseMapScale);
-            queueableBinaryWriter.Write(this.SunScale);
-            queueableBinaryWriter.Write(this.SkyScale);
-            queueableBinaryWriter.Write(this.IndirectScale);
-            queueableBinaryWriter.Write(this.PrtScale);
-            queueableBinaryWriter.Write(this.SurfaceLightScale);
-            queueableBinaryWriter.Write(this.ScenarioLightScale);
-            queueableBinaryWriter.Write(this.LightprobeInterpolationOveride);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.LightmapGroups);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.WritePointer(this.Errors);
-            queueableBinaryWriter.Write(this.fieldpad1);
+            base.Write(writer);
+            writer.Write(this.SearchDistanceLowerBound);
+            writer.Write(this.SearchDistanceUpperBound);
+            writer.Write(this.LuminelsPerWorldUnit);
+            writer.Write(this.OutputWhiteReference);
+            writer.Write(this.OutputBlackReference);
+            writer.Write(this.OutputSchlickParameter);
+            writer.Write(this.DiffuseMapScale);
+            writer.Write(this.SunScale);
+            writer.Write(this.SkyScale);
+            writer.Write(this.IndirectScale);
+            writer.Write(this.PrtScale);
+            writer.Write(this.SurfaceLightScale);
+            writer.Write(this.ScenarioLightScale);
+            writer.Write(this.LightprobeInterpolationOveride);
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.LightmapGroups);
+            writer.Write(this.fieldpad0);
+            writer.WritePointer(this.Errors);
+            writer.Write(this.fieldpad1);
         }
     }
 }

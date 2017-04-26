@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -66,23 +67,23 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Vertices = base.ReadBlockArrayData<AntennaVertexBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Vertices);
+            base.DeferReferences(writer);
+            writer.Defer(this.Vertices);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.AttachmentMarkerName);
-            queueableBinaryWriter.Write(this.Bitmaps);
-            queueableBinaryWriter.Write(this.Physics);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.SpringStrengthCoefficient);
-            queueableBinaryWriter.Write(this.FalloffPixels);
-            queueableBinaryWriter.Write(this.CutoffPixels);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.WritePointer(this.Vertices);
+            base.Write(writer);
+            writer.Write(this.AttachmentMarkerName);
+            writer.Write(this.Bitmaps);
+            writer.Write(this.Physics);
+            writer.Write(this.fieldpad);
+            writer.Write(this.SpringStrengthCoefficient);
+            writer.Write(this.FalloffPixels);
+            writer.Write(this.CutoffPixels);
+            writer.Write(this.fieldpad0);
+            writer.WritePointer(this.Vertices);
         }
     }
 }

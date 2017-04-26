@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -59,23 +60,28 @@ namespace Moonfish.Guerilla.Tags
             this.PixelConstants.ReadInstances(binaryReader, pointerQueue);
             this.VertexConstants.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.BitmapTransforms.DeferReferences(queueableBinaryWriter);
-            this.RenderStates.DeferReferences(queueableBinaryWriter);
-            this.TextureStates.DeferReferences(queueableBinaryWriter);
-            this.PixelConstants.DeferReferences(queueableBinaryWriter);
-            this.VertexConstants.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.BitmapTransforms.DeferReferences(writer);
+            this.BitmapTransforms.DeferReferences(writer);
+            this.RenderStates.DeferReferences(writer);
+            this.RenderStates.DeferReferences(writer);
+            this.TextureStates.DeferReferences(writer);
+            this.TextureStates.DeferReferences(writer);
+            this.PixelConstants.DeferReferences(writer);
+            this.PixelConstants.DeferReferences(writer);
+            this.VertexConstants.DeferReferences(writer);
+            this.VertexConstants.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            this.BitmapTransforms.Write(queueableBinaryWriter);
-            this.RenderStates.Write(queueableBinaryWriter);
-            this.TextureStates.Write(queueableBinaryWriter);
-            this.PixelConstants.Write(queueableBinaryWriter);
-            this.VertexConstants.Write(queueableBinaryWriter);
+            base.Write(writer);
+            this.BitmapTransforms.Write(writer);
+            this.RenderStates.Write(writer);
+            this.TextureStates.Write(writer);
+            this.PixelConstants.Write(writer);
+            this.VertexConstants.Write(writer);
         }
     }
 }

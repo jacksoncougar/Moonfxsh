@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -53,17 +54,17 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.PathfindingPolicy)));
-            queueableBinaryWriter.Write(((short)(this.ScenerySceneryFlags)));
-            queueableBinaryWriter.Write(((short)(this.LightmappingPolicy)));
-            queueableBinaryWriter.Write(this.fieldpad3);
+            base.Write(writer);
+            writer.Write(((short)(this.PathfindingPolicy)));
+            writer.Write(((short)(this.ScenerySceneryFlags)));
+            writer.Write(((short)(this.LightmappingPolicy)));
+            writer.Write(this.fieldpad3);
         }
         /// <summary>
         /// Indicate whether, by default, we should create pathfinding data for this type of scenery

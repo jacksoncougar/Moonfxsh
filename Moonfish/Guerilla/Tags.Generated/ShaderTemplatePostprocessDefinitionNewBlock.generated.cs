@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -59,23 +60,23 @@ namespace Moonfish.Guerilla.Tags
             this.Implementations = base.ReadBlockArrayData<ShaderTemplatePostprocessImplementationNewBlock>(binaryReader, pointerQueue.Dequeue());
             this.Remappings = base.ReadBlockArrayData<ShaderTemplatePostprocessRemappingNewBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.LevelsOfDetail);
-            queueableBinaryWriter.Defer(this.Layers);
-            queueableBinaryWriter.Defer(this.Passes);
-            queueableBinaryWriter.Defer(this.Implementations);
-            queueableBinaryWriter.Defer(this.Remappings);
+            base.DeferReferences(writer);
+            writer.Defer(this.LevelsOfDetail);
+            writer.Defer(this.Layers);
+            writer.Defer(this.Passes);
+            writer.Defer(this.Implementations);
+            writer.Defer(this.Remappings);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.LevelsOfDetail);
-            queueableBinaryWriter.WritePointer(this.Layers);
-            queueableBinaryWriter.WritePointer(this.Passes);
-            queueableBinaryWriter.WritePointer(this.Implementations);
-            queueableBinaryWriter.WritePointer(this.Remappings);
+            base.Write(writer);
+            writer.WritePointer(this.LevelsOfDetail);
+            writer.WritePointer(this.Layers);
+            writer.WritePointer(this.Passes);
+            writer.WritePointer(this.Implementations);
+            writer.WritePointer(this.Remappings);
         }
     }
 }

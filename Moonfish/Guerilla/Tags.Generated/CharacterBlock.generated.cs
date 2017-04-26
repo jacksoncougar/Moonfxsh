@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -134,67 +135,67 @@ namespace Moonfish.Guerilla.Tags
             this.GrenadesProperties = base.ReadBlockArrayData<CharacterGrenadesBlock>(binaryReader, pointerQueue.Dequeue());
             this.VehicleProperties = base.ReadBlockArrayData<CharacterVehicleBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Variants);
-            queueableBinaryWriter.Defer(this.GeneralProperties);
-            queueableBinaryWriter.Defer(this.VitalityProperties);
-            queueableBinaryWriter.Defer(this.PlacementProperties);
-            queueableBinaryWriter.Defer(this.PerceptionProperties);
-            queueableBinaryWriter.Defer(this.LookProperties);
-            queueableBinaryWriter.Defer(this.MovementProperties);
-            queueableBinaryWriter.Defer(this.SwarmProperties);
-            queueableBinaryWriter.Defer(this.ReadyProperties);
-            queueableBinaryWriter.Defer(this.EngageProperties);
-            queueableBinaryWriter.Defer(this.ChargeProperties);
-            queueableBinaryWriter.Defer(this.EvasionProperties);
-            queueableBinaryWriter.Defer(this.CoverProperties);
-            queueableBinaryWriter.Defer(this.RetreatProperties);
-            queueableBinaryWriter.Defer(this.SearchProperties);
-            queueableBinaryWriter.Defer(this.PresearchProperties);
-            queueableBinaryWriter.Defer(this.IdleProperties);
-            queueableBinaryWriter.Defer(this.VocalizationProperties);
-            queueableBinaryWriter.Defer(this.BoardingProperties);
-            queueableBinaryWriter.Defer(this.BossProperties);
-            queueableBinaryWriter.Defer(this.WeaponsProperties);
-            queueableBinaryWriter.Defer(this.FiringPatternProperties);
-            queueableBinaryWriter.Defer(this.GrenadesProperties);
-            queueableBinaryWriter.Defer(this.VehicleProperties);
+            base.DeferReferences(writer);
+            writer.Defer(this.Variants);
+            writer.Defer(this.GeneralProperties);
+            writer.Defer(this.VitalityProperties);
+            writer.Defer(this.PlacementProperties);
+            writer.Defer(this.PerceptionProperties);
+            writer.Defer(this.LookProperties);
+            writer.Defer(this.MovementProperties);
+            writer.Defer(this.SwarmProperties);
+            writer.Defer(this.ReadyProperties);
+            writer.Defer(this.EngageProperties);
+            writer.Defer(this.ChargeProperties);
+            writer.Defer(this.EvasionProperties);
+            writer.Defer(this.CoverProperties);
+            writer.Defer(this.RetreatProperties);
+            writer.Defer(this.SearchProperties);
+            writer.Defer(this.PresearchProperties);
+            writer.Defer(this.IdleProperties);
+            writer.Defer(this.VocalizationProperties);
+            writer.Defer(this.BoardingProperties);
+            writer.Defer(this.BossProperties);
+            writer.Defer(this.WeaponsProperties);
+            writer.Defer(this.FiringPatternProperties);
+            writer.Defer(this.GrenadesProperties);
+            writer.Defer(this.VehicleProperties);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.CharacterCharacterFlags)));
-            queueableBinaryWriter.Write(this.ParentCharacter);
-            queueableBinaryWriter.Write(this.Unit);
-            queueableBinaryWriter.Write(this.Creature);
-            queueableBinaryWriter.Write(this.Style);
-            queueableBinaryWriter.Write(this.MajorCharacter);
-            queueableBinaryWriter.WritePointer(this.Variants);
-            queueableBinaryWriter.WritePointer(this.GeneralProperties);
-            queueableBinaryWriter.WritePointer(this.VitalityProperties);
-            queueableBinaryWriter.WritePointer(this.PlacementProperties);
-            queueableBinaryWriter.WritePointer(this.PerceptionProperties);
-            queueableBinaryWriter.WritePointer(this.LookProperties);
-            queueableBinaryWriter.WritePointer(this.MovementProperties);
-            queueableBinaryWriter.WritePointer(this.SwarmProperties);
-            queueableBinaryWriter.WritePointer(this.ReadyProperties);
-            queueableBinaryWriter.WritePointer(this.EngageProperties);
-            queueableBinaryWriter.WritePointer(this.ChargeProperties);
-            queueableBinaryWriter.WritePointer(this.EvasionProperties);
-            queueableBinaryWriter.WritePointer(this.CoverProperties);
-            queueableBinaryWriter.WritePointer(this.RetreatProperties);
-            queueableBinaryWriter.WritePointer(this.SearchProperties);
-            queueableBinaryWriter.WritePointer(this.PresearchProperties);
-            queueableBinaryWriter.WritePointer(this.IdleProperties);
-            queueableBinaryWriter.WritePointer(this.VocalizationProperties);
-            queueableBinaryWriter.WritePointer(this.BoardingProperties);
-            queueableBinaryWriter.WritePointer(this.BossProperties);
-            queueableBinaryWriter.WritePointer(this.WeaponsProperties);
-            queueableBinaryWriter.WritePointer(this.FiringPatternProperties);
-            queueableBinaryWriter.WritePointer(this.GrenadesProperties);
-            queueableBinaryWriter.WritePointer(this.VehicleProperties);
+            base.Write(writer);
+            writer.Write(((int)(this.CharacterCharacterFlags)));
+            writer.Write(this.ParentCharacter);
+            writer.Write(this.Unit);
+            writer.Write(this.Creature);
+            writer.Write(this.Style);
+            writer.Write(this.MajorCharacter);
+            writer.WritePointer(this.Variants);
+            writer.WritePointer(this.GeneralProperties);
+            writer.WritePointer(this.VitalityProperties);
+            writer.WritePointer(this.PlacementProperties);
+            writer.WritePointer(this.PerceptionProperties);
+            writer.WritePointer(this.LookProperties);
+            writer.WritePointer(this.MovementProperties);
+            writer.WritePointer(this.SwarmProperties);
+            writer.WritePointer(this.ReadyProperties);
+            writer.WritePointer(this.EngageProperties);
+            writer.WritePointer(this.ChargeProperties);
+            writer.WritePointer(this.EvasionProperties);
+            writer.WritePointer(this.CoverProperties);
+            writer.WritePointer(this.RetreatProperties);
+            writer.WritePointer(this.SearchProperties);
+            writer.WritePointer(this.PresearchProperties);
+            writer.WritePointer(this.IdleProperties);
+            writer.WritePointer(this.VocalizationProperties);
+            writer.WritePointer(this.BoardingProperties);
+            writer.WritePointer(this.BossProperties);
+            writer.WritePointer(this.WeaponsProperties);
+            writer.WritePointer(this.FiringPatternProperties);
+            writer.WritePointer(this.GrenadesProperties);
+            writer.WritePointer(this.VehicleProperties);
         }
         [System.FlagsAttribute()]
         public enum CharacterFlags : int

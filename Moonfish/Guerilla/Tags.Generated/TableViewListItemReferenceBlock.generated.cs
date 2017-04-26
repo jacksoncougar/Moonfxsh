@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -61,21 +62,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.TableViewListItemReferenceTextFlags)));
-            queueableBinaryWriter.Write(this.CellWidth);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.BitmapTopleft);
-            queueableBinaryWriter.Write(this.BitmapTag);
-            queueableBinaryWriter.Write(this.StringId);
-            queueableBinaryWriter.Write(this.RenderDepthBias);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write(writer);
+            writer.Write(((int)(this.TableViewListItemReferenceTextFlags)));
+            writer.Write(this.CellWidth);
+            writer.Write(this.fieldpad);
+            writer.Write(this.BitmapTopleft);
+            writer.Write(this.BitmapTag);
+            writer.Write(this.StringId);
+            writer.Write(this.RenderDepthBias);
+            writer.Write(this.fieldpad0);
         }
         [System.FlagsAttribute()]
         public enum TextFlags : int

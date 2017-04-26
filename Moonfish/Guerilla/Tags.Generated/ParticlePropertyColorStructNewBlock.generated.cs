@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -55,19 +56,20 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Mapping.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.Mapping.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.Mapping.DeferReferences(writer);
+            this.Mapping.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.InputVariable)));
-            queueableBinaryWriter.Write(((short)(this.RangeVariable)));
-            queueableBinaryWriter.Write(((short)(this.OutputModifier)));
-            queueableBinaryWriter.Write(((short)(this.OutputModifierInput)));
-            this.Mapping.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(((short)(this.InputVariable)));
+            writer.Write(((short)(this.RangeVariable)));
+            writer.Write(((short)(this.OutputModifier)));
+            writer.Write(((short)(this.OutputModifierInput)));
+            this.Mapping.Write(writer);
         }
         public enum InputVariableEnum : short
         {

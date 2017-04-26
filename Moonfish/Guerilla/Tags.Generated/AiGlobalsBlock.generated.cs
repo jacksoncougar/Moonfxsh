@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -128,55 +129,55 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.GravemindProperties = base.ReadBlockArrayData<AiGlobalsGravemindBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.GravemindProperties);
+            base.DeferReferences(writer);
+            writer.Defer(this.GravemindProperties);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DangerBroadlyFacing);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.DangerShootingNear);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.DangerShootingAt);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.DangerExtremelyClose);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.DangerShieldDamage);
-            queueableBinaryWriter.Write(this.DangerExetendedShieldDamage);
-            queueableBinaryWriter.Write(this.DangerBodyDamage);
-            queueableBinaryWriter.Write(this.DangerExtendedBodyDamage);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.GlobalDialogueTag);
-            queueableBinaryWriter.Write(this.DefaultMissionDialogueSoundEffect);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.JumpDown);
-            queueableBinaryWriter.Write(this.JumpStep);
-            queueableBinaryWriter.Write(this.JumpCrouch);
-            queueableBinaryWriter.Write(this.JumpStand);
-            queueableBinaryWriter.Write(this.JumpStorey);
-            queueableBinaryWriter.Write(this.JumpTower);
-            queueableBinaryWriter.Write(this.MaxJumpDownHeightDown);
-            queueableBinaryWriter.Write(this.MaxJumpDownHeightStep);
-            queueableBinaryWriter.Write(this.MaxJumpDownHeightCrouch);
-            queueableBinaryWriter.Write(this.MaxJumpDownHeightStand);
-            queueableBinaryWriter.Write(this.MaxJumpDownHeightStorey);
-            queueableBinaryWriter.Write(this.MaxJumpDownHeightTower);
-            queueableBinaryWriter.Write(this.HoistStep);
-            queueableBinaryWriter.Write(this.HoistCrouch);
-            queueableBinaryWriter.Write(this.HoistStand);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(this.VaultStep);
-            queueableBinaryWriter.Write(this.VaultCrouch);
-            queueableBinaryWriter.Write(this.fieldpad6);
-            queueableBinaryWriter.WritePointer(this.GravemindProperties);
-            queueableBinaryWriter.Write(this.fieldpad7);
-            queueableBinaryWriter.Write(this.ScaryTargetThrehold);
-            queueableBinaryWriter.Write(this.ScaryWeaponThrehold);
-            queueableBinaryWriter.Write(this.PlayerScariness);
-            queueableBinaryWriter.Write(this.BerserkingActorScariness);
+            base.Write(writer);
+            writer.Write(this.DangerBroadlyFacing);
+            writer.Write(this.fieldpad);
+            writer.Write(this.DangerShootingNear);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.DangerShootingAt);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.DangerExtremelyClose);
+            writer.Write(this.fieldpad2);
+            writer.Write(this.DangerShieldDamage);
+            writer.Write(this.DangerExetendedShieldDamage);
+            writer.Write(this.DangerBodyDamage);
+            writer.Write(this.DangerExtendedBodyDamage);
+            writer.Write(this.fieldpad3);
+            writer.Write(this.GlobalDialogueTag);
+            writer.Write(this.DefaultMissionDialogueSoundEffect);
+            writer.Write(this.fieldpad4);
+            writer.Write(this.JumpDown);
+            writer.Write(this.JumpStep);
+            writer.Write(this.JumpCrouch);
+            writer.Write(this.JumpStand);
+            writer.Write(this.JumpStorey);
+            writer.Write(this.JumpTower);
+            writer.Write(this.MaxJumpDownHeightDown);
+            writer.Write(this.MaxJumpDownHeightStep);
+            writer.Write(this.MaxJumpDownHeightCrouch);
+            writer.Write(this.MaxJumpDownHeightStand);
+            writer.Write(this.MaxJumpDownHeightStorey);
+            writer.Write(this.MaxJumpDownHeightTower);
+            writer.Write(this.HoistStep);
+            writer.Write(this.HoistCrouch);
+            writer.Write(this.HoistStand);
+            writer.Write(this.fieldpad5);
+            writer.Write(this.VaultStep);
+            writer.Write(this.VaultCrouch);
+            writer.Write(this.fieldpad6);
+            writer.WritePointer(this.GravemindProperties);
+            writer.Write(this.fieldpad7);
+            writer.Write(this.ScaryTargetThrehold);
+            writer.Write(this.ScaryWeaponThrehold);
+            writer.Write(this.PlayerScariness);
+            writer.Write(this.BerserkingActorScariness);
         }
     }
 }

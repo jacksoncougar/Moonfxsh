@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -26,11 +27,12 @@ namespace Moonfish.Guerilla.Tags
         public OpenTK.Vector3 Axis;
         public OpenTK.Vector2 Texcoord;
         public Moonfish.Tags.ColourR1G1B1 Color;
+        private byte[] rgb8padding = new byte[1];
         public override int SerializedSize
         {
             get
             {
-                return 47;
+                return 48;
             }
         }
         public override int Alignment
@@ -48,24 +50,26 @@ namespace Moonfish.Guerilla.Tags
             this.Axis = binaryReader.ReadVector3();
             this.Texcoord = binaryReader.ReadVector2();
             this.Color = binaryReader.ReadColourR1G1B1();
+            this.rgb8padding = binaryReader.ReadBytes(1);
             return pointerQueue;
         }
         public override void ReadInstances(Moonfish.Guerilla.BlamBinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Position);
-            queueableBinaryWriter.Write(this.Offset);
-            queueableBinaryWriter.Write(this.Axis);
-            queueableBinaryWriter.Write(this.Texcoord);
-            queueableBinaryWriter.Write(this.Color);
+            base.Write(writer);
+            writer.Write(this.Position);
+            writer.Write(this.Offset);
+            writer.Write(this.Axis);
+            writer.Write(this.Texcoord);
+            writer.Write(this.Color);
+            writer.Write(this.rgb8padding);
         }
     }
 }

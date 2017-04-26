@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -63,21 +64,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.ColonyFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.Radius);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.DebugColor);
-            queueableBinaryWriter.Write(this.BaseMap);
-            queueableBinaryWriter.Write(this.DetailMap);
+            base.Write(writer);
+            writer.Write(((short)(this.ColonyFlags)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.Radius);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.DebugColor);
+            writer.Write(this.BaseMap);
+            writer.Write(this.DetailMap);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

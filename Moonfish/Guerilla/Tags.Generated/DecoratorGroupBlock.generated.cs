@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -70,26 +71,26 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DecoratorSet);
-            queueableBinaryWriter.Write(((byte)(this.DecoratorType)));
-            queueableBinaryWriter.Write(this.ShaderIndex);
-            queueableBinaryWriter.Write(this.CompressedRadius);
-            queueableBinaryWriter.Write(this.Cluster);
-            queueableBinaryWriter.Write(this.CacheBlock);
-            queueableBinaryWriter.Write(this.DecoratorStartIndex);
-            queueableBinaryWriter.Write(this.DecoratorCount);
-            queueableBinaryWriter.Write(this.VertexStartOffset);
-            queueableBinaryWriter.Write(this.VertexCount);
-            queueableBinaryWriter.Write(this.IndexStartOffset);
-            queueableBinaryWriter.Write(this.IndexCount);
-            queueableBinaryWriter.Write(this.CompressedBoundingCenter);
+            base.Write(writer);
+            writer.Write(this.DecoratorSet);
+            writer.Write(((byte)(this.DecoratorType)));
+            writer.Write(this.ShaderIndex);
+            writer.Write(this.CompressedRadius);
+            writer.Write(this.Cluster);
+            writer.Write(this.CacheBlock);
+            writer.Write(this.DecoratorStartIndex);
+            writer.Write(this.DecoratorCount);
+            writer.Write(this.VertexStartOffset);
+            writer.Write(this.VertexCount);
+            writer.Write(this.IndexStartOffset);
+            writer.Write(this.IndexCount);
+            writer.Write(this.CompressedBoundingCenter);
         }
         public enum DecoratorTypeEnum : byte
         {

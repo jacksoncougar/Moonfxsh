@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -78,33 +79,33 @@ namespace Moonfish.Guerilla.Tags
             this.HudBlocks = base.ReadBlockArrayData<HudBlockReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.PlayerBlocks = base.ReadBlockArrayData<PlayerBlockReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Buttons);
-            queueableBinaryWriter.Defer(this.ListBlock);
-            queueableBinaryWriter.Defer(this.TableView);
-            queueableBinaryWriter.Defer(this.TextBlocks);
-            queueableBinaryWriter.Defer(this.BitmapBlocks);
-            queueableBinaryWriter.Defer(this.ModelSceneBlocks);
-            queueableBinaryWriter.Defer(this.TextvalueBlocks);
-            queueableBinaryWriter.Defer(this.HudBlocks);
-            queueableBinaryWriter.Defer(this.PlayerBlocks);
+            base.DeferReferences(writer);
+            writer.Defer(this.Buttons);
+            writer.Defer(this.ListBlock);
+            writer.Defer(this.TableView);
+            writer.Defer(this.TextBlocks);
+            writer.Defer(this.BitmapBlocks);
+            writer.Defer(this.ModelSceneBlocks);
+            writer.Defer(this.TextvalueBlocks);
+            writer.Defer(this.HudBlocks);
+            writer.Defer(this.PlayerBlocks);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.AnimationIndex)));
-            queueableBinaryWriter.WritePointer(this.Buttons);
-            queueableBinaryWriter.WritePointer(this.ListBlock);
-            queueableBinaryWriter.WritePointer(this.TableView);
-            queueableBinaryWriter.WritePointer(this.TextBlocks);
-            queueableBinaryWriter.WritePointer(this.BitmapBlocks);
-            queueableBinaryWriter.WritePointer(this.ModelSceneBlocks);
-            queueableBinaryWriter.WritePointer(this.TextvalueBlocks);
-            queueableBinaryWriter.WritePointer(this.HudBlocks);
-            queueableBinaryWriter.WritePointer(this.PlayerBlocks);
+            base.Write(writer);
+            writer.Write(this.fieldpad);
+            writer.Write(((short)(this.AnimationIndex)));
+            writer.WritePointer(this.Buttons);
+            writer.WritePointer(this.ListBlock);
+            writer.WritePointer(this.TableView);
+            writer.WritePointer(this.TextBlocks);
+            writer.WritePointer(this.BitmapBlocks);
+            writer.WritePointer(this.ModelSceneBlocks);
+            writer.WritePointer(this.TextvalueBlocks);
+            writer.WritePointer(this.HudBlocks);
+            writer.WritePointer(this.PlayerBlocks);
         }
         public enum AnimationIndexEnum : short
         {

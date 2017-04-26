@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -57,18 +58,18 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.EvasionDangerThreshold);
-            queueableBinaryWriter.Write(this.EvasionDelayTimer);
-            queueableBinaryWriter.Write(this.EvasionChance);
-            queueableBinaryWriter.Write(this.EvasionProximityThreshold);
-            queueableBinaryWriter.Write(this.DiveRetreatChance);
+            base.Write(writer);
+            writer.Write(this.EvasionDangerThreshold);
+            writer.Write(this.EvasionDelayTimer);
+            writer.Write(this.EvasionChance);
+            writer.Write(this.EvasionProximityThreshold);
+            writer.Write(this.DiveRetreatChance);
         }
     }
 }

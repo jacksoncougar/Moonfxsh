@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -30,9 +31,9 @@ namespace Moonfish.Guerilla.Tags
         public byte DistributionWeight;
         public Moonfish.Model.Range Scale;
         public Moonfish.Tags.ColourR1G1B1 Tint1;
-        private byte[] fieldpad0 = new byte[1];
+        private byte[] rgb8padding = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 Tint2;
-        private byte[] fieldpad1 = new byte[1];
+        private byte[] rgb8padding0 = new byte[1];
         public float BaseMapTintPercentage;
         public float LightmapTintPercentage;
         public float WindScale;
@@ -62,9 +63,9 @@ namespace Moonfish.Guerilla.Tags
             this.DistributionWeight = binaryReader.ReadByte();
             this.Scale = binaryReader.ReadRange();
             this.Tint1 = binaryReader.ReadColourR1G1B1();
-            this.fieldpad0 = binaryReader.ReadBytes(1);
+            this.rgb8padding = binaryReader.ReadBytes(1);
             this.Tint2 = binaryReader.ReadColourR1G1B1();
-            this.fieldpad1 = binaryReader.ReadBytes(1);
+            this.rgb8padding0 = binaryReader.ReadBytes(1);
             this.BaseMapTintPercentage = binaryReader.ReadSingle();
             this.LightmapTintPercentage = binaryReader.ReadSingle();
             this.WindScale = binaryReader.ReadSingle();
@@ -74,28 +75,28 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.Shader);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((byte)(this.DecoratorPermutationsFlags)));
-            queueableBinaryWriter.Write(((byte)(this.FadeDistance)));
-            queueableBinaryWriter.Write(this.Index);
-            queueableBinaryWriter.Write(this.DistributionWeight);
-            queueableBinaryWriter.Write(this.Scale);
-            queueableBinaryWriter.Write(this.Tint1);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.Tint2);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.BaseMapTintPercentage);
-            queueableBinaryWriter.Write(this.LightmapTintPercentage);
-            queueableBinaryWriter.Write(this.WindScale);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.Shader);
+            writer.Write(this.fieldpad);
+            writer.Write(((byte)(this.DecoratorPermutationsFlags)));
+            writer.Write(((byte)(this.FadeDistance)));
+            writer.Write(this.Index);
+            writer.Write(this.DistributionWeight);
+            writer.Write(this.Scale);
+            writer.Write(this.Tint1);
+            writer.Write(this.rgb8padding);
+            writer.Write(this.Tint2);
+            writer.Write(this.rgb8padding0);
+            writer.Write(this.BaseMapTintPercentage);
+            writer.Write(this.LightmapTintPercentage);
+            writer.Write(this.WindScale);
         }
         [System.FlagsAttribute()]
         public enum Flags : byte

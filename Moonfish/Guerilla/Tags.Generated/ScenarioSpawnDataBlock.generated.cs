@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -64,23 +65,23 @@ namespace Moonfish.Guerilla.Tags
             this.StaticRespawnZones = base.ReadBlockArrayData<StaticSpawnZoneBlock>(binaryReader, pointerQueue.Dequeue());
             this.StaticInitialSpawnZones = base.ReadBlockArrayData<StaticSpawnZoneBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.DynamicSpawnOverloads);
-            queueableBinaryWriter.Defer(this.StaticRespawnZones);
-            queueableBinaryWriter.Defer(this.StaticInitialSpawnZones);
+            base.DeferReferences(writer);
+            writer.Defer(this.DynamicSpawnOverloads);
+            writer.Defer(this.StaticRespawnZones);
+            writer.Defer(this.StaticInitialSpawnZones);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DynamicSpawnLowerHeight);
-            queueableBinaryWriter.Write(this.DynamicSpawnUpperHeight);
-            queueableBinaryWriter.Write(this.GameObjectResetHeight);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.DynamicSpawnOverloads);
-            queueableBinaryWriter.WritePointer(this.StaticRespawnZones);
-            queueableBinaryWriter.WritePointer(this.StaticInitialSpawnZones);
+            base.Write(writer);
+            writer.Write(this.DynamicSpawnLowerHeight);
+            writer.Write(this.DynamicSpawnUpperHeight);
+            writer.Write(this.GameObjectResetHeight);
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.DynamicSpawnOverloads);
+            writer.WritePointer(this.StaticRespawnZones);
+            writer.WritePointer(this.StaticInitialSpawnZones);
         }
     }
 }

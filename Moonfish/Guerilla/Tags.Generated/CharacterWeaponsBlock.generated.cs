@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -123,49 +124,49 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.FiringPatterns = base.ReadBlockArrayData<CharacterFiringPatternBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.FiringPatterns);
+            base.DeferReferences(writer);
+            writer.Defer(this.FiringPatterns);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.CharacterWeaponsWeaponsFlags)));
-            queueableBinaryWriter.Write(this.Weapon);
-            queueableBinaryWriter.Write(this.MaximumFiringRange);
-            queueableBinaryWriter.Write(this.MinimumFiringRange);
-            queueableBinaryWriter.Write(this.NormalCombatRange);
-            queueableBinaryWriter.Write(this.BombardmentRange);
-            queueableBinaryWriter.Write(this.MaxSpecialTargetDistance);
-            queueableBinaryWriter.Write(this.TimidCombatRange);
-            queueableBinaryWriter.Write(this.AggressiveCombatRange);
-            queueableBinaryWriter.Write(this.SuperballisticRange);
-            queueableBinaryWriter.Write(this.BallisticFiringBounds);
-            queueableBinaryWriter.Write(this.BallisticFractionBounds);
-            queueableBinaryWriter.Write(this.FirstBurstDelayTime);
-            queueableBinaryWriter.Write(this.SurpriseDelayTime);
-            queueableBinaryWriter.Write(this.SurpriseFirewildlyTime);
-            queueableBinaryWriter.Write(this.DeathFirewildlyChance);
-            queueableBinaryWriter.Write(this.DeathFirewildlyTime);
-            queueableBinaryWriter.Write(this.CustomStandGunOffset);
-            queueableBinaryWriter.Write(this.CustomCrouchGunOffset);
-            queueableBinaryWriter.Write(((short)(this.SpecialfireMode)));
-            queueableBinaryWriter.Write(((short)(this.SpecialfireSituation)));
-            queueableBinaryWriter.Write(this.SpecialfireChance);
-            queueableBinaryWriter.Write(this.SpecialfireDelay);
-            queueableBinaryWriter.Write(this.SpecialDamageModifier);
-            queueableBinaryWriter.Write(this.SpecialProjectileError);
-            queueableBinaryWriter.Write(this.DropWeaponLoaded);
-            queueableBinaryWriter.Write(this.DropWeaponAmmo);
-            queueableBinaryWriter.Write(this.NormalAccuracyBounds);
-            queueableBinaryWriter.Write(this.NormalAccuracyTime);
-            queueableBinaryWriter.Write(this.HeroicAccuracyBounds);
-            queueableBinaryWriter.Write(this.HeroicAccuracyTime);
-            queueableBinaryWriter.Write(this.LegendaryAccuracyBounds);
-            queueableBinaryWriter.Write(this.LegendaryAccuracyTime);
-            queueableBinaryWriter.WritePointer(this.FiringPatterns);
-            queueableBinaryWriter.Write(this.WeaponMeleeDamage);
+            base.Write(writer);
+            writer.Write(((int)(this.CharacterWeaponsWeaponsFlags)));
+            writer.Write(this.Weapon);
+            writer.Write(this.MaximumFiringRange);
+            writer.Write(this.MinimumFiringRange);
+            writer.Write(this.NormalCombatRange);
+            writer.Write(this.BombardmentRange);
+            writer.Write(this.MaxSpecialTargetDistance);
+            writer.Write(this.TimidCombatRange);
+            writer.Write(this.AggressiveCombatRange);
+            writer.Write(this.SuperballisticRange);
+            writer.Write(this.BallisticFiringBounds);
+            writer.Write(this.BallisticFractionBounds);
+            writer.Write(this.FirstBurstDelayTime);
+            writer.Write(this.SurpriseDelayTime);
+            writer.Write(this.SurpriseFirewildlyTime);
+            writer.Write(this.DeathFirewildlyChance);
+            writer.Write(this.DeathFirewildlyTime);
+            writer.Write(this.CustomStandGunOffset);
+            writer.Write(this.CustomCrouchGunOffset);
+            writer.Write(((short)(this.SpecialfireMode)));
+            writer.Write(((short)(this.SpecialfireSituation)));
+            writer.Write(this.SpecialfireChance);
+            writer.Write(this.SpecialfireDelay);
+            writer.Write(this.SpecialDamageModifier);
+            writer.Write(this.SpecialProjectileError);
+            writer.Write(this.DropWeaponLoaded);
+            writer.Write(this.DropWeaponAmmo);
+            writer.Write(this.NormalAccuracyBounds);
+            writer.Write(this.NormalAccuracyTime);
+            writer.Write(this.HeroicAccuracyBounds);
+            writer.Write(this.HeroicAccuracyTime);
+            writer.Write(this.LegendaryAccuracyBounds);
+            writer.Write(this.LegendaryAccuracyTime);
+            writer.WritePointer(this.FiringPatterns);
+            writer.Write(this.WeaponMeleeDamage);
         }
         [System.FlagsAttribute()]
         public enum WeaponsFlags : int

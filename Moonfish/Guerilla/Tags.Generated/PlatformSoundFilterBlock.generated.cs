@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -60,23 +61,27 @@ namespace Moonfish.Guerilla.Tags
             this.RightFilterFrequency.ReadInstances(binaryReader, pointerQueue);
             this.RightFilterGain.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.LeftFilterFrequency.DeferReferences(queueableBinaryWriter);
-            this.LeftFilterGain.DeferReferences(queueableBinaryWriter);
-            this.RightFilterFrequency.DeferReferences(queueableBinaryWriter);
-            this.RightFilterGain.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.LeftFilterFrequency.DeferReferences(writer);
+            this.LeftFilterFrequency.DeferReferences(writer);
+            this.LeftFilterGain.DeferReferences(writer);
+            this.LeftFilterGain.DeferReferences(writer);
+            this.RightFilterFrequency.DeferReferences(writer);
+            this.RightFilterFrequency.DeferReferences(writer);
+            this.RightFilterGain.DeferReferences(writer);
+            this.RightFilterGain.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.FilterType)));
-            queueableBinaryWriter.Write(this.FilterWidth);
-            this.LeftFilterFrequency.Write(queueableBinaryWriter);
-            this.LeftFilterGain.Write(queueableBinaryWriter);
-            this.RightFilterFrequency.Write(queueableBinaryWriter);
-            this.RightFilterGain.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(((int)(this.FilterType)));
+            writer.Write(this.FilterWidth);
+            this.LeftFilterFrequency.Write(writer);
+            this.LeftFilterGain.Write(writer);
+            this.RightFilterFrequency.Write(writer);
+            this.RightFilterGain.Write(writer);
         }
         /// <summary>
         /// DLS2 filtering:

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -61,22 +62,22 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.States = base.ReadBlockArrayData<ModelVariantStateBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.States);
+            base.DeferReferences(writer);
+            writer.Defer(this.States);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.PermutationName);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((byte)(this.ModelVariantPermutationFlags)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.Probability);
-            queueableBinaryWriter.WritePointer(this.States);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.fieldpad2);
+            base.Write(writer);
+            writer.Write(this.PermutationName);
+            writer.Write(this.fieldpad);
+            writer.Write(((byte)(this.ModelVariantPermutationFlags)));
+            writer.Write(this.fieldpad0);
+            writer.Write(this.Probability);
+            writer.WritePointer(this.States);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.fieldpad2);
         }
         [System.FlagsAttribute()]
         public enum Flags : byte

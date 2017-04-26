@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -65,26 +66,31 @@ namespace Moonfish.Guerilla.Tags
             this.Brightnessfacing.ReadInstances(binaryReader, pointerQueue);
             this.AlongaxisScale.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.Thickness.DeferReferences(queueableBinaryWriter);
-            this.Color.DeferReferences(queueableBinaryWriter);
-            this.Brightnesstime.DeferReferences(queueableBinaryWriter);
-            this.Brightnessfacing.DeferReferences(queueableBinaryWriter);
-            this.AlongaxisScale.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.Thickness.DeferReferences(writer);
+            this.Thickness.DeferReferences(writer);
+            this.Color.DeferReferences(writer);
+            this.Color.DeferReferences(writer);
+            this.Brightnesstime.DeferReferences(writer);
+            this.Brightnesstime.DeferReferences(writer);
+            this.Brightnessfacing.DeferReferences(writer);
+            this.Brightnessfacing.DeferReferences(writer);
+            this.AlongaxisScale.DeferReferences(writer);
+            this.AlongaxisScale.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.BitmapIndex);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            this.Thickness.Write(queueableBinaryWriter);
-            this.Color.Write(queueableBinaryWriter);
-            this.Brightnesstime.Write(queueableBinaryWriter);
-            this.Brightnessfacing.Write(queueableBinaryWriter);
-            this.AlongaxisScale.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(this.fieldpad);
+            writer.Write(this.BitmapIndex);
+            writer.Write(this.fieldpad0);
+            this.Thickness.Write(writer);
+            this.Color.Write(writer);
+            this.Brightnesstime.Write(writer);
+            this.Brightnessfacing.Write(writer);
+            this.AlongaxisScale.Write(writer);
         }
     }
 }

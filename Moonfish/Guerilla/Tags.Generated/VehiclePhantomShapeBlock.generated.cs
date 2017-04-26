@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -98,46 +99,46 @@ namespace Moonfish.Guerilla.Tags
                 this.Multispheres00[i].ReadInstances(binaryReader, pointerQueue);
             }
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
             int i;
             for (i = 0; (i < 4); i = (i + 1))
             {
-                this.ChildShapesStorage00[i].DeferReferences(queueableBinaryWriter);
+                this.ChildShapesStorage00[i].DeferReferences(writer);
             }
             for (i = 0; (i < 4); i = (i + 1))
             {
-                this.Multispheres00[i].DeferReferences(queueableBinaryWriter);
+                this.Multispheres00[i].DeferReferences(writer);
             }
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.Size);
-            queueableBinaryWriter.Write(this.Count);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.Write(this.fieldskip1);
-            queueableBinaryWriter.Write(this.ChildShapesSize);
-            queueableBinaryWriter.Write(this.ChildShapesCapacity);
+            base.Write(writer);
+            writer.Write(this.fieldskip);
+            writer.Write(this.Size);
+            writer.Write(this.Count);
+            writer.Write(this.fieldskip0);
+            writer.Write(this.fieldskip1);
+            writer.Write(this.ChildShapesSize);
+            writer.Write(this.ChildShapesCapacity);
             int i;
             for (i = 0; (i < 4); i = (i + 1))
             {
-                this.ChildShapesStorage00[i].Write(queueableBinaryWriter);
+                this.ChildShapesStorage00[i].Write(writer);
             }
-            queueableBinaryWriter.Write(this.MultisphereCount);
-            queueableBinaryWriter.Write(((int)(this.VehiclePhantomShapeFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.X0);
-            queueableBinaryWriter.Write(this.X1);
-            queueableBinaryWriter.Write(this.Y0);
-            queueableBinaryWriter.Write(this.Y1);
-            queueableBinaryWriter.Write(this.Z0);
-            queueableBinaryWriter.Write(this.Z1);
+            writer.Write(this.MultisphereCount);
+            writer.Write(((int)(this.VehiclePhantomShapeFlags)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.X0);
+            writer.Write(this.X1);
+            writer.Write(this.Y0);
+            writer.Write(this.Y1);
+            writer.Write(this.Z0);
+            writer.Write(this.Z1);
             for (i = 0; (i < 4); i = (i + 1))
             {
-                this.Multispheres00[i].Write(queueableBinaryWriter);
+                this.Multispheres00[i].Write(writer);
             }
         }
         [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
@@ -172,16 +173,16 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
             {
-                base.DeferReferences(queueableBinaryWriter);
+                base.DeferReferences(writer);
             }
-            public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+            public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
             {
-                base.Write(queueableBinaryWriter);
-                queueableBinaryWriter.Write(((short)(this.ShapeType)));
-                queueableBinaryWriter.Write(this.Shape);
-                queueableBinaryWriter.Write(this.CollisionFilter);
+                base.Write(writer);
+                writer.Write(((short)(this.ShapeType)));
+                writer.Write(this.Shape);
+                writer.Write(this.CollisionFilter);
             }
             public enum ShapeTypeEnum : short
             {
@@ -257,27 +258,27 @@ namespace Moonfish.Guerilla.Tags
                     this.FourVectorsStorage00[i].ReadInstances(binaryReader, pointerQueue);
                 }
             }
-            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
             {
-                base.DeferReferences(queueableBinaryWriter);
+                base.DeferReferences(writer);
                 int i;
                 for (i = 0; (i < 8); i = (i + 1))
                 {
-                    this.FourVectorsStorage00[i].DeferReferences(queueableBinaryWriter);
+                    this.FourVectorsStorage00[i].DeferReferences(writer);
                 }
             }
-            public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+            public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
             {
-                base.Write(queueableBinaryWriter);
-                queueableBinaryWriter.Write(this.fieldskip);
-                queueableBinaryWriter.Write(this.Size);
-                queueableBinaryWriter.Write(this.Count);
-                queueableBinaryWriter.Write(this.fieldskip0);
-                queueableBinaryWriter.Write(this.NumSpheres);
+                base.Write(writer);
+                writer.Write(this.fieldskip);
+                writer.Write(this.Size);
+                writer.Write(this.Count);
+                writer.Write(this.fieldskip0);
+                writer.Write(this.NumSpheres);
                 int i;
                 for (i = 0; (i < 8); i = (i + 1))
                 {
-                    this.FourVectorsStorage00[i].Write(queueableBinaryWriter);
+                    this.FourVectorsStorage00[i].Write(writer);
                 }
             }
             [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
@@ -310,15 +311,15 @@ namespace Moonfish.Guerilla.Tags
                 {
                     base.ReadInstances(binaryReader, pointerQueue);
                 }
-                public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+                public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
                 {
-                    base.DeferReferences(queueableBinaryWriter);
+                    base.DeferReferences(writer);
                 }
-                public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+                public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
                 {
-                    base.Write(queueableBinaryWriter);
-                    queueableBinaryWriter.Write(this.Sphere);
-                    queueableBinaryWriter.Write(this.fieldskip);
+                    base.Write(writer);
+                    writer.Write(this.Sphere);
+                    writer.Write(this.fieldskip);
                 }
             }
         }

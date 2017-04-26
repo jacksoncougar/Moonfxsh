@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -62,22 +63,22 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.RasterizerScreenEffectConvolutionFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.ConvolutionAmount);
-            queueableBinaryWriter.Write(this.FilterScale);
-            queueableBinaryWriter.Write(this.FilterBoxFactor);
-            queueableBinaryWriter.Write(this.ZoomFalloffRadius);
-            queueableBinaryWriter.Write(this.ZoomCutoffRadius);
-            queueableBinaryWriter.Write(this.ResolutionScale);
+            base.Write(writer);
+            writer.Write(((short)(this.RasterizerScreenEffectConvolutionFlags)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.ConvolutionAmount);
+            writer.Write(this.FilterScale);
+            writer.Write(this.FilterBoxFactor);
+            writer.Write(this.ZoomFalloffRadius);
+            writer.Write(this.ZoomCutoffRadius);
+            writer.Write(this.ResolutionScale);
         }
         /// <summary>
         /// Convolution blurs the target of this pass reference to the SCREEN EFFECT CONVOLUTION buffer, which is accessible in the shader system through a texture extern. It is not cheap especially for large convolution amounts, so please use it sparingly!! Note that the resolution will be clamped to 64x64 minimum and 768000 pixels total maximum.

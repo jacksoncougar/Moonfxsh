@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -24,7 +25,9 @@ namespace Moonfish.Guerilla.Tags
         public TypeEnum Type;
         public Flags StructureLightmapGroupFlags;
         public int StructureChecksum;
+        [Moonfish.Guerilla.LayoutAttribute(Pack=64)]
         public StructureLightmapPaletteColorBlock[] SectionPalette = new StructureLightmapPaletteColorBlock[0];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=64)]
         public StructureLightmapPaletteColorBlock[] WritablePalettes = new StructureLightmapPaletteColorBlock[0];
         [Moonfish.Tags.TagReferenceAttribute("bitm")]
         public Moonfish.Tags.TagReference BitmapGroup;
@@ -86,39 +89,39 @@ namespace Moonfish.Guerilla.Tags
             this.SceneryObjectInfo = base.ReadBlockArrayData<LightmapSceneryObjectInfoBlock>(binaryReader, pointerQueue.Dequeue());
             this.SceneryObjectBucketRefs = base.ReadBlockArrayData<LightmapInstanceBucketReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.SectionPalette);
-            queueableBinaryWriter.Defer(this.WritablePalettes);
-            queueableBinaryWriter.Defer(this.Clusters);
-            queueableBinaryWriter.Defer(this.ClusterRenderInfo);
-            queueableBinaryWriter.Defer(this.PoopDefinitions);
-            queueableBinaryWriter.Defer(this.LightingEnvironments);
-            queueableBinaryWriter.Defer(this.GeometryBuckets);
-            queueableBinaryWriter.Defer(this.InstanceRenderInfo);
-            queueableBinaryWriter.Defer(this.InstanceBucketRefs);
-            queueableBinaryWriter.Defer(this.SceneryObjectInfo);
-            queueableBinaryWriter.Defer(this.SceneryObjectBucketRefs);
+            base.DeferReferences(writer);
+            writer.Defer(this.SectionPalette);
+            writer.Defer(this.WritablePalettes);
+            writer.Defer(this.Clusters);
+            writer.Defer(this.ClusterRenderInfo);
+            writer.Defer(this.PoopDefinitions);
+            writer.Defer(this.LightingEnvironments);
+            writer.Defer(this.GeometryBuckets);
+            writer.Defer(this.InstanceRenderInfo);
+            writer.Defer(this.InstanceBucketRefs);
+            writer.Defer(this.SceneryObjectInfo);
+            writer.Defer(this.SceneryObjectBucketRefs);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(((short)(this.StructureLightmapGroupFlags)));
-            queueableBinaryWriter.Write(this.StructureChecksum);
-            queueableBinaryWriter.WritePointer(this.SectionPalette);
-            queueableBinaryWriter.WritePointer(this.WritablePalettes);
-            queueableBinaryWriter.Write(this.BitmapGroup);
-            queueableBinaryWriter.WritePointer(this.Clusters);
-            queueableBinaryWriter.WritePointer(this.ClusterRenderInfo);
-            queueableBinaryWriter.WritePointer(this.PoopDefinitions);
-            queueableBinaryWriter.WritePointer(this.LightingEnvironments);
-            queueableBinaryWriter.WritePointer(this.GeometryBuckets);
-            queueableBinaryWriter.WritePointer(this.InstanceRenderInfo);
-            queueableBinaryWriter.WritePointer(this.InstanceBucketRefs);
-            queueableBinaryWriter.WritePointer(this.SceneryObjectInfo);
-            queueableBinaryWriter.WritePointer(this.SceneryObjectBucketRefs);
+            base.Write(writer);
+            writer.Write(((short)(this.Type)));
+            writer.Write(((short)(this.StructureLightmapGroupFlags)));
+            writer.Write(this.StructureChecksum);
+            writer.WritePointer(this.SectionPalette);
+            writer.WritePointer(this.WritablePalettes);
+            writer.Write(this.BitmapGroup);
+            writer.WritePointer(this.Clusters);
+            writer.WritePointer(this.ClusterRenderInfo);
+            writer.WritePointer(this.PoopDefinitions);
+            writer.WritePointer(this.LightingEnvironments);
+            writer.WritePointer(this.GeometryBuckets);
+            writer.WritePointer(this.InstanceRenderInfo);
+            writer.WritePointer(this.InstanceBucketRefs);
+            writer.WritePointer(this.SceneryObjectInfo);
+            writer.WritePointer(this.SceneryObjectBucketRefs);
         }
         public enum TypeEnum : short
         {

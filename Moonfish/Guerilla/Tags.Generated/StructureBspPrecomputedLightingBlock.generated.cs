@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -55,19 +56,20 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Visibility.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.Visibility.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.Visibility.DeferReferences(writer);
+            this.Visibility.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Index);
-            queueableBinaryWriter.Write(((short)(this.LightType)));
-            queueableBinaryWriter.Write(this.AttachmentIndex);
-            queueableBinaryWriter.Write(this.ObjectType);
-            this.Visibility.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(this.Index);
+            writer.Write(((short)(this.LightType)));
+            writer.Write(this.AttachmentIndex);
+            writer.Write(this.ObjectType);
+            this.Visibility.Write(writer);
         }
         public enum LightTypeEnum : short
         {

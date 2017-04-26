@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -25,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
         public Moonfish.Tags.TagReference TagReference;
         public SoundEffectComponentBlock[] Components = new SoundEffectComponentBlock[0];
         public SoundEffectOverridesBlock[] SoundEffectOverridesBlock = new SoundEffectOverridesBlock[0];
-        public byte[] SoundEffectHardwareFormatDataDefinition;
+        private byte[] SoundEffectHardwareFormatDataDefinition;
         public PlatformSoundEffectCollectionBlock[] PlatformSoundEffectCollectionBlock = new PlatformSoundEffectCollectionBlock[0];
         public override int SerializedSize
         {
@@ -59,22 +60,22 @@ namespace Moonfish.Guerilla.Tags
             this.SoundEffectHardwareFormatDataDefinition = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
             this.PlatformSoundEffectCollectionBlock = base.ReadBlockArrayData<PlatformSoundEffectCollectionBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Components);
-            queueableBinaryWriter.Defer(this.SoundEffectOverridesBlock);
-            queueableBinaryWriter.Defer(this.SoundEffectHardwareFormatDataDefinition);
-            queueableBinaryWriter.Defer(this.PlatformSoundEffectCollectionBlock);
+            base.DeferReferences(writer);
+            writer.Defer(this.Components);
+            writer.Defer(this.SoundEffectOverridesBlock);
+            writer.Defer(this.SoundEffectHardwareFormatDataDefinition);
+            writer.Defer(this.PlatformSoundEffectCollectionBlock);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.TagReference);
-            queueableBinaryWriter.WritePointer(this.Components);
-            queueableBinaryWriter.WritePointer(this.SoundEffectOverridesBlock);
-            queueableBinaryWriter.WritePointer(this.SoundEffectHardwareFormatDataDefinition);
-            queueableBinaryWriter.WritePointer(this.PlatformSoundEffectCollectionBlock);
+            base.Write(writer);
+            writer.Write(this.TagReference);
+            writer.WritePointer(this.Components);
+            writer.WritePointer(this.SoundEffectOverridesBlock);
+            writer.WritePointer(this.SoundEffectHardwareFormatDataDefinition);
+            writer.WritePointer(this.PlatformSoundEffectCollectionBlock);
         }
     }
 }

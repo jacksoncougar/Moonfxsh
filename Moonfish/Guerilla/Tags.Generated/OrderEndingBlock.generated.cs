@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -57,20 +58,20 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Triggers = base.ReadBlockArrayData<TriggerReferences>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Triggers);
+            base.DeferReferences(writer);
+            writer.Defer(this.Triggers);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.NextOrder);
-            queueableBinaryWriter.Write(((short)(this.CombinationRule)));
-            queueableBinaryWriter.Write(this.DelayTime);
-            queueableBinaryWriter.Write(((short)(this.DialogueType)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.Triggers);
+            base.Write(writer);
+            writer.Write(this.NextOrder);
+            writer.Write(((short)(this.CombinationRule)));
+            writer.Write(this.DelayTime);
+            writer.Write(((short)(this.DialogueType)));
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.Triggers);
         }
         public enum CombinationRuleEnum : short
         {

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -59,21 +60,22 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Function.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.Function.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.Function.DeferReferences(writer);
+            this.Function.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ParameterIndex);
-            queueableBinaryWriter.Write(this.TransformIndex);
-            queueableBinaryWriter.Write(this.AnimationPropertyType);
-            queueableBinaryWriter.Write(this.InputName);
-            queueableBinaryWriter.Write(this.RangeName);
-            queueableBinaryWriter.Write(this.TimePeriodInSeconds);
-            this.Function.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(this.ParameterIndex);
+            writer.Write(this.TransformIndex);
+            writer.Write(this.AnimationPropertyType);
+            writer.Write(this.InputName);
+            writer.Write(this.RangeName);
+            writer.Write(this.TimePeriodInSeconds);
+            this.Function.Write(writer);
         }
     }
 }

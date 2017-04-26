@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -65,26 +66,27 @@ namespace Moonfish.Guerilla.Tags
             this.PlayerTrainingData = base.ReadBlockArrayData<PlayerTrainingEntryDataBlock>(binaryReader, pointerQueue.Dequeue());
             this.Constants.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Dashlights);
-            queueableBinaryWriter.Defer(this.WaypointArrows);
-            queueableBinaryWriter.Defer(this.Waypoints);
-            queueableBinaryWriter.Defer(this.HudSounds);
-            queueableBinaryWriter.Defer(this.PlayerTrainingData);
-            this.Constants.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            writer.Defer(this.Dashlights);
+            writer.Defer(this.WaypointArrows);
+            writer.Defer(this.Waypoints);
+            writer.Defer(this.HudSounds);
+            writer.Defer(this.PlayerTrainingData);
+            this.Constants.DeferReferences(writer);
+            this.Constants.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.HudText);
-            queueableBinaryWriter.WritePointer(this.Dashlights);
-            queueableBinaryWriter.WritePointer(this.WaypointArrows);
-            queueableBinaryWriter.WritePointer(this.Waypoints);
-            queueableBinaryWriter.WritePointer(this.HudSounds);
-            queueableBinaryWriter.WritePointer(this.PlayerTrainingData);
-            this.Constants.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(this.HudText);
+            writer.WritePointer(this.Dashlights);
+            writer.WritePointer(this.WaypointArrows);
+            writer.WritePointer(this.Waypoints);
+            writer.WritePointer(this.HudSounds);
+            writer.WritePointer(this.PlayerTrainingData);
+            this.Constants.Write(writer);
         }
     }
 }

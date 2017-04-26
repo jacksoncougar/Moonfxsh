@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -86,34 +87,34 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.Material);
-            queueableBinaryWriter.Write(((short)(this.TrianglesFlags)));
-            queueableBinaryWriter.Write(this.RelativeMassScale);
-            queueableBinaryWriter.Write(this.Friction);
-            queueableBinaryWriter.Write(this.Restitution);
-            queueableBinaryWriter.Write(this.Volume);
-            queueableBinaryWriter.Write(this.Mass);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.Phantom);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.Write(this.Size);
-            queueableBinaryWriter.Write(this.Count);
-            queueableBinaryWriter.Write(this.fieldskip1);
-            queueableBinaryWriter.Write(this.Radius);
-            queueableBinaryWriter.Write(this.PointA);
-            queueableBinaryWriter.Write(this.fieldskip2);
-            queueableBinaryWriter.Write(this.PointB);
-            queueableBinaryWriter.Write(this.fieldskip3);
-            queueableBinaryWriter.Write(this.PointC);
-            queueableBinaryWriter.Write(this.fieldskip4);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.Material);
+            writer.Write(((short)(this.TrianglesFlags)));
+            writer.Write(this.RelativeMassScale);
+            writer.Write(this.Friction);
+            writer.Write(this.Restitution);
+            writer.Write(this.Volume);
+            writer.Write(this.Mass);
+            writer.Write(this.fieldskip);
+            writer.Write(this.Phantom);
+            writer.Write(this.fieldskip0);
+            writer.Write(this.Size);
+            writer.Write(this.Count);
+            writer.Write(this.fieldskip1);
+            writer.Write(this.Radius);
+            writer.Write(this.PointA);
+            writer.Write(this.fieldskip2);
+            writer.Write(this.PointB);
+            writer.Write(this.fieldskip3);
+            writer.Write(this.PointC);
+            writer.Write(this.fieldskip4);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

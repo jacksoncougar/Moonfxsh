@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -90,34 +91,34 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.GlobalHudScreenEffectDefinitionFlags)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.Mask);
-            queueableBinaryWriter.Write(this.Mask0);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(this.fieldpad6);
-            queueableBinaryWriter.Write(this.fieldpad7);
-            queueableBinaryWriter.Write(this.fieldpad8);
-            queueableBinaryWriter.Write(((int)(this.GlobalHudScreenEffectDefinitionScreenEffectFlags)));
-            queueableBinaryWriter.Write(this.fieldpad9);
-            queueableBinaryWriter.Write(this.ScreenEffect);
-            queueableBinaryWriter.Write(this.fieldpad10);
-            queueableBinaryWriter.Write(((int)(this.GlobalHudScreenEffectDefinitionGlobalHudScreenEffectDefinitionScreenEffectFlags0)));
-            queueableBinaryWriter.Write(this.fieldpad11);
-            queueableBinaryWriter.Write(this.ScreenEffect0);
-            queueableBinaryWriter.Write(this.fieldpad12);
+            base.Write(writer);
+            writer.Write(this.fieldpad);
+            writer.Write(((short)(this.GlobalHudScreenEffectDefinitionFlags)));
+            writer.Write(this.fieldpad0);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.Mask);
+            writer.Write(this.Mask0);
+            writer.Write(this.fieldpad2);
+            writer.Write(this.fieldpad3);
+            writer.Write(this.fieldpad4);
+            writer.Write(this.fieldpad5);
+            writer.Write(this.fieldpad6);
+            writer.Write(this.fieldpad7);
+            writer.Write(this.fieldpad8);
+            writer.Write(((int)(this.GlobalHudScreenEffectDefinitionScreenEffectFlags)));
+            writer.Write(this.fieldpad9);
+            writer.Write(this.ScreenEffect);
+            writer.Write(this.fieldpad10);
+            writer.Write(((int)(this.GlobalHudScreenEffectDefinitionGlobalHudScreenEffectDefinitionScreenEffectFlags0)));
+            writer.Write(this.fieldpad11);
+            writer.Write(this.ScreenEffect0);
+            writer.Write(this.fieldpad12);
         }
         /// <summary>
         /// Mask bitmap overlay. Use either a 2D bitmap or an interface bitmap.

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -61,23 +62,25 @@ namespace Moonfish.Guerilla.Tags
             this.SectionData = base.ReadBlockArrayData<RenderModelSectionDataBlock>(binaryReader, pointerQueue.Dequeue());
             this.GeometryBlockInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.SectionInfo.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.SectionData);
-            this.GeometryBlockInfo.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.SectionInfo.DeferReferences(writer);
+            this.SectionInfo.DeferReferences(writer);
+            writer.Defer(this.SectionData);
+            this.GeometryBlockInfo.DeferReferences(writer);
+            this.GeometryBlockInfo.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.GlobalGeometryClassificationEnumDefinition)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            this.SectionInfo.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.RigidNode);
-            queueableBinaryWriter.Write(((short)(this.RenderModelSectionFlags)));
-            queueableBinaryWriter.WritePointer(this.SectionData);
-            this.GeometryBlockInfo.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(((short)(this.GlobalGeometryClassificationEnumDefinition)));
+            writer.Write(this.fieldpad);
+            this.SectionInfo.Write(writer);
+            writer.Write(this.RigidNode);
+            writer.Write(((short)(this.RenderModelSectionFlags)));
+            writer.WritePointer(this.SectionData);
+            this.GeometryBlockInfo.Write(writer);
         }
         public enum GlobalGeometryClassificationEnumDefinitionEnum : short
         {

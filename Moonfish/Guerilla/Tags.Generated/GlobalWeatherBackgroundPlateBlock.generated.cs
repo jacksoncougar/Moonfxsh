@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -107,43 +108,43 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Texture0);
-            queueableBinaryWriter.Write(this.Texture1);
-            queueableBinaryWriter.Write(this.Texture2);
-            queueableBinaryWriter.Write(this.PlatePositions0);
-            queueableBinaryWriter.Write(this.PlatePositions1);
-            queueableBinaryWriter.Write(this.PlatePositions2);
-            queueableBinaryWriter.Write(this.MoveSpeed0);
-            queueableBinaryWriter.Write(this.MoveSpeed1);
-            queueableBinaryWriter.Write(this.MoveSpeed2);
-            queueableBinaryWriter.Write(this.TextureScale0);
-            queueableBinaryWriter.Write(this.TextureScale1);
-            queueableBinaryWriter.Write(this.TextureScale2);
-            queueableBinaryWriter.Write(this.Jitter0);
-            queueableBinaryWriter.Write(this.Jitter1);
-            queueableBinaryWriter.Write(this.Jitter2);
-            queueableBinaryWriter.Write(this.PlateZNear);
-            queueableBinaryWriter.Write(this.PlateZFar);
-            queueableBinaryWriter.Write(this.DepthBlendZNear);
-            queueableBinaryWriter.Write(this.DepthBlendZFar);
-            queueableBinaryWriter.Write(this.Opacity0);
-            queueableBinaryWriter.Write(this.Opacity1);
-            queueableBinaryWriter.Write(this.Opacity2);
-            queueableBinaryWriter.Write(((int)(this.GlobalWeatherBackgroundPlateFlags)));
-            queueableBinaryWriter.Write(this.TintColor0);
-            queueableBinaryWriter.Write(this.TintColor1);
-            queueableBinaryWriter.Write(this.TintColor2);
-            queueableBinaryWriter.Write(this.Mass1);
-            queueableBinaryWriter.Write(this.Mass2);
-            queueableBinaryWriter.Write(this.Mass3);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write(writer);
+            writer.Write(this.Texture0);
+            writer.Write(this.Texture1);
+            writer.Write(this.Texture2);
+            writer.Write(this.PlatePositions0);
+            writer.Write(this.PlatePositions1);
+            writer.Write(this.PlatePositions2);
+            writer.Write(this.MoveSpeed0);
+            writer.Write(this.MoveSpeed1);
+            writer.Write(this.MoveSpeed2);
+            writer.Write(this.TextureScale0);
+            writer.Write(this.TextureScale1);
+            writer.Write(this.TextureScale2);
+            writer.Write(this.Jitter0);
+            writer.Write(this.Jitter1);
+            writer.Write(this.Jitter2);
+            writer.Write(this.PlateZNear);
+            writer.Write(this.PlateZFar);
+            writer.Write(this.DepthBlendZNear);
+            writer.Write(this.DepthBlendZFar);
+            writer.Write(this.Opacity0);
+            writer.Write(this.Opacity1);
+            writer.Write(this.Opacity2);
+            writer.Write(((int)(this.GlobalWeatherBackgroundPlateFlags)));
+            writer.Write(this.TintColor0);
+            writer.Write(this.TintColor1);
+            writer.Write(this.TintColor2);
+            writer.Write(this.Mass1);
+            writer.Write(this.Mass2);
+            writer.Write(this.Mass3);
+            writer.Write(this.fieldpad);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

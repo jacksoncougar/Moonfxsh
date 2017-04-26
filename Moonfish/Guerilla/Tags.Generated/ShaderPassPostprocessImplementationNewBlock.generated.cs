@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -105,51 +106,67 @@ namespace Moonfish.Guerilla.Tags
             this.VertexConstantInfo.ReadInstances(binaryReader, pointerQueue);
             this.RenderStateInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.Textures.DeferReferences(queueableBinaryWriter);
-            this.RenderStates.DeferReferences(queueableBinaryWriter);
-            this.TextureStates.DeferReferences(queueableBinaryWriter);
-            this.PsFragments.DeferReferences(queueableBinaryWriter);
-            this.PsPermutations.DeferReferences(queueableBinaryWriter);
-            this.PsCombiners.DeferReferences(queueableBinaryWriter);
-            this.DefaultRenderStates.DeferReferences(queueableBinaryWriter);
-            this.RenderStateExterns.DeferReferences(queueableBinaryWriter);
-            this.TextureStateExterns.DeferReferences(queueableBinaryWriter);
-            this.PixelConstantExterns.DeferReferences(queueableBinaryWriter);
-            this.VertexConstantExterns.DeferReferences(queueableBinaryWriter);
-            this.PsConstants.DeferReferences(queueableBinaryWriter);
-            this.VsConstants.DeferReferences(queueableBinaryWriter);
-            this.PixelConstantInfo.DeferReferences(queueableBinaryWriter);
-            this.VertexConstantInfo.DeferReferences(queueableBinaryWriter);
-            this.RenderStateInfo.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.Textures.DeferReferences(writer);
+            this.Textures.DeferReferences(writer);
+            this.RenderStates.DeferReferences(writer);
+            this.RenderStates.DeferReferences(writer);
+            this.TextureStates.DeferReferences(writer);
+            this.TextureStates.DeferReferences(writer);
+            this.PsFragments.DeferReferences(writer);
+            this.PsFragments.DeferReferences(writer);
+            this.PsPermutations.DeferReferences(writer);
+            this.PsPermutations.DeferReferences(writer);
+            this.PsCombiners.DeferReferences(writer);
+            this.PsCombiners.DeferReferences(writer);
+            this.DefaultRenderStates.DeferReferences(writer);
+            this.DefaultRenderStates.DeferReferences(writer);
+            this.RenderStateExterns.DeferReferences(writer);
+            this.RenderStateExterns.DeferReferences(writer);
+            this.TextureStateExterns.DeferReferences(writer);
+            this.TextureStateExterns.DeferReferences(writer);
+            this.PixelConstantExterns.DeferReferences(writer);
+            this.PixelConstantExterns.DeferReferences(writer);
+            this.VertexConstantExterns.DeferReferences(writer);
+            this.VertexConstantExterns.DeferReferences(writer);
+            this.PsConstants.DeferReferences(writer);
+            this.PsConstants.DeferReferences(writer);
+            this.VsConstants.DeferReferences(writer);
+            this.VsConstants.DeferReferences(writer);
+            this.PixelConstantInfo.DeferReferences(writer);
+            this.PixelConstantInfo.DeferReferences(writer);
+            this.VertexConstantInfo.DeferReferences(writer);
+            this.VertexConstantInfo.DeferReferences(writer);
+            this.RenderStateInfo.DeferReferences(writer);
+            this.RenderStateInfo.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            this.Textures.Write(queueableBinaryWriter);
-            this.RenderStates.Write(queueableBinaryWriter);
-            this.TextureStates.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldskip);
-            this.PsFragments.Write(queueableBinaryWriter);
-            this.PsPermutations.Write(queueableBinaryWriter);
-            this.PsCombiners.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.VertexShader);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.Write(this.fieldskip1);
-            queueableBinaryWriter.Write(this.fieldskip2);
-            queueableBinaryWriter.Write(this.fieldskip3);
-            this.DefaultRenderStates.Write(queueableBinaryWriter);
-            this.RenderStateExterns.Write(queueableBinaryWriter);
-            this.TextureStateExterns.Write(queueableBinaryWriter);
-            this.PixelConstantExterns.Write(queueableBinaryWriter);
-            this.VertexConstantExterns.Write(queueableBinaryWriter);
-            this.PsConstants.Write(queueableBinaryWriter);
-            this.VsConstants.Write(queueableBinaryWriter);
-            this.PixelConstantInfo.Write(queueableBinaryWriter);
-            this.VertexConstantInfo.Write(queueableBinaryWriter);
-            this.RenderStateInfo.Write(queueableBinaryWriter);
+            base.Write(writer);
+            this.Textures.Write(writer);
+            this.RenderStates.Write(writer);
+            this.TextureStates.Write(writer);
+            writer.Write(this.fieldskip);
+            this.PsFragments.Write(writer);
+            this.PsPermutations.Write(writer);
+            this.PsCombiners.Write(writer);
+            writer.Write(this.VertexShader);
+            writer.Write(this.fieldskip0);
+            writer.Write(this.fieldskip1);
+            writer.Write(this.fieldskip2);
+            writer.Write(this.fieldskip3);
+            this.DefaultRenderStates.Write(writer);
+            this.RenderStateExterns.Write(writer);
+            this.TextureStateExterns.Write(writer);
+            this.PixelConstantExterns.Write(writer);
+            this.VertexConstantExterns.Write(writer);
+            this.PsConstants.Write(writer);
+            this.VsConstants.Write(writer);
+            this.PixelConstantInfo.Write(writer);
+            this.VertexConstantInfo.Write(writer);
+            this.RenderStateInfo.Write(writer);
         }
     }
 }

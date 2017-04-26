@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -56,19 +57,19 @@ namespace Moonfish.Guerilla.Tags
             this.ObsoleteProfileColors = base.ReadBlockArrayData<MultiplayerColorBlock>(binaryReader, pointerQueue.Dequeue());
             this.TeamColors = base.ReadBlockArrayData<MultiplayerColorBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.ObsoleteProfileColors);
-            queueableBinaryWriter.Defer(this.TeamColors);
+            base.DeferReferences(writer);
+            writer.Defer(this.ObsoleteProfileColors);
+            writer.Defer(this.TeamColors);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.RandomPlayerNames);
-            queueableBinaryWriter.WritePointer(this.ObsoleteProfileColors);
-            queueableBinaryWriter.WritePointer(this.TeamColors);
-            queueableBinaryWriter.Write(this.TeamNames);
+            base.Write(writer);
+            writer.Write(this.RandomPlayerNames);
+            writer.WritePointer(this.ObsoleteProfileColors);
+            writer.WritePointer(this.TeamColors);
+            writer.Write(this.TeamNames);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -101,41 +102,41 @@ namespace Moonfish.Guerilla.Tags
             this.Color = base.ReadBlockArrayData<LensFlareColorAnimationBlock>(binaryReader, pointerQueue.Dequeue());
             this.Rotation = base.ReadBlockArrayData<LensFlareScalarAnimationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Reflections);
-            queueableBinaryWriter.Defer(this.Brightness);
-            queueableBinaryWriter.Defer(this.Color);
-            queueableBinaryWriter.Defer(this.Rotation);
+            base.DeferReferences(writer);
+            writer.Defer(this.Reflections);
+            writer.Defer(this.Brightness);
+            writer.Defer(this.Color);
+            writer.Defer(this.Rotation);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.FalloffAngle);
-            queueableBinaryWriter.Write(this.CutoffAngle);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.Write(this.OcclusionRadius);
-            queueableBinaryWriter.Write(((short)(this.OcclusionOffsetDirection)));
-            queueableBinaryWriter.Write(((short)(this.OcclusionInnerRadiusScale)));
-            queueableBinaryWriter.Write(this.NearFadeDistance);
-            queueableBinaryWriter.Write(this.FarFadeDistance);
-            queueableBinaryWriter.Write(this.Bitmap);
-            queueableBinaryWriter.Write(((short)(this.LensFlareFlags)));
-            queueableBinaryWriter.Write(this.fieldskip1);
-            queueableBinaryWriter.Write(((short)(this.RotationFunction)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.RotationFunctionScale);
-            queueableBinaryWriter.Write(this.CoronaScale);
-            queueableBinaryWriter.Write(((short)(this.FalloffFunction)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.WritePointer(this.Reflections);
-            queueableBinaryWriter.Write(((short)(this.LensFlareLensFlareFlags0)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.WritePointer(this.Brightness);
-            queueableBinaryWriter.WritePointer(this.Color);
-            queueableBinaryWriter.WritePointer(this.Rotation);
+            base.Write(writer);
+            writer.Write(this.FalloffAngle);
+            writer.Write(this.CutoffAngle);
+            writer.Write(this.fieldskip);
+            writer.Write(this.fieldskip0);
+            writer.Write(this.OcclusionRadius);
+            writer.Write(((short)(this.OcclusionOffsetDirection)));
+            writer.Write(((short)(this.OcclusionInnerRadiusScale)));
+            writer.Write(this.NearFadeDistance);
+            writer.Write(this.FarFadeDistance);
+            writer.Write(this.Bitmap);
+            writer.Write(((short)(this.LensFlareFlags)));
+            writer.Write(this.fieldskip1);
+            writer.Write(((short)(this.RotationFunction)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.RotationFunctionScale);
+            writer.Write(this.CoronaScale);
+            writer.Write(((short)(this.FalloffFunction)));
+            writer.Write(this.fieldpad0);
+            writer.WritePointer(this.Reflections);
+            writer.Write(((short)(this.LensFlareLensFlareFlags0)));
+            writer.Write(this.fieldpad1);
+            writer.WritePointer(this.Brightness);
+            writer.WritePointer(this.Color);
+            writer.WritePointer(this.Rotation);
         }
         public enum OcclusionOffsetDirectionEnum : short
         {

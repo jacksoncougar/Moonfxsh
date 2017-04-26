@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -79,33 +80,33 @@ namespace Moonfish.Guerilla.Tags
             this.SpecialMovement = base.ReadBlockArrayData<SpecialMovementBlock>(binaryReader, pointerQueue.Dequeue());
             this.OrderEndings = base.ReadBlockArrayData<OrderEndingBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.PrimaryAreaSet);
-            queueableBinaryWriter.Defer(this.SecondaryAreaSet);
-            queueableBinaryWriter.Defer(this.SecondarySetTrigger);
-            queueableBinaryWriter.Defer(this.SpecialMovement);
-            queueableBinaryWriter.Defer(this.OrderEndings);
+            base.DeferReferences(writer);
+            writer.Defer(this.PrimaryAreaSet);
+            writer.Defer(this.SecondaryAreaSet);
+            writer.Defer(this.SecondarySetTrigger);
+            writer.Defer(this.SpecialMovement);
+            writer.Defer(this.OrderEndings);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.Style);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((int)(this.OrdersFlags)));
-            queueableBinaryWriter.Write(((short)(this.ForceCombatStatus)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.EntryScript);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.FollowSquad);
-            queueableBinaryWriter.Write(this.FollowRadius);
-            queueableBinaryWriter.WritePointer(this.PrimaryAreaSet);
-            queueableBinaryWriter.WritePointer(this.SecondaryAreaSet);
-            queueableBinaryWriter.WritePointer(this.SecondarySetTrigger);
-            queueableBinaryWriter.WritePointer(this.SpecialMovement);
-            queueableBinaryWriter.WritePointer(this.OrderEndings);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.Style);
+            writer.Write(this.fieldpad);
+            writer.Write(((int)(this.OrdersFlags)));
+            writer.Write(((short)(this.ForceCombatStatus)));
+            writer.Write(this.fieldpad0);
+            writer.Write(this.EntryScript);
+            writer.Write(this.fieldskip);
+            writer.Write(this.FollowSquad);
+            writer.Write(this.FollowRadius);
+            writer.WritePointer(this.PrimaryAreaSet);
+            writer.WritePointer(this.SecondaryAreaSet);
+            writer.WritePointer(this.SecondarySetTrigger);
+            writer.WritePointer(this.SpecialMovement);
+            writer.WritePointer(this.OrderEndings);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

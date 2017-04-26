@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -53,19 +54,22 @@ namespace Moonfish.Guerilla.Tags
             this.PixelConstants.ReadInstances(binaryReader, pointerQueue);
             this.VertexConstants.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.Bitmaps.DeferReferences(queueableBinaryWriter);
-            this.PixelConstants.DeferReferences(queueableBinaryWriter);
-            this.VertexConstants.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.Bitmaps.DeferReferences(writer);
+            this.Bitmaps.DeferReferences(writer);
+            this.PixelConstants.DeferReferences(writer);
+            this.PixelConstants.DeferReferences(writer);
+            this.VertexConstants.DeferReferences(writer);
+            this.VertexConstants.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            this.Bitmaps.Write(queueableBinaryWriter);
-            this.PixelConstants.Write(queueableBinaryWriter);
-            this.VertexConstants.Write(queueableBinaryWriter);
+            base.Write(writer);
+            this.Bitmaps.Write(writer);
+            this.PixelConstants.Write(writer);
+            this.VertexConstants.Write(writer);
         }
     }
 }

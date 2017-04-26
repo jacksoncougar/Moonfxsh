@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -74,32 +75,32 @@ namespace Moonfish.Guerilla.Tags
                 this.EMPTYSTRING00[i].ReadInstances(binaryReader, pointerQueue);
             }
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
             int i;
             for (i = 0; (i < 6); i = (i + 1))
             {
-                this.EMPTYSTRING00[i].DeferReferences(queueableBinaryWriter);
+                this.EMPTYSTRING00[i].DeferReferences(writer);
             }
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.ObjectName);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.NodeName);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.ObjectName);
+            writer.Write(this.fieldskip);
+            writer.Write(this.NodeName);
             int i;
             for (i = 0; (i < 6); i = (i + 1))
             {
-                this.EMPTYSTRING00[i].Write(queueableBinaryWriter);
+                this.EMPTYSTRING00[i].Write(writer);
             }
-            queueableBinaryWriter.Write(this.Position);
-            queueableBinaryWriter.Write(this.Extents);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.KillTriggerVolume);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            writer.Write(this.Position);
+            writer.Write(this.Extents);
+            writer.Write(this.fieldpad);
+            writer.Write(this.KillTriggerVolume);
+            writer.Write(this.fieldpad0);
         }
         [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
         public class EMPTYSTRINGBlock : GuerillaBlock, IWriteDeferrable
@@ -129,14 +130,14 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
             {
-                base.DeferReferences(queueableBinaryWriter);
+                base.DeferReferences(writer);
             }
-            public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+            public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
             {
-                base.Write(queueableBinaryWriter);
-                queueableBinaryWriter.Write(this.EMPTYSTRING);
+                base.Write(writer);
+                writer.Write(this.EMPTYSTRING);
             }
         }
     }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -61,22 +62,22 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.TableRows = base.ReadBlockArrayData<TableViewListRowReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.TableRows);
+            base.DeferReferences(writer);
+            writer.Defer(this.TableRows);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.TableViewListReferenceFlags)));
-            queueableBinaryWriter.Write(((short)(this.AnimationIndex)));
-            queueableBinaryWriter.Write(this.IntroAnimationDelayMilliseconds);
-            queueableBinaryWriter.Write(((short)(this.CustomFont)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.TextColor);
-            queueableBinaryWriter.Write(this.Topleft);
-            queueableBinaryWriter.WritePointer(this.TableRows);
+            base.Write(writer);
+            writer.Write(((int)(this.TableViewListReferenceFlags)));
+            writer.Write(((short)(this.AnimationIndex)));
+            writer.Write(this.IntroAnimationDelayMilliseconds);
+            writer.Write(((short)(this.CustomFont)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.TextColor);
+            writer.Write(this.Topleft);
+            writer.WritePointer(this.TableRows);
         }
         /// <summary>
         /// If the pane contains a table-view, define it here

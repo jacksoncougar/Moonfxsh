@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -60,22 +61,24 @@ namespace Moonfish.Guerilla.Tags
             this.LoadedTorqueCurve.ReadInstances(binaryReader, pointerQueue);
             this.CruisingTorqueCurve.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.LoadedTorqueCurve.DeferReferences(queueableBinaryWriter);
-            this.CruisingTorqueCurve.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.LoadedTorqueCurve.DeferReferences(writer);
+            this.LoadedTorqueCurve.DeferReferences(writer);
+            this.CruisingTorqueCurve.DeferReferences(writer);
+            this.CruisingTorqueCurve.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            this.LoadedTorqueCurve.Write(queueableBinaryWriter);
-            this.CruisingTorqueCurve.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MinTimeToUpshift);
-            queueableBinaryWriter.Write(this.EngineUpshiftScale);
-            queueableBinaryWriter.Write(this.GearRatio);
-            queueableBinaryWriter.Write(this.MinTimeToDownshift);
-            queueableBinaryWriter.Write(this.EngineDownshiftScale);
+            base.Write(writer);
+            this.LoadedTorqueCurve.Write(writer);
+            this.CruisingTorqueCurve.Write(writer);
+            writer.Write(this.MinTimeToUpshift);
+            writer.Write(this.EngineUpshiftScale);
+            writer.Write(this.GearRatio);
+            writer.Write(this.MinTimeToDownshift);
+            writer.Write(this.EngineDownshiftScale);
         }
     }
 }

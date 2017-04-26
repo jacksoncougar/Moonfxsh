@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -55,17 +56,17 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Volumes = base.ReadBlockArrayData<LightVolumeVolumeBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Volumes);
+            base.DeferReferences(writer);
+            writer.Defer(this.Volumes);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.FalloffDistanceFromCamera);
-            queueableBinaryWriter.Write(this.CutoffDistanceFromCamera);
-            queueableBinaryWriter.WritePointer(this.Volumes);
+            base.Write(writer);
+            writer.Write(this.FalloffDistanceFromCamera);
+            writer.Write(this.CutoffDistanceFromCamera);
+            writer.WritePointer(this.Volumes);
         }
     }
 }

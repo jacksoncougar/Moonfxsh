@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -50,17 +51,17 @@ namespace Moonfish.Guerilla.Tags
             this.CollisionLeaves = base.ReadBlockArrayData<BspLeafBlock>(binaryReader, pointerQueue.Dequeue());
             this.SurfaceReferences = base.ReadBlockArrayData<BspSurfaceReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.CollisionLeaves);
-            queueableBinaryWriter.Defer(this.SurfaceReferences);
+            base.DeferReferences(writer);
+            writer.Defer(this.CollisionLeaves);
+            writer.Defer(this.SurfaceReferences);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.CollisionLeaves);
-            queueableBinaryWriter.WritePointer(this.SurfaceReferences);
+            base.Write(writer);
+            writer.WritePointer(this.CollisionLeaves);
+            writer.WritePointer(this.SurfaceReferences);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -88,31 +89,31 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.DeviceDeviceFlags)));
-            queueableBinaryWriter.Write(this.PowerTransitionTime);
-            queueableBinaryWriter.Write(this.PowerAccelerationTime);
-            queueableBinaryWriter.Write(this.PositionTransitionTime);
-            queueableBinaryWriter.Write(this.PositionAccelerationTime);
-            queueableBinaryWriter.Write(this.DepoweredPositionTransitionTime);
-            queueableBinaryWriter.Write(this.DepoweredPositionAccelerationTime);
-            queueableBinaryWriter.Write(((short)(this.DeviceLightmapFlags)));
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.Open);
-            queueableBinaryWriter.Write(this.Close);
-            queueableBinaryWriter.Write(this.Opened);
-            queueableBinaryWriter.Write(this.Closed);
-            queueableBinaryWriter.Write(this.Depowered);
-            queueableBinaryWriter.Write(this.Repowered);
-            queueableBinaryWriter.Write(this.DelayTime);
-            queueableBinaryWriter.Write(this.DelayEffect);
-            queueableBinaryWriter.Write(this.AutomaticActivationRadius);
+            base.Write(writer);
+            writer.Write(((int)(this.DeviceDeviceFlags)));
+            writer.Write(this.PowerTransitionTime);
+            writer.Write(this.PowerAccelerationTime);
+            writer.Write(this.PositionTransitionTime);
+            writer.Write(this.PositionAccelerationTime);
+            writer.Write(this.DepoweredPositionTransitionTime);
+            writer.Write(this.DepoweredPositionAccelerationTime);
+            writer.Write(((short)(this.DeviceLightmapFlags)));
+            writer.Write(this.fieldpad3);
+            writer.Write(this.Open);
+            writer.Write(this.Close);
+            writer.Write(this.Opened);
+            writer.Write(this.Closed);
+            writer.Write(this.Depowered);
+            writer.Write(this.Repowered);
+            writer.Write(this.DelayTime);
+            writer.Write(this.DelayEffect);
+            writer.Write(this.AutomaticActivationRadius);
         }
         [System.FlagsAttribute()]
         public enum DeviceFlags : int

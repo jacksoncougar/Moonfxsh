@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -74,25 +75,25 @@ namespace Moonfish.Guerilla.Tags
             this.Keyframes0 = base.ReadBlockArrayData<ScreenAnimationKeyframeReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.Keyframes1 = base.ReadBlockArrayData<ScreenAnimationKeyframeReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Keyframes);
-            queueableBinaryWriter.Defer(this.Keyframes0);
-            queueableBinaryWriter.Defer(this.Keyframes1);
+            base.DeferReferences(writer);
+            writer.Defer(this.Keyframes);
+            writer.Defer(this.Keyframes0);
+            writer.Defer(this.Keyframes1);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.AnimationReferenceFlags)));
-            queueableBinaryWriter.Write(this.AnimationPeriod);
-            queueableBinaryWriter.WritePointer(this.Keyframes);
-            queueableBinaryWriter.Write(this.AnimationPeriod0);
-            queueableBinaryWriter.WritePointer(this.Keyframes0);
-            queueableBinaryWriter.Write(this.AnimationPeriod1);
-            queueableBinaryWriter.Write(((short)(this.AmbientAnimationLoopingStyle)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.Keyframes1);
+            base.Write(writer);
+            writer.Write(((int)(this.AnimationReferenceFlags)));
+            writer.Write(this.AnimationPeriod);
+            writer.WritePointer(this.Keyframes);
+            writer.Write(this.AnimationPeriod0);
+            writer.WritePointer(this.Keyframes0);
+            writer.Write(this.AnimationPeriod1);
+            writer.Write(((short)(this.AmbientAnimationLoopingStyle)));
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.Keyframes1);
         }
         /// <summary>
         /// Animations used by screen definitions for transitions and ambient animating

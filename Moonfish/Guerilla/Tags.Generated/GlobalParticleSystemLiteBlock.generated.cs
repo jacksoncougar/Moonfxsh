@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -95,39 +96,40 @@ namespace Moonfish.Guerilla.Tags
             this.GeometryBlockInfo.ReadInstances(binaryReader, pointerQueue);
             this.ParticleSystemData = base.ReadBlockArrayData<ParticleSystemLiteDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.GeometryBlockInfo.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.ParticleSystemData);
+            base.DeferReferences(writer);
+            this.GeometryBlockInfo.DeferReferences(writer);
+            this.GeometryBlockInfo.DeferReferences(writer);
+            writer.Defer(this.ParticleSystemData);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Sprites);
-            queueableBinaryWriter.Write(this.ViewBoxWidth);
-            queueableBinaryWriter.Write(this.ViewBoxHeight);
-            queueableBinaryWriter.Write(this.ViewBoxDepth);
-            queueableBinaryWriter.Write(this.ExclusionRadius);
-            queueableBinaryWriter.Write(this.MaxVelocity);
-            queueableBinaryWriter.Write(this.MinMass);
-            queueableBinaryWriter.Write(this.MaxMass);
-            queueableBinaryWriter.Write(this.MinSize);
-            queueableBinaryWriter.Write(this.MaxSize);
-            queueableBinaryWriter.Write(this.MaximumNumberOfParticles);
-            queueableBinaryWriter.Write(this.InitialVelocity);
-            queueableBinaryWriter.Write(this.BitmapAnimationSpeed);
-            this.GeometryBlockInfo.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.ParticleSystemData);
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.MininumOpacity);
-            queueableBinaryWriter.Write(this.MaxinumOpacity);
-            queueableBinaryWriter.Write(this.RainStreakScale);
-            queueableBinaryWriter.Write(this.RainLineWidth);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.fieldpad2);
+            base.Write(writer);
+            writer.Write(this.Sprites);
+            writer.Write(this.ViewBoxWidth);
+            writer.Write(this.ViewBoxHeight);
+            writer.Write(this.ViewBoxDepth);
+            writer.Write(this.ExclusionRadius);
+            writer.Write(this.MaxVelocity);
+            writer.Write(this.MinMass);
+            writer.Write(this.MaxMass);
+            writer.Write(this.MinSize);
+            writer.Write(this.MaxSize);
+            writer.Write(this.MaximumNumberOfParticles);
+            writer.Write(this.InitialVelocity);
+            writer.Write(this.BitmapAnimationSpeed);
+            this.GeometryBlockInfo.Write(writer);
+            writer.WritePointer(this.ParticleSystemData);
+            writer.Write(((short)(this.Type)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.MininumOpacity);
+            writer.Write(this.MaxinumOpacity);
+            writer.Write(this.RainStreakScale);
+            writer.Write(this.RainLineWidth);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.fieldpad2);
         }
         public enum TypeEnum : short
         {

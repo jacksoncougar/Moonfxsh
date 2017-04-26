@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -86,37 +87,37 @@ namespace Moonfish.Guerilla.Tags
                 this.FourVectorsStorage00[i].ReadInstances(binaryReader, pointerQueue);
             }
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
             int i;
             for (i = 0; (i < 8); i = (i + 1))
             {
-                this.FourVectorsStorage00[i].DeferReferences(queueableBinaryWriter);
+                this.FourVectorsStorage00[i].DeferReferences(writer);
             }
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.Material);
-            queueableBinaryWriter.Write(((short)(this.MultiSpheresFlags)));
-            queueableBinaryWriter.Write(this.RelativeMassScale);
-            queueableBinaryWriter.Write(this.Friction);
-            queueableBinaryWriter.Write(this.Restitution);
-            queueableBinaryWriter.Write(this.Volume);
-            queueableBinaryWriter.Write(this.Mass);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.Phantom);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.Write(this.Size);
-            queueableBinaryWriter.Write(this.Count);
-            queueableBinaryWriter.Write(this.fieldskip1);
-            queueableBinaryWriter.Write(this.NumSpheres);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.Material);
+            writer.Write(((short)(this.MultiSpheresFlags)));
+            writer.Write(this.RelativeMassScale);
+            writer.Write(this.Friction);
+            writer.Write(this.Restitution);
+            writer.Write(this.Volume);
+            writer.Write(this.Mass);
+            writer.Write(this.fieldskip);
+            writer.Write(this.Phantom);
+            writer.Write(this.fieldskip0);
+            writer.Write(this.Size);
+            writer.Write(this.Count);
+            writer.Write(this.fieldskip1);
+            writer.Write(this.NumSpheres);
             int i;
             for (i = 0; (i < 8); i = (i + 1))
             {
-                this.FourVectorsStorage00[i].Write(queueableBinaryWriter);
+                this.FourVectorsStorage00[i].Write(writer);
             }
         }
         [System.FlagsAttribute()]
@@ -155,15 +156,15 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
             {
-                base.DeferReferences(queueableBinaryWriter);
+                base.DeferReferences(writer);
             }
-            public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+            public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
             {
-                base.Write(queueableBinaryWriter);
-                queueableBinaryWriter.Write(this.Sphere);
-                queueableBinaryWriter.Write(this.fieldskip);
+                base.Write(writer);
+                writer.Write(this.Sphere);
+                writer.Write(this.fieldskip);
             }
         }
     }

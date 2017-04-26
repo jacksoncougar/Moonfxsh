@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -79,27 +80,27 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MinimumDistance);
-            queueableBinaryWriter.Write(this.MaximumDistance);
-            queueableBinaryWriter.Write(this.SkipFraction);
-            queueableBinaryWriter.Write(this.MaximumBendPerSecond);
-            queueableBinaryWriter.Write(this.GainBase);
-            queueableBinaryWriter.Write(this.GainVariance);
-            queueableBinaryWriter.Write(this.RandomPitchBounds);
-            queueableBinaryWriter.Write(this.InnerConeAngle);
-            queueableBinaryWriter.Write(this.OuterConeAngle);
-            queueableBinaryWriter.Write(this.OuterConeGain);
-            queueableBinaryWriter.Write(((int)(this.SoundPlaybackParametersStructFlags)));
-            queueableBinaryWriter.Write(this.Azimuth);
-            queueableBinaryWriter.Write(this.PositionalGain);
-            queueableBinaryWriter.Write(this.FirstPersonGain);
+            base.Write(writer);
+            writer.Write(this.MinimumDistance);
+            writer.Write(this.MaximumDistance);
+            writer.Write(this.SkipFraction);
+            writer.Write(this.MaximumBendPerSecond);
+            writer.Write(this.GainBase);
+            writer.Write(this.GainVariance);
+            writer.Write(this.RandomPitchBounds);
+            writer.Write(this.InnerConeAngle);
+            writer.Write(this.OuterConeAngle);
+            writer.Write(this.OuterConeGain);
+            writer.Write(((int)(this.SoundPlaybackParametersStructFlags)));
+            writer.Write(this.Azimuth);
+            writer.Write(this.PositionalGain);
+            writer.Write(this.FirstPersonGain);
         }
         /// <summary>
         /// NOTE: this will only apply when the sound is started via script

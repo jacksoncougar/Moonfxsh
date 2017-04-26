@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -92,37 +93,37 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.MultitexOverlay = base.ReadBlockArrayData<GlobalHudMultitextureOverlayDefinition>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.MultitexOverlay);
+            base.DeferReferences(writer);
+            writer.Defer(this.MultitexOverlay);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.AnchorOffset);
-            queueableBinaryWriter.Write(this.WidthScale);
-            queueableBinaryWriter.Write(this.HeightScale);
-            queueableBinaryWriter.Write(((short)(this.UnitHudAuxilaryOverlayScalingFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.InterfaceBitmap);
-            queueableBinaryWriter.Write(this.DefaultColor);
-            queueableBinaryWriter.Write(this.FlashingColor);
-            queueableBinaryWriter.Write(this.FlashPeriod);
-            queueableBinaryWriter.Write(this.FlashDelay);
-            queueableBinaryWriter.Write(this.NumberOfFlashes);
-            queueableBinaryWriter.Write(((short)(this.UnitHudAuxilaryOverlayFlashFlags)));
-            queueableBinaryWriter.Write(this.FlashLength);
-            queueableBinaryWriter.Write(this.DisabledColor);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.SequenceIndex);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.WritePointer(this.MultitexOverlay);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(((short)(this.UnitHudAuxilaryOverlayFlags)));
-            queueableBinaryWriter.Write(this.fieldpad4);
+            base.Write(writer);
+            writer.Write(this.AnchorOffset);
+            writer.Write(this.WidthScale);
+            writer.Write(this.HeightScale);
+            writer.Write(((short)(this.UnitHudAuxilaryOverlayScalingFlags)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.InterfaceBitmap);
+            writer.Write(this.DefaultColor);
+            writer.Write(this.FlashingColor);
+            writer.Write(this.FlashPeriod);
+            writer.Write(this.FlashDelay);
+            writer.Write(this.NumberOfFlashes);
+            writer.Write(((short)(this.UnitHudAuxilaryOverlayFlashFlags)));
+            writer.Write(this.FlashLength);
+            writer.Write(this.DisabledColor);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.SequenceIndex);
+            writer.Write(this.fieldpad2);
+            writer.WritePointer(this.MultitexOverlay);
+            writer.Write(this.fieldpad3);
+            writer.Write(((short)(this.Type)));
+            writer.Write(((short)(this.UnitHudAuxilaryOverlayFlags)));
+            writer.Write(this.fieldpad4);
         }
         [System.FlagsAttribute()]
         public enum ScalingFlags : short

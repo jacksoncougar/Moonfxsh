@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -58,20 +59,20 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.SequenceIndex);
-            queueableBinaryWriter.Write(this.WidthOffset);
-            queueableBinaryWriter.Write(this.OffsetFromReferenceCorner);
-            queueableBinaryWriter.Write(this.OverrideIconColor);
-            queueableBinaryWriter.Write(this.FrameRate030);
-            queueableBinaryWriter.Write(((byte)(this.HudButtonIconFlags)));
-            queueableBinaryWriter.Write(this.TextIndex);
+            base.Write(writer);
+            writer.Write(this.SequenceIndex);
+            writer.Write(this.WidthOffset);
+            writer.Write(this.OffsetFromReferenceCorner);
+            writer.Write(this.OverrideIconColor);
+            writer.Write(this.FrameRate030);
+            writer.Write(((byte)(this.HudButtonIconFlags)));
+            writer.Write(this.TextIndex);
         }
         [System.FlagsAttribute()]
         public enum Flags : byte

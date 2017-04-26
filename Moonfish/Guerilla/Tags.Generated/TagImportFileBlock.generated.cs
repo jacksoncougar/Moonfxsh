@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -27,7 +28,7 @@ namespace Moonfish.Guerilla.Tags
         private byte[] fieldpad = new byte[88];
         public int Checksum;
         public int Size;
-        public byte[] ZippedData;
+        private byte[] ZippedData;
         private byte[] fieldpad0 = new byte[128];
         public override int SerializedSize
         {
@@ -61,22 +62,22 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.ZippedData = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.ZippedData);
+            base.DeferReferences(writer);
+            writer.Defer(this.ZippedData);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Path);
-            queueableBinaryWriter.Write(this.ModificationDate);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Checksum);
-            queueableBinaryWriter.Write(this.Size);
-            queueableBinaryWriter.WritePointer(this.ZippedData);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write(writer);
+            writer.Write(this.Path);
+            writer.Write(this.ModificationDate);
+            writer.Write(this.fieldskip);
+            writer.Write(this.fieldpad);
+            writer.Write(this.Checksum);
+            writer.Write(this.Size);
+            writer.WritePointer(this.ZippedData);
+            writer.Write(this.fieldpad0);
         }
     }
 }

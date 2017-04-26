@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -166,64 +167,64 @@ namespace Moonfish.Guerilla.Tags
             this.ColorAnimation = base.ReadBlockArrayData<LightColorAnimationBlock>(binaryReader, pointerQueue.Dequeue());
             this.GelAnimation = base.ReadBlockArrayData<LightGelAnimationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.BrightnessAnimation);
-            queueableBinaryWriter.Defer(this.ColorAnimation);
-            queueableBinaryWriter.Defer(this.GelAnimation);
+            base.DeferReferences(writer);
+            writer.Defer(this.BrightnessAnimation);
+            writer.Defer(this.ColorAnimation);
+            writer.Defer(this.GelAnimation);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.LightFlags)));
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.SizeModifer);
-            queueableBinaryWriter.Write(this.ShadowQualityBias);
-            queueableBinaryWriter.Write(((short)(this.ShadowTapBias)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.Radius);
-            queueableBinaryWriter.Write(this.SpecularRadius);
-            queueableBinaryWriter.Write(this.NearWidth);
-            queueableBinaryWriter.Write(this.HeightStretch);
-            queueableBinaryWriter.Write(this.FieldOfView);
-            queueableBinaryWriter.Write(this.FalloffDistance);
-            queueableBinaryWriter.Write(this.CutoffDistance);
-            queueableBinaryWriter.Write(((int)(this.LightInterpolationFlags)));
-            queueableBinaryWriter.Write(this.BloomBounds);
-            queueableBinaryWriter.Write(this.SpecularLowerBound);
-            queueableBinaryWriter.Write(this.SpecularUpperBound);
-            queueableBinaryWriter.Write(this.DiffuseLowerBound);
-            queueableBinaryWriter.Write(this.DiffuseUpperBound);
-            queueableBinaryWriter.Write(this.BrightnessBounds);
-            queueableBinaryWriter.Write(this.GelMap);
-            queueableBinaryWriter.Write(((short)(this.SpecularMask)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(((short)(this.FalloffFunction)));
-            queueableBinaryWriter.Write(((short)(this.DiffuseContrast)));
-            queueableBinaryWriter.Write(((short)(this.SpecularContrast)));
-            queueableBinaryWriter.Write(((short)(this.FalloffGeometry)));
-            queueableBinaryWriter.Write(this.LensFlare);
-            queueableBinaryWriter.Write(this.BoundingRadius);
-            queueableBinaryWriter.Write(this.LightVolume);
-            queueableBinaryWriter.Write(((short)(this.DefaultLightmapSetting)));
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.LightmapHalfLife);
-            queueableBinaryWriter.Write(this.LightmapLightScale);
-            queueableBinaryWriter.Write(this.Duration);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(((short)(this.LightLightFalloffFunction)));
-            queueableBinaryWriter.Write(((short)(this.IlluminationFade)));
-            queueableBinaryWriter.Write(((short)(this.ShadowFade)));
-            queueableBinaryWriter.Write(((short)(this.SpecularFade)));
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(((int)(this.LightLightFlags0)));
-            queueableBinaryWriter.WritePointer(this.BrightnessAnimation);
-            queueableBinaryWriter.WritePointer(this.ColorAnimation);
-            queueableBinaryWriter.WritePointer(this.GelAnimation);
-            queueableBinaryWriter.Write(this.Shader);
+            base.Write(writer);
+            writer.Write(((int)(this.LightFlags)));
+            writer.Write(((short)(this.Type)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.SizeModifer);
+            writer.Write(this.ShadowQualityBias);
+            writer.Write(((short)(this.ShadowTapBias)));
+            writer.Write(this.fieldpad0);
+            writer.Write(this.Radius);
+            writer.Write(this.SpecularRadius);
+            writer.Write(this.NearWidth);
+            writer.Write(this.HeightStretch);
+            writer.Write(this.FieldOfView);
+            writer.Write(this.FalloffDistance);
+            writer.Write(this.CutoffDistance);
+            writer.Write(((int)(this.LightInterpolationFlags)));
+            writer.Write(this.BloomBounds);
+            writer.Write(this.SpecularLowerBound);
+            writer.Write(this.SpecularUpperBound);
+            writer.Write(this.DiffuseLowerBound);
+            writer.Write(this.DiffuseUpperBound);
+            writer.Write(this.BrightnessBounds);
+            writer.Write(this.GelMap);
+            writer.Write(((short)(this.SpecularMask)));
+            writer.Write(this.fieldpad1);
+            writer.Write(this.fieldpad2);
+            writer.Write(((short)(this.FalloffFunction)));
+            writer.Write(((short)(this.DiffuseContrast)));
+            writer.Write(((short)(this.SpecularContrast)));
+            writer.Write(((short)(this.FalloffGeometry)));
+            writer.Write(this.LensFlare);
+            writer.Write(this.BoundingRadius);
+            writer.Write(this.LightVolume);
+            writer.Write(((short)(this.DefaultLightmapSetting)));
+            writer.Write(this.fieldpad3);
+            writer.Write(this.LightmapHalfLife);
+            writer.Write(this.LightmapLightScale);
+            writer.Write(this.Duration);
+            writer.Write(this.fieldpad4);
+            writer.Write(((short)(this.LightLightFalloffFunction)));
+            writer.Write(((short)(this.IlluminationFade)));
+            writer.Write(((short)(this.ShadowFade)));
+            writer.Write(((short)(this.SpecularFade)));
+            writer.Write(this.fieldpad5);
+            writer.Write(((int)(this.LightLightFlags0)));
+            writer.WritePointer(this.BrightnessAnimation);
+            writer.WritePointer(this.ColorAnimation);
+            writer.WritePointer(this.GelAnimation);
+            writer.Write(this.Shader);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

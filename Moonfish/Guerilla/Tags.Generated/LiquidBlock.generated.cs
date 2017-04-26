@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -62,22 +63,22 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Arcs = base.ReadBlockArrayData<LiquidArcBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Arcs);
+            base.DeferReferences(writer);
+            writer.Defer(this.Arcs);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(this.AttachmentMarkerName);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.FalloffDistanceFromCamera);
-            queueableBinaryWriter.Write(this.CutoffDistanceFromCamera);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.WritePointer(this.Arcs);
+            base.Write(writer);
+            writer.Write(this.fieldpad);
+            writer.Write(((short)(this.Type)));
+            writer.Write(this.AttachmentMarkerName);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.FalloffDistanceFromCamera);
+            writer.Write(this.CutoffDistanceFromCamera);
+            writer.Write(this.fieldpad1);
+            writer.WritePointer(this.Arcs);
         }
         public enum TypeEnum : short
         {

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -66,24 +67,24 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.ConstantColor0);
-            queueableBinaryWriter.Write(this.ConstantColor1);
-            queueableBinaryWriter.Write(this.ColorARegisterPtrIndex);
-            queueableBinaryWriter.Write(this.ColorBRegisterPtrIndex);
-            queueableBinaryWriter.Write(this.ColorCRegisterPtrIndex);
-            queueableBinaryWriter.Write(this.ColorDRegisterPtrIndex);
-            queueableBinaryWriter.Write(this.AlphaARegisterPtrIndex);
-            queueableBinaryWriter.Write(this.AlphaBRegisterPtrIndex);
-            queueableBinaryWriter.Write(this.AlphaCRegisterPtrIndex);
-            queueableBinaryWriter.Write(this.AlphaDRegisterPtrIndex);
+            base.Write(writer);
+            writer.Write(this.fieldpad);
+            writer.Write(this.ConstantColor0);
+            writer.Write(this.ConstantColor1);
+            writer.Write(this.ColorARegisterPtrIndex);
+            writer.Write(this.ColorBRegisterPtrIndex);
+            writer.Write(this.ColorCRegisterPtrIndex);
+            writer.Write(this.ColorDRegisterPtrIndex);
+            writer.Write(this.AlphaARegisterPtrIndex);
+            writer.Write(this.AlphaBRegisterPtrIndex);
+            writer.Write(this.AlphaCRegisterPtrIndex);
+            writer.Write(this.AlphaDRegisterPtrIndex);
         }
     }
 }

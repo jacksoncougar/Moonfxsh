@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -80,28 +81,28 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.DestinationType)));
-            queueableBinaryWriter.Write(((short)(this.Destination)));
-            queueableBinaryWriter.Write(((short)(this.Source)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.InBounds);
-            queueableBinaryWriter.Write(this.OutBounds);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.TintColorLowerBound);
-            queueableBinaryWriter.Write(this.TintColorUpperBound);
-            queueableBinaryWriter.Write(((short)(this.PeriodicFunction)));
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.FunctionPeriod);
-            queueableBinaryWriter.Write(this.FunctionPhase);
-            queueableBinaryWriter.Write(this.fieldpad3);
+            base.Write(writer);
+            writer.Write(this.fieldpad);
+            writer.Write(((short)(this.DestinationType)));
+            writer.Write(((short)(this.Destination)));
+            writer.Write(((short)(this.Source)));
+            writer.Write(this.fieldpad0);
+            writer.Write(this.InBounds);
+            writer.Write(this.OutBounds);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.TintColorLowerBound);
+            writer.Write(this.TintColorUpperBound);
+            writer.Write(((short)(this.PeriodicFunction)));
+            writer.Write(this.fieldpad2);
+            writer.Write(this.FunctionPeriod);
+            writer.Write(this.FunctionPhase);
+            writer.Write(this.fieldpad3);
         }
         /// <summary>
         /// These describe the relationship that causes the effect.

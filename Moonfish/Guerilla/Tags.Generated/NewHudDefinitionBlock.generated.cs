@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -60,22 +61,23 @@ namespace Moonfish.Guerilla.Tags
             this.DashlightData.ReadInstances(binaryReader, pointerQueue);
             this.ScreenEffectWidgets = base.ReadBlockArrayData<HudScreenEffectWidgets>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.BitmapWidgets);
-            queueableBinaryWriter.Defer(this.TextWidgets);
-            this.DashlightData.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.ScreenEffectWidgets);
+            base.DeferReferences(writer);
+            writer.Defer(this.BitmapWidgets);
+            writer.Defer(this.TextWidgets);
+            this.DashlightData.DeferReferences(writer);
+            this.DashlightData.DeferReferences(writer);
+            writer.Defer(this.ScreenEffectWidgets);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DONOTUSE);
-            queueableBinaryWriter.WritePointer(this.BitmapWidgets);
-            queueableBinaryWriter.WritePointer(this.TextWidgets);
-            this.DashlightData.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.ScreenEffectWidgets);
+            base.Write(writer);
+            writer.Write(this.DONOTUSE);
+            writer.WritePointer(this.BitmapWidgets);
+            writer.WritePointer(this.TextWidgets);
+            this.DashlightData.Write(writer);
+            writer.WritePointer(this.ScreenEffectWidgets);
         }
     }
 }

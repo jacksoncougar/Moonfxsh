@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -59,20 +60,20 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Duration);
-            queueableBinaryWriter.Write(this.TransitionDuration);
-            queueableBinaryWriter.Write(this.Physics);
-            queueableBinaryWriter.Write(this.Width);
-            queueableBinaryWriter.Write(this.ColorLowerBound);
-            queueableBinaryWriter.Write(this.ColorUpperBound);
-            queueableBinaryWriter.Write(((int)(this.ContrailPointStatesScaleFlags)));
+            base.Write(writer);
+            writer.Write(this.Duration);
+            writer.Write(this.TransitionDuration);
+            writer.Write(this.Physics);
+            writer.Write(this.Width);
+            writer.Write(this.ColorLowerBound);
+            writer.Write(this.ColorUpperBound);
+            writer.Write(((int)(this.ContrailPointStatesScaleFlags)));
         }
         [System.FlagsAttribute()]
         public enum ScaleFlags : int

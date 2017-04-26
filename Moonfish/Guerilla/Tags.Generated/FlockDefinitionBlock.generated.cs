@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -115,45 +116,45 @@ namespace Moonfish.Guerilla.Tags
             this.Sources = base.ReadBlockArrayData<FlockSourceBlock>(binaryReader, pointerQueue.Dequeue());
             this.Sinks = base.ReadBlockArrayData<FlockSinkBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Sources);
-            queueableBinaryWriter.Defer(this.Sinks);
+            base.DeferReferences(writer);
+            writer.Defer(this.Sources);
+            writer.Defer(this.Sinks);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Bsp);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.BoundingVolume);
-            queueableBinaryWriter.Write(((short)(this.FlockDefinitionFlags)));
-            queueableBinaryWriter.Write(this.EcologyMargin);
-            queueableBinaryWriter.WritePointer(this.Sources);
-            queueableBinaryWriter.WritePointer(this.Sinks);
-            queueableBinaryWriter.Write(this.ProductionFrequency);
-            queueableBinaryWriter.Write(this.Scale);
-            queueableBinaryWriter.Write(this.Creature);
-            queueableBinaryWriter.Write(this.BoidCount);
-            queueableBinaryWriter.Write(this.NeighborhoodRadius);
-            queueableBinaryWriter.Write(this.AvoidanceRadius);
-            queueableBinaryWriter.Write(this.ForwardScale);
-            queueableBinaryWriter.Write(this.AlignmentScale);
-            queueableBinaryWriter.Write(this.AvoidanceScale);
-            queueableBinaryWriter.Write(this.LevelingForceScale);
-            queueableBinaryWriter.Write(this.SinkScale);
-            queueableBinaryWriter.Write(this.PerceptionAngle);
-            queueableBinaryWriter.Write(this.AverageThrottle);
-            queueableBinaryWriter.Write(this.MaximumThrottle);
-            queueableBinaryWriter.Write(this.PositionScale);
-            queueableBinaryWriter.Write(this.PositionMinRadius);
-            queueableBinaryWriter.Write(this.PositionMaxRadius);
-            queueableBinaryWriter.Write(this.MovementWeightThreshold);
-            queueableBinaryWriter.Write(this.DangerRadius);
-            queueableBinaryWriter.Write(this.DangerScale);
-            queueableBinaryWriter.Write(this.RandomOffsetScale);
-            queueableBinaryWriter.Write(this.RandomOffsetPeriod);
-            queueableBinaryWriter.Write(this.FlockName);
+            base.Write(writer);
+            writer.Write(this.Bsp);
+            writer.Write(this.fieldpad);
+            writer.Write(this.BoundingVolume);
+            writer.Write(((short)(this.FlockDefinitionFlags)));
+            writer.Write(this.EcologyMargin);
+            writer.WritePointer(this.Sources);
+            writer.WritePointer(this.Sinks);
+            writer.Write(this.ProductionFrequency);
+            writer.Write(this.Scale);
+            writer.Write(this.Creature);
+            writer.Write(this.BoidCount);
+            writer.Write(this.NeighborhoodRadius);
+            writer.Write(this.AvoidanceRadius);
+            writer.Write(this.ForwardScale);
+            writer.Write(this.AlignmentScale);
+            writer.Write(this.AvoidanceScale);
+            writer.Write(this.LevelingForceScale);
+            writer.Write(this.SinkScale);
+            writer.Write(this.PerceptionAngle);
+            writer.Write(this.AverageThrottle);
+            writer.Write(this.MaximumThrottle);
+            writer.Write(this.PositionScale);
+            writer.Write(this.PositionMinRadius);
+            writer.Write(this.PositionMaxRadius);
+            writer.Write(this.MovementWeightThreshold);
+            writer.Write(this.DangerRadius);
+            writer.Write(this.DangerScale);
+            writer.Write(this.RandomOffsetScale);
+            writer.Write(this.RandomOffsetPeriod);
+            writer.Write(this.FlockName);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

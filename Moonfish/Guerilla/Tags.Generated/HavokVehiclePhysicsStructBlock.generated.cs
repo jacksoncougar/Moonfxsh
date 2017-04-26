@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -35,6 +36,7 @@ namespace Moonfish.Guerilla.Tags
         public float Radius;
         public AntiGravityPointDefinitionBlock[] AntiGravityPoints = new AntiGravityPointDefinitionBlock[0];
         public FrictionPointDefinitionBlock[] FrictionPoints = new FrictionPointDefinitionBlock[0];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
         public VehiclePhantomShapeBlock[] shapePhantomShape = new VehiclePhantomShapeBlock[0];
         public override int SerializedSize
         {
@@ -77,31 +79,31 @@ namespace Moonfish.Guerilla.Tags
             this.FrictionPoints = base.ReadBlockArrayData<FrictionPointDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
             this.shapePhantomShape = base.ReadBlockArrayData<VehiclePhantomShapeBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.AntiGravityPoints);
-            queueableBinaryWriter.Defer(this.FrictionPoints);
-            queueableBinaryWriter.Defer(this.shapePhantomShape);
+            base.DeferReferences(writer);
+            writer.Defer(this.AntiGravityPoints);
+            writer.Defer(this.FrictionPoints);
+            writer.Defer(this.shapePhantomShape);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.HavokVehiclePhysicsStructFlags)));
-            queueableBinaryWriter.Write(this.GroundFriction);
-            queueableBinaryWriter.Write(this.GroundDepth);
-            queueableBinaryWriter.Write(this.GroundDampFactor);
-            queueableBinaryWriter.Write(this.GroundMovingFriction);
-            queueableBinaryWriter.Write(this.GroundMaximumSlope0);
-            queueableBinaryWriter.Write(this.GroundMaximumSlope1);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.AntiGravityBankLift);
-            queueableBinaryWriter.Write(this.SteeringBankReactionScale);
-            queueableBinaryWriter.Write(this.GravityScale);
-            queueableBinaryWriter.Write(this.Radius);
-            queueableBinaryWriter.WritePointer(this.AntiGravityPoints);
-            queueableBinaryWriter.WritePointer(this.FrictionPoints);
-            queueableBinaryWriter.WritePointer(this.shapePhantomShape);
+            base.Write(writer);
+            writer.Write(((int)(this.HavokVehiclePhysicsStructFlags)));
+            writer.Write(this.GroundFriction);
+            writer.Write(this.GroundDepth);
+            writer.Write(this.GroundDampFactor);
+            writer.Write(this.GroundMovingFriction);
+            writer.Write(this.GroundMaximumSlope0);
+            writer.Write(this.GroundMaximumSlope1);
+            writer.Write(this.fieldpad);
+            writer.Write(this.AntiGravityBankLift);
+            writer.Write(this.SteeringBankReactionScale);
+            writer.Write(this.GravityScale);
+            writer.Write(this.Radius);
+            writer.WritePointer(this.AntiGravityPoints);
+            writer.WritePointer(this.FrictionPoints);
+            writer.WritePointer(this.shapePhantomShape);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

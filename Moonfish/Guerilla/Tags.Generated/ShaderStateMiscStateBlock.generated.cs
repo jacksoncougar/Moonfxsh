@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -24,11 +25,12 @@ namespace Moonfish.Guerilla.Tags
         public Flags ShaderStateMiscStateFlags;
         private byte[] fieldpad = new byte[2];
         public Moonfish.Tags.ColourR1G1B1 FogColor;
+        private byte[] rgb8padding = new byte[1];
         public override int SerializedSize
         {
             get
             {
-                return 7;
+                return 8;
             }
         }
         public override int Alignment
@@ -44,22 +46,24 @@ namespace Moonfish.Guerilla.Tags
             this.ShaderStateMiscStateFlags = ((Flags)(binaryReader.ReadInt16()));
             this.fieldpad = binaryReader.ReadBytes(2);
             this.FogColor = binaryReader.ReadColourR1G1B1();
+            this.rgb8padding = binaryReader.ReadBytes(1);
             return pointerQueue;
         }
         public override void ReadInstances(Moonfish.Guerilla.BlamBinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.ShaderStateMiscStateFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.FogColor);
+            base.Write(writer);
+            writer.Write(((short)(this.ShaderStateMiscStateFlags)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.FogColor);
+            writer.Write(this.rgb8padding);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

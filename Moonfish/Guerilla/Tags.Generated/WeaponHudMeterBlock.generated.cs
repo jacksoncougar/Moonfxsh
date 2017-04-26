@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -35,8 +36,11 @@ namespace Moonfish.Guerilla.Tags
         [Moonfish.Tags.TagReferenceAttribute("bitm")]
         public Moonfish.Tags.TagReference MeterBitmap;
         public Moonfish.Tags.ColourR1G1B1 ColorAtMeterMinimum;
+        private byte[] rgb8padding = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 ColorAtMeterMaximum;
+        private byte[] rgb8padding0 = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 FlashColor;
+        private byte[] rgb8padding1 = new byte[1];
         public Moonfish.Tags.ColourA1R1G1B1 EmptyColor;
         public Flags WeaponHudMeterFlags;
         public byte MinumumMeterValue;
@@ -54,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
         {
             get
             {
-                return 165;
+                return 168;
             }
         }
         public override int Alignment
@@ -80,8 +84,11 @@ namespace Moonfish.Guerilla.Tags
             this.fieldpad3 = binaryReader.ReadBytes(20);
             this.MeterBitmap = binaryReader.ReadTagReference();
             this.ColorAtMeterMinimum = binaryReader.ReadColourR1G1B1();
+            this.rgb8padding = binaryReader.ReadBytes(1);
             this.ColorAtMeterMaximum = binaryReader.ReadColourR1G1B1();
+            this.rgb8padding0 = binaryReader.ReadBytes(1);
             this.FlashColor = binaryReader.ReadColourR1G1B1();
+            this.rgb8padding1 = binaryReader.ReadBytes(1);
             this.EmptyColor = binaryReader.ReadColourA1R1G1B1();
             this.WeaponHudMeterFlags = ((Flags)(binaryReader.ReadByte()));
             this.MinumumMeterValue = binaryReader.ReadByte();
@@ -102,42 +109,45 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.GNullBlock = base.ReadBlockArrayData<GNullBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.GNullBlock);
+            base.DeferReferences(writer);
+            writer.Defer(this.GNullBlock);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.StateAttachedTo)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.CanUseOnMapType)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.AnchorOffset);
-            queueableBinaryWriter.Write(this.WidthScale);
-            queueableBinaryWriter.Write(this.HeightScale);
-            queueableBinaryWriter.Write(((short)(this.WeaponHudMeterScalingFlags)));
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.MeterBitmap);
-            queueableBinaryWriter.Write(this.ColorAtMeterMinimum);
-            queueableBinaryWriter.Write(this.ColorAtMeterMaximum);
-            queueableBinaryWriter.Write(this.FlashColor);
-            queueableBinaryWriter.Write(this.EmptyColor);
-            queueableBinaryWriter.Write(((byte)(this.WeaponHudMeterFlags)));
-            queueableBinaryWriter.Write(this.MinumumMeterValue);
-            queueableBinaryWriter.Write(this.SequenceIndex);
-            queueableBinaryWriter.Write(this.AlphaMultiplier);
-            queueableBinaryWriter.Write(this.AlphaBias);
-            queueableBinaryWriter.Write(this.ValueScale);
-            queueableBinaryWriter.Write(this.Opacity);
-            queueableBinaryWriter.Write(this.Translucency);
-            queueableBinaryWriter.Write(this.DisabledColor);
-            queueableBinaryWriter.WritePointer(this.GNullBlock);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.fieldpad5);
+            base.Write(writer);
+            writer.Write(((short)(this.StateAttachedTo)));
+            writer.Write(this.fieldpad);
+            writer.Write(((short)(this.CanUseOnMapType)));
+            writer.Write(this.fieldpad0);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.AnchorOffset);
+            writer.Write(this.WidthScale);
+            writer.Write(this.HeightScale);
+            writer.Write(((short)(this.WeaponHudMeterScalingFlags)));
+            writer.Write(this.fieldpad2);
+            writer.Write(this.fieldpad3);
+            writer.Write(this.MeterBitmap);
+            writer.Write(this.ColorAtMeterMinimum);
+            writer.Write(this.rgb8padding);
+            writer.Write(this.ColorAtMeterMaximum);
+            writer.Write(this.rgb8padding0);
+            writer.Write(this.FlashColor);
+            writer.Write(this.rgb8padding1);
+            writer.Write(this.EmptyColor);
+            writer.Write(((byte)(this.WeaponHudMeterFlags)));
+            writer.Write(this.MinumumMeterValue);
+            writer.Write(this.SequenceIndex);
+            writer.Write(this.AlphaMultiplier);
+            writer.Write(this.AlphaBias);
+            writer.Write(this.ValueScale);
+            writer.Write(this.Opacity);
+            writer.Write(this.Translucency);
+            writer.Write(this.DisabledColor);
+            writer.WritePointer(this.GNullBlock);
+            writer.Write(this.fieldpad4);
+            writer.Write(this.fieldpad5);
         }
         public enum StateAttachedToEnum : short
         {

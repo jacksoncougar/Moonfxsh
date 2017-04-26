@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -41,7 +42,7 @@ namespace Moonfish.Guerilla.Tags
         public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(Moonfish.Guerilla.BlamBinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(19));
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(20));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(32));
             this.fieldpad = binaryReader.ReadBytes(32);
             return pointerQueue;
@@ -52,18 +53,18 @@ namespace Moonfish.Guerilla.Tags
             this.ParticlesRenderData = base.ReadBlockArrayData<ParticlesRenderDataBlock>(binaryReader, pointerQueue.Dequeue());
             this.ParticlesOtherData = base.ReadBlockArrayData<ParticlesUpdateDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.ParticlesRenderData);
-            queueableBinaryWriter.Defer(this.ParticlesOtherData);
+            base.DeferReferences(writer);
+            writer.Defer(this.ParticlesRenderData);
+            writer.Defer(this.ParticlesOtherData);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.ParticlesRenderData);
-            queueableBinaryWriter.WritePointer(this.ParticlesOtherData);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write(writer);
+            writer.WritePointer(this.ParticlesRenderData);
+            writer.WritePointer(this.ParticlesOtherData);
+            writer.Write(this.fieldpad);
         }
     }
 }

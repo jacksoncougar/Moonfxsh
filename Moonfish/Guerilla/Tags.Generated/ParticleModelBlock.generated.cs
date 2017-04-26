@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -100,43 +101,48 @@ namespace Moonfish.Guerilla.Tags
             this.CachedData = base.ReadBlockArrayData<CachedDataBlock>(binaryReader, pointerQueue.Dequeue());
             this.GeometrySectionInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.ScaleX.DeferReferences(queueableBinaryWriter);
-            this.ScaleY.DeferReferences(queueableBinaryWriter);
-            this.ScaleZ.DeferReferences(queueableBinaryWriter);
-            this.Rotation.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Locations);
-            queueableBinaryWriter.Defer(this.AttachedParticleSystems);
-            queueableBinaryWriter.Defer(this.Models);
-            queueableBinaryWriter.Defer(this.RawVertices);
-            queueableBinaryWriter.Defer(this.Indices);
-            queueableBinaryWriter.Defer(this.CachedData);
-            this.GeometrySectionInfo.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.ScaleX.DeferReferences(writer);
+            this.ScaleX.DeferReferences(writer);
+            this.ScaleY.DeferReferences(writer);
+            this.ScaleY.DeferReferences(writer);
+            this.ScaleZ.DeferReferences(writer);
+            this.ScaleZ.DeferReferences(writer);
+            this.Rotation.DeferReferences(writer);
+            this.Rotation.DeferReferences(writer);
+            writer.Defer(this.Locations);
+            writer.Defer(this.AttachedParticleSystems);
+            writer.Defer(this.Models);
+            writer.Defer(this.RawVertices);
+            writer.Defer(this.Indices);
+            writer.Defer(this.CachedData);
+            this.GeometrySectionInfo.DeferReferences(writer);
+            this.GeometrySectionInfo.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.ParticleModelFlags)));
-            queueableBinaryWriter.Write(((int)(this.Orientation)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Shader);
-            this.ScaleX.Write(queueableBinaryWriter);
-            this.ScaleY.Write(queueableBinaryWriter);
-            this.ScaleZ.Write(queueableBinaryWriter);
-            this.Rotation.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.CollisionEffect);
-            queueableBinaryWriter.Write(this.DeathEffect);
-            queueableBinaryWriter.WritePointer(this.Locations);
-            queueableBinaryWriter.WritePointer(this.AttachedParticleSystems);
-            queueableBinaryWriter.WritePointer(this.Models);
-            queueableBinaryWriter.WritePointer(this.RawVertices);
-            queueableBinaryWriter.WritePointer(this.Indices);
-            queueableBinaryWriter.WritePointer(this.CachedData);
-            this.GeometrySectionInfo.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
+            base.Write(writer);
+            writer.Write(((int)(this.ParticleModelFlags)));
+            writer.Write(((int)(this.Orientation)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.Shader);
+            this.ScaleX.Write(writer);
+            this.ScaleY.Write(writer);
+            this.ScaleZ.Write(writer);
+            this.Rotation.Write(writer);
+            writer.Write(this.CollisionEffect);
+            writer.Write(this.DeathEffect);
+            writer.WritePointer(this.Locations);
+            writer.WritePointer(this.AttachedParticleSystems);
+            writer.WritePointer(this.Models);
+            writer.WritePointer(this.RawVertices);
+            writer.WritePointer(this.Indices);
+            writer.WritePointer(this.CachedData);
+            this.GeometrySectionInfo.Write(writer);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.fieldpad1);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

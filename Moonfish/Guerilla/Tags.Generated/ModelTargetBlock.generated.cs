@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -59,21 +60,22 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.LockonData.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.LockonData.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.LockonData.DeferReferences(writer);
+            this.LockonData.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MarkerName);
-            queueableBinaryWriter.Write(this.Size);
-            queueableBinaryWriter.Write(this.ConeAngle);
-            queueableBinaryWriter.Write(this.DamageSection);
-            queueableBinaryWriter.Write(this.Variant);
-            queueableBinaryWriter.Write(this.TargetingRelevance);
-            this.LockonData.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(this.MarkerName);
+            writer.Write(this.Size);
+            writer.Write(this.ConeAngle);
+            writer.Write(this.DamageSection);
+            writer.Write(this.Variant);
+            writer.Write(this.TargetingRelevance);
+            this.LockonData.Write(writer);
         }
     }
 }

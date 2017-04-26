@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -70,26 +71,26 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.CharacterPerceptionPerceptionFlags)));
-            queueableBinaryWriter.Write(this.MaxVisionDistance);
-            queueableBinaryWriter.Write(this.CentralVisionAngle);
-            queueableBinaryWriter.Write(this.MaxVisionAngle);
-            queueableBinaryWriter.Write(this.PeripheralVisionAngle);
-            queueableBinaryWriter.Write(this.PeripheralDistance);
-            queueableBinaryWriter.Write(this.HearingDistance);
-            queueableBinaryWriter.Write(this.NoticeProjectileChance);
-            queueableBinaryWriter.Write(this.NoticeVehicleChance);
-            queueableBinaryWriter.Write(this.CombatPerceptionTime);
-            queueableBinaryWriter.Write(this.GuardPerceptionTime);
-            queueableBinaryWriter.Write(this.NoncombatPerceptionTime);
-            queueableBinaryWriter.Write(this.FirstAckSurpriseDistance);
+            base.Write(writer);
+            writer.Write(((int)(this.CharacterPerceptionPerceptionFlags)));
+            writer.Write(this.MaxVisionDistance);
+            writer.Write(this.CentralVisionAngle);
+            writer.Write(this.MaxVisionAngle);
+            writer.Write(this.PeripheralVisionAngle);
+            writer.Write(this.PeripheralDistance);
+            writer.Write(this.HearingDistance);
+            writer.Write(this.NoticeProjectileChance);
+            writer.Write(this.NoticeVehicleChance);
+            writer.Write(this.CombatPerceptionTime);
+            writer.Write(this.GuardPerceptionTime);
+            writer.Write(this.NoncombatPerceptionTime);
+            writer.Write(this.FirstAckSurpriseDistance);
         }
         [System.FlagsAttribute()]
         public enum PerceptionFlags : int

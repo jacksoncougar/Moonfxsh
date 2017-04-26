@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -53,17 +54,17 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Movements = base.ReadBlockArrayData<ParticleController>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Movements);
+            base.DeferReferences(writer);
+            writer.Defer(this.Movements);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Template);
-            queueableBinaryWriter.Write(((int)(this.ParticlePhysicsFlags)));
-            queueableBinaryWriter.WritePointer(this.Movements);
+            base.Write(writer);
+            writer.Write(this.Template);
+            writer.Write(((int)(this.ParticlePhysicsFlags)));
+            writer.WritePointer(this.Movements);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

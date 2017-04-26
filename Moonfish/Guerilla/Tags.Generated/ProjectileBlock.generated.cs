@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -145,58 +146,60 @@ namespace Moonfish.Guerilla.Tags
             this.Blah.ReadInstances(binaryReader, pointerQueue);
             this.MaterialResponses = base.ReadBlockArrayData<ProjectileMaterialResponseBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.YourMomma.DeferReferences(queueableBinaryWriter);
-            this.Blah.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.MaterialResponses);
+            base.DeferReferences(writer);
+            this.YourMomma.DeferReferences(writer);
+            this.YourMomma.DeferReferences(writer);
+            this.Blah.DeferReferences(writer);
+            this.Blah.DeferReferences(writer);
+            writer.Defer(this.MaterialResponses);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.ProjectileProjectileFlags)));
-            queueableBinaryWriter.Write(((short)(this.DetonationTimerStarts)));
-            queueableBinaryWriter.Write(((short)(this.ImpactNoise)));
-            queueableBinaryWriter.Write(this.AIPerceptionRadius);
-            queueableBinaryWriter.Write(this.CollisionRadius);
-            queueableBinaryWriter.Write(this.ArmingTime);
-            queueableBinaryWriter.Write(this.DangerRadius);
-            queueableBinaryWriter.Write(this.Timer);
-            queueableBinaryWriter.Write(this.MinimumVelocity);
-            queueableBinaryWriter.Write(this.MaximumRange);
-            queueableBinaryWriter.Write(((short)(this.DetonationNoise)));
-            queueableBinaryWriter.Write(this.SuperDetProjectileCount);
-            queueableBinaryWriter.Write(this.DetonationStarted);
-            queueableBinaryWriter.Write(this.DetonationEffect);
-            queueableBinaryWriter.Write(this.DetonationEffect0);
-            queueableBinaryWriter.Write(this.DetonationDamage);
-            queueableBinaryWriter.Write(this.AttachedDetonationDamage);
-            queueableBinaryWriter.Write(this.SuperDetonation);
-            this.YourMomma.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DetonationSound);
-            queueableBinaryWriter.Write(((byte)(this.DamageReportingType)));
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.SuperAttachedDetonationDamage);
-            queueableBinaryWriter.Write(this.MaterialEffectRadius);
-            queueableBinaryWriter.Write(this.FlybySound);
-            queueableBinaryWriter.Write(this.ImpactEffect);
-            queueableBinaryWriter.Write(this.ImpactDamage);
-            queueableBinaryWriter.Write(this.BoardingDetonationTime);
-            queueableBinaryWriter.Write(this.BoardingDetonationDamage);
-            queueableBinaryWriter.Write(this.BoardingAttachedDetonationDamage);
-            queueableBinaryWriter.Write(this.AirGravityScale);
-            queueableBinaryWriter.Write(this.AirDamageRange);
-            queueableBinaryWriter.Write(this.WaterGravityScale);
-            queueableBinaryWriter.Write(this.WaterDamageRange);
-            queueableBinaryWriter.Write(this.InitialVelocity);
-            queueableBinaryWriter.Write(this.FinalVelocity);
-            this.Blah.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.GuidedAngularVelocity);
-            queueableBinaryWriter.Write(this.AccelerationRange);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.TargetedLeadingFraction);
-            queueableBinaryWriter.WritePointer(this.MaterialResponses);
+            base.Write(writer);
+            writer.Write(((int)(this.ProjectileProjectileFlags)));
+            writer.Write(((short)(this.DetonationTimerStarts)));
+            writer.Write(((short)(this.ImpactNoise)));
+            writer.Write(this.AIPerceptionRadius);
+            writer.Write(this.CollisionRadius);
+            writer.Write(this.ArmingTime);
+            writer.Write(this.DangerRadius);
+            writer.Write(this.Timer);
+            writer.Write(this.MinimumVelocity);
+            writer.Write(this.MaximumRange);
+            writer.Write(((short)(this.DetonationNoise)));
+            writer.Write(this.SuperDetProjectileCount);
+            writer.Write(this.DetonationStarted);
+            writer.Write(this.DetonationEffect);
+            writer.Write(this.DetonationEffect0);
+            writer.Write(this.DetonationDamage);
+            writer.Write(this.AttachedDetonationDamage);
+            writer.Write(this.SuperDetonation);
+            this.YourMomma.Write(writer);
+            writer.Write(this.DetonationSound);
+            writer.Write(((byte)(this.DamageReportingType)));
+            writer.Write(this.fieldpad3);
+            writer.Write(this.SuperAttachedDetonationDamage);
+            writer.Write(this.MaterialEffectRadius);
+            writer.Write(this.FlybySound);
+            writer.Write(this.ImpactEffect);
+            writer.Write(this.ImpactDamage);
+            writer.Write(this.BoardingDetonationTime);
+            writer.Write(this.BoardingDetonationDamage);
+            writer.Write(this.BoardingAttachedDetonationDamage);
+            writer.Write(this.AirGravityScale);
+            writer.Write(this.AirDamageRange);
+            writer.Write(this.WaterGravityScale);
+            writer.Write(this.WaterDamageRange);
+            writer.Write(this.InitialVelocity);
+            writer.Write(this.FinalVelocity);
+            this.Blah.Write(writer);
+            writer.Write(this.GuidedAngularVelocity);
+            writer.Write(this.AccelerationRange);
+            writer.Write(this.fieldpad4);
+            writer.Write(this.TargetedLeadingFraction);
+            writer.WritePointer(this.MaterialResponses);
         }
         [System.FlagsAttribute()]
         public enum ProjectileFlags : int

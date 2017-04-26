@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -88,35 +89,35 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.Position);
-            queueableBinaryWriter.Write(this.ReferenceFrame);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Facing);
-            queueableBinaryWriter.Write(((int)(this.ActorStartingLocationsFlags)));
-            queueableBinaryWriter.Write(this.CharacterType);
-            queueableBinaryWriter.Write(this.InitialWeapon);
-            queueableBinaryWriter.Write(this.InitialSecondaryWeapon);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.VehicleType);
-            queueableBinaryWriter.Write(((short)(this.SeatType)));
-            queueableBinaryWriter.Write(((short)(this.GrenadeType)));
-            queueableBinaryWriter.Write(this.SwarmCount);
-            queueableBinaryWriter.Write(this.ActorVariantName);
-            queueableBinaryWriter.Write(this.VehicleVariantName);
-            queueableBinaryWriter.Write(this.InitialMovementDistance);
-            queueableBinaryWriter.Write(this.EmitterVehicle);
-            queueableBinaryWriter.Write(((short)(this.InitialMovementMode)));
-            queueableBinaryWriter.Write(this.PlacementScript);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.fieldpad1);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.Position);
+            writer.Write(this.ReferenceFrame);
+            writer.Write(this.fieldpad);
+            writer.Write(this.Facing);
+            writer.Write(((int)(this.ActorStartingLocationsFlags)));
+            writer.Write(this.CharacterType);
+            writer.Write(this.InitialWeapon);
+            writer.Write(this.InitialSecondaryWeapon);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.VehicleType);
+            writer.Write(((short)(this.SeatType)));
+            writer.Write(((short)(this.GrenadeType)));
+            writer.Write(this.SwarmCount);
+            writer.Write(this.ActorVariantName);
+            writer.Write(this.VehicleVariantName);
+            writer.Write(this.InitialMovementDistance);
+            writer.Write(this.EmitterVehicle);
+            writer.Write(((short)(this.InitialMovementMode)));
+            writer.Write(this.PlacementScript);
+            writer.Write(this.fieldskip);
+            writer.Write(this.fieldpad1);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

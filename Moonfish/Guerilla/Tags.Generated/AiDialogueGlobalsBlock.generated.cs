@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -59,22 +60,22 @@ namespace Moonfish.Guerilla.Tags
             this.DialogueData = base.ReadBlockArrayData<DialogueDataBlock>(binaryReader, pointerQueue.Dequeue());
             this.InvoluntaryData = base.ReadBlockArrayData<InvoluntaryDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Vocalizations);
-            queueableBinaryWriter.Defer(this.Patterns);
-            queueableBinaryWriter.Defer(this.DialogueData);
-            queueableBinaryWriter.Defer(this.InvoluntaryData);
+            base.DeferReferences(writer);
+            writer.Defer(this.Vocalizations);
+            writer.Defer(this.Patterns);
+            writer.Defer(this.DialogueData);
+            writer.Defer(this.InvoluntaryData);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Vocalizations);
-            queueableBinaryWriter.WritePointer(this.Patterns);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.DialogueData);
-            queueableBinaryWriter.WritePointer(this.InvoluntaryData);
+            base.Write(writer);
+            writer.WritePointer(this.Vocalizations);
+            writer.WritePointer(this.Patterns);
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.DialogueData);
+            writer.WritePointer(this.InvoluntaryData);
         }
     }
 }

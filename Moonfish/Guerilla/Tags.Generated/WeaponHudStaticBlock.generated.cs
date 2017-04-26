@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -98,40 +99,40 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.MultitexOverlay = base.ReadBlockArrayData<GlobalHudMultitextureOverlayDefinition>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.MultitexOverlay);
+            base.DeferReferences(writer);
+            writer.Defer(this.MultitexOverlay);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.StateAttachedTo)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.CanUseOnMapType)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.AnchorOffset);
-            queueableBinaryWriter.Write(this.WidthScale);
-            queueableBinaryWriter.Write(this.HeightScale);
-            queueableBinaryWriter.Write(((short)(this.WeaponHudStaticScalingFlags)));
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.InterfaceBitmap);
-            queueableBinaryWriter.Write(this.DefaultColor);
-            queueableBinaryWriter.Write(this.FlashingColor);
-            queueableBinaryWriter.Write(this.FlashPeriod);
-            queueableBinaryWriter.Write(this.FlashDelay);
-            queueableBinaryWriter.Write(this.NumberOfFlashes);
-            queueableBinaryWriter.Write(((short)(this.WeaponHudStaticFlashFlags)));
-            queueableBinaryWriter.Write(this.FlashLength);
-            queueableBinaryWriter.Write(this.DisabledColor);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.SequenceIndex);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.WritePointer(this.MultitexOverlay);
-            queueableBinaryWriter.Write(this.fieldpad6);
-            queueableBinaryWriter.Write(this.fieldpad7);
+            base.Write(writer);
+            writer.Write(((short)(this.StateAttachedTo)));
+            writer.Write(this.fieldpad);
+            writer.Write(((short)(this.CanUseOnMapType)));
+            writer.Write(this.fieldpad0);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.AnchorOffset);
+            writer.Write(this.WidthScale);
+            writer.Write(this.HeightScale);
+            writer.Write(((short)(this.WeaponHudStaticScalingFlags)));
+            writer.Write(this.fieldpad2);
+            writer.Write(this.fieldpad3);
+            writer.Write(this.InterfaceBitmap);
+            writer.Write(this.DefaultColor);
+            writer.Write(this.FlashingColor);
+            writer.Write(this.FlashPeriod);
+            writer.Write(this.FlashDelay);
+            writer.Write(this.NumberOfFlashes);
+            writer.Write(((short)(this.WeaponHudStaticFlashFlags)));
+            writer.Write(this.FlashLength);
+            writer.Write(this.DisabledColor);
+            writer.Write(this.fieldpad4);
+            writer.Write(this.SequenceIndex);
+            writer.Write(this.fieldpad5);
+            writer.WritePointer(this.MultitexOverlay);
+            writer.Write(this.fieldpad6);
+            writer.Write(this.fieldpad7);
         }
         public enum StateAttachedToEnum : short
         {

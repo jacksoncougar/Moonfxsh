@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -60,21 +61,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Vertex1);
-            queueableBinaryWriter.Write(this.Vertex2);
-            queueableBinaryWriter.Write(((short)(this.SectorLinkLinkFlags)));
-            queueableBinaryWriter.Write(this.HintIndex);
-            queueableBinaryWriter.Write(this.ForwardLink);
-            queueableBinaryWriter.Write(this.ReverseLink);
-            queueableBinaryWriter.Write(this.LeftSector);
-            queueableBinaryWriter.Write(this.RightSector);
+            base.Write(writer);
+            writer.Write(this.Vertex1);
+            writer.Write(this.Vertex2);
+            writer.Write(((short)(this.SectorLinkLinkFlags)));
+            writer.Write(this.HintIndex);
+            writer.Write(this.ForwardLink);
+            writer.Write(this.ReverseLink);
+            writer.Write(this.LeftSector);
+            writer.Write(this.RightSector);
         }
         [System.FlagsAttribute()]
         public enum LinkFlags : short

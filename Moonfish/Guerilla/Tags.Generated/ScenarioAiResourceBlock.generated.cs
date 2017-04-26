@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -73,7 +74,7 @@ namespace Moonfish.Guerilla.Tags
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(68));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(40));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(40));
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(84));
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(88));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(24));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(132));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(68));
@@ -102,51 +103,51 @@ namespace Moonfish.Guerilla.Tags
             this.Flocks = base.ReadBlockArrayData<FlockDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
             this.TriggerVolumeReferences = base.ReadBlockArrayData<ScenarioTriggerVolumeBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.StylePalette);
-            queueableBinaryWriter.Defer(this.SquadGroups);
-            queueableBinaryWriter.Defer(this.Squads);
-            queueableBinaryWriter.Defer(this.Zones);
-            queueableBinaryWriter.Defer(this.CharacterPalette);
-            queueableBinaryWriter.Defer(this.AIAnimationReferences);
-            queueableBinaryWriter.Defer(this.AIScriptReferences);
-            queueableBinaryWriter.Defer(this.AIRecordingReferences);
-            queueableBinaryWriter.Defer(this.AIConversations);
-            queueableBinaryWriter.Defer(this.ScriptingData);
-            queueableBinaryWriter.Defer(this.Orders);
-            queueableBinaryWriter.Defer(this.Triggers);
-            queueableBinaryWriter.Defer(this.BSPPreferences);
-            queueableBinaryWriter.Defer(this.WeaponReferences);
-            queueableBinaryWriter.Defer(this.VehicleReferences);
-            queueableBinaryWriter.Defer(this.VehicleDatumReferences);
-            queueableBinaryWriter.Defer(this.MissionDialogueScenes);
-            queueableBinaryWriter.Defer(this.Flocks);
-            queueableBinaryWriter.Defer(this.TriggerVolumeReferences);
+            base.DeferReferences(writer);
+            writer.Defer(this.StylePalette);
+            writer.Defer(this.SquadGroups);
+            writer.Defer(this.Squads);
+            writer.Defer(this.Zones);
+            writer.Defer(this.CharacterPalette);
+            writer.Defer(this.AIAnimationReferences);
+            writer.Defer(this.AIScriptReferences);
+            writer.Defer(this.AIRecordingReferences);
+            writer.Defer(this.AIConversations);
+            writer.Defer(this.ScriptingData);
+            writer.Defer(this.Orders);
+            writer.Defer(this.Triggers);
+            writer.Defer(this.BSPPreferences);
+            writer.Defer(this.WeaponReferences);
+            writer.Defer(this.VehicleReferences);
+            writer.Defer(this.VehicleDatumReferences);
+            writer.Defer(this.MissionDialogueScenes);
+            writer.Defer(this.Flocks);
+            writer.Defer(this.TriggerVolumeReferences);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.StylePalette);
-            queueableBinaryWriter.WritePointer(this.SquadGroups);
-            queueableBinaryWriter.WritePointer(this.Squads);
-            queueableBinaryWriter.WritePointer(this.Zones);
-            queueableBinaryWriter.WritePointer(this.CharacterPalette);
-            queueableBinaryWriter.WritePointer(this.AIAnimationReferences);
-            queueableBinaryWriter.WritePointer(this.AIScriptReferences);
-            queueableBinaryWriter.WritePointer(this.AIRecordingReferences);
-            queueableBinaryWriter.WritePointer(this.AIConversations);
-            queueableBinaryWriter.WritePointer(this.ScriptingData);
-            queueableBinaryWriter.WritePointer(this.Orders);
-            queueableBinaryWriter.WritePointer(this.Triggers);
-            queueableBinaryWriter.WritePointer(this.BSPPreferences);
-            queueableBinaryWriter.WritePointer(this.WeaponReferences);
-            queueableBinaryWriter.WritePointer(this.VehicleReferences);
-            queueableBinaryWriter.WritePointer(this.VehicleDatumReferences);
-            queueableBinaryWriter.WritePointer(this.MissionDialogueScenes);
-            queueableBinaryWriter.WritePointer(this.Flocks);
-            queueableBinaryWriter.WritePointer(this.TriggerVolumeReferences);
+            base.Write(writer);
+            writer.WritePointer(this.StylePalette);
+            writer.WritePointer(this.SquadGroups);
+            writer.WritePointer(this.Squads);
+            writer.WritePointer(this.Zones);
+            writer.WritePointer(this.CharacterPalette);
+            writer.WritePointer(this.AIAnimationReferences);
+            writer.WritePointer(this.AIScriptReferences);
+            writer.WritePointer(this.AIRecordingReferences);
+            writer.WritePointer(this.AIConversations);
+            writer.WritePointer(this.ScriptingData);
+            writer.WritePointer(this.Orders);
+            writer.WritePointer(this.Triggers);
+            writer.WritePointer(this.BSPPreferences);
+            writer.WritePointer(this.WeaponReferences);
+            writer.WritePointer(this.VehicleReferences);
+            writer.WritePointer(this.VehicleDatumReferences);
+            writer.WritePointer(this.MissionDialogueScenes);
+            writer.WritePointer(this.Flocks);
+            writer.WritePointer(this.TriggerVolumeReferences);
         }
     }
 }

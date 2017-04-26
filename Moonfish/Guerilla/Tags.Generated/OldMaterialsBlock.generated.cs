@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -64,21 +65,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.NewMaterialName);
-            queueableBinaryWriter.Write(this.NewGeneralMaterialName);
-            queueableBinaryWriter.Write(this.GroundFrictionScale);
-            queueableBinaryWriter.Write(this.GroundFrictionNormalK1Scale);
-            queueableBinaryWriter.Write(this.GroundFrictionNormalK0Scale);
-            queueableBinaryWriter.Write(this.GroundDepthScale);
-            queueableBinaryWriter.Write(this.GroundDampFractionScale);
-            queueableBinaryWriter.Write(this.MeleeHitSound);
+            base.Write(writer);
+            writer.Write(this.NewMaterialName);
+            writer.Write(this.NewGeneralMaterialName);
+            writer.Write(this.GroundFrictionScale);
+            writer.Write(this.GroundFrictionNormalK1Scale);
+            writer.Write(this.GroundFrictionNormalK0Scale);
+            writer.Write(this.GroundDepthScale);
+            writer.Write(this.GroundDampFractionScale);
+            writer.Write(this.MeleeHitSound);
         }
     }
 }

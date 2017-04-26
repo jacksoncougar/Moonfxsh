@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -60,21 +61,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.IntegrationType)));
-            queueableBinaryWriter.Write(this.NumberIterations);
-            queueableBinaryWriter.Write(this.Weight);
-            queueableBinaryWriter.Write(this.Drag);
-            queueableBinaryWriter.Write(this.WindScale);
-            queueableBinaryWriter.Write(this.WindFlappinessScale);
-            queueableBinaryWriter.Write(this.LongestRod);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write(writer);
+            writer.Write(((short)(this.IntegrationType)));
+            writer.Write(this.NumberIterations);
+            writer.Write(this.Weight);
+            writer.Write(this.Drag);
+            writer.Write(this.WindScale);
+            writer.Write(this.WindFlappinessScale);
+            writer.Write(this.LongestRod);
+            writer.Write(this.fieldpad);
         }
         public enum IntegrationTypeEnum : short
         {

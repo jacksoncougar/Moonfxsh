@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -61,21 +62,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(((short)(this.DeviceMachineDeviceMachineFlags)));
-            queueableBinaryWriter.Write(this.DoorOpenTime);
-            queueableBinaryWriter.Write(this.DoorOcclusionBounds);
-            queueableBinaryWriter.Write(((short)(this.CollisionResponse)));
-            queueableBinaryWriter.Write(this.ElevatorNode);
-            queueableBinaryWriter.Write(((short)(this.PathfindingPolicy)));
-            queueableBinaryWriter.Write(this.fieldpad4);
+            base.Write(writer);
+            writer.Write(((short)(this.Type)));
+            writer.Write(((short)(this.DeviceMachineDeviceMachineFlags)));
+            writer.Write(this.DoorOpenTime);
+            writer.Write(this.DoorOcclusionBounds);
+            writer.Write(((short)(this.CollisionResponse)));
+            writer.Write(this.ElevatorNode);
+            writer.Write(((short)(this.PathfindingPolicy)));
+            writer.Write(this.fieldpad4);
         }
         public enum TypeEnum : short
         {

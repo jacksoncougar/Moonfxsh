@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -58,21 +59,23 @@ namespace Moonfish.Guerilla.Tags
             this.Constants.ReadInstances(binaryReader, pointerQueue);
             this.Combiners.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.Constants.DeferReferences(queueableBinaryWriter);
-            this.Combiners.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.Constants.DeferReferences(writer);
+            this.Constants.DeferReferences(writer);
+            this.Combiners.DeferReferences(writer);
+            this.Combiners.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.EnumIndex);
-            queueableBinaryWriter.Write(((short)(this.PixelShaderPermutationFlags)));
-            this.Constants.Write(queueableBinaryWriter);
-            this.Combiners.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.fieldskip0);
+            base.Write(writer);
+            writer.Write(this.EnumIndex);
+            writer.Write(((short)(this.PixelShaderPermutationFlags)));
+            this.Constants.Write(writer);
+            this.Combiners.Write(writer);
+            writer.Write(this.fieldskip);
+            writer.Write(this.fieldskip0);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

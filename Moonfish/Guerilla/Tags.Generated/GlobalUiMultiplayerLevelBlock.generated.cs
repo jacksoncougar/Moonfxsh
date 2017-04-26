@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -93,37 +94,37 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MapID);
-            queueableBinaryWriter.Write(this.Bitmap);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.Write(this.Path);
-            queueableBinaryWriter.Write(this.SortOrder);
-            queueableBinaryWriter.Write(((byte)(this.GlobalUiMultiplayerLevelFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.MaxTeamsNone);
-            queueableBinaryWriter.Write(this.MaxTeamsCTF);
-            queueableBinaryWriter.Write(this.MaxTeamsSlayer);
-            queueableBinaryWriter.Write(this.MaxTeamsOddball);
-            queueableBinaryWriter.Write(this.MaxTeamsKOTH);
-            queueableBinaryWriter.Write(this.MaxTeamsRace);
-            queueableBinaryWriter.Write(this.MaxTeamsHeadhunter);
-            queueableBinaryWriter.Write(this.MaxTeamsJuggernaut);
-            queueableBinaryWriter.Write(this.MaxTeamsTerritories);
-            queueableBinaryWriter.Write(this.MaxTeamsAssault);
-            queueableBinaryWriter.Write(this.MaxTeamsStub10);
-            queueableBinaryWriter.Write(this.MaxTeamsStub11);
-            queueableBinaryWriter.Write(this.MaxTeamsStub12);
-            queueableBinaryWriter.Write(this.MaxTeamsStub13);
-            queueableBinaryWriter.Write(this.MaxTeamsStub14);
-            queueableBinaryWriter.Write(this.MaxTeamsStub15);
+            base.Write(writer);
+            writer.Write(this.MapID);
+            writer.Write(this.Bitmap);
+            writer.Write(this.fieldskip);
+            writer.Write(this.fieldskip0);
+            writer.Write(this.Path);
+            writer.Write(this.SortOrder);
+            writer.Write(((byte)(this.GlobalUiMultiplayerLevelFlags)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.MaxTeamsNone);
+            writer.Write(this.MaxTeamsCTF);
+            writer.Write(this.MaxTeamsSlayer);
+            writer.Write(this.MaxTeamsOddball);
+            writer.Write(this.MaxTeamsKOTH);
+            writer.Write(this.MaxTeamsRace);
+            writer.Write(this.MaxTeamsHeadhunter);
+            writer.Write(this.MaxTeamsJuggernaut);
+            writer.Write(this.MaxTeamsTerritories);
+            writer.Write(this.MaxTeamsAssault);
+            writer.Write(this.MaxTeamsStub10);
+            writer.Write(this.MaxTeamsStub11);
+            writer.Write(this.MaxTeamsStub12);
+            writer.Write(this.MaxTeamsStub13);
+            writer.Write(this.MaxTeamsStub14);
+            writer.Write(this.MaxTeamsStub15);
         }
         [System.FlagsAttribute()]
         public enum Flags : byte

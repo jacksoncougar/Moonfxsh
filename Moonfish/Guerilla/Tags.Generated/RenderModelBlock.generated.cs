@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -110,52 +111,52 @@ namespace Moonfish.Guerilla.Tags
             this.PRTInfo = base.ReadBlockArrayData<PrtInfoBlock>(binaryReader, pointerQueue.Dequeue());
             this.SectionRenderLeaves = base.ReadBlockArrayData<SectionRenderLeavesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.ImportInfo);
-            queueableBinaryWriter.Defer(this.CompressionInfo);
-            queueableBinaryWriter.Defer(this.Regions);
-            queueableBinaryWriter.Defer(this.Sections);
-            queueableBinaryWriter.Defer(this.InvalidSectionPairBits);
-            queueableBinaryWriter.Defer(this.SectionGroups);
-            queueableBinaryWriter.Defer(this.Nodes);
-            queueableBinaryWriter.Defer(this.NodeMap);
-            queueableBinaryWriter.Defer(this.MarkerGroups);
-            queueableBinaryWriter.Defer(this.Materials);
-            queueableBinaryWriter.Defer(this.Errors);
-            queueableBinaryWriter.Defer(this.PRTInfo);
-            queueableBinaryWriter.Defer(this.SectionRenderLeaves);
+            base.DeferReferences(writer);
+            writer.Defer(this.ImportInfo);
+            writer.Defer(this.CompressionInfo);
+            writer.Defer(this.Regions);
+            writer.Defer(this.Sections);
+            writer.Defer(this.InvalidSectionPairBits);
+            writer.Defer(this.SectionGroups);
+            writer.Defer(this.Nodes);
+            writer.Defer(this.NodeMap);
+            writer.Defer(this.MarkerGroups);
+            writer.Defer(this.Materials);
+            writer.Defer(this.Errors);
+            writer.Defer(this.PRTInfo);
+            writer.Defer(this.SectionRenderLeaves);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((short)(this.RenderModelFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.WritePointer(this.ImportInfo);
-            queueableBinaryWriter.WritePointer(this.CompressionInfo);
-            queueableBinaryWriter.WritePointer(this.Regions);
-            queueableBinaryWriter.WritePointer(this.Sections);
-            queueableBinaryWriter.WritePointer(this.InvalidSectionPairBits);
-            queueableBinaryWriter.WritePointer(this.SectionGroups);
-            queueableBinaryWriter.Write(this.L1SectionGroupIndex);
-            queueableBinaryWriter.Write(this.L2SectionGroupIndex);
-            queueableBinaryWriter.Write(this.L3SectionGroupIndex);
-            queueableBinaryWriter.Write(this.L4SectionGroupIndex);
-            queueableBinaryWriter.Write(this.L5SectionGroupIndex);
-            queueableBinaryWriter.Write(this.L6SectionGroupIndex);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.NodeListChecksum);
-            queueableBinaryWriter.WritePointer(this.Nodes);
-            queueableBinaryWriter.WritePointer(this.NodeMap);
-            queueableBinaryWriter.WritePointer(this.MarkerGroups);
-            queueableBinaryWriter.WritePointer(this.Materials);
-            queueableBinaryWriter.WritePointer(this.Errors);
-            queueableBinaryWriter.Write(this.DontDrawOverCameraCosineAngle);
-            queueableBinaryWriter.WritePointer(this.PRTInfo);
-            queueableBinaryWriter.WritePointer(this.SectionRenderLeaves);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(((short)(this.RenderModelFlags)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.fieldpad0);
+            writer.WritePointer(this.ImportInfo);
+            writer.WritePointer(this.CompressionInfo);
+            writer.WritePointer(this.Regions);
+            writer.WritePointer(this.Sections);
+            writer.WritePointer(this.InvalidSectionPairBits);
+            writer.WritePointer(this.SectionGroups);
+            writer.Write(this.L1SectionGroupIndex);
+            writer.Write(this.L2SectionGroupIndex);
+            writer.Write(this.L3SectionGroupIndex);
+            writer.Write(this.L4SectionGroupIndex);
+            writer.Write(this.L5SectionGroupIndex);
+            writer.Write(this.L6SectionGroupIndex);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.NodeListChecksum);
+            writer.WritePointer(this.Nodes);
+            writer.WritePointer(this.NodeMap);
+            writer.WritePointer(this.MarkerGroups);
+            writer.WritePointer(this.Materials);
+            writer.WritePointer(this.Errors);
+            writer.Write(this.DontDrawOverCameraCosineAngle);
+            writer.WritePointer(this.PRTInfo);
+            writer.WritePointer(this.SectionRenderLeaves);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

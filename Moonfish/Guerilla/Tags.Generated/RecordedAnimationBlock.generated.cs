@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -29,7 +30,7 @@ namespace Moonfish.Guerilla.Tags
         public short LengthOfAnimation;
         private byte[] fieldpad0 = new byte[2];
         private byte[] fieldpad1 = new byte[4];
-        public byte[] RecordedAnimationEventStream;
+        private byte[] RecordedAnimationEventStream;
         public override int SerializedSize
         {
             get
@@ -63,23 +64,23 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.RecordedAnimationEventStream = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.RecordedAnimationEventStream);
+            base.DeferReferences(writer);
+            writer.Defer(this.RecordedAnimationEventStream);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.Version);
-            queueableBinaryWriter.Write(this.RawAnimationData);
-            queueableBinaryWriter.Write(this.UnitControlDataVersion);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.LengthOfAnimation);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.WritePointer(this.RecordedAnimationEventStream);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.Version);
+            writer.Write(this.RawAnimationData);
+            writer.Write(this.UnitControlDataVersion);
+            writer.Write(this.fieldpad);
+            writer.Write(this.LengthOfAnimation);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.fieldpad1);
+            writer.WritePointer(this.RecordedAnimationEventStream);
         }
     }
 }

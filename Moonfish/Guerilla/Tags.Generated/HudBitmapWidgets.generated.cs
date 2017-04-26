@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -89,36 +90,38 @@ namespace Moonfish.Guerilla.Tags
             this.HudWidgetStateDefinitionStruct.ReadInstances(binaryReader, pointerQueue);
             this.Effect = base.ReadBlockArrayData<HudWidgetEffectBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.HudWidgetInputsStruct.DeferReferences(queueableBinaryWriter);
-            this.HudWidgetStateDefinitionStruct.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Effect);
+            base.DeferReferences(writer);
+            this.HudWidgetInputsStruct.DeferReferences(writer);
+            this.HudWidgetInputsStruct.DeferReferences(writer);
+            this.HudWidgetStateDefinitionStruct.DeferReferences(writer);
+            this.HudWidgetStateDefinitionStruct.DeferReferences(writer);
+            writer.Defer(this.Effect);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            this.HudWidgetInputsStruct.Write(queueableBinaryWriter);
-            this.HudWidgetStateDefinitionStruct.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.Anchor)));
-            queueableBinaryWriter.Write(((short)(this.HudBitmapWidgetsFlags)));
-            queueableBinaryWriter.Write(this.Bitmap);
-            queueableBinaryWriter.Write(this.Shader);
-            queueableBinaryWriter.Write(this.FullscreenSequenceIndex);
-            queueableBinaryWriter.Write(this.HalfscreenSequenceIndex);
-            queueableBinaryWriter.Write(this.QuarterscreenSequenceIndex);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.FullscreenOffset);
-            queueableBinaryWriter.Write(this.HalfscreenOffset);
-            queueableBinaryWriter.Write(this.QuarterscreenOffset);
-            queueableBinaryWriter.Write(this.FullscreenRegistrationPoint);
-            queueableBinaryWriter.Write(this.HalfscreenRegistrationPoint);
-            queueableBinaryWriter.Write(this.QuarterscreenRegistrationPoint);
-            queueableBinaryWriter.WritePointer(this.Effect);
-            queueableBinaryWriter.Write(((short)(this.SpecialHudType)));
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write(writer);
+            writer.Write(this.Name);
+            this.HudWidgetInputsStruct.Write(writer);
+            this.HudWidgetStateDefinitionStruct.Write(writer);
+            writer.Write(((short)(this.Anchor)));
+            writer.Write(((short)(this.HudBitmapWidgetsFlags)));
+            writer.Write(this.Bitmap);
+            writer.Write(this.Shader);
+            writer.Write(this.FullscreenSequenceIndex);
+            writer.Write(this.HalfscreenSequenceIndex);
+            writer.Write(this.QuarterscreenSequenceIndex);
+            writer.Write(this.fieldpad);
+            writer.Write(this.FullscreenOffset);
+            writer.Write(this.HalfscreenOffset);
+            writer.Write(this.QuarterscreenOffset);
+            writer.Write(this.FullscreenRegistrationPoint);
+            writer.Write(this.HalfscreenRegistrationPoint);
+            writer.Write(this.QuarterscreenRegistrationPoint);
+            writer.WritePointer(this.Effect);
+            writer.Write(((short)(this.SpecialHudType)));
+            writer.Write(this.fieldpad0);
         }
         public enum AnchorEnum : short
         {

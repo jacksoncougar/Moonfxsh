@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -83,29 +84,29 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((int)(this.LoopingSoundTrackFlags)));
-            queueableBinaryWriter.Write(this.Gain);
-            queueableBinaryWriter.Write(this.FadeInDuration);
-            queueableBinaryWriter.Write(this.FadeOutDuration);
-            queueableBinaryWriter.Write(this.In);
-            queueableBinaryWriter.Write(this.Loop);
-            queueableBinaryWriter.Write(this.Out);
-            queueableBinaryWriter.Write(this.AltLoop);
-            queueableBinaryWriter.Write(this.AltOut);
-            queueableBinaryWriter.Write(((short)(this.OutputEffect)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.AltTransIn);
-            queueableBinaryWriter.Write(this.AltTransOut);
-            queueableBinaryWriter.Write(this.AltCrossfadeDuration);
-            queueableBinaryWriter.Write(this.AltFadeOutDuration);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(((int)(this.LoopingSoundTrackFlags)));
+            writer.Write(this.Gain);
+            writer.Write(this.FadeInDuration);
+            writer.Write(this.FadeOutDuration);
+            writer.Write(this.In);
+            writer.Write(this.Loop);
+            writer.Write(this.Out);
+            writer.Write(this.AltLoop);
+            writer.Write(this.AltOut);
+            writer.Write(((short)(this.OutputEffect)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.AltTransIn);
+            writer.Write(this.AltTransOut);
+            writer.Write(this.AltCrossfadeDuration);
+            writer.Write(this.AltFadeOutDuration);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

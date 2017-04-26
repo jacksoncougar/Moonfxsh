@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -141,59 +142,59 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.PointStates = base.ReadBlockArrayData<ContrailPointStatesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.PointStates);
+            base.DeferReferences(writer);
+            writer.Defer(this.PointStates);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.ContrailFlags)));
-            queueableBinaryWriter.Write(((short)(this.ContrailScaleFlags)));
-            queueableBinaryWriter.Write(this.PointGenerationRate);
-            queueableBinaryWriter.Write(this.PointVelocity);
-            queueableBinaryWriter.Write(this.PointVelocityConeAngle);
-            queueableBinaryWriter.Write(this.InheritedVelocityFraction);
-            queueableBinaryWriter.Write(((short)(this.RenderType)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.TextureRepeatsU);
-            queueableBinaryWriter.Write(this.TextureRepeatsV);
-            queueableBinaryWriter.Write(this.TextureAnimationU);
-            queueableBinaryWriter.Write(this.TextureAnimationV);
-            queueableBinaryWriter.Write(this.AnimationRate);
-            queueableBinaryWriter.Write(this.Bitmap);
-            queueableBinaryWriter.Write(this.FirstSequenceIndex);
-            queueableBinaryWriter.Write(this.SequenceCount);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(((short)(this.ContrailShaderFlags)));
-            queueableBinaryWriter.Write(((short)(this.FramebufferBlendFunction)));
-            queueableBinaryWriter.Write(((short)(this.FramebufferFadeMode)));
-            queueableBinaryWriter.Write(((short)(this.ContrailMapFlags)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.Bitmap0);
-            queueableBinaryWriter.Write(((short)(this.Anchor)));
-            queueableBinaryWriter.Write(((short)(this.ContrailContrailFlags0)));
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(((short)(this.UanimationFunction)));
-            queueableBinaryWriter.Write(this.UanimationPeriod);
-            queueableBinaryWriter.Write(this.UanimationPhase);
-            queueableBinaryWriter.Write(this.UanimationScale);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(((short)(this.VanimationFunction)));
-            queueableBinaryWriter.Write(this.VanimationPeriod);
-            queueableBinaryWriter.Write(this.VanimationPhase);
-            queueableBinaryWriter.Write(this.VanimationScale);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(((short)(this.RotationanimationFunction)));
-            queueableBinaryWriter.Write(this.RotationanimationPeriod);
-            queueableBinaryWriter.Write(this.RotationanimationPhase);
-            queueableBinaryWriter.Write(this.RotationanimationScale);
-            queueableBinaryWriter.Write(this.RotationanimationCenter);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(this.ZspriteRadiusScale);
-            queueableBinaryWriter.Write(this.fieldpad6);
-            queueableBinaryWriter.WritePointer(this.PointStates);
+            base.Write(writer);
+            writer.Write(((short)(this.ContrailFlags)));
+            writer.Write(((short)(this.ContrailScaleFlags)));
+            writer.Write(this.PointGenerationRate);
+            writer.Write(this.PointVelocity);
+            writer.Write(this.PointVelocityConeAngle);
+            writer.Write(this.InheritedVelocityFraction);
+            writer.Write(((short)(this.RenderType)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.TextureRepeatsU);
+            writer.Write(this.TextureRepeatsV);
+            writer.Write(this.TextureAnimationU);
+            writer.Write(this.TextureAnimationV);
+            writer.Write(this.AnimationRate);
+            writer.Write(this.Bitmap);
+            writer.Write(this.FirstSequenceIndex);
+            writer.Write(this.SequenceCount);
+            writer.Write(this.fieldpad0);
+            writer.Write(((short)(this.ContrailShaderFlags)));
+            writer.Write(((short)(this.FramebufferBlendFunction)));
+            writer.Write(((short)(this.FramebufferFadeMode)));
+            writer.Write(((short)(this.ContrailMapFlags)));
+            writer.Write(this.fieldpad1);
+            writer.Write(this.Bitmap0);
+            writer.Write(((short)(this.Anchor)));
+            writer.Write(((short)(this.ContrailContrailFlags0)));
+            writer.Write(this.fieldpad2);
+            writer.Write(((short)(this.UanimationFunction)));
+            writer.Write(this.UanimationPeriod);
+            writer.Write(this.UanimationPhase);
+            writer.Write(this.UanimationScale);
+            writer.Write(this.fieldpad3);
+            writer.Write(((short)(this.VanimationFunction)));
+            writer.Write(this.VanimationPeriod);
+            writer.Write(this.VanimationPhase);
+            writer.Write(this.VanimationScale);
+            writer.Write(this.fieldpad4);
+            writer.Write(((short)(this.RotationanimationFunction)));
+            writer.Write(this.RotationanimationPeriod);
+            writer.Write(this.RotationanimationPhase);
+            writer.Write(this.RotationanimationScale);
+            writer.Write(this.RotationanimationCenter);
+            writer.Write(this.fieldpad5);
+            writer.Write(this.ZspriteRadiusScale);
+            writer.Write(this.fieldpad6);
+            writer.WritePointer(this.PointStates);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

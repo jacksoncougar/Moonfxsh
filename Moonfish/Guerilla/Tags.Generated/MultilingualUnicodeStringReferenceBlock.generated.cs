@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -64,23 +65,23 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.StringId);
-            queueableBinaryWriter.Write(this.EnglishOffset);
-            queueableBinaryWriter.Write(this.JapaneseOffset);
-            queueableBinaryWriter.Write(this.GermanOffset);
-            queueableBinaryWriter.Write(this.FrenchOffset);
-            queueableBinaryWriter.Write(this.SpanishOffset);
-            queueableBinaryWriter.Write(this.ItalianOffset);
-            queueableBinaryWriter.Write(this.KoreanOffset);
-            queueableBinaryWriter.Write(this.ChineseOffset);
-            queueableBinaryWriter.Write(this.PortugueseOffset);
+            base.Write(writer);
+            writer.Write(this.StringId);
+            writer.Write(this.EnglishOffset);
+            writer.Write(this.JapaneseOffset);
+            writer.Write(this.GermanOffset);
+            writer.Write(this.FrenchOffset);
+            writer.Write(this.SpanishOffset);
+            writer.Write(this.ItalianOffset);
+            writer.Write(this.KoreanOffset);
+            writer.Write(this.ChineseOffset);
+            writer.Write(this.PortugueseOffset);
         }
     }
 }

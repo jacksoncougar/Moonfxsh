@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -54,19 +55,19 @@ namespace Moonfish.Guerilla.Tags
             this.CameraPoints = base.ReadBlockArrayData<ScenarioCutsceneCameraPointBlock>(binaryReader, pointerQueue.Dequeue());
             this.RecordedAnimations = base.ReadBlockArrayData<RecordedAnimationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Flags);
-            queueableBinaryWriter.Defer(this.CameraPoints);
-            queueableBinaryWriter.Defer(this.RecordedAnimations);
+            base.DeferReferences(writer);
+            writer.Defer(this.Flags);
+            writer.Defer(this.CameraPoints);
+            writer.Defer(this.RecordedAnimations);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Flags);
-            queueableBinaryWriter.WritePointer(this.CameraPoints);
-            queueableBinaryWriter.WritePointer(this.RecordedAnimations);
+            base.Write(writer);
+            writer.WritePointer(this.Flags);
+            writer.WritePointer(this.CameraPoints);
+            writer.WritePointer(this.RecordedAnimations);
         }
     }
 }

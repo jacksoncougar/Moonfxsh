@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -72,26 +73,26 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.StartingHealthDamage);
-            queueableBinaryWriter.Write(this.StartingShieldDamage);
-            queueableBinaryWriter.Write(this.PrimaryWeapon);
-            queueableBinaryWriter.Write(this.RoundsLoaded);
-            queueableBinaryWriter.Write(this.RoundsTotal);
-            queueableBinaryWriter.Write(this.SecondaryWeapon);
-            queueableBinaryWriter.Write(this.RoundsLoaded0);
-            queueableBinaryWriter.Write(this.RoundsTotal0);
-            queueableBinaryWriter.Write(this.StartingFragmentationGrenadeCount);
-            queueableBinaryWriter.Write(this.StartingPlasmaGrenadeCount);
-            queueableBinaryWriter.Write(this.StartingunknownGrenadeCount);
-            queueableBinaryWriter.Write(this.StartingunknownGrenadeCount0);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.StartingHealthDamage);
+            writer.Write(this.StartingShieldDamage);
+            writer.Write(this.PrimaryWeapon);
+            writer.Write(this.RoundsLoaded);
+            writer.Write(this.RoundsTotal);
+            writer.Write(this.SecondaryWeapon);
+            writer.Write(this.RoundsLoaded0);
+            writer.Write(this.RoundsTotal0);
+            writer.Write(this.StartingFragmentationGrenadeCount);
+            writer.Write(this.StartingPlasmaGrenadeCount);
+            writer.Write(this.StartingunknownGrenadeCount);
+            writer.Write(this.StartingunknownGrenadeCount0);
         }
     }
 }

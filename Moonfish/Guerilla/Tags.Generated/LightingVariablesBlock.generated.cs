@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -63,23 +64,27 @@ namespace Moonfish.Guerilla.Tags
             this.AmbientLight.ReadInstances(binaryReader, pointerQueue);
             this.LightmapShadows.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.PrimaryLight.DeferReferences(queueableBinaryWriter);
-            this.SecondaryLight.DeferReferences(queueableBinaryWriter);
-            this.AmbientLight.DeferReferences(queueableBinaryWriter);
-            this.LightmapShadows.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.PrimaryLight.DeferReferences(writer);
+            this.PrimaryLight.DeferReferences(writer);
+            this.SecondaryLight.DeferReferences(writer);
+            this.SecondaryLight.DeferReferences(writer);
+            this.AmbientLight.DeferReferences(writer);
+            this.AmbientLight.DeferReferences(writer);
+            this.LightmapShadows.DeferReferences(writer);
+            this.LightmapShadows.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.LightingVariablesObjectAffected)));
-            queueableBinaryWriter.Write(this.LightmapBrightnessOffset);
-            this.PrimaryLight.Write(queueableBinaryWriter);
-            this.SecondaryLight.Write(queueableBinaryWriter);
-            this.AmbientLight.Write(queueableBinaryWriter);
-            this.LightmapShadows.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(((int)(this.LightingVariablesObjectAffected)));
+            writer.Write(this.LightmapBrightnessOffset);
+            this.PrimaryLight.Write(writer);
+            this.SecondaryLight.Write(writer);
+            this.AmbientLight.Write(writer);
+            this.LightmapShadows.Write(writer);
         }
         [System.FlagsAttribute()]
         public enum ObjectAffected : int

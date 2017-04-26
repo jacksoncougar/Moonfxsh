@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -93,38 +94,39 @@ namespace Moonfish.Guerilla.Tags
             this.Section = base.ReadBlockArrayData<WaterGeometrySectionBlock>(binaryReader, pointerQueue.Dequeue());
             this.GeometryBlockInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Section);
-            this.GeometryBlockInfo.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            writer.Defer(this.Section);
+            this.GeometryBlockInfo.DeferReferences(writer);
+            this.GeometryBlockInfo.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Shader);
-            queueableBinaryWriter.WritePointer(this.Section);
-            this.GeometryBlockInfo.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.SunSpotColor);
-            queueableBinaryWriter.Write(this.ReflectionTint);
-            queueableBinaryWriter.Write(this.RefractionTint);
-            queueableBinaryWriter.Write(this.HorizonColor);
-            queueableBinaryWriter.Write(this.SunSpecularPower);
-            queueableBinaryWriter.Write(this.ReflectionBumpScale);
-            queueableBinaryWriter.Write(this.RefractionBumpScale);
-            queueableBinaryWriter.Write(this.FresnelScale);
-            queueableBinaryWriter.Write(this.SunDirHeading);
-            queueableBinaryWriter.Write(this.SunDirPitch);
-            queueableBinaryWriter.Write(this.FOV);
-            queueableBinaryWriter.Write(this.Aspect);
-            queueableBinaryWriter.Write(this.Height);
-            queueableBinaryWriter.Write(this.Farz);
-            queueableBinaryWriter.Write(this.RotateOffset);
-            queueableBinaryWriter.Write(this.Center);
-            queueableBinaryWriter.Write(this.Extents);
-            queueableBinaryWriter.Write(this.FogNear);
-            queueableBinaryWriter.Write(this.FogFar);
-            queueableBinaryWriter.Write(this.DynamicHeightBias);
+            base.Write(writer);
+            writer.Write(this.Shader);
+            writer.WritePointer(this.Section);
+            this.GeometryBlockInfo.Write(writer);
+            writer.Write(this.SunSpotColor);
+            writer.Write(this.ReflectionTint);
+            writer.Write(this.RefractionTint);
+            writer.Write(this.HorizonColor);
+            writer.Write(this.SunSpecularPower);
+            writer.Write(this.ReflectionBumpScale);
+            writer.Write(this.RefractionBumpScale);
+            writer.Write(this.FresnelScale);
+            writer.Write(this.SunDirHeading);
+            writer.Write(this.SunDirPitch);
+            writer.Write(this.FOV);
+            writer.Write(this.Aspect);
+            writer.Write(this.Height);
+            writer.Write(this.Farz);
+            writer.Write(this.RotateOffset);
+            writer.Write(this.Center);
+            writer.Write(this.Extents);
+            writer.Write(this.FogNear);
+            writer.Write(this.FogFar);
+            writer.Write(this.DynamicHeightBias);
         }
     }
 }

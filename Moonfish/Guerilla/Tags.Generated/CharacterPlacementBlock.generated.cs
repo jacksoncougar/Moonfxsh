@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -70,26 +71,26 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.FewUpgradeChance);
-            queueableBinaryWriter.Write(this.FewUpgradeChance0);
-            queueableBinaryWriter.Write(this.FewUpgradeChance1);
-            queueableBinaryWriter.Write(this.FewUpgradeChance2);
-            queueableBinaryWriter.Write(this.NormalUpgradeChance);
-            queueableBinaryWriter.Write(this.NormalUpgradeChance0);
-            queueableBinaryWriter.Write(this.NormalUpgradeChance1);
-            queueableBinaryWriter.Write(this.NormalUpgradeChance2);
-            queueableBinaryWriter.Write(this.ManyUpgradeChance);
-            queueableBinaryWriter.Write(this.ManyUpgradeChance0);
-            queueableBinaryWriter.Write(this.ManyUpgradeChance1);
-            queueableBinaryWriter.Write(this.ManyUpgradeChance2);
+            base.Write(writer);
+            writer.Write(this.fieldpad);
+            writer.Write(this.FewUpgradeChance);
+            writer.Write(this.FewUpgradeChance0);
+            writer.Write(this.FewUpgradeChance1);
+            writer.Write(this.FewUpgradeChance2);
+            writer.Write(this.NormalUpgradeChance);
+            writer.Write(this.NormalUpgradeChance0);
+            writer.Write(this.NormalUpgradeChance1);
+            writer.Write(this.NormalUpgradeChance2);
+            writer.Write(this.ManyUpgradeChance);
+            writer.Write(this.ManyUpgradeChance0);
+            writer.Write(this.ManyUpgradeChance1);
+            writer.Write(this.ManyUpgradeChance2);
         }
     }
 }

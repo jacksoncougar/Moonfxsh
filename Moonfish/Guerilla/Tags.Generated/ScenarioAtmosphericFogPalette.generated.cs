@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -123,45 +124,45 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Mixers = base.ReadBlockArrayData<ScenarioAtmosphericFogMixerBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Mixers);
+            base.DeferReferences(writer);
+            writer.Defer(this.Mixers);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.Color);
-            queueableBinaryWriter.Write(this.SpreadDistance);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.MaximumDensity);
-            queueableBinaryWriter.Write(this.StartDistance);
-            queueableBinaryWriter.Write(this.OpaqueDistance);
-            queueableBinaryWriter.Write(this.Color0);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.MaximumDensity0);
-            queueableBinaryWriter.Write(this.StartDistance0);
-            queueableBinaryWriter.Write(this.OpaqueDistance0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.PlanarColor);
-            queueableBinaryWriter.Write(this.PlanarMaxDensity);
-            queueableBinaryWriter.Write(this.PlanarOverrideAmount);
-            queueableBinaryWriter.Write(this.PlanarMinDistanceBias);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.PatchyColor);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.PatchyDensity);
-            queueableBinaryWriter.Write(this.PatchyDistance);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.PatchyFog);
-            queueableBinaryWriter.WritePointer(this.Mixers);
-            queueableBinaryWriter.Write(this.Amount);
-            queueableBinaryWriter.Write(this.Threshold);
-            queueableBinaryWriter.Write(this.Brightness);
-            queueableBinaryWriter.Write(this.GammaPower);
-            queueableBinaryWriter.Write(((short)(this.ScenarioAtmosphericFogPaletteCameraImmersionFlags)));
-            queueableBinaryWriter.Write(this.fieldpad5);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.Color);
+            writer.Write(this.SpreadDistance);
+            writer.Write(this.fieldpad);
+            writer.Write(this.MaximumDensity);
+            writer.Write(this.StartDistance);
+            writer.Write(this.OpaqueDistance);
+            writer.Write(this.Color0);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.MaximumDensity0);
+            writer.Write(this.StartDistance0);
+            writer.Write(this.OpaqueDistance0);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.PlanarColor);
+            writer.Write(this.PlanarMaxDensity);
+            writer.Write(this.PlanarOverrideAmount);
+            writer.Write(this.PlanarMinDistanceBias);
+            writer.Write(this.fieldpad2);
+            writer.Write(this.PatchyColor);
+            writer.Write(this.fieldpad3);
+            writer.Write(this.PatchyDensity);
+            writer.Write(this.PatchyDistance);
+            writer.Write(this.fieldpad4);
+            writer.Write(this.PatchyFog);
+            writer.WritePointer(this.Mixers);
+            writer.Write(this.Amount);
+            writer.Write(this.Threshold);
+            writer.Write(this.Brightness);
+            writer.Write(this.GammaPower);
+            writer.Write(((short)(this.ScenarioAtmosphericFogPaletteCameraImmersionFlags)));
+            writer.Write(this.fieldpad5);
         }
         /// <summary>
         /// EMPTY STRING

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -70,26 +71,26 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.UserHintParallelogramFlags)));
-            queueableBinaryWriter.Write(this.Point0);
-            queueableBinaryWriter.Write(this.ReferenceFrame);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Point1);
-            queueableBinaryWriter.Write(this.ReferenceFrame0);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.Point2);
-            queueableBinaryWriter.Write(this.ReferenceFrame1);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.Point3);
-            queueableBinaryWriter.Write(this.ReferenceFrame2);
-            queueableBinaryWriter.Write(this.fieldpad2);
+            base.Write(writer);
+            writer.Write(((int)(this.UserHintParallelogramFlags)));
+            writer.Write(this.Point0);
+            writer.Write(this.ReferenceFrame);
+            writer.Write(this.fieldpad);
+            writer.Write(this.Point1);
+            writer.Write(this.ReferenceFrame0);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.Point2);
+            writer.Write(this.ReferenceFrame1);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.Point3);
+            writer.Write(this.ReferenceFrame2);
+            writer.Write(this.fieldpad2);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

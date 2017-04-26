@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -63,25 +64,30 @@ namespace Moonfish.Guerilla.Tags
             this.YourMom2.ReadInstances(binaryReader, pointerQueue);
             this.YourMom3.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.YourMom.DeferReferences(queueableBinaryWriter);
-            this.YourMom0.DeferReferences(queueableBinaryWriter);
-            this.YourMom1.DeferReferences(queueableBinaryWriter);
-            this.YourMom2.DeferReferences(queueableBinaryWriter);
-            this.YourMom3.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.YourMom.DeferReferences(writer);
+            this.YourMom.DeferReferences(writer);
+            this.YourMom0.DeferReferences(writer);
+            this.YourMom0.DeferReferences(writer);
+            this.YourMom1.DeferReferences(writer);
+            this.YourMom1.DeferReferences(writer);
+            this.YourMom2.DeferReferences(writer);
+            this.YourMom2.DeferReferences(writer);
+            this.YourMom3.DeferReferences(writer);
+            this.YourMom3.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.HudWidgetEffectFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            this.YourMom.Write(queueableBinaryWriter);
-            this.YourMom0.Write(queueableBinaryWriter);
-            this.YourMom1.Write(queueableBinaryWriter);
-            this.YourMom2.Write(queueableBinaryWriter);
-            this.YourMom3.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(((short)(this.HudWidgetEffectFlags)));
+            writer.Write(this.fieldpad);
+            this.YourMom.Write(writer);
+            this.YourMom0.Write(writer);
+            this.YourMom1.Write(writer);
+            this.YourMom2.Write(writer);
+            this.YourMom3.Write(writer);
         }
         /// <summary>
         /// allow the scaling, rotation, and offsetting of widgets

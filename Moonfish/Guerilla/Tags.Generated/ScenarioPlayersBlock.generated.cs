@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -76,29 +77,29 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Position);
-            queueableBinaryWriter.Write(this.Facing);
-            queueableBinaryWriter.Write(((short)(this.TeamDesignator)));
-            queueableBinaryWriter.Write(this.BSPIndex);
-            queueableBinaryWriter.Write(((short)(this.GameType1)));
-            queueableBinaryWriter.Write(((short)(this.GameType2)));
-            queueableBinaryWriter.Write(((short)(this.GameType3)));
-            queueableBinaryWriter.Write(((short)(this.GameType4)));
-            queueableBinaryWriter.Write(((short)(this.SpawnType0)));
-            queueableBinaryWriter.Write(((short)(this.SpawnType1)));
-            queueableBinaryWriter.Write(((short)(this.SpawnType2)));
-            queueableBinaryWriter.Write(((short)(this.SpawnType3)));
-            queueableBinaryWriter.Write(this.EMPTYSTRING);
-            queueableBinaryWriter.Write(this.EMPTYSTRING0);
-            queueableBinaryWriter.Write(((short)(this.CampaignPlayerType)));
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write(writer);
+            writer.Write(this.Position);
+            writer.Write(this.Facing);
+            writer.Write(((short)(this.TeamDesignator)));
+            writer.Write(this.BSPIndex);
+            writer.Write(((short)(this.GameType1)));
+            writer.Write(((short)(this.GameType2)));
+            writer.Write(((short)(this.GameType3)));
+            writer.Write(((short)(this.GameType4)));
+            writer.Write(((short)(this.SpawnType0)));
+            writer.Write(((short)(this.SpawnType1)));
+            writer.Write(((short)(this.SpawnType2)));
+            writer.Write(((short)(this.SpawnType3)));
+            writer.Write(this.EMPTYSTRING);
+            writer.Write(this.EMPTYSTRING0);
+            writer.Write(((short)(this.CampaignPlayerType)));
+            writer.Write(this.fieldpad);
         }
         public enum TeamDesignatorEnum : short
         {

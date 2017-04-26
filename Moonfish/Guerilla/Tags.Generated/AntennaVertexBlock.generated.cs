@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -64,23 +65,23 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.SpringStrengthCoefficient);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Angles);
-            queueableBinaryWriter.Write(this.Length);
-            queueableBinaryWriter.Write(this.SequenceIndex);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.Color);
-            queueableBinaryWriter.Write(this.LODColor);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.fieldpad2);
+            base.Write(writer);
+            writer.Write(this.SpringStrengthCoefficient);
+            writer.Write(this.fieldpad);
+            writer.Write(this.Angles);
+            writer.Write(this.Length);
+            writer.Write(this.SequenceIndex);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.Color);
+            writer.Write(this.LODColor);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.fieldpad2);
         }
     }
 }

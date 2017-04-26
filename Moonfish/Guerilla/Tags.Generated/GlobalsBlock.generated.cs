@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -133,69 +134,70 @@ namespace Moonfish.Guerilla.Tags
             this.UiLevelData = base.ReadBlockArrayData<UiLevelsDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
             this.UnicodeBlockInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.HavokCleanupResources);
-            queueableBinaryWriter.Defer(this.CollisionDamage);
-            queueableBinaryWriter.Defer(this.SoundGlobals);
-            queueableBinaryWriter.Defer(this.AiGlobals);
-            queueableBinaryWriter.Defer(this.DamageTable);
-            queueableBinaryWriter.Defer(this.GNullBlock);
-            queueableBinaryWriter.Defer(this.Sounds);
-            queueableBinaryWriter.Defer(this.Camera);
-            queueableBinaryWriter.Defer(this.PlayerControl);
-            queueableBinaryWriter.Defer(this.Difficulty);
-            queueableBinaryWriter.Defer(this.Grenades);
-            queueableBinaryWriter.Defer(this.RasterizerData);
-            queueableBinaryWriter.Defer(this.InterfaceTags);
-            queueableBinaryWriter.Defer(this.weaponList);
-            queueableBinaryWriter.Defer(this.cheatPowerups);
-            queueableBinaryWriter.Defer(this.multiplayerInformation);
-            queueableBinaryWriter.Defer(this.playerInformation);
-            queueableBinaryWriter.Defer(this.playerRepresentation);
-            queueableBinaryWriter.Defer(this.FallingDamage);
-            queueableBinaryWriter.Defer(this.OldMaterials);
-            queueableBinaryWriter.Defer(this.Materials);
-            queueableBinaryWriter.Defer(this.MultiplayerUI);
-            queueableBinaryWriter.Defer(this.ProfileColors);
-            queueableBinaryWriter.Defer(this.RuntimeLevelData);
-            queueableBinaryWriter.Defer(this.UiLevelData);
-            this.UnicodeBlockInfo.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            writer.Defer(this.HavokCleanupResources);
+            writer.Defer(this.CollisionDamage);
+            writer.Defer(this.SoundGlobals);
+            writer.Defer(this.AiGlobals);
+            writer.Defer(this.DamageTable);
+            writer.Defer(this.GNullBlock);
+            writer.Defer(this.Sounds);
+            writer.Defer(this.Camera);
+            writer.Defer(this.PlayerControl);
+            writer.Defer(this.Difficulty);
+            writer.Defer(this.Grenades);
+            writer.Defer(this.RasterizerData);
+            writer.Defer(this.InterfaceTags);
+            writer.Defer(this.weaponList);
+            writer.Defer(this.cheatPowerups);
+            writer.Defer(this.multiplayerInformation);
+            writer.Defer(this.playerInformation);
+            writer.Defer(this.playerRepresentation);
+            writer.Defer(this.FallingDamage);
+            writer.Defer(this.OldMaterials);
+            writer.Defer(this.Materials);
+            writer.Defer(this.MultiplayerUI);
+            writer.Defer(this.ProfileColors);
+            writer.Defer(this.RuntimeLevelData);
+            writer.Defer(this.UiLevelData);
+            this.UnicodeBlockInfo.DeferReferences(writer);
+            this.UnicodeBlockInfo.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((int)(this.Language)));
-            queueableBinaryWriter.WritePointer(this.HavokCleanupResources);
-            queueableBinaryWriter.WritePointer(this.CollisionDamage);
-            queueableBinaryWriter.WritePointer(this.SoundGlobals);
-            queueableBinaryWriter.WritePointer(this.AiGlobals);
-            queueableBinaryWriter.WritePointer(this.DamageTable);
-            queueableBinaryWriter.WritePointer(this.GNullBlock);
-            queueableBinaryWriter.WritePointer(this.Sounds);
-            queueableBinaryWriter.WritePointer(this.Camera);
-            queueableBinaryWriter.WritePointer(this.PlayerControl);
-            queueableBinaryWriter.WritePointer(this.Difficulty);
-            queueableBinaryWriter.WritePointer(this.Grenades);
-            queueableBinaryWriter.WritePointer(this.RasterizerData);
-            queueableBinaryWriter.WritePointer(this.InterfaceTags);
-            queueableBinaryWriter.WritePointer(this.weaponList);
-            queueableBinaryWriter.WritePointer(this.cheatPowerups);
-            queueableBinaryWriter.WritePointer(this.multiplayerInformation);
-            queueableBinaryWriter.WritePointer(this.playerInformation);
-            queueableBinaryWriter.WritePointer(this.playerRepresentation);
-            queueableBinaryWriter.WritePointer(this.FallingDamage);
-            queueableBinaryWriter.WritePointer(this.OldMaterials);
-            queueableBinaryWriter.WritePointer(this.Materials);
-            queueableBinaryWriter.WritePointer(this.MultiplayerUI);
-            queueableBinaryWriter.WritePointer(this.ProfileColors);
-            queueableBinaryWriter.Write(this.MultiplayerGlobals);
-            queueableBinaryWriter.WritePointer(this.RuntimeLevelData);
-            queueableBinaryWriter.WritePointer(this.UiLevelData);
-            queueableBinaryWriter.Write(this.DefaultGlobalLighting);
-            this.UnicodeBlockInfo.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(this.fieldpad);
+            writer.Write(((int)(this.Language)));
+            writer.WritePointer(this.HavokCleanupResources);
+            writer.WritePointer(this.CollisionDamage);
+            writer.WritePointer(this.SoundGlobals);
+            writer.WritePointer(this.AiGlobals);
+            writer.WritePointer(this.DamageTable);
+            writer.WritePointer(this.GNullBlock);
+            writer.WritePointer(this.Sounds);
+            writer.WritePointer(this.Camera);
+            writer.WritePointer(this.PlayerControl);
+            writer.WritePointer(this.Difficulty);
+            writer.WritePointer(this.Grenades);
+            writer.WritePointer(this.RasterizerData);
+            writer.WritePointer(this.InterfaceTags);
+            writer.WritePointer(this.weaponList);
+            writer.WritePointer(this.cheatPowerups);
+            writer.WritePointer(this.multiplayerInformation);
+            writer.WritePointer(this.playerInformation);
+            writer.WritePointer(this.playerRepresentation);
+            writer.WritePointer(this.FallingDamage);
+            writer.WritePointer(this.OldMaterials);
+            writer.WritePointer(this.Materials);
+            writer.WritePointer(this.MultiplayerUI);
+            writer.WritePointer(this.ProfileColors);
+            writer.Write(this.MultiplayerGlobals);
+            writer.WritePointer(this.RuntimeLevelData);
+            writer.WritePointer(this.UiLevelData);
+            writer.Write(this.DefaultGlobalLighting);
+            this.UnicodeBlockInfo.Write(writer);
         }
         public enum LanguageEnum : int
         {

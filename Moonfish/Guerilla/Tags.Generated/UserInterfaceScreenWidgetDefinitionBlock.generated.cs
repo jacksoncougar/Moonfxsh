@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -95,33 +96,33 @@ namespace Moonfish.Guerilla.Tags
             this.LocalStrings = base.ReadBlockArrayData<LocalStringIdListSectionReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.LocalBitmaps = base.ReadBlockArrayData<LocalBitmapReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Panes);
-            queueableBinaryWriter.Defer(this.LocalStrings);
-            queueableBinaryWriter.Defer(this.LocalBitmaps);
+            base.DeferReferences(writer);
+            writer.Defer(this.Panes);
+            writer.Defer(this.LocalStrings);
+            writer.Defer(this.LocalBitmaps);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.UserInterfaceScreenWidgetDefinitionFlags)));
-            queueableBinaryWriter.Write(((short)(this.ScreenID)));
-            queueableBinaryWriter.Write(((short)(this.ButtonKeyType)));
-            queueableBinaryWriter.Write(this.TextColor);
-            queueableBinaryWriter.Write(this.StringListTag);
-            queueableBinaryWriter.WritePointer(this.Panes);
-            queueableBinaryWriter.Write(((short)(this.ShapeGroup)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.HeaderStringId);
-            queueableBinaryWriter.WritePointer(this.LocalStrings);
-            queueableBinaryWriter.WritePointer(this.LocalBitmaps);
-            queueableBinaryWriter.Write(this.SourceColor);
-            queueableBinaryWriter.Write(this.DestinationColor);
-            queueableBinaryWriter.Write(this.AccumulateZoomScaleX);
-            queueableBinaryWriter.Write(this.AccumulateZoomScaleY);
-            queueableBinaryWriter.Write(this.RefractionScaleX);
-            queueableBinaryWriter.Write(this.RefractionScaleY);
+            base.Write(writer);
+            writer.Write(((int)(this.UserInterfaceScreenWidgetDefinitionFlags)));
+            writer.Write(((short)(this.ScreenID)));
+            writer.Write(((short)(this.ButtonKeyType)));
+            writer.Write(this.TextColor);
+            writer.Write(this.StringListTag);
+            writer.WritePointer(this.Panes);
+            writer.Write(((short)(this.ShapeGroup)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.HeaderStringId);
+            writer.WritePointer(this.LocalStrings);
+            writer.WritePointer(this.LocalBitmaps);
+            writer.Write(this.SourceColor);
+            writer.Write(this.DestinationColor);
+            writer.Write(this.AccumulateZoomScaleX);
+            writer.Write(this.AccumulateZoomScaleY);
+            writer.Write(this.RefractionScaleX);
+            writer.Write(this.RefractionScaleY);
         }
         /// <summary>
         /// Set misc. screen behavior here

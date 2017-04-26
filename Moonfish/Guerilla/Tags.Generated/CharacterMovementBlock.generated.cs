@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -68,25 +69,25 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.CharacterMovementMovementFlags)));
-            queueableBinaryWriter.Write(this.PathfindingRadius);
-            queueableBinaryWriter.Write(this.DestinationRadius);
-            queueableBinaryWriter.Write(this.DiveGrenadeChance);
-            queueableBinaryWriter.Write(((short)(this.ObstacleLeapMinSize)));
-            queueableBinaryWriter.Write(((short)(this.ObstacleLeapMaxSize)));
-            queueableBinaryWriter.Write(((short)(this.ObstacleIgnoreSize)));
-            queueableBinaryWriter.Write(((short)(this.ObstacleSmashableSize)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.JumpHeight)));
-            queueableBinaryWriter.Write(((int)(this.CharacterMovementMovementHints)));
-            queueableBinaryWriter.Write(this.ThrottleScale);
+            base.Write(writer);
+            writer.Write(((int)(this.CharacterMovementMovementFlags)));
+            writer.Write(this.PathfindingRadius);
+            writer.Write(this.DestinationRadius);
+            writer.Write(this.DiveGrenadeChance);
+            writer.Write(((short)(this.ObstacleLeapMinSize)));
+            writer.Write(((short)(this.ObstacleLeapMaxSize)));
+            writer.Write(((short)(this.ObstacleIgnoreSize)));
+            writer.Write(((short)(this.ObstacleSmashableSize)));
+            writer.Write(this.fieldpad);
+            writer.Write(((short)(this.JumpHeight)));
+            writer.Write(((int)(this.CharacterMovementMovementHints)));
+            writer.Write(this.ThrottleScale);
         }
         [System.FlagsAttribute()]
         public enum MovementFlags : int

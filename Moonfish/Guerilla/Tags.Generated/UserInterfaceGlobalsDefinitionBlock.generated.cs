@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -66,18 +67,18 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.ScreenWidgets = base.ReadBlockArrayData<UserInterfaceWidgetReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.ScreenWidgets);
+            base.DeferReferences(writer);
+            writer.Defer(this.ScreenWidgets);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.SharedGlobals);
-            queueableBinaryWriter.WritePointer(this.ScreenWidgets);
-            queueableBinaryWriter.Write(this.MpVariantSettingsUi);
-            queueableBinaryWriter.Write(this.GameHopperDescriptions);
+            base.Write(writer);
+            writer.Write(this.SharedGlobals);
+            writer.WritePointer(this.ScreenWidgets);
+            writer.Write(this.MpVariantSettingsUi);
+            writer.Write(this.GameHopperDescriptions);
         }
     }
 }

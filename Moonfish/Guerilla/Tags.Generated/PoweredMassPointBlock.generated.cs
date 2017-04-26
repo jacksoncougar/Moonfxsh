@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -64,23 +65,23 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((int)(this.PoweredMassPointFlags)));
-            queueableBinaryWriter.Write(this.AntigravStrength);
-            queueableBinaryWriter.Write(this.AntigravOffset);
-            queueableBinaryWriter.Write(this.AntigravHeight);
-            queueableBinaryWriter.Write(this.AntigravDampFraction);
-            queueableBinaryWriter.Write(this.AntigravNormalK1);
-            queueableBinaryWriter.Write(this.AntigravNormalK0);
-            queueableBinaryWriter.Write(this.DamageSourceRegionName);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(((int)(this.PoweredMassPointFlags)));
+            writer.Write(this.AntigravStrength);
+            writer.Write(this.AntigravOffset);
+            writer.Write(this.AntigravHeight);
+            writer.Write(this.AntigravDampFraction);
+            writer.Write(this.AntigravNormalK1);
+            writer.Write(this.AntigravNormalK0);
+            writer.Write(this.DamageSourceRegionName);
+            writer.Write(this.fieldpad);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -64,25 +65,25 @@ namespace Moonfish.Guerilla.Tags
             this.WeatherProperties = base.ReadBlockArrayData<ScenarioClusterWeatherPropertiesBlock>(binaryReader, pointerQueue.Dequeue());
             this.AtmosphericFogProperties = base.ReadBlockArrayData<ScenarioClusterAtmosphericFogPropertiesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.BackgroundSounds);
-            queueableBinaryWriter.Defer(this.SoundEnvironments);
-            queueableBinaryWriter.Defer(this.ClusterCentroids);
-            queueableBinaryWriter.Defer(this.WeatherProperties);
-            queueableBinaryWriter.Defer(this.AtmosphericFogProperties);
+            base.DeferReferences(writer);
+            writer.Defer(this.BackgroundSounds);
+            writer.Defer(this.SoundEnvironments);
+            writer.Defer(this.ClusterCentroids);
+            writer.Defer(this.WeatherProperties);
+            writer.Defer(this.AtmosphericFogProperties);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.BSP);
-            queueableBinaryWriter.WritePointer(this.BackgroundSounds);
-            queueableBinaryWriter.WritePointer(this.SoundEnvironments);
-            queueableBinaryWriter.Write(this.BSPChecksum);
-            queueableBinaryWriter.WritePointer(this.ClusterCentroids);
-            queueableBinaryWriter.WritePointer(this.WeatherProperties);
-            queueableBinaryWriter.WritePointer(this.AtmosphericFogProperties);
+            base.Write(writer);
+            writer.Write(this.BSP);
+            writer.WritePointer(this.BackgroundSounds);
+            writer.WritePointer(this.SoundEnvironments);
+            writer.Write(this.BSPChecksum);
+            writer.WritePointer(this.ClusterCentroids);
+            writer.WritePointer(this.WeatherProperties);
+            writer.WritePointer(this.AtmosphericFogProperties);
         }
     }
 }

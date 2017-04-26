@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -65,25 +66,25 @@ namespace Moonfish.Guerilla.Tags
             this.Lines = base.ReadBlockArrayData<AiConversationLineBlock>(binaryReader, pointerQueue.Dequeue());
             this.GNullBlock = base.ReadBlockArrayData<GNullBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Participants);
-            queueableBinaryWriter.Defer(this.Lines);
-            queueableBinaryWriter.Defer(this.GNullBlock);
+            base.DeferReferences(writer);
+            writer.Defer(this.Participants);
+            writer.Defer(this.Lines);
+            writer.Defer(this.GNullBlock);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((short)(this.AiConversationFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.TriggerDistance);
-            queueableBinaryWriter.Write(this.RuntoplayerDist);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.WritePointer(this.Participants);
-            queueableBinaryWriter.WritePointer(this.Lines);
-            queueableBinaryWriter.WritePointer(this.GNullBlock);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(((short)(this.AiConversationFlags)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.TriggerDistance);
+            writer.Write(this.RuntoplayerDist);
+            writer.Write(this.fieldpad0);
+            writer.WritePointer(this.Participants);
+            writer.WritePointer(this.Lines);
+            writer.WritePointer(this.GNullBlock);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

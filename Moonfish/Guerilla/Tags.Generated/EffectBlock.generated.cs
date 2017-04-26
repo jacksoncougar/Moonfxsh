@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -70,26 +71,26 @@ namespace Moonfish.Guerilla.Tags
             this.Locations = base.ReadBlockArrayData<EffectLocationsBlock>(binaryReader, pointerQueue.Dequeue());
             this.Events = base.ReadBlockArrayData<EffectEventBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Locations);
-            queueableBinaryWriter.Defer(this.Events);
+            base.DeferReferences(writer);
+            writer.Defer(this.Locations);
+            writer.Defer(this.Events);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.EffectFlags)));
-            queueableBinaryWriter.Write(this.LoopStartEvent);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.Locations);
-            queueableBinaryWriter.WritePointer(this.Events);
-            queueableBinaryWriter.Write(this.LoopingSound);
-            queueableBinaryWriter.Write(this.Location);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.Write(this.AlwaysPlayDistance);
-            queueableBinaryWriter.Write(this.NeverPlayDistance);
+            base.Write(writer);
+            writer.Write(((int)(this.EffectFlags)));
+            writer.Write(this.LoopStartEvent);
+            writer.Write(this.fieldskip);
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.Locations);
+            writer.WritePointer(this.Events);
+            writer.Write(this.LoopingSound);
+            writer.Write(this.Location);
+            writer.Write(this.fieldskip0);
+            writer.Write(this.AlwaysPlayDistance);
+            writer.Write(this.NeverPlayDistance);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

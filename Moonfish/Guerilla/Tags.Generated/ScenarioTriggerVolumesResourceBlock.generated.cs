@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -51,17 +52,17 @@ namespace Moonfish.Guerilla.Tags
             this.KillTriggerVolumes = base.ReadBlockArrayData<ScenarioTriggerVolumeBlock>(binaryReader, pointerQueue.Dequeue());
             this.ObjectNames = base.ReadBlockArrayData<ScenarioObjectNamesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.KillTriggerVolumes);
-            queueableBinaryWriter.Defer(this.ObjectNames);
+            base.DeferReferences(writer);
+            writer.Defer(this.KillTriggerVolumes);
+            writer.Defer(this.ObjectNames);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.KillTriggerVolumes);
-            queueableBinaryWriter.WritePointer(this.ObjectNames);
+            base.Write(writer);
+            writer.WritePointer(this.KillTriggerVolumes);
+            writer.WritePointer(this.ObjectNames);
         }
     }
 }

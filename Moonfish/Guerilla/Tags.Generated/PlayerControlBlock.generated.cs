@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -99,41 +100,41 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.LookFunction = base.ReadBlockArrayData<LookFunctionBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.LookFunction);
+            base.DeferReferences(writer);
+            writer.Defer(this.LookFunction);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MagnetismFriction);
-            queueableBinaryWriter.Write(this.MagnetismAdhesion);
-            queueableBinaryWriter.Write(this.InconsequentialTargetScale);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.CrosshairLocation);
-            queueableBinaryWriter.Write(this.SecondsToStart);
-            queueableBinaryWriter.Write(this.SecondsToFullSpeed);
-            queueableBinaryWriter.Write(this.DecayRate);
-            queueableBinaryWriter.Write(this.FullSpeedMultiplier);
-            queueableBinaryWriter.Write(this.PeggedMagnitude);
-            queueableBinaryWriter.Write(this.PeggedAngularThreshold);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.LookDefaultPitchRate);
-            queueableBinaryWriter.Write(this.LookDefaultYawRate);
-            queueableBinaryWriter.Write(this.LookPegThreshold01);
-            queueableBinaryWriter.Write(this.LookYawAccelerationTime);
-            queueableBinaryWriter.Write(this.LookYawAccelerationScale);
-            queueableBinaryWriter.Write(this.LookPitchAccelerationTime);
-            queueableBinaryWriter.Write(this.LookPitchAccelerationScale);
-            queueableBinaryWriter.Write(this.LookAutolevellingScale);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.GravityScale);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.MinimumAutolevellingTicks);
-            queueableBinaryWriter.Write(this.MinimumAngleForVehicleFlipping);
-            queueableBinaryWriter.WritePointer(this.LookFunction);
-            queueableBinaryWriter.Write(this.MinimumActionHoldTime);
+            base.Write(writer);
+            writer.Write(this.MagnetismFriction);
+            writer.Write(this.MagnetismAdhesion);
+            writer.Write(this.InconsequentialTargetScale);
+            writer.Write(this.fieldpad);
+            writer.Write(this.CrosshairLocation);
+            writer.Write(this.SecondsToStart);
+            writer.Write(this.SecondsToFullSpeed);
+            writer.Write(this.DecayRate);
+            writer.Write(this.FullSpeedMultiplier);
+            writer.Write(this.PeggedMagnitude);
+            writer.Write(this.PeggedAngularThreshold);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.LookDefaultPitchRate);
+            writer.Write(this.LookDefaultYawRate);
+            writer.Write(this.LookPegThreshold01);
+            writer.Write(this.LookYawAccelerationTime);
+            writer.Write(this.LookYawAccelerationScale);
+            writer.Write(this.LookPitchAccelerationTime);
+            writer.Write(this.LookPitchAccelerationScale);
+            writer.Write(this.LookAutolevellingScale);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.GravityScale);
+            writer.Write(this.fieldpad2);
+            writer.Write(this.MinimumAutolevellingTicks);
+            writer.Write(this.MinimumAngleForVehicleFlipping);
+            writer.WritePointer(this.LookFunction);
+            writer.Write(this.MinimumActionHoldTime);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -81,26 +82,26 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.PrimaryMessageSound);
-            queueableBinaryWriter.Write(this.SecondaryMessageSound);
-            queueableBinaryWriter.Write(this.BootGrieferString);
-            queueableBinaryWriter.Write(this.CannotBootGrieferString);
-            queueableBinaryWriter.Write(this.TrainingShader);
-            queueableBinaryWriter.Write(this.HumanTrainingTopRight);
-            queueableBinaryWriter.Write(this.HumanTrainingTopCenter);
-            queueableBinaryWriter.Write(this.HumanTrainingTopLeft);
-            queueableBinaryWriter.Write(this.HumanTrainingMiddle);
-            queueableBinaryWriter.Write(this.EliteTrainingTopRight);
-            queueableBinaryWriter.Write(this.EliteTrainingTopCenter);
-            queueableBinaryWriter.Write(this.EliteTrainingTopLeft);
-            queueableBinaryWriter.Write(this.EliteTrainingMiddle);
+            base.Write(writer);
+            writer.Write(this.PrimaryMessageSound);
+            writer.Write(this.SecondaryMessageSound);
+            writer.Write(this.BootGrieferString);
+            writer.Write(this.CannotBootGrieferString);
+            writer.Write(this.TrainingShader);
+            writer.Write(this.HumanTrainingTopRight);
+            writer.Write(this.HumanTrainingTopCenter);
+            writer.Write(this.HumanTrainingTopLeft);
+            writer.Write(this.HumanTrainingMiddle);
+            writer.Write(this.EliteTrainingTopRight);
+            writer.Write(this.EliteTrainingTopCenter);
+            writer.Write(this.EliteTrainingTopLeft);
+            writer.Write(this.EliteTrainingMiddle);
         }
     }
 }

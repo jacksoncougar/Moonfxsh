@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -68,21 +69,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.JapaneseSound);
-            queueableBinaryWriter.Write(this.GermanSound);
-            queueableBinaryWriter.Write(this.FrenchSound);
-            queueableBinaryWriter.Write(this.SpanishSound);
-            queueableBinaryWriter.Write(this.ItalianSound);
-            queueableBinaryWriter.Write(this.KoreanSound);
-            queueableBinaryWriter.Write(this.ChineseSound);
-            queueableBinaryWriter.Write(this.PortugueseSound);
+            base.Write(writer);
+            writer.Write(this.JapaneseSound);
+            writer.Write(this.GermanSound);
+            writer.Write(this.FrenchSound);
+            writer.Write(this.SpanishSound);
+            writer.Write(this.ItalianSound);
+            writer.Write(this.KoreanSound);
+            writer.Write(this.ChineseSound);
+            writer.Write(this.PortugueseSound);
         }
     }
 }

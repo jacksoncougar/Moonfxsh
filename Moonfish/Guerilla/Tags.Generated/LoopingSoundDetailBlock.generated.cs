@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -64,21 +65,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.Sound);
-            queueableBinaryWriter.Write(this.RandomPeriodBounds);
-            queueableBinaryWriter.Write(this.FieldReal);
-            queueableBinaryWriter.Write(((int)(this.LoopingSoundDetailFlags)));
-            queueableBinaryWriter.Write(this.YawBounds);
-            queueableBinaryWriter.Write(this.PitchBounds);
-            queueableBinaryWriter.Write(this.DistanceBounds);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.Sound);
+            writer.Write(this.RandomPeriodBounds);
+            writer.Write(this.FieldReal);
+            writer.Write(((int)(this.LoopingSoundDetailFlags)));
+            writer.Write(this.YawBounds);
+            writer.Write(this.PitchBounds);
+            writer.Write(this.DistanceBounds);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -69,27 +70,27 @@ namespace Moonfish.Guerilla.Tags
             this.HudBlocks = base.ReadBlockArrayData<HudBlockReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.PlayerBlocks = base.ReadBlockArrayData<PlayerBlockReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.ItemAnimations);
-            queueableBinaryWriter.Defer(this.TextBlocks);
-            queueableBinaryWriter.Defer(this.BitmapBlocks);
-            queueableBinaryWriter.Defer(this.HudBlocks);
-            queueableBinaryWriter.Defer(this.PlayerBlocks);
+            base.DeferReferences(writer);
+            writer.Defer(this.ItemAnimations);
+            writer.Defer(this.TextBlocks);
+            writer.Defer(this.BitmapBlocks);
+            writer.Defer(this.HudBlocks);
+            writer.Defer(this.PlayerBlocks);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.UserInterfaceListSkinDefinitionListFlags)));
-            queueableBinaryWriter.Write(this.ArrowsBitmap);
-            queueableBinaryWriter.Write(this.UparrowsOffset);
-            queueableBinaryWriter.Write(this.DownarrowsOffset);
-            queueableBinaryWriter.WritePointer(this.ItemAnimations);
-            queueableBinaryWriter.WritePointer(this.TextBlocks);
-            queueableBinaryWriter.WritePointer(this.BitmapBlocks);
-            queueableBinaryWriter.WritePointer(this.HudBlocks);
-            queueableBinaryWriter.WritePointer(this.PlayerBlocks);
+            base.Write(writer);
+            writer.Write(((int)(this.UserInterfaceListSkinDefinitionListFlags)));
+            writer.Write(this.ArrowsBitmap);
+            writer.Write(this.UparrowsOffset);
+            writer.Write(this.DownarrowsOffset);
+            writer.WritePointer(this.ItemAnimations);
+            writer.WritePointer(this.TextBlocks);
+            writer.WritePointer(this.BitmapBlocks);
+            writer.WritePointer(this.HudBlocks);
+            writer.WritePointer(this.PlayerBlocks);
         }
         [System.FlagsAttribute()]
         public enum ListFlags : int

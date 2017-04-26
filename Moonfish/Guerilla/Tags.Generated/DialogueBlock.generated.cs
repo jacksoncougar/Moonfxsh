@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -55,18 +56,18 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Vocalizations = base.ReadBlockArrayData<SoundReferencesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Vocalizations);
+            base.DeferReferences(writer);
+            writer.Defer(this.Vocalizations);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.GlobalDialogueInfo);
-            queueableBinaryWriter.Write(((int)(this.DialogueFlags)));
-            queueableBinaryWriter.WritePointer(this.Vocalizations);
-            queueableBinaryWriter.Write(this.MissionDialogueDesignator);
+            base.Write(writer);
+            writer.Write(this.GlobalDialogueInfo);
+            writer.Write(((int)(this.DialogueFlags)));
+            writer.WritePointer(this.Vocalizations);
+            writer.Write(this.MissionDialogueDesignator);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

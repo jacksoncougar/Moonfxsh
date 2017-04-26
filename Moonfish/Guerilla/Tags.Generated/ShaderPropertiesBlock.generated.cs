@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -72,25 +73,25 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DiffuseMap);
-            queueableBinaryWriter.Write(this.LightmapEmissiveMap);
-            queueableBinaryWriter.Write(this.LightmapEmissiveColor);
-            queueableBinaryWriter.Write(this.LightmapEmissivePower);
-            queueableBinaryWriter.Write(this.LightmapResolutionScale);
-            queueableBinaryWriter.Write(this.LightmapHalfLife);
-            queueableBinaryWriter.Write(this.LightmapDiffuseScale);
-            queueableBinaryWriter.Write(this.AlphaTestMap);
-            queueableBinaryWriter.Write(this.TranslucentMap);
-            queueableBinaryWriter.Write(this.LightmapTransparentColor);
-            queueableBinaryWriter.Write(this.LightmapTransparentAlpha);
-            queueableBinaryWriter.Write(this.LightmapFoliageScale);
+            base.Write(writer);
+            writer.Write(this.DiffuseMap);
+            writer.Write(this.LightmapEmissiveMap);
+            writer.Write(this.LightmapEmissiveColor);
+            writer.Write(this.LightmapEmissivePower);
+            writer.Write(this.LightmapResolutionScale);
+            writer.Write(this.LightmapHalfLife);
+            writer.Write(this.LightmapDiffuseScale);
+            writer.Write(this.AlphaTestMap);
+            writer.Write(this.TranslucentMap);
+            writer.Write(this.LightmapTransparentColor);
+            writer.Write(this.LightmapTransparentAlpha);
+            writer.Write(this.LightmapFoliageScale);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -50,17 +51,17 @@ namespace Moonfish.Guerilla.Tags
             this.Grenades = base.ReadBlockArrayData<GrenadeBlock>(binaryReader, pointerQueue.Dequeue());
             this.Powerups = base.ReadBlockArrayData<PowerupBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Grenades);
-            queueableBinaryWriter.Defer(this.Powerups);
+            base.DeferReferences(writer);
+            writer.Defer(this.Grenades);
+            writer.Defer(this.Powerups);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Grenades);
-            queueableBinaryWriter.WritePointer(this.Powerups);
+            base.Write(writer);
+            writer.WritePointer(this.Grenades);
+            writer.WritePointer(this.Powerups);
         }
     }
 }

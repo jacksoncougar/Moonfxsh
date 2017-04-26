@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -53,18 +54,18 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Permutations = base.ReadBlockArrayData<RenderModelPermutationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Permutations);
+            base.DeferReferences(writer);
+            writer.Defer(this.Permutations);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.NodeMapOffset);
-            queueableBinaryWriter.Write(this.NodeMapSize);
-            queueableBinaryWriter.WritePointer(this.Permutations);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.NodeMapOffset);
+            writer.Write(this.NodeMapSize);
+            writer.WritePointer(this.Permutations);
         }
     }
 }

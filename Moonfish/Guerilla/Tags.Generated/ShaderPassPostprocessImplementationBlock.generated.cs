@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -98,45 +99,49 @@ namespace Moonfish.Guerilla.Tags
             this.PixelShaderCombiners = base.ReadBlockArrayData<PixelShaderCombinerBlock>(binaryReader, pointerQueue.Dequeue());
             this.PixelShaderConstants = base.ReadBlockArrayData<PixelShaderConstantBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.GPUState.DeferReferences(queueableBinaryWriter);
-            this.GPUConstantState.DeferReferences(queueableBinaryWriter);
-            this.GPUVolatileState.DeferReferences(queueableBinaryWriter);
-            this.GPUDefaultState.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.ValueExterns);
-            queueableBinaryWriter.Defer(this.ColorExterns);
-            queueableBinaryWriter.Defer(this.SwitchExterns);
-            queueableBinaryWriter.Defer(this.PixelShaderFragments);
-            queueableBinaryWriter.Defer(this.PixelShaderPermutations);
-            queueableBinaryWriter.Defer(this.PixelShaderCombiners);
-            queueableBinaryWriter.Defer(this.PixelShaderConstants);
+            base.DeferReferences(writer);
+            this.GPUState.DeferReferences(writer);
+            this.GPUState.DeferReferences(writer);
+            this.GPUConstantState.DeferReferences(writer);
+            this.GPUConstantState.DeferReferences(writer);
+            this.GPUVolatileState.DeferReferences(writer);
+            this.GPUVolatileState.DeferReferences(writer);
+            this.GPUDefaultState.DeferReferences(writer);
+            this.GPUDefaultState.DeferReferences(writer);
+            writer.Defer(this.ValueExterns);
+            writer.Defer(this.ColorExterns);
+            writer.Defer(this.SwitchExterns);
+            writer.Defer(this.PixelShaderFragments);
+            writer.Defer(this.PixelShaderPermutations);
+            writer.Defer(this.PixelShaderCombiners);
+            writer.Defer(this.PixelShaderConstants);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            this.GPUState.Write(queueableBinaryWriter);
-            this.GPUConstantState.Write(queueableBinaryWriter);
-            this.GPUVolatileState.Write(queueableBinaryWriter);
-            this.GPUDefaultState.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.VertexShader);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.Write(this.fieldskip1);
-            queueableBinaryWriter.Write(this.fieldskip2);
-            queueableBinaryWriter.WritePointer(this.ValueExterns);
-            queueableBinaryWriter.WritePointer(this.ColorExterns);
-            queueableBinaryWriter.WritePointer(this.SwitchExterns);
-            queueableBinaryWriter.Write(this.BitmapParameterCount);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldskip3);
-            queueableBinaryWriter.WritePointer(this.PixelShaderFragments);
-            queueableBinaryWriter.WritePointer(this.PixelShaderPermutations);
-            queueableBinaryWriter.WritePointer(this.PixelShaderCombiners);
-            queueableBinaryWriter.WritePointer(this.PixelShaderConstants);
-            queueableBinaryWriter.Write(this.fieldskip4);
-            queueableBinaryWriter.Write(this.fieldskip5);
+            base.Write(writer);
+            this.GPUState.Write(writer);
+            this.GPUConstantState.Write(writer);
+            this.GPUVolatileState.Write(writer);
+            this.GPUDefaultState.Write(writer);
+            writer.Write(this.VertexShader);
+            writer.Write(this.fieldskip);
+            writer.Write(this.fieldskip0);
+            writer.Write(this.fieldskip1);
+            writer.Write(this.fieldskip2);
+            writer.WritePointer(this.ValueExterns);
+            writer.WritePointer(this.ColorExterns);
+            writer.WritePointer(this.SwitchExterns);
+            writer.Write(this.BitmapParameterCount);
+            writer.Write(this.fieldpad);
+            writer.Write(this.fieldskip3);
+            writer.WritePointer(this.PixelShaderFragments);
+            writer.WritePointer(this.PixelShaderPermutations);
+            writer.WritePointer(this.PixelShaderCombiners);
+            writer.WritePointer(this.PixelShaderConstants);
+            writer.Write(this.fieldskip4);
+            writer.Write(this.fieldskip5);
         }
     }
 }

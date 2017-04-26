@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -53,19 +54,19 @@ namespace Moonfish.Guerilla.Tags
             this.VehicleSuspensionCCAABB = base.ReadBlockArrayData<VehicleSuspensionBlock>(binaryReader, pointerQueue.Dequeue());
             this.ObjectOverlaysCCAABB = base.ReadBlockArrayData<ObjectAnimationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.ModesAABBCC);
-            queueableBinaryWriter.Defer(this.VehicleSuspensionCCAABB);
-            queueableBinaryWriter.Defer(this.ObjectOverlaysCCAABB);
+            base.DeferReferences(writer);
+            writer.Defer(this.ModesAABBCC);
+            writer.Defer(this.VehicleSuspensionCCAABB);
+            writer.Defer(this.ObjectOverlaysCCAABB);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.ModesAABBCC);
-            queueableBinaryWriter.WritePointer(this.VehicleSuspensionCCAABB);
-            queueableBinaryWriter.WritePointer(this.ObjectOverlaysCCAABB);
+            base.Write(writer);
+            writer.WritePointer(this.ModesAABBCC);
+            writer.WritePointer(this.VehicleSuspensionCCAABB);
+            writer.WritePointer(this.ObjectOverlaysCCAABB);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -50,17 +51,17 @@ namespace Moonfish.Guerilla.Tags
             this.DevicePortalAssociations = base.ReadBlockArrayData<StructureDevicePortalAssociationBlock>(binaryReader, pointerQueue.Dequeue());
             this.GamePortalToPortalMap = base.ReadBlockArrayData<GamePortalToPortalMappingBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.DevicePortalAssociations);
-            queueableBinaryWriter.Defer(this.GamePortalToPortalMap);
+            base.DeferReferences(writer);
+            writer.Defer(this.DevicePortalAssociations);
+            writer.Defer(this.GamePortalToPortalMap);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.DevicePortalAssociations);
-            queueableBinaryWriter.WritePointer(this.GamePortalToPortalMap);
+            base.Write(writer);
+            writer.WritePointer(this.DevicePortalAssociations);
+            writer.WritePointer(this.GamePortalToPortalMap);
         }
     }
 }

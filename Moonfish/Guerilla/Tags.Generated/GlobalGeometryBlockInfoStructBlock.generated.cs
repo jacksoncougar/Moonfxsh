@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -66,23 +67,23 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Resources = base.ReadBlockArrayData<GlobalGeometryBlockResourceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Resources);
+            base.DeferReferences(writer);
+            writer.Defer(this.Resources);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.BlockOffset);
-            queueableBinaryWriter.Write(this.BlockSize);
-            queueableBinaryWriter.Write(this.SectionDataSize);
-            queueableBinaryWriter.Write(this.ResourceDataSize);
-            queueableBinaryWriter.WritePointer(this.Resources);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.OwnerTagSectionOffset);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
+            base.Write(writer);
+            writer.Write(this.BlockOffset);
+            writer.Write(this.BlockSize);
+            writer.Write(this.SectionDataSize);
+            writer.Write(this.ResourceDataSize);
+            writer.WritePointer(this.Resources);
+            writer.Write(this.fieldpad);
+            writer.Write(this.OwnerTagSectionOffset);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.fieldpad1);
         }
     }
 }

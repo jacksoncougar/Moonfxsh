@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -78,30 +79,31 @@ namespace Moonfish.Guerilla.Tags
             this.StripIndices = base.ReadBlockArrayData<ClothIndicesBlock>(binaryReader, pointerQueue.Dequeue());
             this.Links = base.ReadBlockArrayData<ClothLinksBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.Properties.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Vertices);
-            queueableBinaryWriter.Defer(this.Indices);
-            queueableBinaryWriter.Defer(this.StripIndices);
-            queueableBinaryWriter.Defer(this.Links);
+            base.DeferReferences(writer);
+            this.Properties.DeferReferences(writer);
+            this.Properties.DeferReferences(writer);
+            writer.Defer(this.Vertices);
+            writer.Defer(this.Indices);
+            writer.Defer(this.StripIndices);
+            writer.Defer(this.Links);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.ClothFlags)));
-            queueableBinaryWriter.Write(this.MarkerAttachmentName);
-            queueableBinaryWriter.Write(this.Shader);
-            queueableBinaryWriter.Write(this.GridXDimension);
-            queueableBinaryWriter.Write(this.GridYDimension);
-            queueableBinaryWriter.Write(this.GridSpacingX);
-            queueableBinaryWriter.Write(this.GridSpacingY);
-            this.Properties.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Vertices);
-            queueableBinaryWriter.WritePointer(this.Indices);
-            queueableBinaryWriter.WritePointer(this.StripIndices);
-            queueableBinaryWriter.WritePointer(this.Links);
+            base.Write(writer);
+            writer.Write(((int)(this.ClothFlags)));
+            writer.Write(this.MarkerAttachmentName);
+            writer.Write(this.Shader);
+            writer.Write(this.GridXDimension);
+            writer.Write(this.GridYDimension);
+            writer.Write(this.GridSpacingX);
+            writer.Write(this.GridSpacingY);
+            this.Properties.Write(writer);
+            writer.WritePointer(this.Vertices);
+            writer.WritePointer(this.Indices);
+            writer.WritePointer(this.StripIndices);
+            writer.WritePointer(this.Links);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

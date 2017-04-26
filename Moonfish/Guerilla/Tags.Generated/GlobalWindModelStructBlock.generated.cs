@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -89,36 +90,36 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.WindPirmitives = base.ReadBlockArrayData<GloalWindPrimitivesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.WindPirmitives);
+            base.DeferReferences(writer);
+            writer.Defer(this.WindPirmitives);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.WindTilingScale);
-            queueableBinaryWriter.Write(this.WindPrimaryHeadingpitchstrength);
-            queueableBinaryWriter.Write(this.PrimaryRateOfChange);
-            queueableBinaryWriter.Write(this.PrimaryMinStrength);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.WindGustingHeadingpitchstrength);
-            queueableBinaryWriter.Write(this.GustDiretionalRateOfChange);
-            queueableBinaryWriter.Write(this.GustStrengthRateOfChange);
-            queueableBinaryWriter.Write(this.GustConeAngle);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(this.fieldpad6);
-            queueableBinaryWriter.Write(this.fieldpad7);
-            queueableBinaryWriter.Write(this.TurbulanceRateOfChange);
-            queueableBinaryWriter.Write(this.TurbulenceScaleXYZ);
-            queueableBinaryWriter.Write(this.GravityConstant);
-            queueableBinaryWriter.WritePointer(this.WindPirmitives);
-            queueableBinaryWriter.Write(this.fieldpad8);
+            base.Write(writer);
+            writer.Write(this.WindTilingScale);
+            writer.Write(this.WindPrimaryHeadingpitchstrength);
+            writer.Write(this.PrimaryRateOfChange);
+            writer.Write(this.PrimaryMinStrength);
+            writer.Write(this.fieldpad);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.WindGustingHeadingpitchstrength);
+            writer.Write(this.GustDiretionalRateOfChange);
+            writer.Write(this.GustStrengthRateOfChange);
+            writer.Write(this.GustConeAngle);
+            writer.Write(this.fieldpad2);
+            writer.Write(this.fieldpad3);
+            writer.Write(this.fieldpad4);
+            writer.Write(this.fieldpad5);
+            writer.Write(this.fieldpad6);
+            writer.Write(this.fieldpad7);
+            writer.Write(this.TurbulanceRateOfChange);
+            writer.Write(this.TurbulenceScaleXYZ);
+            writer.Write(this.GravityConstant);
+            writer.WritePointer(this.WindPirmitives);
+            writer.Write(this.fieldpad8);
         }
     }
 }

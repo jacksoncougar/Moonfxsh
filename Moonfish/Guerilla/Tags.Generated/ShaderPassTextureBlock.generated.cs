@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -63,7 +64,7 @@ namespace Moonfish.Guerilla.Tags
             this.fieldpad1 = binaryReader.ReadBytes(2);
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(8));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(16));
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(11));
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(12));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(8));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(8));
             return pointerQueue;
@@ -77,32 +78,32 @@ namespace Moonfish.Guerilla.Tags
             this.MiscState = base.ReadBlockArrayData<ShaderTextureStateMiscStateBlock>(binaryReader, pointerQueue.Dequeue());
             this.Constants = base.ReadBlockArrayData<ShaderTextureStateConstantBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.AddressState);
-            queueableBinaryWriter.Defer(this.FilterState);
-            queueableBinaryWriter.Defer(this.KillState);
-            queueableBinaryWriter.Defer(this.MiscState);
-            queueableBinaryWriter.Defer(this.Constants);
+            base.DeferReferences(writer);
+            writer.Defer(this.AddressState);
+            writer.Defer(this.FilterState);
+            writer.Defer(this.KillState);
+            writer.Defer(this.MiscState);
+            writer.Defer(this.Constants);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.SourceParameter);
-            queueableBinaryWriter.Write(((short)(this.SourceExtern)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(((short)(this.Mode)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(((short)(this.DotMapping)));
-            queueableBinaryWriter.Write(this.InputStage);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.WritePointer(this.AddressState);
-            queueableBinaryWriter.WritePointer(this.FilterState);
-            queueableBinaryWriter.WritePointer(this.KillState);
-            queueableBinaryWriter.WritePointer(this.MiscState);
-            queueableBinaryWriter.WritePointer(this.Constants);
+            base.Write(writer);
+            writer.Write(this.SourceParameter);
+            writer.Write(((short)(this.SourceExtern)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.fieldskip);
+            writer.Write(((short)(this.Mode)));
+            writer.Write(this.fieldpad0);
+            writer.Write(((short)(this.DotMapping)));
+            writer.Write(this.InputStage);
+            writer.Write(this.fieldpad1);
+            writer.WritePointer(this.AddressState);
+            writer.WritePointer(this.FilterState);
+            writer.WritePointer(this.KillState);
+            writer.WritePointer(this.MiscState);
+            writer.WritePointer(this.Constants);
         }
         public enum SourceExternEnum : short
         {

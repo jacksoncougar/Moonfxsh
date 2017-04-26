@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -132,56 +133,56 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Unit);
-            queueableBinaryWriter.Write(this.Style);
-            queueableBinaryWriter.Write(((int)(this.CharacterVehicleVehicleFlags)));
-            queueableBinaryWriter.Write(this.AiPathfindingRadius);
-            queueableBinaryWriter.Write(this.AiDestinationRadius);
-            queueableBinaryWriter.Write(this.AiDecelerationDistanceworldUnits);
-            queueableBinaryWriter.Write(this.AiTurningRadius);
-            queueableBinaryWriter.Write(this.AiInnerTurningRadius);
-            queueableBinaryWriter.Write(this.AiIdealTurningRadius);
-            queueableBinaryWriter.Write(this.AiBansheeSteeringMaximum);
-            queueableBinaryWriter.Write(this.AiMaxSteeringAngle);
-            queueableBinaryWriter.Write(this.AiMaxSteeringDelta);
-            queueableBinaryWriter.Write(this.AiOversteeringScale);
-            queueableBinaryWriter.Write(this.AiOversteeringBounds);
-            queueableBinaryWriter.Write(this.AiSideslipDistance);
-            queueableBinaryWriter.Write(this.AiAvoidanceDistance);
-            queueableBinaryWriter.Write(this.AiMinUrgency);
-            queueableBinaryWriter.Write(this.AiThrottleMaximum);
-            queueableBinaryWriter.Write(this.AiGoalMinThrottleScale);
-            queueableBinaryWriter.Write(this.AiTurnMinThrottleScale);
-            queueableBinaryWriter.Write(this.AiDirectionMinThrottleScale);
-            queueableBinaryWriter.Write(this.AiAccelerationScale);
-            queueableBinaryWriter.Write(this.AiThrottleBlend);
-            queueableBinaryWriter.Write(this.TheoreticalMaxSpeed);
-            queueableBinaryWriter.Write(this.ErrorScale);
-            queueableBinaryWriter.Write(this.AiAllowableAimDeviationAngle);
-            queueableBinaryWriter.Write(this.AiChargeTightAngleDistance);
-            queueableBinaryWriter.Write(this.AiChargeTightAngle);
-            queueableBinaryWriter.Write(this.AiChargeRepeatTimeout);
-            queueableBinaryWriter.Write(this.AiChargeLookaheadTime);
-            queueableBinaryWriter.Write(this.AiChargeConsiderDistance);
-            queueableBinaryWriter.Write(this.AiChargeAbortDistance);
-            queueableBinaryWriter.Write(this.VehicleRamTimeout);
-            queueableBinaryWriter.Write(this.RamParalysisTime);
-            queueableBinaryWriter.Write(this.AiCoverDamageThreshold);
-            queueableBinaryWriter.Write(this.AiCoverMinDistance);
-            queueableBinaryWriter.Write(this.AiCoverTime);
-            queueableBinaryWriter.Write(this.AiCoverMinBoostDistance);
-            queueableBinaryWriter.Write(this.TurtlingRecentDamageThreshold);
-            queueableBinaryWriter.Write(this.TurtlingMinTime);
-            queueableBinaryWriter.Write(this.TurtlingTimeout);
-            queueableBinaryWriter.Write(((short)(this.ObstacleIgnoreSize)));
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write(writer);
+            writer.Write(this.Unit);
+            writer.Write(this.Style);
+            writer.Write(((int)(this.CharacterVehicleVehicleFlags)));
+            writer.Write(this.AiPathfindingRadius);
+            writer.Write(this.AiDestinationRadius);
+            writer.Write(this.AiDecelerationDistanceworldUnits);
+            writer.Write(this.AiTurningRadius);
+            writer.Write(this.AiInnerTurningRadius);
+            writer.Write(this.AiIdealTurningRadius);
+            writer.Write(this.AiBansheeSteeringMaximum);
+            writer.Write(this.AiMaxSteeringAngle);
+            writer.Write(this.AiMaxSteeringDelta);
+            writer.Write(this.AiOversteeringScale);
+            writer.Write(this.AiOversteeringBounds);
+            writer.Write(this.AiSideslipDistance);
+            writer.Write(this.AiAvoidanceDistance);
+            writer.Write(this.AiMinUrgency);
+            writer.Write(this.AiThrottleMaximum);
+            writer.Write(this.AiGoalMinThrottleScale);
+            writer.Write(this.AiTurnMinThrottleScale);
+            writer.Write(this.AiDirectionMinThrottleScale);
+            writer.Write(this.AiAccelerationScale);
+            writer.Write(this.AiThrottleBlend);
+            writer.Write(this.TheoreticalMaxSpeed);
+            writer.Write(this.ErrorScale);
+            writer.Write(this.AiAllowableAimDeviationAngle);
+            writer.Write(this.AiChargeTightAngleDistance);
+            writer.Write(this.AiChargeTightAngle);
+            writer.Write(this.AiChargeRepeatTimeout);
+            writer.Write(this.AiChargeLookaheadTime);
+            writer.Write(this.AiChargeConsiderDistance);
+            writer.Write(this.AiChargeAbortDistance);
+            writer.Write(this.VehicleRamTimeout);
+            writer.Write(this.RamParalysisTime);
+            writer.Write(this.AiCoverDamageThreshold);
+            writer.Write(this.AiCoverMinDistance);
+            writer.Write(this.AiCoverTime);
+            writer.Write(this.AiCoverMinBoostDistance);
+            writer.Write(this.TurtlingRecentDamageThreshold);
+            writer.Write(this.TurtlingMinTime);
+            writer.Write(this.TurtlingTimeout);
+            writer.Write(((short)(this.ObstacleIgnoreSize)));
+            writer.Write(this.fieldpad);
         }
         [System.FlagsAttribute()]
         public enum VehicleFlags : int

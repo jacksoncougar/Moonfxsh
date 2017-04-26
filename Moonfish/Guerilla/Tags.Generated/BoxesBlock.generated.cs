@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -104,43 +105,43 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.Material);
-            queueableBinaryWriter.Write(((short)(this.BoxesFlags)));
-            queueableBinaryWriter.Write(this.RelativeMassScale);
-            queueableBinaryWriter.Write(this.Friction);
-            queueableBinaryWriter.Write(this.Restitution);
-            queueableBinaryWriter.Write(this.Volume);
-            queueableBinaryWriter.Write(this.Mass);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.Phantom);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.Write(this.Size);
-            queueableBinaryWriter.Write(this.Count);
-            queueableBinaryWriter.Write(this.fieldskip1);
-            queueableBinaryWriter.Write(this.Radius);
-            queueableBinaryWriter.Write(this.HalfExtents);
-            queueableBinaryWriter.Write(this.fieldskip2);
-            queueableBinaryWriter.Write(this.fieldskip3);
-            queueableBinaryWriter.Write(this.Size0);
-            queueableBinaryWriter.Write(this.Count0);
-            queueableBinaryWriter.Write(this.fieldskip4);
-            queueableBinaryWriter.Write(this.fieldskip5);
-            queueableBinaryWriter.Write(this.RotationI);
-            queueableBinaryWriter.Write(this.fieldskip6);
-            queueableBinaryWriter.Write(this.RotationJ);
-            queueableBinaryWriter.Write(this.fieldskip7);
-            queueableBinaryWriter.Write(this.RotationK);
-            queueableBinaryWriter.Write(this.fieldskip8);
-            queueableBinaryWriter.Write(this.Translation);
-            queueableBinaryWriter.Write(this.fieldskip9);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.Material);
+            writer.Write(((short)(this.BoxesFlags)));
+            writer.Write(this.RelativeMassScale);
+            writer.Write(this.Friction);
+            writer.Write(this.Restitution);
+            writer.Write(this.Volume);
+            writer.Write(this.Mass);
+            writer.Write(this.fieldskip);
+            writer.Write(this.Phantom);
+            writer.Write(this.fieldskip0);
+            writer.Write(this.Size);
+            writer.Write(this.Count);
+            writer.Write(this.fieldskip1);
+            writer.Write(this.Radius);
+            writer.Write(this.HalfExtents);
+            writer.Write(this.fieldskip2);
+            writer.Write(this.fieldskip3);
+            writer.Write(this.Size0);
+            writer.Write(this.Count0);
+            writer.Write(this.fieldskip4);
+            writer.Write(this.fieldskip5);
+            writer.Write(this.RotationI);
+            writer.Write(this.fieldskip6);
+            writer.Write(this.RotationJ);
+            writer.Write(this.fieldskip7);
+            writer.Write(this.RotationK);
+            writer.Write(this.fieldskip8);
+            writer.Write(this.Translation);
+            writer.Write(this.fieldskip9);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

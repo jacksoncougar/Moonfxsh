@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -23,7 +24,7 @@ namespace Moonfish.Guerilla.Tags
     public partial class HsSourceFilesBlock : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Tags.String32 Name;
-        public byte[] Source;
+        private byte[] Source;
         public override int SerializedSize
         {
             get
@@ -50,16 +51,16 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Source = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Source);
+            base.DeferReferences(writer);
+            writer.Defer(this.Source);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.WritePointer(this.Source);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.WritePointer(this.Source);
         }
     }
 }

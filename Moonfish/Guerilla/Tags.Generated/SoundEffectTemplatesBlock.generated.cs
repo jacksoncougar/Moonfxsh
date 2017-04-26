@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -25,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// DON'T MODIFY THIS TAG UNLESS YOU KNOW WHAT YOU ARE DOING
         /// </summary>
-        public byte[] Explanation;
+        private byte[] Explanation;
         public Flags SoundEffectTemplatesFlags;
         public short FieldShortInteger;
         public short FieldShortInteger0;
@@ -61,21 +62,21 @@ namespace Moonfish.Guerilla.Tags
             this.Explanation = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
             this.Parameters = base.ReadBlockArrayData<SoundEffectTemplateParameterBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Explanation);
-            queueableBinaryWriter.Defer(this.Parameters);
+            base.DeferReferences(writer);
+            writer.Defer(this.Explanation);
+            writer.Defer(this.Parameters);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DspEffect);
-            queueableBinaryWriter.WritePointer(this.Explanation);
-            queueableBinaryWriter.Write(((int)(this.SoundEffectTemplatesFlags)));
-            queueableBinaryWriter.Write(this.FieldShortInteger);
-            queueableBinaryWriter.Write(this.FieldShortInteger0);
-            queueableBinaryWriter.WritePointer(this.Parameters);
+            base.Write(writer);
+            writer.Write(this.DspEffect);
+            writer.WritePointer(this.Explanation);
+            writer.Write(((int)(this.SoundEffectTemplatesFlags)));
+            writer.Write(this.FieldShortInteger);
+            writer.Write(this.FieldShortInteger0);
+            writer.WritePointer(this.Parameters);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

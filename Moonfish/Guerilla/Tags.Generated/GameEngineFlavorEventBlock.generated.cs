@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -89,36 +90,37 @@ namespace Moonfish.Guerilla.Tags
             this.ExtraSounds.ReadInstances(binaryReader, pointerQueue);
             this.SoundPermutations = base.ReadBlockArrayData<SoundResponseDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.ExtraSounds.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.SoundPermutations);
+            base.DeferReferences(writer);
+            this.ExtraSounds.DeferReferences(writer);
+            this.ExtraSounds.DeferReferences(writer);
+            writer.Defer(this.SoundPermutations);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.GameEngineFlavorEventFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.Event)));
-            queueableBinaryWriter.Write(((short)(this.Audience)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.DisplayString);
-            queueableBinaryWriter.Write(((short)(this.RequiredField)));
-            queueableBinaryWriter.Write(((short)(this.ExcludedAudience)));
-            queueableBinaryWriter.Write(this.PrimaryString);
-            queueableBinaryWriter.Write(this.PrimaryStringDuration);
-            queueableBinaryWriter.Write(this.PluralDisplayString);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.SoundDelay);
-            queueableBinaryWriter.Write(((short)(this.GameEngineFlavorEventSoundFlags)));
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.Sound);
-            this.ExtraSounds.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.WritePointer(this.SoundPermutations);
+            base.Write(writer);
+            writer.Write(((short)(this.GameEngineFlavorEventFlags)));
+            writer.Write(this.fieldpad);
+            writer.Write(((short)(this.Event)));
+            writer.Write(((short)(this.Audience)));
+            writer.Write(this.fieldpad0);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.DisplayString);
+            writer.Write(((short)(this.RequiredField)));
+            writer.Write(((short)(this.ExcludedAudience)));
+            writer.Write(this.PrimaryString);
+            writer.Write(this.PrimaryStringDuration);
+            writer.Write(this.PluralDisplayString);
+            writer.Write(this.fieldpad2);
+            writer.Write(this.SoundDelay);
+            writer.Write(((short)(this.GameEngineFlavorEventSoundFlags)));
+            writer.Write(this.fieldpad3);
+            writer.Write(this.Sound);
+            this.ExtraSounds.Write(writer);
+            writer.Write(this.fieldpad4);
+            writer.Write(this.fieldpad5);
+            writer.WritePointer(this.SoundPermutations);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

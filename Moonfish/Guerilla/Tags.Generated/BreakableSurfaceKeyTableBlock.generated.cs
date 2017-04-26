@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -62,22 +63,22 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.InstancedGeometryIndex);
-            queueableBinaryWriter.Write(this.BreakableSurfaceIndex);
-            queueableBinaryWriter.Write(this.SeedSurfaceIndex);
-            queueableBinaryWriter.Write(this.x0);
-            queueableBinaryWriter.Write(this.x1);
-            queueableBinaryWriter.Write(this.y0);
-            queueableBinaryWriter.Write(this.y1);
-            queueableBinaryWriter.Write(this.z0);
-            queueableBinaryWriter.Write(this.z1);
+            base.Write(writer);
+            writer.Write(this.InstancedGeometryIndex);
+            writer.Write(this.BreakableSurfaceIndex);
+            writer.Write(this.SeedSurfaceIndex);
+            writer.Write(this.x0);
+            writer.Write(this.x1);
+            writer.Write(this.y0);
+            writer.Write(this.y1);
+            writer.Write(this.z0);
+            writer.Write(this.z1);
         }
     }
 }

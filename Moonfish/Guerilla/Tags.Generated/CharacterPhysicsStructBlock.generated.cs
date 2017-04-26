@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -29,8 +30,11 @@ namespace Moonfish.Guerilla.Tags
         public Moonfish.Tags.StringIdent LivingMaterialName;
         public Moonfish.Tags.StringIdent DeadMaterialName;
         private byte[] fieldpad = new byte[4];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
         public SpheresBlock[] DeadSphereShapes = new SpheresBlock[0];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
         public PillsBlock[] PillShapes = new PillsBlock[0];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
         public SpheresBlock[] SphereShapes = new SpheresBlock[0];
         public CharacterPhysicsGroundStructBlock GroundPhysics = new CharacterPhysicsGroundStructBlock();
         public CharacterPhysicsFlyingStructBlock FlyingPhysics = new CharacterPhysicsFlyingStructBlock();
@@ -81,35 +85,39 @@ namespace Moonfish.Guerilla.Tags
             this.DeadPhysics.ReadInstances(binaryReader, pointerQueue);
             this.SentinelPhysics.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.DeadSphereShapes);
-            queueableBinaryWriter.Defer(this.PillShapes);
-            queueableBinaryWriter.Defer(this.SphereShapes);
-            this.GroundPhysics.DeferReferences(queueableBinaryWriter);
-            this.FlyingPhysics.DeferReferences(queueableBinaryWriter);
-            this.DeadPhysics.DeferReferences(queueableBinaryWriter);
-            this.SentinelPhysics.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            writer.Defer(this.DeadSphereShapes);
+            writer.Defer(this.PillShapes);
+            writer.Defer(this.SphereShapes);
+            this.GroundPhysics.DeferReferences(writer);
+            this.GroundPhysics.DeferReferences(writer);
+            this.FlyingPhysics.DeferReferences(writer);
+            this.FlyingPhysics.DeferReferences(writer);
+            this.DeadPhysics.DeferReferences(writer);
+            this.DeadPhysics.DeferReferences(writer);
+            this.SentinelPhysics.DeferReferences(writer);
+            this.SentinelPhysics.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.CharacterPhysicsStructFlags)));
-            queueableBinaryWriter.Write(this.HeightStanding);
-            queueableBinaryWriter.Write(this.HeightCrouching);
-            queueableBinaryWriter.Write(this.Radius);
-            queueableBinaryWriter.Write(this.Mass);
-            queueableBinaryWriter.Write(this.LivingMaterialName);
-            queueableBinaryWriter.Write(this.DeadMaterialName);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.DeadSphereShapes);
-            queueableBinaryWriter.WritePointer(this.PillShapes);
-            queueableBinaryWriter.WritePointer(this.SphereShapes);
-            this.GroundPhysics.Write(queueableBinaryWriter);
-            this.FlyingPhysics.Write(queueableBinaryWriter);
-            this.DeadPhysics.Write(queueableBinaryWriter);
-            this.SentinelPhysics.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(((int)(this.CharacterPhysicsStructFlags)));
+            writer.Write(this.HeightStanding);
+            writer.Write(this.HeightCrouching);
+            writer.Write(this.Radius);
+            writer.Write(this.Mass);
+            writer.Write(this.LivingMaterialName);
+            writer.Write(this.DeadMaterialName);
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.DeadSphereShapes);
+            writer.WritePointer(this.PillShapes);
+            writer.WritePointer(this.SphereShapes);
+            this.GroundPhysics.Write(writer);
+            this.FlyingPhysics.Write(writer);
+            this.DeadPhysics.Write(writer);
+            this.SentinelPhysics.Write(writer);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

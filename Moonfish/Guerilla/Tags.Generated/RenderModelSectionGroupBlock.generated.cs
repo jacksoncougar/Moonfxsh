@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -51,17 +52,17 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.CompoundNodes = base.ReadBlockArrayData<RenderModelCompoundNodeBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.CompoundNodes);
+            base.DeferReferences(writer);
+            writer.Defer(this.CompoundNodes);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.RenderModelSectionGroupDetailLevels)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.CompoundNodes);
+            base.Write(writer);
+            writer.Write(((short)(this.RenderModelSectionGroupDetailLevels)));
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.CompoundNodes);
         }
         [System.FlagsAttribute()]
         public enum DetailLevels : short

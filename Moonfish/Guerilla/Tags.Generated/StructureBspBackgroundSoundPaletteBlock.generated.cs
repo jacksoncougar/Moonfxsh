@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -68,24 +69,24 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.BackgroundSound);
-            queueableBinaryWriter.Write(this.InsideClusterSound);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.CutoffDistance);
-            queueableBinaryWriter.Write(((int)(this.StructureBspBackgroundSoundPaletteScaleFlags)));
-            queueableBinaryWriter.Write(this.InteriorScale);
-            queueableBinaryWriter.Write(this.PortalScale);
-            queueableBinaryWriter.Write(this.ExteriorScale);
-            queueableBinaryWriter.Write(this.InterpolationSpeed);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.BackgroundSound);
+            writer.Write(this.InsideClusterSound);
+            writer.Write(this.fieldpad);
+            writer.Write(this.CutoffDistance);
+            writer.Write(((int)(this.StructureBspBackgroundSoundPaletteScaleFlags)));
+            writer.Write(this.InteriorScale);
+            writer.Write(this.PortalScale);
+            writer.Write(this.ExteriorScale);
+            writer.Write(this.InterpolationSpeed);
+            writer.Write(this.fieldpad0);
         }
         [System.FlagsAttribute()]
         public enum ScaleFlags : int

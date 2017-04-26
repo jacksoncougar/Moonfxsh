@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -56,20 +57,21 @@ namespace Moonfish.Guerilla.Tags
             this.BackgroundPlates = base.ReadBlockArrayData<GlobalWeatherBackgroundPlateBlock>(binaryReader, pointerQueue.Dequeue());
             this.WindModel.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.ParticleSystem);
-            queueableBinaryWriter.Defer(this.BackgroundPlates);
-            this.WindModel.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            writer.Defer(this.ParticleSystem);
+            writer.Defer(this.BackgroundPlates);
+            this.WindModel.DeferReferences(writer);
+            this.WindModel.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.ParticleSystem);
-            queueableBinaryWriter.WritePointer(this.BackgroundPlates);
-            this.WindModel.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.FadeRadius);
+            base.Write(writer);
+            writer.WritePointer(this.ParticleSystem);
+            writer.WritePointer(this.BackgroundPlates);
+            this.WindModel.Write(writer);
+            writer.Write(this.FadeRadius);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -50,17 +51,17 @@ namespace Moonfish.Guerilla.Tags
             this.InitialPermutations = base.ReadBlockArrayData<ObjectChangeColorInitialPermutation>(binaryReader, pointerQueue.Dequeue());
             this.Functions = base.ReadBlockArrayData<ObjectChangeColorFunction>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.InitialPermutations);
-            queueableBinaryWriter.Defer(this.Functions);
+            base.DeferReferences(writer);
+            writer.Defer(this.InitialPermutations);
+            writer.Defer(this.Functions);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.InitialPermutations);
-            queueableBinaryWriter.WritePointer(this.Functions);
+            base.Write(writer);
+            writer.WritePointer(this.InitialPermutations);
+            writer.WritePointer(this.Functions);
         }
     }
 }

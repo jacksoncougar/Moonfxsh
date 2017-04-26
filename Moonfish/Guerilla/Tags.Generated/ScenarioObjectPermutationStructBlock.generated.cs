@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -24,14 +25,18 @@ namespace Moonfish.Guerilla.Tags
         public Moonfish.Tags.StringIdent VariantName;
         public ActiveChangeColors ScenarioObjectPermutationStructActiveChangeColors;
         public Moonfish.Tags.ColourR1G1B1 PrimaryColor;
+        private byte[] rgb8padding = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 SecondaryColor;
+        private byte[] rgb8padding0 = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 TertiaryColor;
+        private byte[] rgb8padding1 = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 QuaternaryColor;
+        private byte[] rgb8padding2 = new byte[1];
         public override int SerializedSize
         {
             get
             {
-                return 20;
+                return 24;
             }
         }
         public override int Alignment
@@ -47,28 +52,36 @@ namespace Moonfish.Guerilla.Tags
             this.VariantName = binaryReader.ReadStringIdent();
             this.ScenarioObjectPermutationStructActiveChangeColors = ((ActiveChangeColors)(binaryReader.ReadInt32()));
             this.PrimaryColor = binaryReader.ReadColourR1G1B1();
+            this.rgb8padding = binaryReader.ReadBytes(1);
             this.SecondaryColor = binaryReader.ReadColourR1G1B1();
+            this.rgb8padding0 = binaryReader.ReadBytes(1);
             this.TertiaryColor = binaryReader.ReadColourR1G1B1();
+            this.rgb8padding1 = binaryReader.ReadBytes(1);
             this.QuaternaryColor = binaryReader.ReadColourR1G1B1();
+            this.rgb8padding2 = binaryReader.ReadBytes(1);
             return pointerQueue;
         }
         public override void ReadInstances(Moonfish.Guerilla.BlamBinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.VariantName);
-            queueableBinaryWriter.Write(((int)(this.ScenarioObjectPermutationStructActiveChangeColors)));
-            queueableBinaryWriter.Write(this.PrimaryColor);
-            queueableBinaryWriter.Write(this.SecondaryColor);
-            queueableBinaryWriter.Write(this.TertiaryColor);
-            queueableBinaryWriter.Write(this.QuaternaryColor);
+            base.Write(writer);
+            writer.Write(this.VariantName);
+            writer.Write(((int)(this.ScenarioObjectPermutationStructActiveChangeColors)));
+            writer.Write(this.PrimaryColor);
+            writer.Write(this.rgb8padding);
+            writer.Write(this.SecondaryColor);
+            writer.Write(this.rgb8padding0);
+            writer.Write(this.TertiaryColor);
+            writer.Write(this.rgb8padding1);
+            writer.Write(this.QuaternaryColor);
+            writer.Write(this.rgb8padding2);
         }
         [System.FlagsAttribute()]
         public enum ActiveChangeColors : int

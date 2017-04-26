@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -58,19 +59,19 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.ParticleEffects = base.ReadBlockArrayData<ParticleSystemDefinitionBlockNew>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.ParticleEffects);
+            base.DeferReferences(writer);
+            writer.Defer(this.ParticleEffects);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MaximumVitality);
-            queueableBinaryWriter.Write(this.Effect);
-            queueableBinaryWriter.Write(this.Sound);
-            queueableBinaryWriter.WritePointer(this.ParticleEffects);
-            queueableBinaryWriter.Write(this.ParticleDensity);
+            base.Write(writer);
+            writer.Write(this.MaximumVitality);
+            writer.Write(this.Effect);
+            writer.Write(this.Sound);
+            writer.WritePointer(this.ParticleEffects);
+            writer.Write(this.ParticleDensity);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -78,26 +79,26 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.RateOfFire);
-            queueableBinaryWriter.Write(this.TargetTracking);
-            queueableBinaryWriter.Write(this.TargetLeading);
-            queueableBinaryWriter.Write(this.BurstOriginRadius);
-            queueableBinaryWriter.Write(this.BurstOriginAngle);
-            queueableBinaryWriter.Write(this.BurstReturnLength);
-            queueableBinaryWriter.Write(this.BurstReturnAngle);
-            queueableBinaryWriter.Write(this.BurstDuration);
-            queueableBinaryWriter.Write(this.BurstSeparation);
-            queueableBinaryWriter.Write(this.WeaponDamageModifier);
-            queueableBinaryWriter.Write(this.ProjectileError);
-            queueableBinaryWriter.Write(this.BurstAngularVelocity);
-            queueableBinaryWriter.Write(this.MaximumErrorAngle);
+            base.Write(writer);
+            writer.Write(this.RateOfFire);
+            writer.Write(this.TargetTracking);
+            writer.Write(this.TargetLeading);
+            writer.Write(this.BurstOriginRadius);
+            writer.Write(this.BurstOriginAngle);
+            writer.Write(this.BurstReturnLength);
+            writer.Write(this.BurstReturnAngle);
+            writer.Write(this.BurstDuration);
+            writer.Write(this.BurstSeparation);
+            writer.Write(this.WeaponDamageModifier);
+            writer.Write(this.ProjectileError);
+            writer.Write(this.BurstAngularVelocity);
+            writer.Write(this.MaximumErrorAngle);
         }
     }
 }

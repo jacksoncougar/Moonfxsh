@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -60,23 +61,23 @@ namespace Moonfish.Guerilla.Tags
             this.Cells = base.ReadBlockArrayData<DecoratorCellCollectionBlock>(binaryReader, pointerQueue.Dequeue());
             this.Decals = base.ReadBlockArrayData<DecoratorProjectedDecalBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.CacheBlocks);
-            queueableBinaryWriter.Defer(this.Groups);
-            queueableBinaryWriter.Defer(this.Cells);
-            queueableBinaryWriter.Defer(this.Decals);
+            base.DeferReferences(writer);
+            writer.Defer(this.CacheBlocks);
+            writer.Defer(this.Groups);
+            writer.Defer(this.Cells);
+            writer.Defer(this.Decals);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.GridOrigin);
-            queueableBinaryWriter.Write(this.CellCountPerDimension);
-            queueableBinaryWriter.WritePointer(this.CacheBlocks);
-            queueableBinaryWriter.WritePointer(this.Groups);
-            queueableBinaryWriter.WritePointer(this.Cells);
-            queueableBinaryWriter.WritePointer(this.Decals);
+            base.Write(writer);
+            writer.Write(this.GridOrigin);
+            writer.Write(this.CellCountPerDimension);
+            writer.WritePointer(this.CacheBlocks);
+            writer.WritePointer(this.Groups);
+            writer.WritePointer(this.Cells);
+            writer.WritePointer(this.Decals);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -55,19 +56,19 @@ namespace Moonfish.Guerilla.Tags
             this.Categories = base.ReadBlockArrayData<ShaderTemplateCategoryBlock>(binaryReader, pointerQueue.Dequeue());
             this.ShaderLODs = base.ReadBlockArrayData<ShaderTemplateLevelOfDetailBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Categories);
-            queueableBinaryWriter.Defer(this.ShaderLODs);
+            base.DeferReferences(writer);
+            writer.Defer(this.Categories);
+            writer.Defer(this.ShaderLODs);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Categories);
-            queueableBinaryWriter.WritePointer(this.ShaderLODs);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write(writer);
+            writer.WritePointer(this.Categories);
+            writer.WritePointer(this.ShaderLODs);
+            writer.Write(this.fieldpad);
+            writer.Write(this.fieldpad0);
         }
     }
 }

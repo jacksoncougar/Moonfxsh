@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -71,26 +72,26 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.ButtonWidgetReferenceTextFlags)));
-            queueableBinaryWriter.Write(((short)(this.AnimationIndex)));
-            queueableBinaryWriter.Write(this.IntroAnimationDelayMilliseconds);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.CustomFont)));
-            queueableBinaryWriter.Write(this.TextColor);
-            queueableBinaryWriter.Write(this.Bounds);
-            queueableBinaryWriter.Write(this.Bitmap);
-            queueableBinaryWriter.Write(this.BitmapOffset);
-            queueableBinaryWriter.Write(this.StringId);
-            queueableBinaryWriter.Write(this.RenderDepthBias);
-            queueableBinaryWriter.Write(this.MouseRegionTopOffset);
-            queueableBinaryWriter.Write(((int)(this.ButtonWidgetReferenceButtonFlags)));
+            base.Write(writer);
+            writer.Write(((int)(this.ButtonWidgetReferenceTextFlags)));
+            writer.Write(((short)(this.AnimationIndex)));
+            writer.Write(this.IntroAnimationDelayMilliseconds);
+            writer.Write(this.fieldpad);
+            writer.Write(((short)(this.CustomFont)));
+            writer.Write(this.TextColor);
+            writer.Write(this.Bounds);
+            writer.Write(this.Bitmap);
+            writer.Write(this.BitmapOffset);
+            writer.Write(this.StringId);
+            writer.Write(this.RenderDepthBias);
+            writer.Write(this.MouseRegionTopOffset);
+            writer.Write(((int)(this.ButtonWidgetReferenceButtonFlags)));
         }
         /// <summary>
         /// If the pane contains buttons, define them here

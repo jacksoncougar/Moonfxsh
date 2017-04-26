@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -55,19 +56,20 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.ConstraintBodies.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.ConstraintBodies.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.ConstraintBodies.DeferReferences(writer);
+            this.ConstraintBodies.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            this.ConstraintBodies.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.MinLimit);
-            queueableBinaryWriter.Write(this.MaxLimit);
-            queueableBinaryWriter.Write(this.MaxFrictionForce);
+            base.Write(writer);
+            this.ConstraintBodies.Write(writer);
+            writer.Write(this.fieldpad);
+            writer.Write(this.MinLimit);
+            writer.Write(this.MaxLimit);
+            writer.Write(this.MaxFrictionForce);
         }
     }
 }

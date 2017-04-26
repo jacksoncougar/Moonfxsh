@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -70,25 +71,26 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Physics.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.Physics.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.Physics.DeferReferences(writer);
+            this.Physics.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.CreatureCreatureFlags)));
-            queueableBinaryWriter.Write(((short)(this.DefaultTeam)));
-            queueableBinaryWriter.Write(((short)(this.MotionSensorBlipSize)));
-            queueableBinaryWriter.Write(this.TurningVelocityMaximum);
-            queueableBinaryWriter.Write(this.TurningAccelerationMaximum);
-            queueableBinaryWriter.Write(this.CasualTurningModifier);
-            queueableBinaryWriter.Write(this.AutoaimWidth);
-            this.Physics.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ImpactDamage);
-            queueableBinaryWriter.Write(this.ImpactShieldDamage);
-            queueableBinaryWriter.Write(this.DestroyAfterDeathTime);
+            base.Write(writer);
+            writer.Write(((int)(this.CreatureCreatureFlags)));
+            writer.Write(((short)(this.DefaultTeam)));
+            writer.Write(((short)(this.MotionSensorBlipSize)));
+            writer.Write(this.TurningVelocityMaximum);
+            writer.Write(this.TurningAccelerationMaximum);
+            writer.Write(this.CasualTurningModifier);
+            writer.Write(this.AutoaimWidth);
+            this.Physics.Write(writer);
+            writer.Write(this.ImpactDamage);
+            writer.Write(this.ImpactShieldDamage);
+            writer.Write(this.DestroyAfterDeathTime);
         }
         [System.FlagsAttribute()]
         public enum CreatureFlags : int

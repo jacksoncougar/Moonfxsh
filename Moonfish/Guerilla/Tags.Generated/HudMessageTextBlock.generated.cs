@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -22,7 +23,7 @@ namespace Moonfish.Guerilla.Tags
     [TagBlockOriginalNameAttribute("hud_message_text_block")]
     public partial class HudMessageTextBlock : GuerillaBlock, IWriteDeferrable
     {
-        public byte[] TextData;
+        private byte[] TextData;
         public HudMessageElementsBlock[] MessageElements = new HudMessageElementsBlock[0];
         public HudMessagesBlock[] Messages = new HudMessagesBlock[0];
         private byte[] fieldpad = new byte[84];
@@ -56,20 +57,20 @@ namespace Moonfish.Guerilla.Tags
             this.MessageElements = base.ReadBlockArrayData<HudMessageElementsBlock>(binaryReader, pointerQueue.Dequeue());
             this.Messages = base.ReadBlockArrayData<HudMessagesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.TextData);
-            queueableBinaryWriter.Defer(this.MessageElements);
-            queueableBinaryWriter.Defer(this.Messages);
+            base.DeferReferences(writer);
+            writer.Defer(this.TextData);
+            writer.Defer(this.MessageElements);
+            writer.Defer(this.Messages);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.TextData);
-            queueableBinaryWriter.WritePointer(this.MessageElements);
-            queueableBinaryWriter.WritePointer(this.Messages);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write(writer);
+            writer.WritePointer(this.TextData);
+            writer.WritePointer(this.MessageElements);
+            writer.WritePointer(this.Messages);
+            writer.Write(this.fieldpad);
         }
     }
 }

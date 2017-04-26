@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -73,27 +74,27 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.CharacterChargeChargeFlags)));
-            queueableBinaryWriter.Write(this.MeleeConsiderRange);
-            queueableBinaryWriter.Write(this.MeleeChance);
-            queueableBinaryWriter.Write(this.MeleeAttackRange);
-            queueableBinaryWriter.Write(this.MeleeAbortRange);
-            queueableBinaryWriter.Write(this.MeleeAttackTimeout);
-            queueableBinaryWriter.Write(this.MeleeAttackDelayTimer);
-            queueableBinaryWriter.Write(this.MeleeLeapRange);
-            queueableBinaryWriter.Write(this.MeleeLeapChance);
-            queueableBinaryWriter.Write(this.IdealLeapVelocity);
-            queueableBinaryWriter.Write(this.MaxLeapVelocity);
-            queueableBinaryWriter.Write(this.MeleeLeapBallistic);
-            queueableBinaryWriter.Write(this.MeleeDelayTimer);
-            queueableBinaryWriter.Write(this.BerserkWeapon);
+            base.Write(writer);
+            writer.Write(((int)(this.CharacterChargeChargeFlags)));
+            writer.Write(this.MeleeConsiderRange);
+            writer.Write(this.MeleeChance);
+            writer.Write(this.MeleeAttackRange);
+            writer.Write(this.MeleeAbortRange);
+            writer.Write(this.MeleeAttackTimeout);
+            writer.Write(this.MeleeAttackDelayTimer);
+            writer.Write(this.MeleeLeapRange);
+            writer.Write(this.MeleeLeapChance);
+            writer.Write(this.IdealLeapVelocity);
+            writer.Write(this.MaxLeapVelocity);
+            writer.Write(this.MeleeLeapBallistic);
+            writer.Write(this.MeleeDelayTimer);
+            writer.Write(this.BerserkWeapon);
         }
         [System.FlagsAttribute()]
         public enum ChargeFlags : int

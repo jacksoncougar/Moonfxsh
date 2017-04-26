@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -54,18 +55,18 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ScenarioPlanarFogIndex);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Plane);
-            queueableBinaryWriter.Write(((short)(this.StructureBspFogPlaneFlags)));
-            queueableBinaryWriter.Write(this.Priority);
+            base.Write(writer);
+            writer.Write(this.ScenarioPlanarFogIndex);
+            writer.Write(this.fieldpad);
+            writer.Write(this.Plane);
+            writer.Write(((short)(this.StructureBspFogPlaneFlags)));
+            writer.Write(this.Priority);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

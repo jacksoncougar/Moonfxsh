@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -84,39 +85,40 @@ namespace Moonfish.Guerilla.Tags
             this.VertexShaderConstants = base.ReadBlockArrayData<ShaderPostprocessVertexShaderConstantBlock>(binaryReader, pointerQueue.Dequeue());
             this.GPUState.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Layers);
-            queueableBinaryWriter.Defer(this.Passes);
-            queueableBinaryWriter.Defer(this.Implementations);
-            queueableBinaryWriter.Defer(this.Bitmaps);
-            queueableBinaryWriter.Defer(this.BitmapTransforms);
-            queueableBinaryWriter.Defer(this.Values);
-            queueableBinaryWriter.Defer(this.Colors);
-            queueableBinaryWriter.Defer(this.BitmapTransformOverlays);
-            queueableBinaryWriter.Defer(this.ValueOverlays);
-            queueableBinaryWriter.Defer(this.ColorOverlays);
-            queueableBinaryWriter.Defer(this.VertexShaderConstants);
-            this.GPUState.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            writer.Defer(this.Layers);
+            writer.Defer(this.Passes);
+            writer.Defer(this.Implementations);
+            writer.Defer(this.Bitmaps);
+            writer.Defer(this.BitmapTransforms);
+            writer.Defer(this.Values);
+            writer.Defer(this.Colors);
+            writer.Defer(this.BitmapTransformOverlays);
+            writer.Defer(this.ValueOverlays);
+            writer.Defer(this.ColorOverlays);
+            writer.Defer(this.VertexShaderConstants);
+            this.GPUState.DeferReferences(writer);
+            this.GPUState.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ProjectedHeightPercentage);
-            queueableBinaryWriter.Write(this.AvailableLayers);
-            queueableBinaryWriter.WritePointer(this.Layers);
-            queueableBinaryWriter.WritePointer(this.Passes);
-            queueableBinaryWriter.WritePointer(this.Implementations);
-            queueableBinaryWriter.WritePointer(this.Bitmaps);
-            queueableBinaryWriter.WritePointer(this.BitmapTransforms);
-            queueableBinaryWriter.WritePointer(this.Values);
-            queueableBinaryWriter.WritePointer(this.Colors);
-            queueableBinaryWriter.WritePointer(this.BitmapTransformOverlays);
-            queueableBinaryWriter.WritePointer(this.ValueOverlays);
-            queueableBinaryWriter.WritePointer(this.ColorOverlays);
-            queueableBinaryWriter.WritePointer(this.VertexShaderConstants);
-            this.GPUState.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(this.ProjectedHeightPercentage);
+            writer.Write(this.AvailableLayers);
+            writer.WritePointer(this.Layers);
+            writer.WritePointer(this.Passes);
+            writer.WritePointer(this.Implementations);
+            writer.WritePointer(this.Bitmaps);
+            writer.WritePointer(this.BitmapTransforms);
+            writer.WritePointer(this.Values);
+            writer.WritePointer(this.Colors);
+            writer.WritePointer(this.BitmapTransformOverlays);
+            writer.WritePointer(this.ValueOverlays);
+            writer.WritePointer(this.ColorOverlays);
+            writer.WritePointer(this.VertexShaderConstants);
+            this.GPUState.Write(writer);
         }
     }
 }

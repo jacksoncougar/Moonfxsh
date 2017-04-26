@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -71,31 +72,31 @@ namespace Moonfish.Guerilla.Tags
             this.WellHints = base.ReadBlockArrayData<UserHintWellBlock>(binaryReader, pointerQueue.Dequeue());
             this.FlightHints = base.ReadBlockArrayData<UserHintFlightBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.PointGeometry);
-            queueableBinaryWriter.Defer(this.RayGeometry);
-            queueableBinaryWriter.Defer(this.LineSegmentGeometry);
-            queueableBinaryWriter.Defer(this.ParallelogramGeometry);
-            queueableBinaryWriter.Defer(this.PolygonGeometry);
-            queueableBinaryWriter.Defer(this.JumpHints);
-            queueableBinaryWriter.Defer(this.ClimbHints);
-            queueableBinaryWriter.Defer(this.WellHints);
-            queueableBinaryWriter.Defer(this.FlightHints);
+            base.DeferReferences(writer);
+            writer.Defer(this.PointGeometry);
+            writer.Defer(this.RayGeometry);
+            writer.Defer(this.LineSegmentGeometry);
+            writer.Defer(this.ParallelogramGeometry);
+            writer.Defer(this.PolygonGeometry);
+            writer.Defer(this.JumpHints);
+            writer.Defer(this.ClimbHints);
+            writer.Defer(this.WellHints);
+            writer.Defer(this.FlightHints);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.PointGeometry);
-            queueableBinaryWriter.WritePointer(this.RayGeometry);
-            queueableBinaryWriter.WritePointer(this.LineSegmentGeometry);
-            queueableBinaryWriter.WritePointer(this.ParallelogramGeometry);
-            queueableBinaryWriter.WritePointer(this.PolygonGeometry);
-            queueableBinaryWriter.WritePointer(this.JumpHints);
-            queueableBinaryWriter.WritePointer(this.ClimbHints);
-            queueableBinaryWriter.WritePointer(this.WellHints);
-            queueableBinaryWriter.WritePointer(this.FlightHints);
+            base.Write(writer);
+            writer.WritePointer(this.PointGeometry);
+            writer.WritePointer(this.RayGeometry);
+            writer.WritePointer(this.LineSegmentGeometry);
+            writer.WritePointer(this.ParallelogramGeometry);
+            writer.WritePointer(this.PolygonGeometry);
+            writer.WritePointer(this.JumpHints);
+            writer.WritePointer(this.ClimbHints);
+            writer.WritePointer(this.WellHints);
+            writer.WritePointer(this.FlightHints);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -74,33 +75,43 @@ namespace Moonfish.Guerilla.Tags
             this.ColorOverlays.ReadInstances(binaryReader, pointerQueue);
             this.VertexShaderConstants.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.GPUConstantState.DeferReferences(queueableBinaryWriter);
-            this.GPUVolatileState.DeferReferences(queueableBinaryWriter);
-            this.BitmapParameters.DeferReferences(queueableBinaryWriter);
-            this.BitmapTransforms.DeferReferences(queueableBinaryWriter);
-            this.ValueParameters.DeferReferences(queueableBinaryWriter);
-            this.ColorParameters.DeferReferences(queueableBinaryWriter);
-            this.BitmapTransformOverlays.DeferReferences(queueableBinaryWriter);
-            this.ValueOverlays.DeferReferences(queueableBinaryWriter);
-            this.ColorOverlays.DeferReferences(queueableBinaryWriter);
-            this.VertexShaderConstants.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.GPUConstantState.DeferReferences(writer);
+            this.GPUConstantState.DeferReferences(writer);
+            this.GPUVolatileState.DeferReferences(writer);
+            this.GPUVolatileState.DeferReferences(writer);
+            this.BitmapParameters.DeferReferences(writer);
+            this.BitmapParameters.DeferReferences(writer);
+            this.BitmapTransforms.DeferReferences(writer);
+            this.BitmapTransforms.DeferReferences(writer);
+            this.ValueParameters.DeferReferences(writer);
+            this.ValueParameters.DeferReferences(writer);
+            this.ColorParameters.DeferReferences(writer);
+            this.ColorParameters.DeferReferences(writer);
+            this.BitmapTransformOverlays.DeferReferences(writer);
+            this.BitmapTransformOverlays.DeferReferences(writer);
+            this.ValueOverlays.DeferReferences(writer);
+            this.ValueOverlays.DeferReferences(writer);
+            this.ColorOverlays.DeferReferences(writer);
+            this.ColorOverlays.DeferReferences(writer);
+            this.VertexShaderConstants.DeferReferences(writer);
+            this.VertexShaderConstants.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            this.GPUConstantState.Write(queueableBinaryWriter);
-            this.GPUVolatileState.Write(queueableBinaryWriter);
-            this.BitmapParameters.Write(queueableBinaryWriter);
-            this.BitmapTransforms.Write(queueableBinaryWriter);
-            this.ValueParameters.Write(queueableBinaryWriter);
-            this.ColorParameters.Write(queueableBinaryWriter);
-            this.BitmapTransformOverlays.Write(queueableBinaryWriter);
-            this.ValueOverlays.Write(queueableBinaryWriter);
-            this.ColorOverlays.Write(queueableBinaryWriter);
-            this.VertexShaderConstants.Write(queueableBinaryWriter);
+            base.Write(writer);
+            this.GPUConstantState.Write(writer);
+            this.GPUVolatileState.Write(writer);
+            this.BitmapParameters.Write(writer);
+            this.BitmapTransforms.Write(writer);
+            this.ValueParameters.Write(writer);
+            this.ColorParameters.Write(writer);
+            this.BitmapTransformOverlays.Write(writer);
+            this.ValueOverlays.Write(writer);
+            this.ColorOverlays.Write(writer);
+            this.VertexShaderConstants.Write(writer);
         }
     }
 }

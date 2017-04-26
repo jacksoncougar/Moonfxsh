@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -71,26 +72,26 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.CacheFileSoundFlags)));
-            queueableBinaryWriter.Write(((byte)(this.SoundClass)));
-            queueableBinaryWriter.Write(((byte)(this.SampleRate)));
-            queueableBinaryWriter.Write(((byte)(this.Encoding)));
-            queueableBinaryWriter.Write(((byte)(this.Compression)));
-            queueableBinaryWriter.Write(this.PlaybackIndex);
-            queueableBinaryWriter.Write(this.FirstPitchRangeIndex);
-            queueableBinaryWriter.Write(this.PitchRangeCount);
-            queueableBinaryWriter.Write(this.ScaleIndex);
-            queueableBinaryWriter.Write(this.PromotionIndex);
-            queueableBinaryWriter.Write(this.CustomPlaybackIndex);
-            queueableBinaryWriter.Write(this.ExtraInfoIndex);
-            queueableBinaryWriter.Write(this.MaximumPlayTime);
+            base.Write(writer);
+            writer.Write(((short)(this.CacheFileSoundFlags)));
+            writer.Write(((byte)(this.SoundClass)));
+            writer.Write(((byte)(this.SampleRate)));
+            writer.Write(((byte)(this.Encoding)));
+            writer.Write(((byte)(this.Compression)));
+            writer.Write(this.PlaybackIndex);
+            writer.Write(this.FirstPitchRangeIndex);
+            writer.Write(this.PitchRangeCount);
+            writer.Write(this.ScaleIndex);
+            writer.Write(this.PromotionIndex);
+            writer.Write(this.CustomPlaybackIndex);
+            writer.Write(this.ExtraInfoIndex);
+            writer.Write(this.MaximumPlayTime);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

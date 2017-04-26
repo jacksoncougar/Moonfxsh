@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -55,20 +56,20 @@ namespace Moonfish.Guerilla.Tags
             this.FogPlanes = base.ReadBlockArrayData<StructureBspFogPlaneDebugInfoBlock>(binaryReader, pointerQueue.Dequeue());
             this.FogZones = base.ReadBlockArrayData<StructureBspFogZoneDebugInfoBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Clusters);
-            queueableBinaryWriter.Defer(this.FogPlanes);
-            queueableBinaryWriter.Defer(this.FogZones);
+            base.DeferReferences(writer);
+            writer.Defer(this.Clusters);
+            writer.Defer(this.FogPlanes);
+            writer.Defer(this.FogZones);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.Clusters);
-            queueableBinaryWriter.WritePointer(this.FogPlanes);
-            queueableBinaryWriter.WritePointer(this.FogZones);
+            base.Write(writer);
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.Clusters);
+            writer.WritePointer(this.FogPlanes);
+            writer.WritePointer(this.FogZones);
         }
     }
 }

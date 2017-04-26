@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -43,7 +44,8 @@ namespace Moonfish.Guerilla.Tags
         public short LoopFrameIndex;
         public Moonfish.Tags.ShortBlockIndex1 ParentAnimation;
         public Moonfish.Tags.ShortBlockIndex1 NextAnimation;
-        public byte[] AnimationData;
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
+        private byte[] AnimationData;
         public PackedDataSizesStructBlock DataSizes = new PackedDataSizesStructBlock();
         public AnimationFrameEventBlock[] FrameEventsABCDCC = new AnimationFrameEventBlock[0];
         public AnimationSoundEventBlock[] SoundEventsABCDCC = new AnimationSoundEventBlock[0];
@@ -106,47 +108,48 @@ namespace Moonfish.Guerilla.Tags
             this.EffectEventsABCDCC = base.ReadBlockArrayData<AnimationEffectEventBlock>(binaryReader, pointerQueue.Dequeue());
             this.ObjectspaceParentNodesABCDCC = base.ReadBlockArrayData<ObjectSpaceNodeDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.AnimationData);
-            this.DataSizes.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.FrameEventsABCDCC);
-            queueableBinaryWriter.Defer(this.SoundEventsABCDCC);
-            queueableBinaryWriter.Defer(this.EffectEventsABCDCC);
-            queueableBinaryWriter.Defer(this.ObjectspaceParentNodesABCDCC);
+            base.DeferReferences(writer);
+            writer.Defer(this.AnimationData, 16);
+            this.DataSizes.DeferReferences(writer);
+            this.DataSizes.DeferReferences(writer);
+            writer.Defer(this.FrameEventsABCDCC);
+            writer.Defer(this.SoundEventsABCDCC);
+            writer.Defer(this.EffectEventsABCDCC);
+            writer.Defer(this.ObjectspaceParentNodesABCDCC);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.NodeListChecksum);
-            queueableBinaryWriter.Write(this.ProductionChecksum);
-            queueableBinaryWriter.Write(this.ImportChecksum);
-            queueableBinaryWriter.Write(((byte)(this.Type)));
-            queueableBinaryWriter.Write(((byte)(this.FrameInfoType)));
-            queueableBinaryWriter.Write(this.BlendScreen);
-            queueableBinaryWriter.Write(this.NodeCount);
-            queueableBinaryWriter.Write(this.FrameCount);
-            queueableBinaryWriter.Write(((byte)(this.AnimationPoolInternalFlags)));
-            queueableBinaryWriter.Write(((byte)(this.AnimationPoolProductionFlags)));
-            queueableBinaryWriter.Write(((short)(this.AnimationPoolPlaybackFlags)));
-            queueableBinaryWriter.Write(((byte)(this.DesiredCompression)));
-            queueableBinaryWriter.Write(((byte)(this.CurrentCompression)));
-            queueableBinaryWriter.Write(this.Weight);
-            queueableBinaryWriter.Write(this.ParentGraphIndex);
-            queueableBinaryWriter.Write(this.ParentGraphBlockIndex);
-            queueableBinaryWriter.Write(this.ParentGraphBlockOffset);
-            queueableBinaryWriter.Write(this.ParentGraphStartingPointIndex);
-            queueableBinaryWriter.Write(this.LoopFrameIndex);
-            queueableBinaryWriter.Write(this.ParentAnimation);
-            queueableBinaryWriter.Write(this.NextAnimation);
-            queueableBinaryWriter.WritePointer(this.AnimationData);
-            this.DataSizes.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.FrameEventsABCDCC);
-            queueableBinaryWriter.WritePointer(this.SoundEventsABCDCC);
-            queueableBinaryWriter.WritePointer(this.EffectEventsABCDCC);
-            queueableBinaryWriter.WritePointer(this.ObjectspaceParentNodesABCDCC);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.NodeListChecksum);
+            writer.Write(this.ProductionChecksum);
+            writer.Write(this.ImportChecksum);
+            writer.Write(((byte)(this.Type)));
+            writer.Write(((byte)(this.FrameInfoType)));
+            writer.Write(this.BlendScreen);
+            writer.Write(this.NodeCount);
+            writer.Write(this.FrameCount);
+            writer.Write(((byte)(this.AnimationPoolInternalFlags)));
+            writer.Write(((byte)(this.AnimationPoolProductionFlags)));
+            writer.Write(((short)(this.AnimationPoolPlaybackFlags)));
+            writer.Write(((byte)(this.DesiredCompression)));
+            writer.Write(((byte)(this.CurrentCompression)));
+            writer.Write(this.Weight);
+            writer.Write(this.ParentGraphIndex);
+            writer.Write(this.ParentGraphBlockIndex);
+            writer.Write(this.ParentGraphBlockOffset);
+            writer.Write(this.ParentGraphStartingPointIndex);
+            writer.Write(this.LoopFrameIndex);
+            writer.Write(this.ParentAnimation);
+            writer.Write(this.NextAnimation);
+            writer.WritePointer(this.AnimationData);
+            this.DataSizes.Write(writer);
+            writer.WritePointer(this.FrameEventsABCDCC);
+            writer.WritePointer(this.SoundEventsABCDCC);
+            writer.WritePointer(this.EffectEventsABCDCC);
+            writer.WritePointer(this.ObjectspaceParentNodesABCDCC);
         }
         public enum TypeEnum : byte
         {

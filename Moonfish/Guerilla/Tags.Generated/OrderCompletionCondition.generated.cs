@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -66,24 +67,24 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.RuleType)));
-            queueableBinaryWriter.Write(this.Squad);
-            queueableBinaryWriter.Write(this.SquadGroup);
-            queueableBinaryWriter.Write(this.A);
-            queueableBinaryWriter.Write(this.X);
-            queueableBinaryWriter.Write(this.TriggerVolume);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.ExitConditionScript);
-            queueableBinaryWriter.Write(this.FieldShortInteger);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(((int)(this.OrderCompletionConditionFlags)));
+            base.Write(writer);
+            writer.Write(((short)(this.RuleType)));
+            writer.Write(this.Squad);
+            writer.Write(this.SquadGroup);
+            writer.Write(this.A);
+            writer.Write(this.X);
+            writer.Write(this.TriggerVolume);
+            writer.Write(this.fieldpad);
+            writer.Write(this.ExitConditionScript);
+            writer.Write(this.FieldShortInteger);
+            writer.Write(this.fieldpad0);
+            writer.Write(((int)(this.OrderCompletionConditionFlags)));
         }
         public enum RuleTypeEnum : short
         {

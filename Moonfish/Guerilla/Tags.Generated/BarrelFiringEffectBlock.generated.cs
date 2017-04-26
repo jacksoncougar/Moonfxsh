@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -66,21 +67,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ShotCountLowerBound);
-            queueableBinaryWriter.Write(this.ShotCountUpperBound);
-            queueableBinaryWriter.Write(this.FiringEffect);
-            queueableBinaryWriter.Write(this.MisfireEffect);
-            queueableBinaryWriter.Write(this.EmptyEffect);
-            queueableBinaryWriter.Write(this.FiringDamage);
-            queueableBinaryWriter.Write(this.MisfireDamage);
-            queueableBinaryWriter.Write(this.EmptyDamage);
+            base.Write(writer);
+            writer.Write(this.ShotCountLowerBound);
+            writer.Write(this.ShotCountUpperBound);
+            writer.Write(this.FiringEffect);
+            writer.Write(this.MisfireEffect);
+            writer.Write(this.EmptyEffect);
+            writer.Write(this.FiringDamage);
+            writer.Write(this.MisfireDamage);
+            writer.Write(this.EmptyDamage);
         }
     }
 }

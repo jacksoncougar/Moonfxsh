@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -67,23 +68,23 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.LensFlareReflectionFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.BitmapIndex);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.Position);
-            queueableBinaryWriter.Write(this.RotationOffset);
-            queueableBinaryWriter.Write(this.Radius);
-            queueableBinaryWriter.Write(this.Brightness);
-            queueableBinaryWriter.Write(this.ModulationFactor);
-            queueableBinaryWriter.Write(this.Color);
+            base.Write(writer);
+            writer.Write(((short)(this.LensFlareReflectionFlags)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.BitmapIndex);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.Position);
+            writer.Write(this.RotationOffset);
+            writer.Write(this.Radius);
+            writer.Write(this.Brightness);
+            writer.Write(this.ModulationFactor);
+            writer.Write(this.Color);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -123,50 +124,55 @@ namespace Moonfish.Guerilla.Tags
             this.Rangescale.ReadInstances(binaryReader, pointerQueue);
             this.Brightnessscale.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.HorizontalRange.DeferReferences(queueableBinaryWriter);
-            this.VerticalRange.DeferReferences(queueableBinaryWriter);
-            this.Roughness.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Cores);
-            this.Rangescale.DeferReferences(queueableBinaryWriter);
-            this.Brightnessscale.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.HorizontalRange.DeferReferences(writer);
+            this.HorizontalRange.DeferReferences(writer);
+            this.VerticalRange.DeferReferences(writer);
+            this.VerticalRange.DeferReferences(writer);
+            this.Roughness.DeferReferences(writer);
+            this.Roughness.DeferReferences(writer);
+            writer.Defer(this.Cores);
+            this.Rangescale.DeferReferences(writer);
+            this.Rangescale.DeferReferences(writer);
+            this.Brightnessscale.DeferReferences(writer);
+            this.Brightnessscale.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.LiquidArcFlags)));
-            queueableBinaryWriter.Write(((short)(this.SpriteCount)));
-            queueableBinaryWriter.Write(this.NaturalLength);
-            queueableBinaryWriter.Write(this.Instances);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.InstanceSpreadAngle);
-            queueableBinaryWriter.Write(this.InstanceRotationPeriod);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.MaterialEffects);
-            queueableBinaryWriter.Write(this.Bitmap);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            this.HorizontalRange.Write(queueableBinaryWriter);
-            this.VerticalRange.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.VerticalNegativeScale);
-            this.Roughness.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.Octave1Frequency);
-            queueableBinaryWriter.Write(this.Octave2Frequency);
-            queueableBinaryWriter.Write(this.Octave3Frequency);
-            queueableBinaryWriter.Write(this.Octave4Frequency);
-            queueableBinaryWriter.Write(this.Octave5Frequency);
-            queueableBinaryWriter.Write(this.Octave6Frequency);
-            queueableBinaryWriter.Write(this.Octave7Frequency);
-            queueableBinaryWriter.Write(this.Octave8Frequency);
-            queueableBinaryWriter.Write(this.Octave9Frequency);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(((short)(this.LiquidArcOctaveFlags)));
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.WritePointer(this.Cores);
-            this.Rangescale.Write(queueableBinaryWriter);
-            this.Brightnessscale.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(((short)(this.LiquidArcFlags)));
+            writer.Write(((short)(this.SpriteCount)));
+            writer.Write(this.NaturalLength);
+            writer.Write(this.Instances);
+            writer.Write(this.fieldpad);
+            writer.Write(this.InstanceSpreadAngle);
+            writer.Write(this.InstanceRotationPeriod);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.MaterialEffects);
+            writer.Write(this.Bitmap);
+            writer.Write(this.fieldpad1);
+            this.HorizontalRange.Write(writer);
+            this.VerticalRange.Write(writer);
+            writer.Write(this.VerticalNegativeScale);
+            this.Roughness.Write(writer);
+            writer.Write(this.fieldpad2);
+            writer.Write(this.Octave1Frequency);
+            writer.Write(this.Octave2Frequency);
+            writer.Write(this.Octave3Frequency);
+            writer.Write(this.Octave4Frequency);
+            writer.Write(this.Octave5Frequency);
+            writer.Write(this.Octave6Frequency);
+            writer.Write(this.Octave7Frequency);
+            writer.Write(this.Octave8Frequency);
+            writer.Write(this.Octave9Frequency);
+            writer.Write(this.fieldpad3);
+            writer.Write(((short)(this.LiquidArcOctaveFlags)));
+            writer.Write(this.fieldpad4);
+            writer.WritePointer(this.Cores);
+            this.Rangescale.Write(writer);
+            this.Brightnessscale.Write(writer);
         }
         /// <summary>
         /// Note that if the type is not STANDARD, then the 'collide_with_stuff' and material effects will not have any effect. In addition, the 'natural_length' will not have an effect except as a means to compute the collision fraction.

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -26,6 +27,7 @@ namespace Moonfish.Guerilla.Tags
         public OpenTK.Vector3 BoundingSphereCenter;
         public float BoundingSphereRadius;
         public GlobalCollisionBspStructBlock CollisionInfo = new GlobalCollisionBspStructBlock();
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
         public CollisionBspPhysicsBlock[] BspPhysics = new CollisionBspPhysicsBlock[0];
         public StructureBspLeafBlock[] RenderLeaves = new StructureBspLeafBlock[0];
         public StructureBspSurfaceReferenceBlock[] SurfaceReferences = new StructureBspSurfaceReferenceBlock[0];
@@ -65,26 +67,28 @@ namespace Moonfish.Guerilla.Tags
             this.RenderLeaves = base.ReadBlockArrayData<StructureBspLeafBlock>(binaryReader, pointerQueue.Dequeue());
             this.SurfaceReferences = base.ReadBlockArrayData<StructureBspSurfaceReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.RenderInfo.DeferReferences(queueableBinaryWriter);
-            this.CollisionInfo.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.BspPhysics);
-            queueableBinaryWriter.Defer(this.RenderLeaves);
-            queueableBinaryWriter.Defer(this.SurfaceReferences);
+            base.DeferReferences(writer);
+            this.RenderInfo.DeferReferences(writer);
+            this.RenderInfo.DeferReferences(writer);
+            this.CollisionInfo.DeferReferences(writer);
+            this.CollisionInfo.DeferReferences(writer);
+            writer.Defer(this.BspPhysics);
+            writer.Defer(this.RenderLeaves);
+            writer.Defer(this.SurfaceReferences);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            this.RenderInfo.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Checksum);
-            queueableBinaryWriter.Write(this.BoundingSphereCenter);
-            queueableBinaryWriter.Write(this.BoundingSphereRadius);
-            this.CollisionInfo.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.BspPhysics);
-            queueableBinaryWriter.WritePointer(this.RenderLeaves);
-            queueableBinaryWriter.WritePointer(this.SurfaceReferences);
+            base.Write(writer);
+            this.RenderInfo.Write(writer);
+            writer.Write(this.Checksum);
+            writer.Write(this.BoundingSphereCenter);
+            writer.Write(this.BoundingSphereRadius);
+            this.CollisionInfo.Write(writer);
+            writer.WritePointer(this.BspPhysics);
+            writer.WritePointer(this.RenderLeaves);
+            writer.WritePointer(this.SurfaceReferences);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -77,25 +78,25 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MonoUnspatializedGain);
-            queueableBinaryWriter.Write(this.StereoTo3dGain);
-            queueableBinaryWriter.Write(this.RearSurroundToFrontStereoGain);
-            queueableBinaryWriter.Write(this.FrontSpeakerGain);
-            queueableBinaryWriter.Write(this.CenterSpeakerGain);
-            queueableBinaryWriter.Write(this.FrontSpeakerGain0);
-            queueableBinaryWriter.Write(this.CenterSpeakerGain0);
-            queueableBinaryWriter.Write(this.StereoUnspatializedGain);
-            queueableBinaryWriter.Write(this.SoloPlayerFadeOutDelay);
-            queueableBinaryWriter.Write(this.SoloPlayerFadeOutTime);
-            queueableBinaryWriter.Write(this.SoloPlayerFadeInTime);
-            queueableBinaryWriter.Write(this.GameMusicFadeOutTime);
+            base.Write(writer);
+            writer.Write(this.MonoUnspatializedGain);
+            writer.Write(this.StereoTo3dGain);
+            writer.Write(this.RearSurroundToFrontStereoGain);
+            writer.Write(this.FrontSpeakerGain);
+            writer.Write(this.CenterSpeakerGain);
+            writer.Write(this.FrontSpeakerGain0);
+            writer.Write(this.CenterSpeakerGain0);
+            writer.Write(this.StereoUnspatializedGain);
+            writer.Write(this.SoloPlayerFadeOutDelay);
+            writer.Write(this.SoloPlayerFadeOutTime);
+            writer.Write(this.SoloPlayerFadeInTime);
+            writer.Write(this.GameMusicFadeOutTime);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -73,27 +74,28 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.StructureBlockInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.StructureBlockInfo.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.StructureBlockInfo.DeferReferences(writer);
+            this.StructureBlockInfo.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            this.StructureBlockInfo.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.StructureBSP);
-            queueableBinaryWriter.Write(this.StructureLightmap);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.UNUSEDRadianceEstSearchDistance);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.UNUSEDLuminelsPerWorldUnit);
-            queueableBinaryWriter.Write(this.UNUSEDOutputWhiteReference);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(((short)(this.ScenarioStructureBspReferenceFlags)));
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.DefaultSky);
-            queueableBinaryWriter.Write(this.fieldpad3);
+            base.Write(writer);
+            this.StructureBlockInfo.Write(writer);
+            writer.Write(this.StructureBSP);
+            writer.Write(this.StructureLightmap);
+            writer.Write(this.fieldpad);
+            writer.Write(this.UNUSEDRadianceEstSearchDistance);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.UNUSEDLuminelsPerWorldUnit);
+            writer.Write(this.UNUSEDOutputWhiteReference);
+            writer.Write(this.fieldpad1);
+            writer.Write(((short)(this.ScenarioStructureBspReferenceFlags)));
+            writer.Write(this.fieldpad2);
+            writer.Write(this.DefaultSky);
+            writer.Write(this.fieldpad3);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

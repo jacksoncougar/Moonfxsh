@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -54,19 +55,19 @@ namespace Moonfish.Guerilla.Tags
             this.Options = base.ReadBlockArrayData<TextValuePairBlock>(binaryReader, pointerQueue.Dequeue());
             this.NullBlock = base.ReadBlockArrayData<NullBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Options);
-            queueableBinaryWriter.Defer(this.NullBlock);
+            base.DeferReferences(writer);
+            writer.Defer(this.Options);
+            writer.Defer(this.NullBlock);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.SettingCategory)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.Options);
-            queueableBinaryWriter.WritePointer(this.NullBlock);
+            base.Write(writer);
+            writer.Write(((int)(this.SettingCategory)));
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.Options);
+            writer.WritePointer(this.NullBlock);
         }
         public enum SettingCategoryEnum : int
         {

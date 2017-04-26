@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -60,22 +61,22 @@ namespace Moonfish.Guerilla.Tags
             this.FogOpposite = base.ReadBlockArrayData<SkyLightFogBlock>(binaryReader, pointerQueue.Dequeue());
             this.Radiosity = base.ReadBlockArrayData<SkyRadiosityLightBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Fog);
-            queueableBinaryWriter.Defer(this.FogOpposite);
-            queueableBinaryWriter.Defer(this.Radiosity);
+            base.DeferReferences(writer);
+            writer.Defer(this.Fog);
+            writer.Defer(this.FogOpposite);
+            writer.Defer(this.Radiosity);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DirectionVector);
-            queueableBinaryWriter.Write(this.Direction);
-            queueableBinaryWriter.Write(this.LensFlare);
-            queueableBinaryWriter.WritePointer(this.Fog);
-            queueableBinaryWriter.WritePointer(this.FogOpposite);
-            queueableBinaryWriter.WritePointer(this.Radiosity);
+            base.Write(writer);
+            writer.Write(this.DirectionVector);
+            writer.Write(this.Direction);
+            writer.Write(this.LensFlare);
+            writer.WritePointer(this.Fog);
+            writer.WritePointer(this.FogOpposite);
+            writer.WritePointer(this.Radiosity);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -60,21 +61,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.FieldShortInteger);
-            queueableBinaryWriter.Write(this.FieldShortInteger0);
-            queueableBinaryWriter.Write(this.FieldShortInteger1);
-            queueableBinaryWriter.Write(this.FieldShortInteger2);
-            queueableBinaryWriter.Write(this.FieldLongInteger);
-            queueableBinaryWriter.Write(this.FieldLongInteger0);
-            queueableBinaryWriter.Write(this.FieldLongInteger1);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write(writer);
+            writer.Write(this.FieldShortInteger);
+            writer.Write(this.FieldShortInteger0);
+            writer.Write(this.FieldShortInteger1);
+            writer.Write(this.FieldShortInteger2);
+            writer.Write(this.FieldLongInteger);
+            writer.Write(this.FieldLongInteger0);
+            writer.Write(this.FieldLongInteger1);
+            writer.Write(this.fieldpad);
         }
     }
 }

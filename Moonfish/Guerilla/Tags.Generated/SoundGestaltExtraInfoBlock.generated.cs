@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -50,17 +51,18 @@ namespace Moonfish.Guerilla.Tags
             this.EncodedPermutationSection = base.ReadBlockArrayData<SoundEncodedDialogueSectionBlock>(binaryReader, pointerQueue.Dequeue());
             this.GeometryBlockInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.EncodedPermutationSection);
-            this.GeometryBlockInfo.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            writer.Defer(this.EncodedPermutationSection);
+            this.GeometryBlockInfo.DeferReferences(writer);
+            this.GeometryBlockInfo.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.EncodedPermutationSection);
-            this.GeometryBlockInfo.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.WritePointer(this.EncodedPermutationSection);
+            this.GeometryBlockInfo.Write(writer);
         }
     }
 }

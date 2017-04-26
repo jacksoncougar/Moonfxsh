@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -21,7 +22,8 @@ namespace Moonfish.Guerilla.Tags
     [TagBlockOriginalNameAttribute("old_unused_strucure_physics_block")]
     public partial class OldUnusedStrucurePhysicsBlock : GuerillaBlock, IWriteDeferrable
     {
-        public byte[] moppCode;
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
+        private byte[] moppCode;
         public OldUnusedObjectIdentifiersBlock[] EvironmentObjectIdentifiers = new OldUnusedObjectIdentifiersBlock[0];
         private byte[] fieldpad = new byte[4];
         public OpenTK.Vector3 MoppBoundsMin;
@@ -56,20 +58,20 @@ namespace Moonfish.Guerilla.Tags
             this.moppCode = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
             this.EvironmentObjectIdentifiers = base.ReadBlockArrayData<OldUnusedObjectIdentifiersBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.moppCode);
-            queueableBinaryWriter.Defer(this.EvironmentObjectIdentifiers);
+            base.DeferReferences(writer);
+            writer.Defer(this.moppCode, 16);
+            writer.Defer(this.EvironmentObjectIdentifiers);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.moppCode);
-            queueableBinaryWriter.WritePointer(this.EvironmentObjectIdentifiers);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.MoppBoundsMin);
-            queueableBinaryWriter.Write(this.MoppBoundsMax);
+            base.Write(writer);
+            writer.WritePointer(this.moppCode);
+            writer.WritePointer(this.EvironmentObjectIdentifiers);
+            writer.Write(this.fieldpad);
+            writer.Write(this.MoppBoundsMin);
+            writer.Write(this.MoppBoundsMax);
         }
     }
 }

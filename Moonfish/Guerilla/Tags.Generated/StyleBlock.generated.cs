@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -97,40 +98,40 @@ namespace Moonfish.Guerilla.Tags
             this.SpecialMovement = base.ReadBlockArrayData<SpecialMovementBlock>(binaryReader, pointerQueue.Dequeue());
             this.BehaviorList = base.ReadBlockArrayData<BehaviorNamesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.SpecialMovement);
-            queueableBinaryWriter.Defer(this.BehaviorList);
+            base.DeferReferences(writer);
+            writer.Defer(this.SpecialMovement);
+            writer.Defer(this.BehaviorList);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((short)(this.CombatStatusDecayOptions)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.Attitude)));
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(((byte)(this.EngageAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.EvasionAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.CoverAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.SearchAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.PresearchAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.RetreatAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.ChargeAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.ReadyAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.IdleAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.WeaponAttitude)));
-            queueableBinaryWriter.Write(((byte)(this.SwarmAttitude)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(((int)(this.StyleStyleControl)));
-            queueableBinaryWriter.Write(((int)(this.StyleBehaviors1)));
-            queueableBinaryWriter.Write(((int)(this.StyleBehaviors2)));
-            queueableBinaryWriter.Write(((int)(this.StyleBehaviors3)));
-            queueableBinaryWriter.Write(((int)(this.StyleBehaviors4)));
-            queueableBinaryWriter.Write(((int)(this.StyleBehaviors5)));
-            queueableBinaryWriter.WritePointer(this.SpecialMovement);
-            queueableBinaryWriter.WritePointer(this.BehaviorList);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(((short)(this.CombatStatusDecayOptions)));
+            writer.Write(this.fieldpad);
+            writer.Write(((short)(this.Attitude)));
+            writer.Write(this.fieldpad0);
+            writer.Write(((byte)(this.EngageAttitude)));
+            writer.Write(((byte)(this.EvasionAttitude)));
+            writer.Write(((byte)(this.CoverAttitude)));
+            writer.Write(((byte)(this.SearchAttitude)));
+            writer.Write(((byte)(this.PresearchAttitude)));
+            writer.Write(((byte)(this.RetreatAttitude)));
+            writer.Write(((byte)(this.ChargeAttitude)));
+            writer.Write(((byte)(this.ReadyAttitude)));
+            writer.Write(((byte)(this.IdleAttitude)));
+            writer.Write(((byte)(this.WeaponAttitude)));
+            writer.Write(((byte)(this.SwarmAttitude)));
+            writer.Write(this.fieldpad1);
+            writer.Write(((int)(this.StyleStyleControl)));
+            writer.Write(((int)(this.StyleBehaviors1)));
+            writer.Write(((int)(this.StyleBehaviors2)));
+            writer.Write(((int)(this.StyleBehaviors3)));
+            writer.Write(((int)(this.StyleBehaviors4)));
+            writer.Write(((int)(this.StyleBehaviors5)));
+            writer.WritePointer(this.SpecialMovement);
+            writer.WritePointer(this.BehaviorList);
         }
         /// <summary>
         /// Controls how combat status is allowed to be automatically reduced in the absence of combat stimuli. 'Latch at X' means that once the level of x is attained (and/or surpassed) the combat status never falls below it

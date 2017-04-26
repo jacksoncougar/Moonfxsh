@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -23,7 +24,7 @@ namespace Moonfish.Guerilla.Tags
     public partial class MultilingualUnicodeStringListBlock : GuerillaBlock, IWriteDeferrable
     {
         public MultilingualUnicodeStringReferenceBlock[] StringReferences = new MultilingualUnicodeStringReferenceBlock[0];
-        public byte[] StringDataUtf8;
+        private byte[] StringDataUtf8;
         private byte[] fieldpad = new byte[36];
         public override int SerializedSize
         {
@@ -53,18 +54,18 @@ namespace Moonfish.Guerilla.Tags
             this.StringReferences = base.ReadBlockArrayData<MultilingualUnicodeStringReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.StringDataUtf8 = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.StringReferences);
-            queueableBinaryWriter.Defer(this.StringDataUtf8);
+            base.DeferReferences(writer);
+            writer.Defer(this.StringReferences);
+            writer.Defer(this.StringDataUtf8);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.StringReferences);
-            queueableBinaryWriter.WritePointer(this.StringDataUtf8);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write(writer);
+            writer.WritePointer(this.StringReferences);
+            writer.WritePointer(this.StringDataUtf8);
+            writer.Write(this.fieldpad);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -21,11 +22,13 @@ namespace Moonfish.Guerilla.Tags
     [TagBlockOriginalNameAttribute("global_structure_physics_struct_block")]
     public partial class GlobalStructurePhysicsStructBlock : GuerillaBlock, IWriteDeferrable
     {
-        public byte[] moppCode;
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
+        private byte[] moppCode;
         private byte[] fieldpad = new byte[4];
         public OpenTK.Vector3 moppBoundsMin;
         public OpenTK.Vector3 moppBoundsMax;
-        public byte[] BreakableSurfacesMoppCode;
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
+        private byte[] BreakableSurfacesMoppCode;
         public BreakableSurfaceKeyTableBlock[] BreakableSurfaceKeyTable = new BreakableSurfaceKeyTableBlock[0];
         public override int SerializedSize
         {
@@ -59,22 +62,22 @@ namespace Moonfish.Guerilla.Tags
             this.BreakableSurfacesMoppCode = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
             this.BreakableSurfaceKeyTable = base.ReadBlockArrayData<BreakableSurfaceKeyTableBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.moppCode);
-            queueableBinaryWriter.Defer(this.BreakableSurfacesMoppCode);
-            queueableBinaryWriter.Defer(this.BreakableSurfaceKeyTable);
+            base.DeferReferences(writer);
+            writer.Defer(this.moppCode, 16);
+            writer.Defer(this.BreakableSurfacesMoppCode, 16);
+            writer.Defer(this.BreakableSurfaceKeyTable);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.moppCode);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.moppBoundsMin);
-            queueableBinaryWriter.Write(this.moppBoundsMax);
-            queueableBinaryWriter.WritePointer(this.BreakableSurfacesMoppCode);
-            queueableBinaryWriter.WritePointer(this.BreakableSurfaceKeyTable);
+            base.Write(writer);
+            writer.WritePointer(this.moppCode);
+            writer.Write(this.fieldpad);
+            writer.Write(this.moppBoundsMin);
+            writer.Write(this.moppBoundsMax);
+            writer.WritePointer(this.BreakableSurfacesMoppCode);
+            writer.WritePointer(this.BreakableSurfaceKeyTable);
         }
     }
 }

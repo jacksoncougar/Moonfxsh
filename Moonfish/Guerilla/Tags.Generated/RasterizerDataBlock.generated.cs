@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -145,45 +146,45 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.GlobalVertexShaders = base.ReadBlockArrayData<VertexShaderReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.GlobalVertexShaders);
+            base.DeferReferences(writer);
+            writer.Defer(this.GlobalVertexShaders);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.DistanceAttenuation);
-            queueableBinaryWriter.Write(this.VectorNormalization);
-            queueableBinaryWriter.Write(this.Gradients);
-            queueableBinaryWriter.Write(this.UNUSED);
-            queueableBinaryWriter.Write(this.UNUSED0);
-            queueableBinaryWriter.Write(this.UNUSED1);
-            queueableBinaryWriter.Write(this.Glow);
-            queueableBinaryWriter.Write(this.UNUSED2);
-            queueableBinaryWriter.Write(this.UNUSED3);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.GlobalVertexShaders);
-            queueableBinaryWriter.Write(this.Default2D);
-            queueableBinaryWriter.Write(this.Default3D);
-            queueableBinaryWriter.Write(this.DefaultCubeMap);
-            queueableBinaryWriter.Write(this.UNUSED4);
-            queueableBinaryWriter.Write(this.UNUSED5);
-            queueableBinaryWriter.Write(this.UNUSED6);
-            queueableBinaryWriter.Write(this.UNUSED7);
-            queueableBinaryWriter.Write(this.UNUSED8);
-            queueableBinaryWriter.Write(this.UNUSED9);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.GlobalShader);
-            queueableBinaryWriter.Write(((short)(this.RasterizerDataFlags)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.RefractionAmount);
-            queueableBinaryWriter.Write(this.DistanceFalloff);
-            queueableBinaryWriter.Write(this.TintColor);
-            queueableBinaryWriter.Write(this.HyperstealthRefraction);
-            queueableBinaryWriter.Write(this.HyperstealthDistanceFalloff);
-            queueableBinaryWriter.Write(this.HyperstealthTintColor);
-            queueableBinaryWriter.Write(this.UNUSED10);
+            base.Write(writer);
+            writer.Write(this.DistanceAttenuation);
+            writer.Write(this.VectorNormalization);
+            writer.Write(this.Gradients);
+            writer.Write(this.UNUSED);
+            writer.Write(this.UNUSED0);
+            writer.Write(this.UNUSED1);
+            writer.Write(this.Glow);
+            writer.Write(this.UNUSED2);
+            writer.Write(this.UNUSED3);
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.GlobalVertexShaders);
+            writer.Write(this.Default2D);
+            writer.Write(this.Default3D);
+            writer.Write(this.DefaultCubeMap);
+            writer.Write(this.UNUSED4);
+            writer.Write(this.UNUSED5);
+            writer.Write(this.UNUSED6);
+            writer.Write(this.UNUSED7);
+            writer.Write(this.UNUSED8);
+            writer.Write(this.UNUSED9);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.GlobalShader);
+            writer.Write(((short)(this.RasterizerDataFlags)));
+            writer.Write(this.fieldpad1);
+            writer.Write(this.RefractionAmount);
+            writer.Write(this.DistanceFalloff);
+            writer.Write(this.TintColor);
+            writer.Write(this.HyperstealthRefraction);
+            writer.Write(this.HyperstealthDistanceFalloff);
+            writer.Write(this.HyperstealthTintColor);
+            writer.Write(this.UNUSED10);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

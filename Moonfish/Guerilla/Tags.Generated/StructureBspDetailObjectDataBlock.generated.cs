@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -60,23 +61,23 @@ namespace Moonfish.Guerilla.Tags
             this.Counts = base.ReadBlockArrayData<GlobalDetailObjectCountsBlock>(binaryReader, pointerQueue.Dequeue());
             this.ZReferenceVectors = base.ReadBlockArrayData<GlobalZReferenceVectorBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Cells);
-            queueableBinaryWriter.Defer(this.Instances);
-            queueableBinaryWriter.Defer(this.Counts);
-            queueableBinaryWriter.Defer(this.ZReferenceVectors);
+            base.DeferReferences(writer);
+            writer.Defer(this.Cells);
+            writer.Defer(this.Instances);
+            writer.Defer(this.Counts);
+            writer.Defer(this.ZReferenceVectors);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Cells);
-            queueableBinaryWriter.WritePointer(this.Instances);
-            queueableBinaryWriter.WritePointer(this.Counts);
-            queueableBinaryWriter.WritePointer(this.ZReferenceVectors);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write(writer);
+            writer.WritePointer(this.Cells);
+            writer.WritePointer(this.Instances);
+            writer.WritePointer(this.Counts);
+            writer.WritePointer(this.ZReferenceVectors);
+            writer.Write(this.fieldpad);
+            writer.Write(this.fieldpad0);
         }
     }
 }

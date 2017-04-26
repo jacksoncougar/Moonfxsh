@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -47,12 +48,12 @@ namespace Moonfish.Guerilla.Tags
         public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(Moonfish.Guerilla.BlamBinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(22));
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(31));
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(24));
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(32));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(2));
             this.DecalVertexBuffer = binaryReader.ReadVertexBuffer();
             this.fieldpad = binaryReader.ReadBytes(16);
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(47));
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(48));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(2));
             this.SpriteVertexBuffer = binaryReader.ReadVertexBuffer();
             this.fieldpad0 = binaryReader.ReadBytes(16);
@@ -67,27 +68,29 @@ namespace Moonfish.Guerilla.Tags
             this.SpriteVertices = base.ReadBlockArrayData<SpriteVerticesBlock>(binaryReader, pointerQueue.Dequeue());
             this.SpriteIndices = base.ReadBlockArrayData<IndicesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Placements);
-            queueableBinaryWriter.Defer(this.DecalVertices);
-            queueableBinaryWriter.Defer(this.DecalIndices);
-            queueableBinaryWriter.Defer(this.SpriteVertices);
-            queueableBinaryWriter.Defer(this.SpriteIndices);
+            base.DeferReferences(writer);
+            writer.Defer(this.Placements);
+            writer.Defer(this.DecalVertices);
+            writer.Defer(this.DecalIndices);
+            writer.Defer(this.DecalVertexBuffer);
+            writer.Defer(this.SpriteVertices);
+            writer.Defer(this.SpriteIndices);
+            writer.Defer(this.SpriteVertexBuffer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Placements);
-            queueableBinaryWriter.WritePointer(this.DecalVertices);
-            queueableBinaryWriter.WritePointer(this.DecalIndices);
-            queueableBinaryWriter.Write(this.DecalVertexBuffer);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.SpriteVertices);
-            queueableBinaryWriter.WritePointer(this.SpriteIndices);
-            queueableBinaryWriter.Write(this.SpriteVertexBuffer);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write(writer);
+            writer.WritePointer(this.Placements);
+            writer.WritePointer(this.DecalVertices);
+            writer.WritePointer(this.DecalIndices);
+            writer.Write(this.DecalVertexBuffer);
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.SpriteVertices);
+            writer.WritePointer(this.SpriteIndices);
+            writer.Write(this.SpriteVertexBuffer);
+            writer.Write(this.fieldpad0);
         }
     }
 }

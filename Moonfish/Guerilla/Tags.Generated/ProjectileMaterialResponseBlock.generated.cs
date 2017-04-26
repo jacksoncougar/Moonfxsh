@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -87,33 +88,33 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.ProjectileMaterialResponseFlags)));
-            queueableBinaryWriter.Write(((short)(this.Response)));
-            queueableBinaryWriter.Write(this.DONOTUSE);
-            queueableBinaryWriter.Write(this.MaterialName);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(((short)(this.ProjectileMaterialResponseProjectileMaterialResponseResponse)));
-            queueableBinaryWriter.Write(((short)(this.ProjectileMaterialResponseProjectileMaterialResponseFlags0)));
-            queueableBinaryWriter.Write(this.ChanceFraction);
-            queueableBinaryWriter.Write(this.Between);
-            queueableBinaryWriter.Write(this.And);
-            queueableBinaryWriter.Write(this.DONOTUSE0);
-            queueableBinaryWriter.Write(((short)(this.ScaleEffectsBy)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.AngularNoise);
-            queueableBinaryWriter.Write(this.VelocityNoise);
-            queueableBinaryWriter.Write(this.DONOTUSE1);
-            queueableBinaryWriter.Write(this.InitialFriction);
-            queueableBinaryWriter.Write(this.MaximumDistance);
-            queueableBinaryWriter.Write(this.ParallelFriction);
-            queueableBinaryWriter.Write(this.PerpendicularFriction);
+            base.Write(writer);
+            writer.Write(((short)(this.ProjectileMaterialResponseFlags)));
+            writer.Write(((short)(this.Response)));
+            writer.Write(this.DONOTUSE);
+            writer.Write(this.MaterialName);
+            writer.Write(this.fieldskip);
+            writer.Write(((short)(this.ProjectileMaterialResponseProjectileMaterialResponseResponse)));
+            writer.Write(((short)(this.ProjectileMaterialResponseProjectileMaterialResponseFlags0)));
+            writer.Write(this.ChanceFraction);
+            writer.Write(this.Between);
+            writer.Write(this.And);
+            writer.Write(this.DONOTUSE0);
+            writer.Write(((short)(this.ScaleEffectsBy)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.AngularNoise);
+            writer.Write(this.VelocityNoise);
+            writer.Write(this.DONOTUSE1);
+            writer.Write(this.InitialFriction);
+            writer.Write(this.MaximumDistance);
+            writer.Write(this.ParallelFriction);
+            writer.Write(this.PerpendicularFriction);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -93,39 +94,44 @@ namespace Moonfish.Guerilla.Tags
             this.Aspect = base.ReadBlockArrayData<LightVolumeAspectBlock>(binaryReader, pointerQueue.Dequeue());
             this.LightVolumeRuntimeOffsetBlock = base.ReadBlockArrayData<LightVolumeRuntimeOffsetBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.OffsetFunction.DeferReferences(queueableBinaryWriter);
-            this.RadiusFunction.DeferReferences(queueableBinaryWriter);
-            this.BrightnessFunction.DeferReferences(queueableBinaryWriter);
-            this.ColorFunction.DeferReferences(queueableBinaryWriter);
-            this.FacingFunction.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Aspect);
-            queueableBinaryWriter.Defer(this.LightVolumeRuntimeOffsetBlock);
+            base.DeferReferences(writer);
+            this.OffsetFunction.DeferReferences(writer);
+            this.OffsetFunction.DeferReferences(writer);
+            this.RadiusFunction.DeferReferences(writer);
+            this.RadiusFunction.DeferReferences(writer);
+            this.BrightnessFunction.DeferReferences(writer);
+            this.BrightnessFunction.DeferReferences(writer);
+            this.ColorFunction.DeferReferences(writer);
+            this.ColorFunction.DeferReferences(writer);
+            this.FacingFunction.DeferReferences(writer);
+            this.FacingFunction.DeferReferences(writer);
+            writer.Defer(this.Aspect);
+            writer.Defer(this.LightVolumeRuntimeOffsetBlock);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.LightVolumeVolumeFlags)));
-            queueableBinaryWriter.Write(this.Bitmap);
-            queueableBinaryWriter.Write(this.SpriteCount);
-            this.OffsetFunction.Write(queueableBinaryWriter);
-            this.RadiusFunction.Write(queueableBinaryWriter);
-            this.BrightnessFunction.Write(queueableBinaryWriter);
-            this.ColorFunction.Write(queueableBinaryWriter);
-            this.FacingFunction.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Aspect);
-            queueableBinaryWriter.Write(this.RadiusFracMin);
-            queueableBinaryWriter.Write(this.DEPRECATEDXstepExponent);
-            queueableBinaryWriter.Write(this.DEPRECATEDXbufferLength);
-            queueableBinaryWriter.Write(this.XbufferSpacing);
-            queueableBinaryWriter.Write(this.XbufferMinIterations);
-            queueableBinaryWriter.Write(this.XbufferMaxIterations);
-            queueableBinaryWriter.Write(this.XdeltaMaxError);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.WritePointer(this.LightVolumeRuntimeOffsetBlock);
-            queueableBinaryWriter.Write(this.fieldskip0);
+            base.Write(writer);
+            writer.Write(((int)(this.LightVolumeVolumeFlags)));
+            writer.Write(this.Bitmap);
+            writer.Write(this.SpriteCount);
+            this.OffsetFunction.Write(writer);
+            this.RadiusFunction.Write(writer);
+            this.BrightnessFunction.Write(writer);
+            this.ColorFunction.Write(writer);
+            this.FacingFunction.Write(writer);
+            writer.WritePointer(this.Aspect);
+            writer.Write(this.RadiusFracMin);
+            writer.Write(this.DEPRECATEDXstepExponent);
+            writer.Write(this.DEPRECATEDXbufferLength);
+            writer.Write(this.XbufferSpacing);
+            writer.Write(this.XbufferMinIterations);
+            writer.Write(this.XbufferMaxIterations);
+            writer.Write(this.XdeltaMaxError);
+            writer.Write(this.fieldskip);
+            writer.WritePointer(this.LightVolumeRuntimeOffsetBlock);
+            writer.Write(this.fieldskip0);
         }
         /// <summary>
         /// If no bitmap is selected, the default glow bitmap will be used. Sprite count controls how many sprites are used to render this volume. Using more sprites will result in a smoother and brighter effect, at a slight performance penalty. Don't touch the flags unless you know what you're doing (they should be off by default).

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -58,20 +59,20 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.MagFilter)));
-            queueableBinaryWriter.Write(((short)(this.MinFilter)));
-            queueableBinaryWriter.Write(((short)(this.MipFilter)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.MipmapBias);
-            queueableBinaryWriter.Write(this.MaxMipmapIndex);
-            queueableBinaryWriter.Write(((short)(this.Anisotropy)));
+            base.Write(writer);
+            writer.Write(((short)(this.MagFilter)));
+            writer.Write(((short)(this.MinFilter)));
+            writer.Write(((short)(this.MipFilter)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.MipmapBias);
+            writer.Write(this.MaxMipmapIndex);
+            writer.Write(((short)(this.Anisotropy)));
         }
         public enum MagFilterEnum : short
         {

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -26,7 +27,9 @@ namespace Moonfish.Guerilla.Tags
         public JustificationEnum Justification;
         public FontEnum Font;
         public Moonfish.Tags.ColourR1G1B1 TextColor;
+        private byte[] rgb8padding = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 ShadowColor;
+        private byte[] rgb8padding0 = new byte[1];
         public float FadeInTimeseconds;
         public float UpTimeseconds;
         public float FadeOutTimeseconds;
@@ -35,7 +38,7 @@ namespace Moonfish.Guerilla.Tags
         {
             get
             {
-                return 36;
+                return 38;
             }
         }
         public override int Alignment
@@ -53,7 +56,9 @@ namespace Moonfish.Guerilla.Tags
             this.Justification = ((JustificationEnum)(binaryReader.ReadInt16()));
             this.Font = ((FontEnum)(binaryReader.ReadInt16()));
             this.TextColor = binaryReader.ReadColourR1G1B1();
+            this.rgb8padding = binaryReader.ReadBytes(1);
             this.ShadowColor = binaryReader.ReadColourR1G1B1();
+            this.rgb8padding0 = binaryReader.ReadBytes(1);
             this.FadeInTimeseconds = binaryReader.ReadSingle();
             this.UpTimeseconds = binaryReader.ReadSingle();
             this.FadeOutTimeseconds = binaryReader.ReadSingle();
@@ -64,23 +69,25 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.TextBounds);
-            queueableBinaryWriter.Write(((short)(this.Justification)));
-            queueableBinaryWriter.Write(((short)(this.Font)));
-            queueableBinaryWriter.Write(this.TextColor);
-            queueableBinaryWriter.Write(this.ShadowColor);
-            queueableBinaryWriter.Write(this.FadeInTimeseconds);
-            queueableBinaryWriter.Write(this.UpTimeseconds);
-            queueableBinaryWriter.Write(this.FadeOutTimeseconds);
-            queueableBinaryWriter.Write(this.padding);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.TextBounds);
+            writer.Write(((short)(this.Justification)));
+            writer.Write(((short)(this.Font)));
+            writer.Write(this.TextColor);
+            writer.Write(this.rgb8padding);
+            writer.Write(this.ShadowColor);
+            writer.Write(this.rgb8padding0);
+            writer.Write(this.FadeInTimeseconds);
+            writer.Write(this.UpTimeseconds);
+            writer.Write(this.FadeOutTimeseconds);
+            writer.Write(this.padding);
         }
         public enum JustificationEnum : short
         {

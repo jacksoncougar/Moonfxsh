@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -63,22 +64,22 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Skin);
-            queueableBinaryWriter.Write(this.Bottomleft);
-            queueableBinaryWriter.Write(((byte)(this.TableOrder)));
-            queueableBinaryWriter.Write(this.MaximumPlayerCount);
-            queueableBinaryWriter.Write(this.RowCount);
-            queueableBinaryWriter.Write(this.ColumnCount);
-            queueableBinaryWriter.Write(this.RowHeight);
-            queueableBinaryWriter.Write(this.ColumnWidth);
+            base.Write(writer);
+            writer.Write(this.fieldpad);
+            writer.Write(this.Skin);
+            writer.Write(this.Bottomleft);
+            writer.Write(((byte)(this.TableOrder)));
+            writer.Write(this.MaximumPlayerCount);
+            writer.Write(this.RowCount);
+            writer.Write(this.ColumnCount);
+            writer.Write(this.RowHeight);
+            writer.Write(this.ColumnWidth);
         }
         public enum TableOrderEnum : byte
         {

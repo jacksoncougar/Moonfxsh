@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -21,13 +22,18 @@ namespace Moonfish.Guerilla.Tags
     [TagBlockOriginalNameAttribute("global_collision_bsp_block")]
     public partial class GlobalCollisionBspBlock : GuerillaBlock, IWriteDeferrable
     {
+        [Moonfish.Guerilla.LayoutAttribute(Pack=8)]
         public Bsp3dNodesBlock[] BSP3DNodes = new Bsp3dNodesBlock[0];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
         public PlanesBlock[] Planes = new PlanesBlock[0];
         public LeavesBlock[] Leaves = new LeavesBlock[0];
         public Bsp2dReferencesBlock[] BSP2DReferences = new Bsp2dReferencesBlock[0];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
         public Bsp2dNodesBlock[] BSP2DNodes = new Bsp2dNodesBlock[0];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=8)]
         public SurfacesBlock[] Surfaces = new SurfacesBlock[0];
         public EdgesBlock[] Edges = new EdgesBlock[0];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
         public VerticesBlock[] Vertices = new VerticesBlock[0];
         public override int SerializedSize
         {
@@ -68,29 +74,29 @@ namespace Moonfish.Guerilla.Tags
             this.Edges = base.ReadBlockArrayData<EdgesBlock>(binaryReader, pointerQueue.Dequeue());
             this.Vertices = base.ReadBlockArrayData<VerticesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.BSP3DNodes);
-            queueableBinaryWriter.Defer(this.Planes);
-            queueableBinaryWriter.Defer(this.Leaves);
-            queueableBinaryWriter.Defer(this.BSP2DReferences);
-            queueableBinaryWriter.Defer(this.BSP2DNodes);
-            queueableBinaryWriter.Defer(this.Surfaces);
-            queueableBinaryWriter.Defer(this.Edges);
-            queueableBinaryWriter.Defer(this.Vertices);
+            base.DeferReferences(writer);
+            writer.Defer(this.BSP3DNodes);
+            writer.Defer(this.Planes);
+            writer.Defer(this.Leaves);
+            writer.Defer(this.BSP2DReferences);
+            writer.Defer(this.BSP2DNodes);
+            writer.Defer(this.Surfaces);
+            writer.Defer(this.Edges);
+            writer.Defer(this.Vertices);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.BSP3DNodes);
-            queueableBinaryWriter.WritePointer(this.Planes);
-            queueableBinaryWriter.WritePointer(this.Leaves);
-            queueableBinaryWriter.WritePointer(this.BSP2DReferences);
-            queueableBinaryWriter.WritePointer(this.BSP2DNodes);
-            queueableBinaryWriter.WritePointer(this.Surfaces);
-            queueableBinaryWriter.WritePointer(this.Edges);
-            queueableBinaryWriter.WritePointer(this.Vertices);
+            base.Write(writer);
+            writer.WritePointer(this.BSP3DNodes);
+            writer.WritePointer(this.Planes);
+            writer.WritePointer(this.Leaves);
+            writer.WritePointer(this.BSP2DReferences);
+            writer.WritePointer(this.BSP2DNodes);
+            writer.WritePointer(this.Surfaces);
+            writer.WritePointer(this.Edges);
+            writer.WritePointer(this.Vertices);
         }
     }
 }

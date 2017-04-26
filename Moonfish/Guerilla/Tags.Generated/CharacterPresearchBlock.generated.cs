@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -56,19 +57,19 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.CharacterPresearchPresearchFlags)));
-            queueableBinaryWriter.Write(this.MinPresearchTime);
-            queueableBinaryWriter.Write(this.MaxPresearchTime);
-            queueableBinaryWriter.Write(this.MinCertaintyRadius);
-            queueableBinaryWriter.Write(this.DEPRECATED);
-            queueableBinaryWriter.Write(this.MinSuppressingTime);
+            base.Write(writer);
+            writer.Write(((int)(this.CharacterPresearchPresearchFlags)));
+            writer.Write(this.MinPresearchTime);
+            writer.Write(this.MaxPresearchTime);
+            writer.Write(this.MinCertaintyRadius);
+            writer.Write(this.DEPRECATED);
+            writer.Write(this.MinSuppressingTime);
         }
         [System.FlagsAttribute()]
         public enum PresearchFlags : int

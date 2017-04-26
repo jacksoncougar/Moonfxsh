@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -96,40 +97,40 @@ namespace Moonfish.Guerilla.Tags
             this.PoweredMassPoints = base.ReadBlockArrayData<PoweredMassPointBlock>(binaryReader, pointerQueue.Dequeue());
             this.MassPoints = base.ReadBlockArrayData<MassPointBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.InertialMatrixAndInverse);
-            queueableBinaryWriter.Defer(this.PoweredMassPoints);
-            queueableBinaryWriter.Defer(this.MassPoints);
+            base.DeferReferences(writer);
+            writer.Defer(this.InertialMatrixAndInverse);
+            writer.Defer(this.PoweredMassPoints);
+            writer.Defer(this.MassPoints);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Radius);
-            queueableBinaryWriter.Write(this.MomentScale);
-            queueableBinaryWriter.Write(this.Mass);
-            queueableBinaryWriter.Write(this.CenterOfMass);
-            queueableBinaryWriter.Write(this.Density);
-            queueableBinaryWriter.Write(this.GravityScale);
-            queueableBinaryWriter.Write(this.GroundFriction);
-            queueableBinaryWriter.Write(this.GroundDepth);
-            queueableBinaryWriter.Write(this.GroundDampFraction);
-            queueableBinaryWriter.Write(this.GroundNormalK1);
-            queueableBinaryWriter.Write(this.GroundNormalK0);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.WaterFriction);
-            queueableBinaryWriter.Write(this.WaterDepth);
-            queueableBinaryWriter.Write(this.WaterDensity);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.AirFriction);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.XxMoment);
-            queueableBinaryWriter.Write(this.YyMoment);
-            queueableBinaryWriter.Write(this.ZzMoment);
-            queueableBinaryWriter.WritePointer(this.InertialMatrixAndInverse);
-            queueableBinaryWriter.WritePointer(this.PoweredMassPoints);
-            queueableBinaryWriter.WritePointer(this.MassPoints);
+            base.Write(writer);
+            writer.Write(this.Radius);
+            writer.Write(this.MomentScale);
+            writer.Write(this.Mass);
+            writer.Write(this.CenterOfMass);
+            writer.Write(this.Density);
+            writer.Write(this.GravityScale);
+            writer.Write(this.GroundFriction);
+            writer.Write(this.GroundDepth);
+            writer.Write(this.GroundDampFraction);
+            writer.Write(this.GroundNormalK1);
+            writer.Write(this.GroundNormalK0);
+            writer.Write(this.fieldpad);
+            writer.Write(this.WaterFriction);
+            writer.Write(this.WaterDepth);
+            writer.Write(this.WaterDensity);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.AirFriction);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.XxMoment);
+            writer.Write(this.YyMoment);
+            writer.Write(this.ZzMoment);
+            writer.WritePointer(this.InertialMatrixAndInverse);
+            writer.WritePointer(this.PoweredMassPoints);
+            writer.WritePointer(this.MassPoints);
         }
     }
 }

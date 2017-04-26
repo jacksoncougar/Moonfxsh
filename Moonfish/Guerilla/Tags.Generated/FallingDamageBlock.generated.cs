@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -72,24 +73,24 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.HarmfulFallingDistance);
-            queueableBinaryWriter.Write(this.FallingDamage);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.MaximumFallingDistance);
-            queueableBinaryWriter.Write(this.DistanceDamage);
-            queueableBinaryWriter.Write(this.VehicleEnvironemtnCollisionDamageEffect);
-            queueableBinaryWriter.Write(this.VehicleKilledUnitDamageEffect);
-            queueableBinaryWriter.Write(this.VehicleCollisionDamage);
-            queueableBinaryWriter.Write(this.FlamingDeathDamage);
-            queueableBinaryWriter.Write(this.fieldpad1);
+            base.Write(writer);
+            writer.Write(this.fieldpad);
+            writer.Write(this.HarmfulFallingDistance);
+            writer.Write(this.FallingDamage);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.MaximumFallingDistance);
+            writer.Write(this.DistanceDamage);
+            writer.Write(this.VehicleEnvironemtnCollisionDamageEffect);
+            writer.Write(this.VehicleKilledUnitDamageEffect);
+            writer.Write(this.VehicleCollisionDamage);
+            writer.Write(this.FlamingDeathDamage);
+            writer.Write(this.fieldpad1);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -64,23 +65,23 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Ambient);
-            queueableBinaryWriter.Write(this.ShadowDirection);
-            queueableBinaryWriter.Write(this.LightingAccuracy);
-            queueableBinaryWriter.Write(this.ShadowOpacity);
-            queueableBinaryWriter.Write(this.PrimaryDirectionColor);
-            queueableBinaryWriter.Write(this.PrimaryDirection);
-            queueableBinaryWriter.Write(this.SecondaryDirectionColor);
-            queueableBinaryWriter.Write(this.SecondaryDirection);
-            queueableBinaryWriter.Write(this.ShIndex);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write(writer);
+            writer.Write(this.Ambient);
+            writer.Write(this.ShadowDirection);
+            writer.Write(this.LightingAccuracy);
+            writer.Write(this.ShadowOpacity);
+            writer.Write(this.PrimaryDirectionColor);
+            writer.Write(this.PrimaryDirection);
+            writer.Write(this.SecondaryDirectionColor);
+            writer.Write(this.SecondaryDirection);
+            writer.Write(this.ShIndex);
+            writer.Write(this.fieldpad);
         }
     }
 }

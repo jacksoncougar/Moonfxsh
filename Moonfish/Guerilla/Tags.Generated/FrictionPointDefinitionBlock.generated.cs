@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -78,30 +79,30 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MarkerName);
-            queueableBinaryWriter.Write(((int)(this.FrictionPointDefinitionFlags)));
-            queueableBinaryWriter.Write(this.FractionOfTotalMass);
-            queueableBinaryWriter.Write(this.Radius);
-            queueableBinaryWriter.Write(this.DamagedRadius);
-            queueableBinaryWriter.Write(((short)(this.FrictionType)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.MovingFrictionVelocityDiff);
-            queueableBinaryWriter.Write(this.EbrakeMovingFriction);
-            queueableBinaryWriter.Write(this.EbrakeFriction);
-            queueableBinaryWriter.Write(this.EbrakeMovingFrictionVelDiff);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.CollisionGlobalMaterialName);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(((short)(this.ModelStateDestroyed)));
-            queueableBinaryWriter.Write(this.RegionName);
-            queueableBinaryWriter.Write(this.fieldpad2);
+            base.Write(writer);
+            writer.Write(this.MarkerName);
+            writer.Write(((int)(this.FrictionPointDefinitionFlags)));
+            writer.Write(this.FractionOfTotalMass);
+            writer.Write(this.Radius);
+            writer.Write(this.DamagedRadius);
+            writer.Write(((short)(this.FrictionType)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.MovingFrictionVelocityDiff);
+            writer.Write(this.EbrakeMovingFriction);
+            writer.Write(this.EbrakeFriction);
+            writer.Write(this.EbrakeMovingFrictionVelDiff);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.CollisionGlobalMaterialName);
+            writer.Write(this.fieldpad1);
+            writer.Write(((short)(this.ModelStateDestroyed)));
+            writer.Write(this.RegionName);
+            writer.Write(this.fieldpad2);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -59,21 +60,21 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Points = base.ReadBlockArrayData<PointBlockReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Points);
+            base.DeferReferences(writer);
+            writer.Defer(this.Points);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.ShapeReferenceFlags)));
-            queueableBinaryWriter.Write(((short)(this.AnimationIndex)));
-            queueableBinaryWriter.Write(this.IntroAnimationDelayMilliseconds);
-            queueableBinaryWriter.Write(this.Color);
-            queueableBinaryWriter.WritePointer(this.Points);
-            queueableBinaryWriter.Write(this.RenderDepthBias);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write(writer);
+            writer.Write(((int)(this.ShapeReferenceFlags)));
+            writer.Write(((short)(this.AnimationIndex)));
+            writer.Write(this.IntroAnimationDelayMilliseconds);
+            writer.Write(this.Color);
+            writer.WritePointer(this.Points);
+            writer.Write(this.RenderDepthBias);
+            writer.Write(this.fieldpad);
         }
         /// <summary>
         /// This is the old way

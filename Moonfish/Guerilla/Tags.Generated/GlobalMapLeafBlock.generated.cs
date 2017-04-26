@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -50,17 +51,17 @@ namespace Moonfish.Guerilla.Tags
             this.Faces = base.ReadBlockArrayData<MapLeafFaceBlock>(binaryReader, pointerQueue.Dequeue());
             this.ConnectionIndices = base.ReadBlockArrayData<MapLeafConnectionIndexBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Faces);
-            queueableBinaryWriter.Defer(this.ConnectionIndices);
+            base.DeferReferences(writer);
+            writer.Defer(this.Faces);
+            writer.Defer(this.ConnectionIndices);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Faces);
-            queueableBinaryWriter.WritePointer(this.ConnectionIndices);
+            base.Write(writer);
+            writer.WritePointer(this.Faces);
+            writer.WritePointer(this.ConnectionIndices);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -53,18 +54,18 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.RowCells = base.ReadBlockArrayData<TableViewListItemReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.RowCells);
+            base.DeferReferences(writer);
+            writer.Defer(this.RowCells);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.TableViewListRowReferenceFlags)));
-            queueableBinaryWriter.Write(this.RowHeight);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.RowCells);
+            base.Write(writer);
+            writer.Write(((int)(this.TableViewListRowReferenceFlags)));
+            writer.Write(this.RowHeight);
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.RowCells);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

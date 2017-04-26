@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -29,7 +30,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         [Moonfish.Tags.TagReferenceAttribute("scnr")]
         public Moonfish.Tags.TagReference Scenario;
-        public byte[] Parameters;
+        private byte[] Parameters;
         private byte[] fieldpad = new byte[32];
         public override int SerializedSize
         {
@@ -58,17 +59,17 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Parameters = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Parameters);
+            base.DeferReferences(writer);
+            writer.Defer(this.Parameters);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Scenario);
-            queueableBinaryWriter.WritePointer(this.Parameters);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write(writer);
+            writer.Write(this.Scenario);
+            writer.WritePointer(this.Parameters);
+            writer.Write(this.fieldpad);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -50,17 +51,19 @@ namespace Moonfish.Guerilla.Tags
             this.LowFrequencyVibration.ReadInstances(binaryReader, pointerQueue);
             this.HighFrequencyVibration.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.LowFrequencyVibration.DeferReferences(queueableBinaryWriter);
-            this.HighFrequencyVibration.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.LowFrequencyVibration.DeferReferences(writer);
+            this.LowFrequencyVibration.DeferReferences(writer);
+            this.HighFrequencyVibration.DeferReferences(writer);
+            this.HighFrequencyVibration.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            this.LowFrequencyVibration.Write(queueableBinaryWriter);
-            this.HighFrequencyVibration.Write(queueableBinaryWriter);
+            base.Write(writer);
+            this.LowFrequencyVibration.Write(writer);
+            this.HighFrequencyVibration.Write(writer);
         }
     }
 }

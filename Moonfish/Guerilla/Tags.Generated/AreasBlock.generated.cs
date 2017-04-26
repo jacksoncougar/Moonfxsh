@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -61,22 +62,22 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.FlightHints = base.ReadBlockArrayData<FlightReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.FlightHints);
+            base.DeferReferences(writer);
+            writer.Defer(this.FlightHints);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((int)(this.AreasAreaFlags)));
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.ManualReferenceFrame);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.WritePointer(this.FlightHints);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(((int)(this.AreasAreaFlags)));
+            writer.Write(this.fieldskip);
+            writer.Write(this.fieldskip0);
+            writer.Write(this.fieldpad);
+            writer.Write(this.ManualReferenceFrame);
+            writer.Write(this.fieldpad0);
+            writer.WritePointer(this.FlightHints);
         }
         [System.FlagsAttribute()]
         public enum AreaFlags : int

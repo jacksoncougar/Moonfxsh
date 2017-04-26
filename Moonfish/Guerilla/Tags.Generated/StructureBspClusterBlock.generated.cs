@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -49,7 +50,8 @@ namespace Moonfish.Guerilla.Tags
         public int ChecksumFromStructure;
         public StructureBspClusterInstancedGeometryIndexBlock[] InstancedGeometryIndices = new StructureBspClusterInstancedGeometryIndexBlock[0];
         public GlobalGeometrySectionStripIndexBlock[] IndexReorderTable = new GlobalGeometrySectionStripIndexBlock[0];
-        public byte[] CollisionMoppCode;
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
+        private byte[] CollisionMoppCode;
         public override int SerializedSize
         {
             get
@@ -107,47 +109,49 @@ namespace Moonfish.Guerilla.Tags
             this.IndexReorderTable = base.ReadBlockArrayData<GlobalGeometrySectionStripIndexBlock>(binaryReader, pointerQueue.Dequeue());
             this.CollisionMoppCode = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.SectionInfo.DeferReferences(queueableBinaryWriter);
-            this.GeometryBlockInfo.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.ClusterData);
-            queueableBinaryWriter.Defer(this.PredictedResources);
-            queueableBinaryWriter.Defer(this.Portals);
-            queueableBinaryWriter.Defer(this.InstancedGeometryIndices);
-            queueableBinaryWriter.Defer(this.IndexReorderTable);
-            queueableBinaryWriter.Defer(this.CollisionMoppCode);
+            base.DeferReferences(writer);
+            this.SectionInfo.DeferReferences(writer);
+            this.SectionInfo.DeferReferences(writer);
+            this.GeometryBlockInfo.DeferReferences(writer);
+            this.GeometryBlockInfo.DeferReferences(writer);
+            writer.Defer(this.ClusterData);
+            writer.Defer(this.PredictedResources);
+            writer.Defer(this.Portals);
+            writer.Defer(this.InstancedGeometryIndices);
+            writer.Defer(this.IndexReorderTable);
+            writer.Defer(this.CollisionMoppCode, 16);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            this.SectionInfo.Write(queueableBinaryWriter);
-            this.GeometryBlockInfo.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.ClusterData);
-            queueableBinaryWriter.Write(this.BoundsX);
-            queueableBinaryWriter.Write(this.BoundsY);
-            queueableBinaryWriter.Write(this.BoundsZ);
-            queueableBinaryWriter.Write(this.ScenarioSkyIndex);
-            queueableBinaryWriter.Write(this.MediaIndex);
-            queueableBinaryWriter.Write(this.ScenarioVisibleSkyIndex);
-            queueableBinaryWriter.Write(this.ScenarioAtmosphericFogIndex);
-            queueableBinaryWriter.Write(this.PlanarFogDesignator);
-            queueableBinaryWriter.Write(this.VisibleFogPlaneIndex);
-            queueableBinaryWriter.Write(this.BackgroundSound);
-            queueableBinaryWriter.Write(this.SoundEnvironment);
-            queueableBinaryWriter.Write(this.Weather);
-            queueableBinaryWriter.Write(this.TransitionStructureBSP);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(((short)(this.StructureBspClusterFlags)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.WritePointer(this.PredictedResources);
-            queueableBinaryWriter.WritePointer(this.Portals);
-            queueableBinaryWriter.Write(this.ChecksumFromStructure);
-            queueableBinaryWriter.WritePointer(this.InstancedGeometryIndices);
-            queueableBinaryWriter.WritePointer(this.IndexReorderTable);
-            queueableBinaryWriter.WritePointer(this.CollisionMoppCode);
+            base.Write(writer);
+            this.SectionInfo.Write(writer);
+            this.GeometryBlockInfo.Write(writer);
+            writer.WritePointer(this.ClusterData);
+            writer.Write(this.BoundsX);
+            writer.Write(this.BoundsY);
+            writer.Write(this.BoundsZ);
+            writer.Write(this.ScenarioSkyIndex);
+            writer.Write(this.MediaIndex);
+            writer.Write(this.ScenarioVisibleSkyIndex);
+            writer.Write(this.ScenarioAtmosphericFogIndex);
+            writer.Write(this.PlanarFogDesignator);
+            writer.Write(this.VisibleFogPlaneIndex);
+            writer.Write(this.BackgroundSound);
+            writer.Write(this.SoundEnvironment);
+            writer.Write(this.Weather);
+            writer.Write(this.TransitionStructureBSP);
+            writer.Write(this.fieldpad);
+            writer.Write(this.fieldpad0);
+            writer.Write(((short)(this.StructureBspClusterFlags)));
+            writer.Write(this.fieldpad1);
+            writer.WritePointer(this.PredictedResources);
+            writer.WritePointer(this.Portals);
+            writer.Write(this.ChecksumFromStructure);
+            writer.WritePointer(this.InstancedGeometryIndices);
+            writer.WritePointer(this.IndexReorderTable);
+            writer.WritePointer(this.CollisionMoppCode);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

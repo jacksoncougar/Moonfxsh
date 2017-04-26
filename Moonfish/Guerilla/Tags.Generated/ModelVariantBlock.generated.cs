@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -61,22 +62,22 @@ namespace Moonfish.Guerilla.Tags
             this.Regions = base.ReadBlockArrayData<ModelVariantRegionBlock>(binaryReader, pointerQueue.Dequeue());
             this.Objects = base.ReadBlockArrayData<ModelVariantObjectBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Regions);
-            queueableBinaryWriter.Defer(this.Objects);
+            base.DeferReferences(writer);
+            writer.Defer(this.Regions);
+            writer.Defer(this.Objects);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.Regions);
-            queueableBinaryWriter.WritePointer(this.Objects);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.DialogueSoundEffect);
-            queueableBinaryWriter.Write(this.Dialogue);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.Regions);
+            writer.WritePointer(this.Objects);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.DialogueSoundEffect);
+            writer.Write(this.Dialogue);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -100,39 +101,39 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MaximumRandomSpawnBias);
-            queueableBinaryWriter.Write(this.TeleporterRechargeTime);
-            queueableBinaryWriter.Write(this.GrenadeDangerWeight);
-            queueableBinaryWriter.Write(this.GrenadeDangerInnerRadius);
-            queueableBinaryWriter.Write(this.GrenadeDangerOuterRadius);
-            queueableBinaryWriter.Write(this.GrenadeDangerLeadTime);
-            queueableBinaryWriter.Write(this.VehicleDangerMinSpeed);
-            queueableBinaryWriter.Write(this.VehicleDangerWeight);
-            queueableBinaryWriter.Write(this.VehicleDangerRadius);
-            queueableBinaryWriter.Write(this.VehicleDangerLeadTime);
-            queueableBinaryWriter.Write(this.VehicleNearbyPlayerDist);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.HillShader);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.FlagResetStopDistance);
-            queueableBinaryWriter.Write(this.BombExplodeEffect);
-            queueableBinaryWriter.Write(this.BombExplodeDmgEffect);
-            queueableBinaryWriter.Write(this.BombDefuseEffect);
-            queueableBinaryWriter.Write(this.BombDefusalString);
-            queueableBinaryWriter.Write(this.BlockedTeleporterString);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(this.fieldpad6);
+            base.Write(writer);
+            writer.Write(this.MaximumRandomSpawnBias);
+            writer.Write(this.TeleporterRechargeTime);
+            writer.Write(this.GrenadeDangerWeight);
+            writer.Write(this.GrenadeDangerInnerRadius);
+            writer.Write(this.GrenadeDangerOuterRadius);
+            writer.Write(this.GrenadeDangerLeadTime);
+            writer.Write(this.VehicleDangerMinSpeed);
+            writer.Write(this.VehicleDangerWeight);
+            writer.Write(this.VehicleDangerRadius);
+            writer.Write(this.VehicleDangerLeadTime);
+            writer.Write(this.VehicleNearbyPlayerDist);
+            writer.Write(this.fieldpad);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.HillShader);
+            writer.Write(this.fieldpad2);
+            writer.Write(this.FlagResetStopDistance);
+            writer.Write(this.BombExplodeEffect);
+            writer.Write(this.BombExplodeDmgEffect);
+            writer.Write(this.BombDefuseEffect);
+            writer.Write(this.BombDefusalString);
+            writer.Write(this.BlockedTeleporterString);
+            writer.Write(this.fieldpad3);
+            writer.Write(this.fieldpad4);
+            writer.Write(this.fieldpad5);
+            writer.Write(this.fieldpad6);
         }
     }
 }

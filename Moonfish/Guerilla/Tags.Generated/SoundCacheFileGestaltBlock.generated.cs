@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -78,35 +79,35 @@ namespace Moonfish.Guerilla.Tags
             this.Promotions = base.ReadBlockArrayData<SoundGestaltPromotionsBlock>(binaryReader, pointerQueue.Dequeue());
             this.ExtraInfos = base.ReadBlockArrayData<SoundGestaltExtraInfoBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Playbacks);
-            queueableBinaryWriter.Defer(this.Scales);
-            queueableBinaryWriter.Defer(this.ImportNames);
-            queueableBinaryWriter.Defer(this.PitchRangeParameters);
-            queueableBinaryWriter.Defer(this.PitchRanges);
-            queueableBinaryWriter.Defer(this.Permutations);
-            queueableBinaryWriter.Defer(this.CustomPlaybacks);
-            queueableBinaryWriter.Defer(this.RuntimePermutationFlags);
-            queueableBinaryWriter.Defer(this.Chunks);
-            queueableBinaryWriter.Defer(this.Promotions);
-            queueableBinaryWriter.Defer(this.ExtraInfos);
+            base.DeferReferences(writer);
+            writer.Defer(this.Playbacks);
+            writer.Defer(this.Scales);
+            writer.Defer(this.ImportNames);
+            writer.Defer(this.PitchRangeParameters);
+            writer.Defer(this.PitchRanges);
+            writer.Defer(this.Permutations);
+            writer.Defer(this.CustomPlaybacks);
+            writer.Defer(this.RuntimePermutationFlags);
+            writer.Defer(this.Chunks);
+            writer.Defer(this.Promotions);
+            writer.Defer(this.ExtraInfos);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Playbacks);
-            queueableBinaryWriter.WritePointer(this.Scales);
-            queueableBinaryWriter.WritePointer(this.ImportNames);
-            queueableBinaryWriter.WritePointer(this.PitchRangeParameters);
-            queueableBinaryWriter.WritePointer(this.PitchRanges);
-            queueableBinaryWriter.WritePointer(this.Permutations);
-            queueableBinaryWriter.WritePointer(this.CustomPlaybacks);
-            queueableBinaryWriter.WritePointer(this.RuntimePermutationFlags);
-            queueableBinaryWriter.WritePointer(this.Chunks);
-            queueableBinaryWriter.WritePointer(this.Promotions);
-            queueableBinaryWriter.WritePointer(this.ExtraInfos);
+            base.Write(writer);
+            writer.WritePointer(this.Playbacks);
+            writer.WritePointer(this.Scales);
+            writer.WritePointer(this.ImportNames);
+            writer.WritePointer(this.PitchRangeParameters);
+            writer.WritePointer(this.PitchRanges);
+            writer.WritePointer(this.Permutations);
+            writer.WritePointer(this.CustomPlaybacks);
+            writer.WritePointer(this.RuntimePermutationFlags);
+            writer.WritePointer(this.Chunks);
+            writer.WritePointer(this.Promotions);
+            writer.WritePointer(this.ExtraInfos);
         }
     }
 }

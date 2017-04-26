@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -87,35 +88,35 @@ namespace Moonfish.Guerilla.Tags
             this.PostprocessDefinition = base.ReadBlockArrayData<ShaderPostprocessDefinitionNewBlock>(binaryReader, pointerQueue.Dequeue());
             this.PredictedResources = base.ReadBlockArrayData<PredictedResourceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.RuntimeProperties);
-            queueableBinaryWriter.Defer(this.Parameters);
-            queueableBinaryWriter.Defer(this.PostprocessDefinition);
-            queueableBinaryWriter.Defer(this.PredictedResources);
+            base.DeferReferences(writer);
+            writer.Defer(this.RuntimeProperties);
+            writer.Defer(this.Parameters);
+            writer.Defer(this.PostprocessDefinition);
+            writer.Defer(this.PredictedResources);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Template);
-            queueableBinaryWriter.Write(this.MaterialName);
-            queueableBinaryWriter.WritePointer(this.RuntimeProperties);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(((short)(this.ShaderFlags)));
-            queueableBinaryWriter.WritePointer(this.Parameters);
-            queueableBinaryWriter.WritePointer(this.PostprocessDefinition);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.WritePointer(this.PredictedResources);
-            queueableBinaryWriter.Write(this.LightResponse);
-            queueableBinaryWriter.Write(((short)(this.ShaderLODBias)));
-            queueableBinaryWriter.Write(((short)(this.SpecularType)));
-            queueableBinaryWriter.Write(((short)(this.LightmapType)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.LightmapSpecularBrightness);
-            queueableBinaryWriter.Write(this.LightmapAmbientBias);
-            queueableBinaryWriter.Write(this.AddedDepthBiasOffset);
-            queueableBinaryWriter.Write(this.AddedDepthBiasSlopeScale);
+            base.Write(writer);
+            writer.Write(this.Template);
+            writer.Write(this.MaterialName);
+            writer.WritePointer(this.RuntimeProperties);
+            writer.Write(this.fieldpad);
+            writer.Write(((short)(this.ShaderFlags)));
+            writer.WritePointer(this.Parameters);
+            writer.WritePointer(this.PostprocessDefinition);
+            writer.Write(this.fieldpad0);
+            writer.WritePointer(this.PredictedResources);
+            writer.Write(this.LightResponse);
+            writer.Write(((short)(this.ShaderLODBias)));
+            writer.Write(((short)(this.SpecularType)));
+            writer.Write(((short)(this.LightmapType)));
+            writer.Write(this.fieldpad1);
+            writer.Write(this.LightmapSpecularBrightness);
+            writer.Write(this.LightmapAmbientBias);
+            writer.Write(this.AddedDepthBiasOffset);
+            writer.Write(this.AddedDepthBiasSlopeScale);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

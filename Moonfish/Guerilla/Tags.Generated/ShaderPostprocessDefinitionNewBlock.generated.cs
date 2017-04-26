@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -91,44 +92,44 @@ namespace Moonfish.Guerilla.Tags
             this.ValueProperties = base.ReadBlockArrayData<ShaderPostprocessValuePropertyBlock>(binaryReader, pointerQueue.Dequeue());
             this.OldLevelsOfDetail = base.ReadBlockArrayData<ShaderPostprocessLevelOfDetailBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Bitmaps);
-            queueableBinaryWriter.Defer(this.PixelConstants);
-            queueableBinaryWriter.Defer(this.VertexConstants);
-            queueableBinaryWriter.Defer(this.LevelsOfDetail);
-            queueableBinaryWriter.Defer(this.Layers);
-            queueableBinaryWriter.Defer(this.Passes);
-            queueableBinaryWriter.Defer(this.Implementations);
-            queueableBinaryWriter.Defer(this.Overlays);
-            queueableBinaryWriter.Defer(this.OverlayReferences);
-            queueableBinaryWriter.Defer(this.AnimatedParameters);
-            queueableBinaryWriter.Defer(this.AnimatedParameterReferences);
-            queueableBinaryWriter.Defer(this.BitmapProperties);
-            queueableBinaryWriter.Defer(this.ColorProperties);
-            queueableBinaryWriter.Defer(this.ValueProperties);
-            queueableBinaryWriter.Defer(this.OldLevelsOfDetail);
+            base.DeferReferences(writer);
+            writer.Defer(this.Bitmaps);
+            writer.Defer(this.PixelConstants);
+            writer.Defer(this.VertexConstants);
+            writer.Defer(this.LevelsOfDetail);
+            writer.Defer(this.Layers);
+            writer.Defer(this.Passes);
+            writer.Defer(this.Implementations);
+            writer.Defer(this.Overlays);
+            writer.Defer(this.OverlayReferences);
+            writer.Defer(this.AnimatedParameters);
+            writer.Defer(this.AnimatedParameterReferences);
+            writer.Defer(this.BitmapProperties);
+            writer.Defer(this.ColorProperties);
+            writer.Defer(this.ValueProperties);
+            writer.Defer(this.OldLevelsOfDetail);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ShaderTemplateIndex);
-            queueableBinaryWriter.WritePointer(this.Bitmaps);
-            queueableBinaryWriter.WritePointer(this.PixelConstants);
-            queueableBinaryWriter.WritePointer(this.VertexConstants);
-            queueableBinaryWriter.WritePointer(this.LevelsOfDetail);
-            queueableBinaryWriter.WritePointer(this.Layers);
-            queueableBinaryWriter.WritePointer(this.Passes);
-            queueableBinaryWriter.WritePointer(this.Implementations);
-            queueableBinaryWriter.WritePointer(this.Overlays);
-            queueableBinaryWriter.WritePointer(this.OverlayReferences);
-            queueableBinaryWriter.WritePointer(this.AnimatedParameters);
-            queueableBinaryWriter.WritePointer(this.AnimatedParameterReferences);
-            queueableBinaryWriter.WritePointer(this.BitmapProperties);
-            queueableBinaryWriter.WritePointer(this.ColorProperties);
-            queueableBinaryWriter.WritePointer(this.ValueProperties);
-            queueableBinaryWriter.WritePointer(this.OldLevelsOfDetail);
+            base.Write(writer);
+            writer.Write(this.ShaderTemplateIndex);
+            writer.WritePointer(this.Bitmaps);
+            writer.WritePointer(this.PixelConstants);
+            writer.WritePointer(this.VertexConstants);
+            writer.WritePointer(this.LevelsOfDetail);
+            writer.WritePointer(this.Layers);
+            writer.WritePointer(this.Passes);
+            writer.WritePointer(this.Implementations);
+            writer.WritePointer(this.Overlays);
+            writer.WritePointer(this.OverlayReferences);
+            writer.WritePointer(this.AnimatedParameters);
+            writer.WritePointer(this.AnimatedParameterReferences);
+            writer.WritePointer(this.BitmapProperties);
+            writer.WritePointer(this.ColorProperties);
+            writer.WritePointer(this.ValueProperties);
+            writer.WritePointer(this.OldLevelsOfDetail);
         }
     }
 }

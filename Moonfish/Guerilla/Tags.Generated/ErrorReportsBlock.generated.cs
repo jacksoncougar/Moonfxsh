@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -23,7 +24,7 @@ namespace Moonfish.Guerilla.Tags
     {
         public TypeEnum Type;
         public Flags ErrorReportsFlags;
-        public byte[] Text;
+        private byte[] Text;
         public Moonfish.Tags.String32 SourceFilename;
         public int SourceLineNumber;
         public ErrorReportVerticesBlock[] Vertices = new ErrorReportVerticesBlock[0];
@@ -89,39 +90,39 @@ namespace Moonfish.Guerilla.Tags
             this.Quads = base.ReadBlockArrayData<ErrorReportQuadsBlock>(binaryReader, pointerQueue.Dequeue());
             this.Comments = base.ReadBlockArrayData<ErrorReportCommentsBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Text);
-            queueableBinaryWriter.Defer(this.Vertices);
-            queueableBinaryWriter.Defer(this.Vectors);
-            queueableBinaryWriter.Defer(this.Lines);
-            queueableBinaryWriter.Defer(this.Triangles);
-            queueableBinaryWriter.Defer(this.Quads);
-            queueableBinaryWriter.Defer(this.Comments);
+            base.DeferReferences(writer);
+            writer.Defer(this.Text);
+            writer.Defer(this.Vertices);
+            writer.Defer(this.Vectors);
+            writer.Defer(this.Lines);
+            writer.Defer(this.Triangles);
+            writer.Defer(this.Quads);
+            writer.Defer(this.Comments);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.Type)));
-            queueableBinaryWriter.Write(((short)(this.ErrorReportsFlags)));
-            queueableBinaryWriter.WritePointer(this.Text);
-            queueableBinaryWriter.Write(this.SourceFilename);
-            queueableBinaryWriter.Write(this.SourceLineNumber);
-            queueableBinaryWriter.WritePointer(this.Vertices);
-            queueableBinaryWriter.WritePointer(this.Vectors);
-            queueableBinaryWriter.WritePointer(this.Lines);
-            queueableBinaryWriter.WritePointer(this.Triangles);
-            queueableBinaryWriter.WritePointer(this.Quads);
-            queueableBinaryWriter.WritePointer(this.Comments);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.ReportKey);
-            queueableBinaryWriter.Write(this.NodeIndex);
-            queueableBinaryWriter.Write(this.BoundsX);
-            queueableBinaryWriter.Write(this.BoundsY);
-            queueableBinaryWriter.Write(this.BoundsZ);
-            queueableBinaryWriter.Write(this.Color);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write(writer);
+            writer.Write(((short)(this.Type)));
+            writer.Write(((short)(this.ErrorReportsFlags)));
+            writer.WritePointer(this.Text);
+            writer.Write(this.SourceFilename);
+            writer.Write(this.SourceLineNumber);
+            writer.WritePointer(this.Vertices);
+            writer.WritePointer(this.Vectors);
+            writer.WritePointer(this.Lines);
+            writer.WritePointer(this.Triangles);
+            writer.WritePointer(this.Quads);
+            writer.WritePointer(this.Comments);
+            writer.Write(this.fieldpad);
+            writer.Write(this.ReportKey);
+            writer.Write(this.NodeIndex);
+            writer.Write(this.BoundsX);
+            writer.Write(this.BoundsY);
+            writer.Write(this.BoundsZ);
+            writer.Write(this.Color);
+            writer.Write(this.fieldpad0);
         }
         public enum TypeEnum : short
         {

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -59,21 +60,22 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Data.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.Data.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.Data.DeferReferences(writer);
+            this.Data.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            this.Data.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Position);
-            queueableBinaryWriter.Write(this.LowerHeight);
-            queueableBinaryWriter.Write(this.UpperHeight);
-            queueableBinaryWriter.Write(this.InnerRadius);
-            queueableBinaryWriter.Write(this.OuterRadius);
-            queueableBinaryWriter.Write(this.Weight);
+            base.Write(writer);
+            this.Data.Write(writer);
+            writer.Write(this.Position);
+            writer.Write(this.LowerHeight);
+            writer.Write(this.UpperHeight);
+            writer.Write(this.InnerRadius);
+            writer.Write(this.OuterRadius);
+            writer.Write(this.Weight);
         }
     }
 }

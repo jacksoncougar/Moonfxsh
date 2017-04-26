@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -88,35 +89,35 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.ScenarioFunctionFlags)));
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.Period);
-            queueableBinaryWriter.Write(this.ScalePeriodBy);
-            queueableBinaryWriter.Write(((short)(this.Function)));
-            queueableBinaryWriter.Write(this.ScaleFunctionBy);
-            queueableBinaryWriter.Write(((short)(this.WobbleFunction)));
-            queueableBinaryWriter.Write(this.WobblePeriod);
-            queueableBinaryWriter.Write(this.WobbleMagnitude);
-            queueableBinaryWriter.Write(this.SquareWaveThreshold);
-            queueableBinaryWriter.Write(this.StepCount);
-            queueableBinaryWriter.Write(((short)(this.MapTo)));
-            queueableBinaryWriter.Write(this.SawtoothCount);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.ScaleResultBy);
-            queueableBinaryWriter.Write(((short)(this.BoundsMode)));
-            queueableBinaryWriter.Write(this.Bounds);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.TurnOffWith);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.fieldpad3);
+            base.Write(writer);
+            writer.Write(((int)(this.ScenarioFunctionFlags)));
+            writer.Write(this.Name);
+            writer.Write(this.Period);
+            writer.Write(this.ScalePeriodBy);
+            writer.Write(((short)(this.Function)));
+            writer.Write(this.ScaleFunctionBy);
+            writer.Write(((short)(this.WobbleFunction)));
+            writer.Write(this.WobblePeriod);
+            writer.Write(this.WobbleMagnitude);
+            writer.Write(this.SquareWaveThreshold);
+            writer.Write(this.StepCount);
+            writer.Write(((short)(this.MapTo)));
+            writer.Write(this.SawtoothCount);
+            writer.Write(this.fieldpad);
+            writer.Write(this.ScaleResultBy);
+            writer.Write(((short)(this.BoundsMode)));
+            writer.Write(this.Bounds);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.TurnOffWith);
+            writer.Write(this.fieldpad2);
+            writer.Write(this.fieldpad3);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

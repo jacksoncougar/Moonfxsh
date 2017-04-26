@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -29,21 +30,32 @@ namespace Moonfish.Guerilla.Tags
         private byte[] fieldpad = new byte[24];
         public PhantomTypesBlock[] PhantomTypes = new PhantomTypesBlock[0];
         public PhysicsModelNodeConstraintEdgeBlock[] NodeEdges = new PhysicsModelNodeConstraintEdgeBlock[0];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
         public RigidBodiesBlock[] RigidBodies = new RigidBodiesBlock[0];
         public PhmoMaterialsBlock[] Materials = new PhmoMaterialsBlock[0];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
         public SpheresBlock[] Spheres = new SpheresBlock[0];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
         public MultiSpheresBlock[] MultiSpheres = new MultiSpheresBlock[0];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
         public PillsBlock[] Pills = new PillsBlock[0];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
         public BoxesBlock[] Boxes = new BoxesBlock[0];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
         public TrianglesBlock[] Triangles = new TrianglesBlock[0];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
         public PolyhedraBlock[] Polyhedra = new PolyhedraBlock[0];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
         public PolyhedronFourVectorsBlock[] PolyhedronFourVectors = new PolyhedronFourVectorsBlock[0];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
         public PolyhedronPlaneEquationsBlock[] PolyhedronPlaneEquations = new PolyhedronPlaneEquationsBlock[0];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
         public MassDistributionsBlock[] MassDistributions = new MassDistributionsBlock[0];
         public ListsBlock[] Lists = new ListsBlock[0];
         public ListShapesBlock[] ListShapes = new ListShapesBlock[0];
         public MoppsBlock[] Mopps = new MoppsBlock[0];
-        public byte[] MoppCodes;
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
+        private byte[] MoppCodes;
         public HingeConstraintsBlock[] HingeConstraints = new HingeConstraintsBlock[0];
         public RagdollConstraintsBlock[] RagdollConstraints = new RagdollConstraintsBlock[0];
         public RegionsBlock[] Regions = new RegionsBlock[0];
@@ -142,76 +154,76 @@ namespace Moonfish.Guerilla.Tags
             this.PrismaticConstraints = base.ReadBlockArrayData<PrismaticConstraintsBlock>(binaryReader, pointerQueue.Dequeue());
             this.Phantoms = base.ReadBlockArrayData<PhantomsBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.PhantomTypes);
-            queueableBinaryWriter.Defer(this.NodeEdges);
-            queueableBinaryWriter.Defer(this.RigidBodies);
-            queueableBinaryWriter.Defer(this.Materials);
-            queueableBinaryWriter.Defer(this.Spheres);
-            queueableBinaryWriter.Defer(this.MultiSpheres);
-            queueableBinaryWriter.Defer(this.Pills);
-            queueableBinaryWriter.Defer(this.Boxes);
-            queueableBinaryWriter.Defer(this.Triangles);
-            queueableBinaryWriter.Defer(this.Polyhedra);
-            queueableBinaryWriter.Defer(this.PolyhedronFourVectors);
-            queueableBinaryWriter.Defer(this.PolyhedronPlaneEquations);
-            queueableBinaryWriter.Defer(this.MassDistributions);
-            queueableBinaryWriter.Defer(this.Lists);
-            queueableBinaryWriter.Defer(this.ListShapes);
-            queueableBinaryWriter.Defer(this.Mopps);
-            queueableBinaryWriter.Defer(this.MoppCodes);
-            queueableBinaryWriter.Defer(this.HingeConstraints);
-            queueableBinaryWriter.Defer(this.RagdollConstraints);
-            queueableBinaryWriter.Defer(this.Regions);
-            queueableBinaryWriter.Defer(this.Nodes);
-            queueableBinaryWriter.Defer(this.ImportInfo);
-            queueableBinaryWriter.Defer(this.Errors);
-            queueableBinaryWriter.Defer(this.PointToPathCurves);
-            queueableBinaryWriter.Defer(this.LimitedHingeConstraints);
-            queueableBinaryWriter.Defer(this.BallAndSocketConstraints);
-            queueableBinaryWriter.Defer(this.StiffSpringConstraints);
-            queueableBinaryWriter.Defer(this.PrismaticConstraints);
-            queueableBinaryWriter.Defer(this.Phantoms);
+            base.DeferReferences(writer);
+            writer.Defer(this.PhantomTypes);
+            writer.Defer(this.NodeEdges);
+            writer.Defer(this.RigidBodies);
+            writer.Defer(this.Materials);
+            writer.Defer(this.Spheres);
+            writer.Defer(this.MultiSpheres);
+            writer.Defer(this.Pills);
+            writer.Defer(this.Boxes);
+            writer.Defer(this.Triangles);
+            writer.Defer(this.Polyhedra);
+            writer.Defer(this.PolyhedronFourVectors);
+            writer.Defer(this.PolyhedronPlaneEquations);
+            writer.Defer(this.MassDistributions);
+            writer.Defer(this.Lists);
+            writer.Defer(this.ListShapes);
+            writer.Defer(this.Mopps);
+            writer.Defer(this.MoppCodes, 16);
+            writer.Defer(this.HingeConstraints);
+            writer.Defer(this.RagdollConstraints);
+            writer.Defer(this.Regions);
+            writer.Defer(this.Nodes);
+            writer.Defer(this.ImportInfo);
+            writer.Defer(this.Errors);
+            writer.Defer(this.PointToPathCurves);
+            writer.Defer(this.LimitedHingeConstraints);
+            writer.Defer(this.BallAndSocketConstraints);
+            writer.Defer(this.StiffSpringConstraints);
+            writer.Defer(this.PrismaticConstraints);
+            writer.Defer(this.Phantoms);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.PhysicsModelFlags)));
-            queueableBinaryWriter.Write(this.Mass);
-            queueableBinaryWriter.Write(this.LowFreqDeactivationScale);
-            queueableBinaryWriter.Write(this.HighFreqDeactivationScale);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.PhantomTypes);
-            queueableBinaryWriter.WritePointer(this.NodeEdges);
-            queueableBinaryWriter.WritePointer(this.RigidBodies);
-            queueableBinaryWriter.WritePointer(this.Materials);
-            queueableBinaryWriter.WritePointer(this.Spheres);
-            queueableBinaryWriter.WritePointer(this.MultiSpheres);
-            queueableBinaryWriter.WritePointer(this.Pills);
-            queueableBinaryWriter.WritePointer(this.Boxes);
-            queueableBinaryWriter.WritePointer(this.Triangles);
-            queueableBinaryWriter.WritePointer(this.Polyhedra);
-            queueableBinaryWriter.WritePointer(this.PolyhedronFourVectors);
-            queueableBinaryWriter.WritePointer(this.PolyhedronPlaneEquations);
-            queueableBinaryWriter.WritePointer(this.MassDistributions);
-            queueableBinaryWriter.WritePointer(this.Lists);
-            queueableBinaryWriter.WritePointer(this.ListShapes);
-            queueableBinaryWriter.WritePointer(this.Mopps);
-            queueableBinaryWriter.WritePointer(this.MoppCodes);
-            queueableBinaryWriter.WritePointer(this.HingeConstraints);
-            queueableBinaryWriter.WritePointer(this.RagdollConstraints);
-            queueableBinaryWriter.WritePointer(this.Regions);
-            queueableBinaryWriter.WritePointer(this.Nodes);
-            queueableBinaryWriter.WritePointer(this.ImportInfo);
-            queueableBinaryWriter.WritePointer(this.Errors);
-            queueableBinaryWriter.WritePointer(this.PointToPathCurves);
-            queueableBinaryWriter.WritePointer(this.LimitedHingeConstraints);
-            queueableBinaryWriter.WritePointer(this.BallAndSocketConstraints);
-            queueableBinaryWriter.WritePointer(this.StiffSpringConstraints);
-            queueableBinaryWriter.WritePointer(this.PrismaticConstraints);
-            queueableBinaryWriter.WritePointer(this.Phantoms);
+            base.Write(writer);
+            writer.Write(((int)(this.PhysicsModelFlags)));
+            writer.Write(this.Mass);
+            writer.Write(this.LowFreqDeactivationScale);
+            writer.Write(this.HighFreqDeactivationScale);
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.PhantomTypes);
+            writer.WritePointer(this.NodeEdges);
+            writer.WritePointer(this.RigidBodies);
+            writer.WritePointer(this.Materials);
+            writer.WritePointer(this.Spheres);
+            writer.WritePointer(this.MultiSpheres);
+            writer.WritePointer(this.Pills);
+            writer.WritePointer(this.Boxes);
+            writer.WritePointer(this.Triangles);
+            writer.WritePointer(this.Polyhedra);
+            writer.WritePointer(this.PolyhedronFourVectors);
+            writer.WritePointer(this.PolyhedronPlaneEquations);
+            writer.WritePointer(this.MassDistributions);
+            writer.WritePointer(this.Lists);
+            writer.WritePointer(this.ListShapes);
+            writer.WritePointer(this.Mopps);
+            writer.WritePointer(this.MoppCodes);
+            writer.WritePointer(this.HingeConstraints);
+            writer.WritePointer(this.RagdollConstraints);
+            writer.WritePointer(this.Regions);
+            writer.WritePointer(this.Nodes);
+            writer.WritePointer(this.ImportInfo);
+            writer.WritePointer(this.Errors);
+            writer.WritePointer(this.PointToPathCurves);
+            writer.WritePointer(this.LimitedHingeConstraints);
+            writer.WritePointer(this.BallAndSocketConstraints);
+            writer.WritePointer(this.StiffSpringConstraints);
+            writer.WritePointer(this.PrismaticConstraints);
+            writer.WritePointer(this.Phantoms);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

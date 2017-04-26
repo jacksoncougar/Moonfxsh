@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -69,24 +70,24 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.ErrorBlock = base.ReadBlockArrayData<UiErrorBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.ErrorBlock);
+            base.DeferReferences(writer);
+            writer.Defer(this.ErrorBlock);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.CategoryName);
-            queueableBinaryWriter.Write(((short)(this.UiErrorCategoryFlags)));
-            queueableBinaryWriter.Write(((byte)(this.DefaultButton)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.StringTag);
-            queueableBinaryWriter.Write(this.DefaultTitle);
-            queueableBinaryWriter.Write(this.DefaultMessage);
-            queueableBinaryWriter.Write(this.DefaultOk);
-            queueableBinaryWriter.Write(this.DefaultCancel);
-            queueableBinaryWriter.WritePointer(this.ErrorBlock);
+            base.Write(writer);
+            writer.Write(this.CategoryName);
+            writer.Write(((short)(this.UiErrorCategoryFlags)));
+            writer.Write(((byte)(this.DefaultButton)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.StringTag);
+            writer.Write(this.DefaultTitle);
+            writer.Write(this.DefaultMessage);
+            writer.Write(this.DefaultOk);
+            writer.Write(this.DefaultCancel);
+            writer.WritePointer(this.ErrorBlock);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

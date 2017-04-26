@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -90,36 +91,36 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.DialogueType)));
-            queueableBinaryWriter.Write(this.VocalizationIndex);
-            queueableBinaryWriter.Write(this.VocalizationName);
-            queueableBinaryWriter.Write(((short)(this.SpeakerType)));
-            queueableBinaryWriter.Write(((short)(this.VocalizationPatternsFlags)));
-            queueableBinaryWriter.Write(((short)(this.Listenertarget)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(((short)(this.Hostility)));
-            queueableBinaryWriter.Write(((short)(this.DamageType)));
-            queueableBinaryWriter.Write(((short)(this.DangerLevel)));
-            queueableBinaryWriter.Write(((short)(this.Attitude)));
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(((short)(this.SubjectActorType)));
-            queueableBinaryWriter.Write(((short)(this.CauseActorType)));
-            queueableBinaryWriter.Write(((short)(this.CauseType)));
-            queueableBinaryWriter.Write(((short)(this.SubjectType)));
-            queueableBinaryWriter.Write(this.CauseAiTypeName);
-            queueableBinaryWriter.Write(((short)(this.SpatialRelation)));
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.SubjectAiTypeName);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(((int)(this.VocalizationPatternsConditions)));
+            base.Write(writer);
+            writer.Write(((short)(this.DialogueType)));
+            writer.Write(this.VocalizationIndex);
+            writer.Write(this.VocalizationName);
+            writer.Write(((short)(this.SpeakerType)));
+            writer.Write(((short)(this.VocalizationPatternsFlags)));
+            writer.Write(((short)(this.Listenertarget)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.fieldpad0);
+            writer.Write(((short)(this.Hostility)));
+            writer.Write(((short)(this.DamageType)));
+            writer.Write(((short)(this.DangerLevel)));
+            writer.Write(((short)(this.Attitude)));
+            writer.Write(this.fieldpad1);
+            writer.Write(((short)(this.SubjectActorType)));
+            writer.Write(((short)(this.CauseActorType)));
+            writer.Write(((short)(this.CauseType)));
+            writer.Write(((short)(this.SubjectType)));
+            writer.Write(this.CauseAiTypeName);
+            writer.Write(((short)(this.SpatialRelation)));
+            writer.Write(this.fieldpad2);
+            writer.Write(this.SubjectAiTypeName);
+            writer.Write(this.fieldpad3);
+            writer.Write(((int)(this.VocalizationPatternsConditions)));
         }
         public enum DialogueTypeEnum : short
         {

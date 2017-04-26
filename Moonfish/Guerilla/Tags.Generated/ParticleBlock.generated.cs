@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -100,42 +101,47 @@ namespace Moonfish.Guerilla.Tags
             this.AttachedParticleSystems = base.ReadBlockArrayData<ParticleSystemDefinitionBlockNew>(binaryReader, pointerQueue.Dequeue());
             this.ShaderPostprocessDefinitionNewBlock = base.ReadBlockArrayData<ShaderPostprocessDefinitionNewBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.ShaderParameters);
-            this.Color.DeferReferences(queueableBinaryWriter);
-            this.Alpha.DeferReferences(queueableBinaryWriter);
-            this.Scale.DeferReferences(queueableBinaryWriter);
-            this.Rotation.DeferReferences(queueableBinaryWriter);
-            this.FrameIndex.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Locations);
-            queueableBinaryWriter.Defer(this.AttachedParticleSystems);
-            queueableBinaryWriter.Defer(this.ShaderPostprocessDefinitionNewBlock);
+            base.DeferReferences(writer);
+            writer.Defer(this.ShaderParameters);
+            this.Color.DeferReferences(writer);
+            this.Color.DeferReferences(writer);
+            this.Alpha.DeferReferences(writer);
+            this.Alpha.DeferReferences(writer);
+            this.Scale.DeferReferences(writer);
+            this.Scale.DeferReferences(writer);
+            this.Rotation.DeferReferences(writer);
+            this.Rotation.DeferReferences(writer);
+            this.FrameIndex.DeferReferences(writer);
+            this.FrameIndex.DeferReferences(writer);
+            writer.Defer(this.Locations);
+            writer.Defer(this.AttachedParticleSystems);
+            writer.Defer(this.ShaderPostprocessDefinitionNewBlock);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.ParticleFlags)));
-            queueableBinaryWriter.Write(((short)(this.ParticleBillboardStyle)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.FirstSequenceIndex);
-            queueableBinaryWriter.Write(this.SequenceCount);
-            queueableBinaryWriter.Write(this.ShaderTemplate);
-            queueableBinaryWriter.WritePointer(this.ShaderParameters);
-            this.Color.Write(queueableBinaryWriter);
-            this.Alpha.Write(queueableBinaryWriter);
-            this.Scale.Write(queueableBinaryWriter);
-            this.Rotation.Write(queueableBinaryWriter);
-            this.FrameIndex.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.CollisionEffect);
-            queueableBinaryWriter.Write(this.DeathEffect);
-            queueableBinaryWriter.WritePointer(this.Locations);
-            queueableBinaryWriter.WritePointer(this.AttachedParticleSystems);
-            queueableBinaryWriter.WritePointer(this.ShaderPostprocessDefinitionNewBlock);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.fieldpad2);
+            base.Write(writer);
+            writer.Write(((int)(this.ParticleFlags)));
+            writer.Write(((short)(this.ParticleBillboardStyle)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.FirstSequenceIndex);
+            writer.Write(this.SequenceCount);
+            writer.Write(this.ShaderTemplate);
+            writer.WritePointer(this.ShaderParameters);
+            this.Color.Write(writer);
+            this.Alpha.Write(writer);
+            this.Scale.Write(writer);
+            this.Rotation.Write(writer);
+            this.FrameIndex.Write(writer);
+            writer.Write(this.CollisionEffect);
+            writer.Write(this.DeathEffect);
+            writer.WritePointer(this.Locations);
+            writer.WritePointer(this.AttachedParticleSystems);
+            writer.WritePointer(this.ShaderPostprocessDefinitionNewBlock);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.fieldpad2);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

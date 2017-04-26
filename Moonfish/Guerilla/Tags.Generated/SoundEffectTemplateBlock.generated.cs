@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -56,20 +57,20 @@ namespace Moonfish.Guerilla.Tags
             this.AdditionalSoundInputs = base.ReadBlockArrayData<SoundEffectTemplateAdditionalSoundInputBlock>(binaryReader, pointerQueue.Dequeue());
             this.PlatformSoundEffectTemplateCollectionBlock = base.ReadBlockArrayData<PlatformSoundEffectTemplateCollectionBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.TemplateCollection);
-            queueableBinaryWriter.Defer(this.AdditionalSoundInputs);
-            queueableBinaryWriter.Defer(this.PlatformSoundEffectTemplateCollectionBlock);
+            base.DeferReferences(writer);
+            writer.Defer(this.TemplateCollection);
+            writer.Defer(this.AdditionalSoundInputs);
+            writer.Defer(this.PlatformSoundEffectTemplateCollectionBlock);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.TemplateCollection);
-            queueableBinaryWriter.Write(this.InputEffectName);
-            queueableBinaryWriter.WritePointer(this.AdditionalSoundInputs);
-            queueableBinaryWriter.WritePointer(this.PlatformSoundEffectTemplateCollectionBlock);
+            base.Write(writer);
+            writer.WritePointer(this.TemplateCollection);
+            writer.Write(this.InputEffectName);
+            writer.WritePointer(this.AdditionalSoundInputs);
+            writer.WritePointer(this.PlatformSoundEffectTemplateCollectionBlock);
         }
     }
 }

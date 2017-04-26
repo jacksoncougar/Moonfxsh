@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -51,17 +52,17 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Planes = base.ReadBlockArrayData<StructureBspWeatherPolyhedronPlaneBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Planes);
+            base.DeferReferences(writer);
+            writer.Defer(this.Planes);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.BoundingSphereCenter);
-            queueableBinaryWriter.Write(this.BoundingSphereRadius);
-            queueableBinaryWriter.WritePointer(this.Planes);
+            base.Write(writer);
+            writer.Write(this.BoundingSphereCenter);
+            writer.Write(this.BoundingSphereRadius);
+            writer.WritePointer(this.Planes);
         }
     }
 }

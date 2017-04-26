@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -96,39 +97,39 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.CharacterVitalityVitalityFlags)));
-            queueableBinaryWriter.Write(this.NormalBodyVitality);
-            queueableBinaryWriter.Write(this.NormalShieldVitality);
-            queueableBinaryWriter.Write(this.LegendaryBodyVitality);
-            queueableBinaryWriter.Write(this.LegendaryShieldVitality);
-            queueableBinaryWriter.Write(this.BodyRechargeFraction);
-            queueableBinaryWriter.Write(this.SoftPingThreshold);
-            queueableBinaryWriter.Write(this.SoftPingThreshold0);
-            queueableBinaryWriter.Write(this.SoftPingMinInterruptTime);
-            queueableBinaryWriter.Write(this.HardPingThreshold);
-            queueableBinaryWriter.Write(this.HardPingThreshold0);
-            queueableBinaryWriter.Write(this.HardPingMinInterruptTime);
-            queueableBinaryWriter.Write(this.CurrentDamageDecayDelay);
-            queueableBinaryWriter.Write(this.CurrentDamageDecayTime);
-            queueableBinaryWriter.Write(this.RecentDamageDecayDelay);
-            queueableBinaryWriter.Write(this.RecentDamageDecayTime);
-            queueableBinaryWriter.Write(this.BodyRechargeDelayTime);
-            queueableBinaryWriter.Write(this.BodyRechargeTime);
-            queueableBinaryWriter.Write(this.ShieldRechargeDelayTime);
-            queueableBinaryWriter.Write(this.ShieldRechargeTime);
-            queueableBinaryWriter.Write(this.StunThreshold);
-            queueableBinaryWriter.Write(this.StunTimeBounds);
-            queueableBinaryWriter.Write(this.ExtendedShieldDamageThreshold);
-            queueableBinaryWriter.Write(this.ExtendedBodyDamageThreshold);
-            queueableBinaryWriter.Write(this.SuicideRadius);
-            queueableBinaryWriter.Write(this.fieldskip);
+            base.Write(writer);
+            writer.Write(((int)(this.CharacterVitalityVitalityFlags)));
+            writer.Write(this.NormalBodyVitality);
+            writer.Write(this.NormalShieldVitality);
+            writer.Write(this.LegendaryBodyVitality);
+            writer.Write(this.LegendaryShieldVitality);
+            writer.Write(this.BodyRechargeFraction);
+            writer.Write(this.SoftPingThreshold);
+            writer.Write(this.SoftPingThreshold0);
+            writer.Write(this.SoftPingMinInterruptTime);
+            writer.Write(this.HardPingThreshold);
+            writer.Write(this.HardPingThreshold0);
+            writer.Write(this.HardPingMinInterruptTime);
+            writer.Write(this.CurrentDamageDecayDelay);
+            writer.Write(this.CurrentDamageDecayTime);
+            writer.Write(this.RecentDamageDecayDelay);
+            writer.Write(this.RecentDamageDecayTime);
+            writer.Write(this.BodyRechargeDelayTime);
+            writer.Write(this.BodyRechargeTime);
+            writer.Write(this.ShieldRechargeDelayTime);
+            writer.Write(this.ShieldRechargeTime);
+            writer.Write(this.StunThreshold);
+            writer.Write(this.StunTimeBounds);
+            writer.Write(this.ExtendedShieldDamageThreshold);
+            writer.Write(this.ExtendedBodyDamageThreshold);
+            writer.Write(this.SuicideRadius);
+            writer.Write(this.fieldskip);
         }
         [System.FlagsAttribute()]
         public enum VitalityFlags : int

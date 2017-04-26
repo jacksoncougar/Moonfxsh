@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -25,10 +26,10 @@ namespace Moonfish.Guerilla.Tags
         public short ClusterCount;
         public short VolumeCount;
         private byte[] fieldpad = new byte[2];
-        public byte[] Projections;
-        public byte[] VisibilityClusters;
-        public byte[] ClusterRemapTable;
-        public byte[] VisibilityVolumes;
+        private byte[] Projections;
+        private byte[] VisibilityClusters;
+        private byte[] ClusterRemapTable;
+        private byte[] VisibilityVolumes;
         public override int SerializedSize
         {
             get
@@ -64,25 +65,25 @@ namespace Moonfish.Guerilla.Tags
             this.ClusterRemapTable = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
             this.VisibilityVolumes = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Projections);
-            queueableBinaryWriter.Defer(this.VisibilityClusters);
-            queueableBinaryWriter.Defer(this.ClusterRemapTable);
-            queueableBinaryWriter.Defer(this.VisibilityVolumes);
+            base.DeferReferences(writer);
+            writer.Defer(this.Projections);
+            writer.Defer(this.VisibilityClusters);
+            writer.Defer(this.ClusterRemapTable);
+            writer.Defer(this.VisibilityVolumes);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ProjectionCount);
-            queueableBinaryWriter.Write(this.ClusterCount);
-            queueableBinaryWriter.Write(this.VolumeCount);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.Projections);
-            queueableBinaryWriter.WritePointer(this.VisibilityClusters);
-            queueableBinaryWriter.WritePointer(this.ClusterRemapTable);
-            queueableBinaryWriter.WritePointer(this.VisibilityVolumes);
+            base.Write(writer);
+            writer.Write(this.ProjectionCount);
+            writer.Write(this.ClusterCount);
+            writer.Write(this.VolumeCount);
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.Projections);
+            writer.WritePointer(this.VisibilityClusters);
+            writer.WritePointer(this.ClusterRemapTable);
+            writer.WritePointer(this.VisibilityVolumes);
         }
     }
 }

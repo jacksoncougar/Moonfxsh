@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -58,20 +59,20 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.AutoaimAngle);
-            queueableBinaryWriter.Write(this.AutoaimRange);
-            queueableBinaryWriter.Write(this.MagnetismAngle);
-            queueableBinaryWriter.Write(this.MagnetismRange);
-            queueableBinaryWriter.Write(this.DeviationAngle);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write(writer);
+            writer.Write(this.AutoaimAngle);
+            writer.Write(this.AutoaimRange);
+            writer.Write(this.MagnetismAngle);
+            writer.Write(this.MagnetismRange);
+            writer.Write(this.DeviationAngle);
+            writer.Write(this.fieldpad);
+            writer.Write(this.fieldpad0);
         }
     }
 }

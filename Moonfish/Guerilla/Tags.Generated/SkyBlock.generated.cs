@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -117,46 +118,46 @@ namespace Moonfish.Guerilla.Tags
             this.ShaderFunctions = base.ReadBlockArrayData<SkyShaderFunctionBlock>(binaryReader, pointerQueue.Dequeue());
             this.Animations = base.ReadBlockArrayData<SkyAnimationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.CubeMap);
-            queueableBinaryWriter.Defer(this.AtmosphericFog);
-            queueableBinaryWriter.Defer(this.SecondaryFog);
-            queueableBinaryWriter.Defer(this.SkyFog);
-            queueableBinaryWriter.Defer(this.PatchyFog);
-            queueableBinaryWriter.Defer(this.Lights);
-            queueableBinaryWriter.Defer(this.ShaderFunctions);
-            queueableBinaryWriter.Defer(this.Animations);
+            base.DeferReferences(writer);
+            writer.Defer(this.CubeMap);
+            writer.Defer(this.AtmosphericFog);
+            writer.Defer(this.SecondaryFog);
+            writer.Defer(this.SkyFog);
+            writer.Defer(this.PatchyFog);
+            writer.Defer(this.Lights);
+            writer.Defer(this.ShaderFunctions);
+            writer.Defer(this.Animations);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.RenderModel);
-            queueableBinaryWriter.Write(this.AnimationGraph);
-            queueableBinaryWriter.Write(((int)(this.SkyFlags)));
-            queueableBinaryWriter.Write(this.RenderModelScale);
-            queueableBinaryWriter.Write(this.MovementScale);
-            queueableBinaryWriter.WritePointer(this.CubeMap);
-            queueableBinaryWriter.Write(this.IndoorAmbientColor);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.OutdoorAmbientColor);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.FogSpreadDistance);
-            queueableBinaryWriter.WritePointer(this.AtmosphericFog);
-            queueableBinaryWriter.WritePointer(this.SecondaryFog);
-            queueableBinaryWriter.WritePointer(this.SkyFog);
-            queueableBinaryWriter.WritePointer(this.PatchyFog);
-            queueableBinaryWriter.Write(this.Amount);
-            queueableBinaryWriter.Write(this.Threshold);
-            queueableBinaryWriter.Write(this.Brightness);
-            queueableBinaryWriter.Write(this.GammaPower);
-            queueableBinaryWriter.WritePointer(this.Lights);
-            queueableBinaryWriter.Write(this.GlobalSkyRotation);
-            queueableBinaryWriter.WritePointer(this.ShaderFunctions);
-            queueableBinaryWriter.WritePointer(this.Animations);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.ClearColor);
+            base.Write(writer);
+            writer.Write(this.RenderModel);
+            writer.Write(this.AnimationGraph);
+            writer.Write(((int)(this.SkyFlags)));
+            writer.Write(this.RenderModelScale);
+            writer.Write(this.MovementScale);
+            writer.WritePointer(this.CubeMap);
+            writer.Write(this.IndoorAmbientColor);
+            writer.Write(this.fieldpad);
+            writer.Write(this.OutdoorAmbientColor);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.FogSpreadDistance);
+            writer.WritePointer(this.AtmosphericFog);
+            writer.WritePointer(this.SecondaryFog);
+            writer.WritePointer(this.SkyFog);
+            writer.WritePointer(this.PatchyFog);
+            writer.Write(this.Amount);
+            writer.Write(this.Threshold);
+            writer.Write(this.Brightness);
+            writer.Write(this.GammaPower);
+            writer.WritePointer(this.Lights);
+            writer.Write(this.GlobalSkyRotation);
+            writer.WritePointer(this.ShaderFunctions);
+            writer.WritePointer(this.Animations);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.ClearColor);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

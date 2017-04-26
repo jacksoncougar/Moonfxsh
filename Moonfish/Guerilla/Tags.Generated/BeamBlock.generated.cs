@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -69,28 +70,34 @@ namespace Moonfish.Guerilla.Tags
             this.Yaw.ReadInstances(binaryReader, pointerQueue);
             this.Pitch.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.Color.DeferReferences(queueableBinaryWriter);
-            this.Alpha.DeferReferences(queueableBinaryWriter);
-            this.Width.DeferReferences(queueableBinaryWriter);
-            this.Length.DeferReferences(queueableBinaryWriter);
-            this.Yaw.DeferReferences(queueableBinaryWriter);
-            this.Pitch.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.Color.DeferReferences(writer);
+            this.Color.DeferReferences(writer);
+            this.Alpha.DeferReferences(writer);
+            this.Alpha.DeferReferences(writer);
+            this.Width.DeferReferences(writer);
+            this.Width.DeferReferences(writer);
+            this.Length.DeferReferences(writer);
+            this.Length.DeferReferences(writer);
+            this.Yaw.DeferReferences(writer);
+            this.Yaw.DeferReferences(writer);
+            this.Pitch.DeferReferences(writer);
+            this.Pitch.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Shader);
-            queueableBinaryWriter.Write(this.Location);
-            queueableBinaryWriter.Write(this.fieldpad);
-            this.Color.Write(queueableBinaryWriter);
-            this.Alpha.Write(queueableBinaryWriter);
-            this.Width.Write(queueableBinaryWriter);
-            this.Length.Write(queueableBinaryWriter);
-            this.Yaw.Write(queueableBinaryWriter);
-            this.Pitch.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(this.Shader);
+            writer.Write(this.Location);
+            writer.Write(this.fieldpad);
+            this.Color.Write(writer);
+            this.Alpha.Write(writer);
+            this.Width.Write(writer);
+            this.Length.Write(writer);
+            this.Yaw.Write(writer);
+            this.Pitch.Write(writer);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -23,6 +24,7 @@ namespace Moonfish.Guerilla.Tags
     {
         public Moonfish.Tags.StringIdent Name;
         public CollisionModelBspBlock[] Bsps = new CollisionModelBspBlock[0];
+        [Moonfish.Guerilla.LayoutAttribute(Pack=16)]
         public CollisionBspPhysicsBlock[] BspPhysics = new CollisionBspPhysicsBlock[0];
         public override int SerializedSize
         {
@@ -52,18 +54,18 @@ namespace Moonfish.Guerilla.Tags
             this.Bsps = base.ReadBlockArrayData<CollisionModelBspBlock>(binaryReader, pointerQueue.Dequeue());
             this.BspPhysics = base.ReadBlockArrayData<CollisionBspPhysicsBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Bsps);
-            queueableBinaryWriter.Defer(this.BspPhysics);
+            base.DeferReferences(writer);
+            writer.Defer(this.Bsps);
+            writer.Defer(this.BspPhysics);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.WritePointer(this.Bsps);
-            queueableBinaryWriter.WritePointer(this.BspPhysics);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.WritePointer(this.Bsps);
+            writer.WritePointer(this.BspPhysics);
         }
     }
 }

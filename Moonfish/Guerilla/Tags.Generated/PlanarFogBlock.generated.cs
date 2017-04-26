@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -86,32 +87,32 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.PatchyFog = base.ReadBlockArrayData<PlanarFogPatchyFogBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.PatchyFog);
+            base.DeferReferences(writer);
+            writer.Defer(this.PatchyFog);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.PlanarFogFlags)));
-            queueableBinaryWriter.Write(this.Priority);
-            queueableBinaryWriter.Write(this.GlobalMaterialName);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.MaximumDensity);
-            queueableBinaryWriter.Write(this.OpaqueDistance);
-            queueableBinaryWriter.Write(this.OpaqueDepth);
-            queueableBinaryWriter.Write(this.AtmosphericplanarDepth);
-            queueableBinaryWriter.Write(this.EyeOffsetScale);
-            queueableBinaryWriter.Write(this.Color);
-            queueableBinaryWriter.WritePointer(this.PatchyFog);
-            queueableBinaryWriter.Write(this.BackgroundSound);
-            queueableBinaryWriter.Write(this.SoundEnvironment);
-            queueableBinaryWriter.Write(this.EnvironmentDampingFactor);
-            queueableBinaryWriter.Write(this.BackgroundSoundGain);
-            queueableBinaryWriter.Write(this.EnterSound);
-            queueableBinaryWriter.Write(this.ExitSound);
+            base.Write(writer);
+            writer.Write(((short)(this.PlanarFogFlags)));
+            writer.Write(this.Priority);
+            writer.Write(this.GlobalMaterialName);
+            writer.Write(this.fieldpad);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.MaximumDensity);
+            writer.Write(this.OpaqueDistance);
+            writer.Write(this.OpaqueDepth);
+            writer.Write(this.AtmosphericplanarDepth);
+            writer.Write(this.EyeOffsetScale);
+            writer.Write(this.Color);
+            writer.WritePointer(this.PatchyFog);
+            writer.Write(this.BackgroundSound);
+            writer.Write(this.SoundEnvironment);
+            writer.Write(this.EnvironmentDampingFactor);
+            writer.Write(this.BackgroundSoundGain);
+            writer.Write(this.EnterSound);
+            writer.Write(this.ExitSound);
         }
         /// <summary>
         /// Please don't use these flags unless you know what you're doing! Come talk to Bernie first.

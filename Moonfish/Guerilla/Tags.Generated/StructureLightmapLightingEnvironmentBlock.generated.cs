@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -102,52 +103,52 @@ namespace Moonfish.Guerilla.Tags
                 this.BlueCoefficients00[i].ReadInstances(binaryReader, pointerQueue);
             }
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
             int i;
             for (i = 0; (i < 9); i = (i + 1))
             {
-                this.RedCoefficients00[i].DeferReferences(queueableBinaryWriter);
+                this.RedCoefficients00[i].DeferReferences(writer);
             }
             for (i = 0; (i < 9); i = (i + 1))
             {
-                this.GreenCoefficients00[i].DeferReferences(queueableBinaryWriter);
+                this.GreenCoefficients00[i].DeferReferences(writer);
             }
             for (i = 0; (i < 9); i = (i + 1))
             {
-                this.BlueCoefficients00[i].DeferReferences(queueableBinaryWriter);
+                this.BlueCoefficients00[i].DeferReferences(writer);
             }
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.SamplePoint);
+            base.Write(writer);
+            writer.Write(this.SamplePoint);
             int i;
             for (i = 0; (i < 9); i = (i + 1))
             {
-                this.RedCoefficients00[i].Write(queueableBinaryWriter);
+                this.RedCoefficients00[i].Write(writer);
             }
             for (i = 0; (i < 9); i = (i + 1))
             {
-                this.GreenCoefficients00[i].Write(queueableBinaryWriter);
+                this.GreenCoefficients00[i].Write(writer);
             }
             for (i = 0; (i < 9); i = (i + 1))
             {
-                this.BlueCoefficients00[i].Write(queueableBinaryWriter);
+                this.BlueCoefficients00[i].Write(writer);
             }
-            queueableBinaryWriter.Write(this.MeanIncomingLightDirection);
-            queueableBinaryWriter.Write(this.IncomingLightIntensity);
-            queueableBinaryWriter.Write(this.SpecularBitmapIndex);
-            queueableBinaryWriter.Write(this.RotationAxis);
-            queueableBinaryWriter.Write(this.RotationSpeed);
-            queueableBinaryWriter.Write(this.BumpDirection);
-            queueableBinaryWriter.Write(this.ColorTint);
-            queueableBinaryWriter.Write(((short)(this.ProceduralOveride)));
-            queueableBinaryWriter.Write(((short)(this.StructureLightmapLightingEnvironmentFlags)));
-            queueableBinaryWriter.Write(this.ProceduralParam0);
-            queueableBinaryWriter.Write(this.ProceduralParam1xyz);
-            queueableBinaryWriter.Write(this.ProceduralParam1w);
+            writer.Write(this.MeanIncomingLightDirection);
+            writer.Write(this.IncomingLightIntensity);
+            writer.Write(this.SpecularBitmapIndex);
+            writer.Write(this.RotationAxis);
+            writer.Write(this.RotationSpeed);
+            writer.Write(this.BumpDirection);
+            writer.Write(this.ColorTint);
+            writer.Write(((short)(this.ProceduralOveride)));
+            writer.Write(((short)(this.StructureLightmapLightingEnvironmentFlags)));
+            writer.Write(this.ProceduralParam0);
+            writer.Write(this.ProceduralParam1xyz);
+            writer.Write(this.ProceduralParam1w);
         }
         [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
         public class RedCoefficientsBlock : GuerillaBlock, IWriteDeferrable
@@ -177,14 +178,14 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
             {
-                base.DeferReferences(queueableBinaryWriter);
+                base.DeferReferences(writer);
             }
-            public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+            public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
             {
-                base.Write(queueableBinaryWriter);
-                queueableBinaryWriter.Write(this.RedCoefficient);
+                base.Write(writer);
+                writer.Write(this.RedCoefficient);
             }
         }
         [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
@@ -215,14 +216,14 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
             {
-                base.DeferReferences(queueableBinaryWriter);
+                base.DeferReferences(writer);
             }
-            public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+            public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
             {
-                base.Write(queueableBinaryWriter);
-                queueableBinaryWriter.Write(this.GreenCoefficient);
+                base.Write(writer);
+                writer.Write(this.GreenCoefficient);
             }
         }
         [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
@@ -253,14 +254,14 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
             {
-                base.DeferReferences(queueableBinaryWriter);
+                base.DeferReferences(writer);
             }
-            public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+            public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
             {
-                base.Write(queueableBinaryWriter);
-                queueableBinaryWriter.Write(this.BlueCoefficient);
+                base.Write(writer);
+                writer.Write(this.BlueCoefficient);
             }
         }
         public enum ProceduralOverideEnum : short

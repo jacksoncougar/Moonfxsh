@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -22,7 +23,7 @@ namespace Moonfish.Guerilla.Tags
     public partial class GlobalGeometryPointDataStructBlock : GuerillaBlock, IWriteDeferrable
     {
         public GlobalGeometryRawPointBlock[] RawPoints = new GlobalGeometryRawPointBlock[0];
-        public byte[] RuntimePointData;
+        private byte[] RuntimePointData;
         public GlobalGeometryRigidPointGroupBlock[] RigidPointGroups = new GlobalGeometryRigidPointGroupBlock[0];
         public GlobalGeometryPointDataIndexBlock[] VertexPointIndices = new GlobalGeometryPointDataIndexBlock[0];
         public override int SerializedSize
@@ -56,21 +57,21 @@ namespace Moonfish.Guerilla.Tags
             this.RigidPointGroups = base.ReadBlockArrayData<GlobalGeometryRigidPointGroupBlock>(binaryReader, pointerQueue.Dequeue());
             this.VertexPointIndices = base.ReadBlockArrayData<GlobalGeometryPointDataIndexBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.RawPoints);
-            queueableBinaryWriter.Defer(this.RuntimePointData);
-            queueableBinaryWriter.Defer(this.RigidPointGroups);
-            queueableBinaryWriter.Defer(this.VertexPointIndices);
+            base.DeferReferences(writer);
+            writer.Defer(this.RawPoints);
+            writer.Defer(this.RuntimePointData);
+            writer.Defer(this.RigidPointGroups);
+            writer.Defer(this.VertexPointIndices);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.RawPoints);
-            queueableBinaryWriter.WritePointer(this.RuntimePointData);
-            queueableBinaryWriter.WritePointer(this.RigidPointGroups);
-            queueableBinaryWriter.WritePointer(this.VertexPointIndices);
+            base.Write(writer);
+            writer.WritePointer(this.RawPoints);
+            writer.WritePointer(this.RuntimePointData);
+            writer.WritePointer(this.RigidPointGroups);
+            writer.WritePointer(this.VertexPointIndices);
         }
     }
 }

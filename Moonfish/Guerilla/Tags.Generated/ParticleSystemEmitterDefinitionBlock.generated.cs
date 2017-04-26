@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -82,36 +83,45 @@ namespace Moonfish.Guerilla.Tags
             this.EmissionRadius.ReadInstances(binaryReader, pointerQueue);
             this.EmissionAngle.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.ParticleEmissionRate.DeferReferences(queueableBinaryWriter);
-            this.ParticleLifespan.DeferReferences(queueableBinaryWriter);
-            this.ParticleVelocity.DeferReferences(queueableBinaryWriter);
-            this.ParticleAngularVelocity.DeferReferences(queueableBinaryWriter);
-            this.ParticleSize.DeferReferences(queueableBinaryWriter);
-            this.ParticleTint.DeferReferences(queueableBinaryWriter);
-            this.ParticleAlpha.DeferReferences(queueableBinaryWriter);
-            this.EmissionRadius.DeferReferences(queueableBinaryWriter);
-            this.EmissionAngle.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.ParticleEmissionRate.DeferReferences(writer);
+            this.ParticleEmissionRate.DeferReferences(writer);
+            this.ParticleLifespan.DeferReferences(writer);
+            this.ParticleLifespan.DeferReferences(writer);
+            this.ParticleVelocity.DeferReferences(writer);
+            this.ParticleVelocity.DeferReferences(writer);
+            this.ParticleAngularVelocity.DeferReferences(writer);
+            this.ParticleAngularVelocity.DeferReferences(writer);
+            this.ParticleSize.DeferReferences(writer);
+            this.ParticleSize.DeferReferences(writer);
+            this.ParticleTint.DeferReferences(writer);
+            this.ParticleTint.DeferReferences(writer);
+            this.ParticleAlpha.DeferReferences(writer);
+            this.ParticleAlpha.DeferReferences(writer);
+            this.EmissionRadius.DeferReferences(writer);
+            this.EmissionRadius.DeferReferences(writer);
+            this.EmissionAngle.DeferReferences(writer);
+            this.EmissionAngle.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ParticlePhysics);
-            this.ParticleEmissionRate.Write(queueableBinaryWriter);
-            this.ParticleLifespan.Write(queueableBinaryWriter);
-            this.ParticleVelocity.Write(queueableBinaryWriter);
-            this.ParticleAngularVelocity.Write(queueableBinaryWriter);
-            this.ParticleSize.Write(queueableBinaryWriter);
-            this.ParticleTint.Write(queueableBinaryWriter);
-            this.ParticleAlpha.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.EmissionShape)));
-            this.EmissionRadius.Write(queueableBinaryWriter);
-            this.EmissionAngle.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.TranslationalOffset);
-            queueableBinaryWriter.Write(this.RelativeDirection);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write(writer);
+            writer.Write(this.ParticlePhysics);
+            this.ParticleEmissionRate.Write(writer);
+            this.ParticleLifespan.Write(writer);
+            this.ParticleVelocity.Write(writer);
+            this.ParticleAngularVelocity.Write(writer);
+            this.ParticleSize.Write(writer);
+            this.ParticleTint.Write(writer);
+            this.ParticleAlpha.Write(writer);
+            writer.Write(((int)(this.EmissionShape)));
+            this.EmissionRadius.Write(writer);
+            this.EmissionAngle.Write(writer);
+            writer.Write(this.TranslationalOffset);
+            writer.Write(this.RelativeDirection);
+            writer.Write(this.fieldpad);
         }
         public enum EmissionShapeEnum : int
         {

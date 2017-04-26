@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -62,24 +63,24 @@ namespace Moonfish.Guerilla.Tags
             this.BoundingFogPlaneIndices = base.ReadBlockArrayData<StructureBspDebugInfoIndicesBlock>(binaryReader, pointerQueue.Dequeue());
             this.CollisionFogPlaneIndices = base.ReadBlockArrayData<StructureBspDebugInfoIndicesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Lines);
-            queueableBinaryWriter.Defer(this.ImmersedClusterIndices);
-            queueableBinaryWriter.Defer(this.BoundingFogPlaneIndices);
-            queueableBinaryWriter.Defer(this.CollisionFogPlaneIndices);
+            base.DeferReferences(writer);
+            writer.Defer(this.Lines);
+            writer.Defer(this.ImmersedClusterIndices);
+            writer.Defer(this.BoundingFogPlaneIndices);
+            writer.Defer(this.CollisionFogPlaneIndices);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MediaIndex);
-            queueableBinaryWriter.Write(this.BaseFogPlaneIndex);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.Lines);
-            queueableBinaryWriter.WritePointer(this.ImmersedClusterIndices);
-            queueableBinaryWriter.WritePointer(this.BoundingFogPlaneIndices);
-            queueableBinaryWriter.WritePointer(this.CollisionFogPlaneIndices);
+            base.Write(writer);
+            writer.Write(this.MediaIndex);
+            writer.Write(this.BaseFogPlaneIndex);
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.Lines);
+            writer.WritePointer(this.ImmersedClusterIndices);
+            writer.WritePointer(this.BoundingFogPlaneIndices);
+            writer.WritePointer(this.CollisionFogPlaneIndices);
         }
     }
 }

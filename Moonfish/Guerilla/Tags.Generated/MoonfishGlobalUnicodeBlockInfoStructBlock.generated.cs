@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -152,67 +153,67 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.EnglishStringCount);
-            queueableBinaryWriter.Write(this.EnglishStringTableLength);
-            queueableBinaryWriter.Write(this.EnglishStringIndexAddress);
-            queueableBinaryWriter.Write(this.EnglishStringTableAddress);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.JapaneseStringCount);
-            queueableBinaryWriter.Write(this.JapaneseStringTableLength);
-            queueableBinaryWriter.Write(this.JapaneseStringIndexAddress);
-            queueableBinaryWriter.Write(this.JapaneseStringTableAddress);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.DutchStringCount);
-            queueableBinaryWriter.Write(this.DutchStringTableLength);
-            queueableBinaryWriter.Write(this.DutchStringIndexAddress);
-            queueableBinaryWriter.Write(this.DutchStringTableAddress);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(this.FrenchStringCount);
-            queueableBinaryWriter.Write(this.FrenchStringTableLength);
-            queueableBinaryWriter.Write(this.FrenchStringIndexAddress);
-            queueableBinaryWriter.Write(this.FrenchStringTableAddress);
-            queueableBinaryWriter.Write(this.fieldpad6);
-            queueableBinaryWriter.Write(this.fieldpad7);
-            queueableBinaryWriter.Write(this.SpanishStringCount);
-            queueableBinaryWriter.Write(this.SpanishStringTableLength);
-            queueableBinaryWriter.Write(this.SpanishStringIndexAddress);
-            queueableBinaryWriter.Write(this.SpanishStringTableAddress);
-            queueableBinaryWriter.Write(this.fieldpad8);
-            queueableBinaryWriter.Write(this.fieldpad9);
-            queueableBinaryWriter.Write(this.ItalianStringCount);
-            queueableBinaryWriter.Write(this.ItalianStringTableLength);
-            queueableBinaryWriter.Write(this.ItalianStringIndexAddress);
-            queueableBinaryWriter.Write(this.ItalianStringTableAddress);
-            queueableBinaryWriter.Write(this.fieldpad10);
-            queueableBinaryWriter.Write(this.fieldpad11);
-            queueableBinaryWriter.Write(this.KoreanStringCount);
-            queueableBinaryWriter.Write(this.KoreanStringTableLength);
-            queueableBinaryWriter.Write(this.KoreanStringIndexAddress);
-            queueableBinaryWriter.Write(this.KoreanStringTableAddress);
-            queueableBinaryWriter.Write(this.fieldpad12);
-            queueableBinaryWriter.Write(this.fieldpad13);
-            queueableBinaryWriter.Write(this.ChineseStringCount);
-            queueableBinaryWriter.Write(this.ChineseStringTableLength);
-            queueableBinaryWriter.Write(this.ChineseStringIndexAddress);
-            queueableBinaryWriter.Write(this.ChineseStringTableAddress);
-            queueableBinaryWriter.Write(this.fieldpad14);
-            queueableBinaryWriter.Write(this.fieldpad15);
-            queueableBinaryWriter.Write(this.PortugueseStringCount);
-            queueableBinaryWriter.Write(this.PortugueseStringTableLength);
-            queueableBinaryWriter.Write(this.PortugueseStringIndexAddress);
-            queueableBinaryWriter.Write(this.PortugueseStringTableAddress);
-            queueableBinaryWriter.Write(this.fieldpad16);
+            base.Write(writer);
+            writer.Write(this.fieldpad);
+            writer.Write(this.EnglishStringCount);
+            writer.Write(this.EnglishStringTableLength);
+            writer.Write(this.EnglishStringIndexAddress);
+            writer.Write(this.EnglishStringTableAddress);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.JapaneseStringCount);
+            writer.Write(this.JapaneseStringTableLength);
+            writer.Write(this.JapaneseStringIndexAddress);
+            writer.Write(this.JapaneseStringTableAddress);
+            writer.Write(this.fieldpad2);
+            writer.Write(this.fieldpad3);
+            writer.Write(this.DutchStringCount);
+            writer.Write(this.DutchStringTableLength);
+            writer.Write(this.DutchStringIndexAddress);
+            writer.Write(this.DutchStringTableAddress);
+            writer.Write(this.fieldpad4);
+            writer.Write(this.fieldpad5);
+            writer.Write(this.FrenchStringCount);
+            writer.Write(this.FrenchStringTableLength);
+            writer.Write(this.FrenchStringIndexAddress);
+            writer.Write(this.FrenchStringTableAddress);
+            writer.Write(this.fieldpad6);
+            writer.Write(this.fieldpad7);
+            writer.Write(this.SpanishStringCount);
+            writer.Write(this.SpanishStringTableLength);
+            writer.Write(this.SpanishStringIndexAddress);
+            writer.Write(this.SpanishStringTableAddress);
+            writer.Write(this.fieldpad8);
+            writer.Write(this.fieldpad9);
+            writer.Write(this.ItalianStringCount);
+            writer.Write(this.ItalianStringTableLength);
+            writer.Write(this.ItalianStringIndexAddress);
+            writer.Write(this.ItalianStringTableAddress);
+            writer.Write(this.fieldpad10);
+            writer.Write(this.fieldpad11);
+            writer.Write(this.KoreanStringCount);
+            writer.Write(this.KoreanStringTableLength);
+            writer.Write(this.KoreanStringIndexAddress);
+            writer.Write(this.KoreanStringTableAddress);
+            writer.Write(this.fieldpad12);
+            writer.Write(this.fieldpad13);
+            writer.Write(this.ChineseStringCount);
+            writer.Write(this.ChineseStringTableLength);
+            writer.Write(this.ChineseStringIndexAddress);
+            writer.Write(this.ChineseStringTableAddress);
+            writer.Write(this.fieldpad14);
+            writer.Write(this.fieldpad15);
+            writer.Write(this.PortugueseStringCount);
+            writer.Write(this.PortugueseStringTableLength);
+            writer.Write(this.PortugueseStringIndexAddress);
+            writer.Write(this.PortugueseStringTableAddress);
+            writer.Write(this.fieldpad16);
         }
     }
 }

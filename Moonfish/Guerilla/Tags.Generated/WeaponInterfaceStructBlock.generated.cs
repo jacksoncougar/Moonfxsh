@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -53,18 +54,19 @@ namespace Moonfish.Guerilla.Tags
             this.SharedInterface.ReadInstances(binaryReader, pointerQueue);
             this.FirstPerson = base.ReadBlockArrayData<WeaponFirstPersonInterfaceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.SharedInterface.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.FirstPerson);
+            base.DeferReferences(writer);
+            this.SharedInterface.DeferReferences(writer);
+            this.SharedInterface.DeferReferences(writer);
+            writer.Defer(this.FirstPerson);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            this.SharedInterface.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.FirstPerson);
-            queueableBinaryWriter.Write(this.NewHudInterface);
+            base.Write(writer);
+            this.SharedInterface.Write(writer);
+            writer.WritePointer(this.FirstPerson);
+            writer.Write(this.NewHudInterface);
         }
     }
 }

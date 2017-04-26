@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -61,20 +62,20 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Position);
-            queueableBinaryWriter.Write(this.ReferenceFrame);
-            queueableBinaryWriter.Write(((short)(this.FiringPositionsFlags)));
-            queueableBinaryWriter.Write(this.Area);
-            queueableBinaryWriter.Write(this.ClusterIndex);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.Normal);
+            base.Write(writer);
+            writer.Write(this.Position);
+            writer.Write(this.ReferenceFrame);
+            writer.Write(((short)(this.FiringPositionsFlags)));
+            writer.Write(this.Area);
+            writer.Write(this.ClusterIndex);
+            writer.Write(this.fieldskip);
+            writer.Write(this.Normal);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

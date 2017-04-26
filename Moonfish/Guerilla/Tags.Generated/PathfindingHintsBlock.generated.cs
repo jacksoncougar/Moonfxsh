@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -64,23 +65,23 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.HintType)));
-            queueableBinaryWriter.Write(this.NextHintIndex);
-            queueableBinaryWriter.Write(this.HintData0);
-            queueableBinaryWriter.Write(this.HintData1);
-            queueableBinaryWriter.Write(this.HintData2);
-            queueableBinaryWriter.Write(this.HintData3);
-            queueableBinaryWriter.Write(this.HintData4);
-            queueableBinaryWriter.Write(this.HintData5);
-            queueableBinaryWriter.Write(this.HintData6);
-            queueableBinaryWriter.Write(this.HintData7);
+            base.Write(writer);
+            writer.Write(((short)(this.HintType)));
+            writer.Write(this.NextHintIndex);
+            writer.Write(this.HintData0);
+            writer.Write(this.HintData1);
+            writer.Write(this.HintData2);
+            writer.Write(this.HintData3);
+            writer.Write(this.HintData4);
+            writer.Write(this.HintData5);
+            writer.Write(this.HintData6);
+            writer.Write(this.HintData7);
         }
         public enum HintTypeEnum : short
         {

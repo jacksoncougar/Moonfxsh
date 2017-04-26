@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -57,21 +58,24 @@ namespace Moonfish.Guerilla.Tags
             this.Vibration.ReadInstances(binaryReader, pointerQueue);
             this.SoundEffect.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.ScreenFlash.DeferReferences(queueableBinaryWriter);
-            this.Vibration.DeferReferences(queueableBinaryWriter);
-            this.SoundEffect.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.ScreenFlash.DeferReferences(writer);
+            this.ScreenFlash.DeferReferences(writer);
+            this.Vibration.DeferReferences(writer);
+            this.Vibration.DeferReferences(writer);
+            this.SoundEffect.DeferReferences(writer);
+            this.SoundEffect.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.ResponseType)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            this.ScreenFlash.Write(queueableBinaryWriter);
-            this.Vibration.Write(queueableBinaryWriter);
-            this.SoundEffect.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(((short)(this.ResponseType)));
+            writer.Write(this.fieldpad);
+            this.ScreenFlash.Write(writer);
+            this.Vibration.Write(writer);
+            this.SoundEffect.Write(writer);
         }
         public enum ResponseTypeEnum : short
         {

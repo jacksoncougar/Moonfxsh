@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -62,22 +63,22 @@ namespace Moonfish.Guerilla.Tags
             this.Tracks = base.ReadBlockArrayData<LoopingSoundTrackBlock>(binaryReader, pointerQueue.Dequeue());
             this.DetailSounds = base.ReadBlockArrayData<LoopingSoundDetailBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Tracks);
-            queueableBinaryWriter.Defer(this.DetailSounds);
+            base.DeferReferences(writer);
+            writer.Defer(this.Tracks);
+            writer.Defer(this.DetailSounds);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.SoundLoopingFlags)));
-            queueableBinaryWriter.Write(this.MartysMusicTime);
-            queueableBinaryWriter.Write(this.FieldReal);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.TagReference);
-            queueableBinaryWriter.WritePointer(this.Tracks);
-            queueableBinaryWriter.WritePointer(this.DetailSounds);
+            base.Write(writer);
+            writer.Write(((int)(this.SoundLoopingFlags)));
+            writer.Write(this.MartysMusicTime);
+            writer.Write(this.FieldReal);
+            writer.Write(this.fieldpad);
+            writer.Write(this.TagReference);
+            writer.WritePointer(this.Tracks);
+            writer.WritePointer(this.DetailSounds);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

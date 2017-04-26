@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -72,27 +73,27 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Scale);
-            queueableBinaryWriter.Write(this.Forward);
-            queueableBinaryWriter.Write(this.Left);
-            queueableBinaryWriter.Write(this.Up);
-            queueableBinaryWriter.Write(this.Position);
-            queueableBinaryWriter.Write(this.InstanceDefinition);
-            queueableBinaryWriter.Write(((short)(this.StructureBspInstancedGeometryInstancesFlags)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.Write(this.Checksum);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(((short)(this.PathfindingPolicy)));
-            queueableBinaryWriter.Write(((short)(this.LightmappingPolicy)));
+            base.Write(writer);
+            writer.Write(this.Scale);
+            writer.Write(this.Forward);
+            writer.Write(this.Left);
+            writer.Write(this.Up);
+            writer.Write(this.Position);
+            writer.Write(this.InstanceDefinition);
+            writer.Write(((short)(this.StructureBspInstancedGeometryInstancesFlags)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.fieldskip);
+            writer.Write(this.fieldskip0);
+            writer.Write(this.Checksum);
+            writer.Write(this.Name);
+            writer.Write(((short)(this.PathfindingPolicy)));
+            writer.Write(((short)(this.LightmappingPolicy)));
         }
         [System.FlagsAttribute()]
         public enum Flags : short

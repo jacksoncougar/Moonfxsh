@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -131,51 +132,51 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Unused);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.WalkingSpeed);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.RunForward);
-            queueableBinaryWriter.Write(this.RunBackward);
-            queueableBinaryWriter.Write(this.RunSideways);
-            queueableBinaryWriter.Write(this.RunAcceleration);
-            queueableBinaryWriter.Write(this.SneakForward);
-            queueableBinaryWriter.Write(this.SneakBackward);
-            queueableBinaryWriter.Write(this.SneakSideways);
-            queueableBinaryWriter.Write(this.SneakAcceleration);
-            queueableBinaryWriter.Write(this.AirborneAcceleration);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.GrenadeOrigin);
-            queueableBinaryWriter.Write(this.fieldpad2);
-            queueableBinaryWriter.Write(this.StunMovementPenalty);
-            queueableBinaryWriter.Write(this.StunTurningPenalty);
-            queueableBinaryWriter.Write(this.StunJumpingPenalty);
-            queueableBinaryWriter.Write(this.MinimumStunTime);
-            queueableBinaryWriter.Write(this.MaximumStunTime);
-            queueableBinaryWriter.Write(this.fieldpad3);
-            queueableBinaryWriter.Write(this.FirstPersonIdleTime);
-            queueableBinaryWriter.Write(this.FirstPersonSkipFraction);
-            queueableBinaryWriter.Write(this.fieldpad4);
-            queueableBinaryWriter.Write(this.CoopRespawnEffect);
-            queueableBinaryWriter.Write(this.BinocularsZoomCount);
-            queueableBinaryWriter.Write(this.BinocularsZoomRange);
-            queueableBinaryWriter.Write(this.BinocularsZoomInSound);
-            queueableBinaryWriter.Write(this.BinocularsZoomOutSound);
-            queueableBinaryWriter.Write(this.fieldpad5);
-            queueableBinaryWriter.Write(this.ActiveCamouflageOn);
-            queueableBinaryWriter.Write(this.ActiveCamouflageOff);
-            queueableBinaryWriter.Write(this.ActiveCamouflageError);
-            queueableBinaryWriter.Write(this.ActiveCamouflageReady);
-            queueableBinaryWriter.Write(this.FlashlightOn);
-            queueableBinaryWriter.Write(this.FlashlightOff);
-            queueableBinaryWriter.Write(this.IceCream);
+            base.Write(writer);
+            writer.Write(this.Unused);
+            writer.Write(this.fieldpad);
+            writer.Write(this.WalkingSpeed);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.RunForward);
+            writer.Write(this.RunBackward);
+            writer.Write(this.RunSideways);
+            writer.Write(this.RunAcceleration);
+            writer.Write(this.SneakForward);
+            writer.Write(this.SneakBackward);
+            writer.Write(this.SneakSideways);
+            writer.Write(this.SneakAcceleration);
+            writer.Write(this.AirborneAcceleration);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.GrenadeOrigin);
+            writer.Write(this.fieldpad2);
+            writer.Write(this.StunMovementPenalty);
+            writer.Write(this.StunTurningPenalty);
+            writer.Write(this.StunJumpingPenalty);
+            writer.Write(this.MinimumStunTime);
+            writer.Write(this.MaximumStunTime);
+            writer.Write(this.fieldpad3);
+            writer.Write(this.FirstPersonIdleTime);
+            writer.Write(this.FirstPersonSkipFraction);
+            writer.Write(this.fieldpad4);
+            writer.Write(this.CoopRespawnEffect);
+            writer.Write(this.BinocularsZoomCount);
+            writer.Write(this.BinocularsZoomRange);
+            writer.Write(this.BinocularsZoomInSound);
+            writer.Write(this.BinocularsZoomOutSound);
+            writer.Write(this.fieldpad5);
+            writer.Write(this.ActiveCamouflageOn);
+            writer.Write(this.ActiveCamouflageOff);
+            writer.Write(this.ActiveCamouflageError);
+            writer.Write(this.ActiveCamouflageReady);
+            writer.Write(this.FlashlightOn);
+            writer.Write(this.FlashlightOff);
+            writer.Write(this.IceCream);
         }
     }
 }

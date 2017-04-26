@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -55,20 +56,20 @@ namespace Moonfish.Guerilla.Tags
             this.ConstantInputs = base.ReadBlockArrayData<PlatformSoundEffectConstantBlock>(binaryReader, pointerQueue.Dequeue());
             this.TemplateOverrideDescriptors = base.ReadBlockArrayData<PlatformSoundEffectOverrideDescriptorBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.FunctionInputs);
-            queueableBinaryWriter.Defer(this.ConstantInputs);
-            queueableBinaryWriter.Defer(this.TemplateOverrideDescriptors);
+            base.DeferReferences(writer);
+            writer.Defer(this.FunctionInputs);
+            writer.Defer(this.ConstantInputs);
+            writer.Defer(this.TemplateOverrideDescriptors);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.FunctionInputs);
-            queueableBinaryWriter.WritePointer(this.ConstantInputs);
-            queueableBinaryWriter.WritePointer(this.TemplateOverrideDescriptors);
-            queueableBinaryWriter.Write(this.InputOverrides);
+            base.Write(writer);
+            writer.WritePointer(this.FunctionInputs);
+            writer.WritePointer(this.ConstantInputs);
+            writer.WritePointer(this.TemplateOverrideDescriptors);
+            writer.Write(this.InputOverrides);
         }
     }
 }

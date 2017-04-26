@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -70,26 +71,26 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.ParentNode);
-            queueableBinaryWriter.Write(this.FirstChildNode);
-            queueableBinaryWriter.Write(this.NextSiblingNode);
-            queueableBinaryWriter.Write(this.ImportNodeIndex);
-            queueableBinaryWriter.Write(this.DefaultTranslation);
-            queueableBinaryWriter.Write(this.DefaultRotation);
-            queueableBinaryWriter.Write(this.InverseForward);
-            queueableBinaryWriter.Write(this.InverseLeft);
-            queueableBinaryWriter.Write(this.InverseUp);
-            queueableBinaryWriter.Write(this.InversePosition);
-            queueableBinaryWriter.Write(this.InverseScale);
-            queueableBinaryWriter.Write(this.DistanceFromParent);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.ParentNode);
+            writer.Write(this.FirstChildNode);
+            writer.Write(this.NextSiblingNode);
+            writer.Write(this.ImportNodeIndex);
+            writer.Write(this.DefaultTranslation);
+            writer.Write(this.DefaultRotation);
+            writer.Write(this.InverseForward);
+            writer.Write(this.InverseLeft);
+            writer.Write(this.InverseUp);
+            writer.Write(this.InversePosition);
+            writer.Write(this.InverseScale);
+            writer.Write(this.DistanceFromParent);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -51,17 +52,17 @@ namespace Moonfish.Guerilla.Tags
             this.Universal = base.ReadBlockArrayData<MultiplayerUniversalBlock>(binaryReader, pointerQueue.Dequeue());
             this.Runtime = base.ReadBlockArrayData<MultiplayerRuntimeBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Universal);
-            queueableBinaryWriter.Defer(this.Runtime);
+            base.DeferReferences(writer);
+            writer.Defer(this.Universal);
+            writer.Defer(this.Runtime);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.WritePointer(this.Universal);
-            queueableBinaryWriter.WritePointer(this.Runtime);
+            base.Write(writer);
+            writer.WritePointer(this.Universal);
+            writer.WritePointer(this.Runtime);
         }
     }
 }

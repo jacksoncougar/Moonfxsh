@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -66,24 +67,24 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.MaximumAimingDeviation);
-            queueableBinaryWriter.Write(this.MaximumLookingDeviation);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.NoncombatLookDeltaL);
-            queueableBinaryWriter.Write(this.NoncombatLookDeltaR);
-            queueableBinaryWriter.Write(this.CombatLookDeltaL);
-            queueableBinaryWriter.Write(this.CombatLookDeltaR);
-            queueableBinaryWriter.Write(this.NoncombatIdleLooking);
-            queueableBinaryWriter.Write(this.NoncombatIdleAiming);
-            queueableBinaryWriter.Write(this.CombatIdleLooking);
-            queueableBinaryWriter.Write(this.CombatIdleAiming);
+            base.Write(writer);
+            writer.Write(this.MaximumAimingDeviation);
+            writer.Write(this.MaximumLookingDeviation);
+            writer.Write(this.fieldpad);
+            writer.Write(this.NoncombatLookDeltaL);
+            writer.Write(this.NoncombatLookDeltaR);
+            writer.Write(this.CombatLookDeltaL);
+            writer.Write(this.CombatLookDeltaR);
+            writer.Write(this.NoncombatIdleLooking);
+            writer.Write(this.NoncombatIdleAiming);
+            writer.Write(this.CombatIdleLooking);
+            writer.Write(this.CombatIdleAiming);
         }
     }
 }

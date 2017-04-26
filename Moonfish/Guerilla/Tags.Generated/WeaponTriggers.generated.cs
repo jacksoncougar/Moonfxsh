@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -64,24 +65,26 @@ namespace Moonfish.Guerilla.Tags
             this.Autofire.ReadInstances(binaryReader, pointerQueue);
             this.Charging.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.Autofire.DeferReferences(queueableBinaryWriter);
-            this.Charging.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.Autofire.DeferReferences(writer);
+            this.Autofire.DeferReferences(writer);
+            this.Charging.DeferReferences(writer);
+            this.Charging.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.WeaponTriggersFlags)));
-            queueableBinaryWriter.Write(((short)(this.Input)));
-            queueableBinaryWriter.Write(((short)(this.Behavior)));
-            queueableBinaryWriter.Write(this.PrimaryBarrel);
-            queueableBinaryWriter.Write(this.SecondaryBarrel);
-            queueableBinaryWriter.Write(((short)(this.Prediction)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            this.Autofire.Write(queueableBinaryWriter);
-            this.Charging.Write(queueableBinaryWriter);
+            base.Write(writer);
+            writer.Write(((int)(this.WeaponTriggersFlags)));
+            writer.Write(((short)(this.Input)));
+            writer.Write(((short)(this.Behavior)));
+            writer.Write(this.PrimaryBarrel);
+            writer.Write(this.SecondaryBarrel);
+            writer.Write(((short)(this.Prediction)));
+            writer.Write(this.fieldpad);
+            this.Autofire.Write(writer);
+            this.Charging.Write(writer);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

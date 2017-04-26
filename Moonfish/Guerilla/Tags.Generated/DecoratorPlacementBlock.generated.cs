@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -24,14 +25,16 @@ namespace Moonfish.Guerilla.Tags
         public int InternalData1;
         public int CompressedPosition;
         public Moonfish.Tags.ColourR1G1B1 TintColor;
+        private byte[] rgb8padding = new byte[1];
         public Moonfish.Tags.ColourR1G1B1 LightmapColor;
+        private byte[] rgb8padding0 = new byte[1];
         public int CompressedLightDirection;
         public int CompressedLight2Direction;
         public override int SerializedSize
         {
             get
             {
-                return 22;
+                return 24;
             }
         }
         public override int Alignment
@@ -47,7 +50,9 @@ namespace Moonfish.Guerilla.Tags
             this.InternalData1 = binaryReader.ReadInt32();
             this.CompressedPosition = binaryReader.ReadInt32();
             this.TintColor = binaryReader.ReadColourR1G1B1();
+            this.rgb8padding = binaryReader.ReadBytes(1);
             this.LightmapColor = binaryReader.ReadColourR1G1B1();
+            this.rgb8padding0 = binaryReader.ReadBytes(1);
             this.CompressedLightDirection = binaryReader.ReadInt32();
             this.CompressedLight2Direction = binaryReader.ReadInt32();
             return pointerQueue;
@@ -56,19 +61,21 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.InternalData1);
-            queueableBinaryWriter.Write(this.CompressedPosition);
-            queueableBinaryWriter.Write(this.TintColor);
-            queueableBinaryWriter.Write(this.LightmapColor);
-            queueableBinaryWriter.Write(this.CompressedLightDirection);
-            queueableBinaryWriter.Write(this.CompressedLight2Direction);
+            base.Write(writer);
+            writer.Write(this.InternalData1);
+            writer.Write(this.CompressedPosition);
+            writer.Write(this.TintColor);
+            writer.Write(this.rgb8padding);
+            writer.Write(this.LightmapColor);
+            writer.Write(this.rgb8padding0);
+            writer.Write(this.CompressedLightDirection);
+            writer.Write(this.CompressedLight2Direction);
         }
     }
 }

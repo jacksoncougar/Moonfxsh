@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -98,40 +99,40 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Node);
-            queueableBinaryWriter.Write(this.Region);
-            queueableBinaryWriter.Write(this.Permutattion);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.BoudingSphereOffset);
-            queueableBinaryWriter.Write(this.BoundingSphereRadius);
-            queueableBinaryWriter.Write(((short)(this.RigidBodiesFlags)));
-            queueableBinaryWriter.Write(((short)(this.MotionType)));
-            queueableBinaryWriter.Write(this.NoPhantomPowerAlt);
-            queueableBinaryWriter.Write(((short)(this.Size)));
-            queueableBinaryWriter.Write(this.InertiaTensorScale);
-            queueableBinaryWriter.Write(this.LinearDamping);
-            queueableBinaryWriter.Write(this.AngularDamping);
-            queueableBinaryWriter.Write(this.CenterOffMassOffset);
-            queueableBinaryWriter.Write(((short)(this.ShapeType)));
-            queueableBinaryWriter.Write(this.Shape);
-            queueableBinaryWriter.Write(this.Mass);
-            queueableBinaryWriter.Write(this.CenterOfMass);
-            queueableBinaryWriter.Write(this.fieldskip);
-            queueableBinaryWriter.Write(this.IntertiaTensorX);
-            queueableBinaryWriter.Write(this.fieldskip0);
-            queueableBinaryWriter.Write(this.IntertiaTensorY);
-            queueableBinaryWriter.Write(this.fieldskip1);
-            queueableBinaryWriter.Write(this.IntertiaTensorZ);
-            queueableBinaryWriter.Write(this.fieldskip2);
-            queueableBinaryWriter.Write(this.BoundingSpherePad);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            base.Write(writer);
+            writer.Write(this.Node);
+            writer.Write(this.Region);
+            writer.Write(this.Permutattion);
+            writer.Write(this.fieldpad);
+            writer.Write(this.BoudingSphereOffset);
+            writer.Write(this.BoundingSphereRadius);
+            writer.Write(((short)(this.RigidBodiesFlags)));
+            writer.Write(((short)(this.MotionType)));
+            writer.Write(this.NoPhantomPowerAlt);
+            writer.Write(((short)(this.Size)));
+            writer.Write(this.InertiaTensorScale);
+            writer.Write(this.LinearDamping);
+            writer.Write(this.AngularDamping);
+            writer.Write(this.CenterOffMassOffset);
+            writer.Write(((short)(this.ShapeType)));
+            writer.Write(this.Shape);
+            writer.Write(this.Mass);
+            writer.Write(this.CenterOfMass);
+            writer.Write(this.fieldskip);
+            writer.Write(this.IntertiaTensorX);
+            writer.Write(this.fieldskip0);
+            writer.Write(this.IntertiaTensorY);
+            writer.Write(this.fieldskip1);
+            writer.Write(this.IntertiaTensorZ);
+            writer.Write(this.fieldskip2);
+            writer.Write(this.BoundingSpherePad);
+            writer.Write(this.fieldpad0);
         }
         [System.FlagsAttribute()]
         public enum Flags : short

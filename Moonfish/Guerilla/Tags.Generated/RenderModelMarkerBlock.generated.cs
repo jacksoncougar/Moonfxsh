@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -58,20 +59,20 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.RegionIndex);
-            queueableBinaryWriter.Write(this.PermutationIndex);
-            queueableBinaryWriter.Write(this.NodeIndex);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.Translation);
-            queueableBinaryWriter.Write(this.Rotation);
-            queueableBinaryWriter.Write(this.Scale);
+            base.Write(writer);
+            writer.Write(this.RegionIndex);
+            writer.Write(this.PermutationIndex);
+            writer.Write(this.NodeIndex);
+            writer.Write(this.fieldpad);
+            writer.Write(this.Translation);
+            writer.Write(this.Rotation);
+            writer.Write(this.Scale);
         }
     }
 }

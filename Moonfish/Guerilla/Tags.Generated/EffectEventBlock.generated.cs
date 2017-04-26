@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -64,25 +65,25 @@ namespace Moonfish.Guerilla.Tags
             this.Accelerations = base.ReadBlockArrayData<EffectAccelerationsBlock>(binaryReader, pointerQueue.Dequeue());
             this.ParticleSystems = base.ReadBlockArrayData<ParticleSystemDefinitionBlockNew>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Parts);
-            queueableBinaryWriter.Defer(this.Beams);
-            queueableBinaryWriter.Defer(this.Accelerations);
-            queueableBinaryWriter.Defer(this.ParticleSystems);
+            base.DeferReferences(writer);
+            writer.Defer(this.Parts);
+            writer.Defer(this.Beams);
+            writer.Defer(this.Accelerations);
+            writer.Defer(this.ParticleSystems);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.EffectEventFlags)));
-            queueableBinaryWriter.Write(this.SkipFraction);
-            queueableBinaryWriter.Write(this.DelayBounds);
-            queueableBinaryWriter.Write(this.DurationBounds);
-            queueableBinaryWriter.WritePointer(this.Parts);
-            queueableBinaryWriter.WritePointer(this.Beams);
-            queueableBinaryWriter.WritePointer(this.Accelerations);
-            queueableBinaryWriter.WritePointer(this.ParticleSystems);
+            base.Write(writer);
+            writer.Write(((int)(this.EffectEventFlags)));
+            writer.Write(this.SkipFraction);
+            writer.Write(this.DelayBounds);
+            writer.Write(this.DurationBounds);
+            writer.WritePointer(this.Parts);
+            writer.WritePointer(this.Beams);
+            writer.WritePointer(this.Accelerations);
+            writer.WritePointer(this.ParticleSystems);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

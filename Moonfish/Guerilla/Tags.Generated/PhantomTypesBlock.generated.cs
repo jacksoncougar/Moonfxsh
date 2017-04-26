@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -95,33 +96,33 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.PhantomTypesFlags)));
-            queueableBinaryWriter.Write(((byte)(this.MinimumSize)));
-            queueableBinaryWriter.Write(((byte)(this.MaximumSize)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.MarkerName);
-            queueableBinaryWriter.Write(this.AlignmentMarkerName);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.Write(this.HookesLawE);
-            queueableBinaryWriter.Write(this.LinearDeadRadius);
-            queueableBinaryWriter.Write(this.CenterAcc);
-            queueableBinaryWriter.Write(this.CenterMaxVel);
-            queueableBinaryWriter.Write(this.AxisAcc);
-            queueableBinaryWriter.Write(this.AxisMaxVel);
-            queueableBinaryWriter.Write(this.DirectionAcc);
-            queueableBinaryWriter.Write(this.DirectionMaxVel);
-            queueableBinaryWriter.Write(this.fieldpad1);
-            queueableBinaryWriter.Write(this.AlignmentHookesLawE);
-            queueableBinaryWriter.Write(this.AlignmentAcc);
-            queueableBinaryWriter.Write(this.AlignmentMaxVel);
-            queueableBinaryWriter.Write(this.fieldpad2);
+            base.Write(writer);
+            writer.Write(((int)(this.PhantomTypesFlags)));
+            writer.Write(((byte)(this.MinimumSize)));
+            writer.Write(((byte)(this.MaximumSize)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.MarkerName);
+            writer.Write(this.AlignmentMarkerName);
+            writer.Write(this.fieldpad0);
+            writer.Write(this.HookesLawE);
+            writer.Write(this.LinearDeadRadius);
+            writer.Write(this.CenterAcc);
+            writer.Write(this.CenterMaxVel);
+            writer.Write(this.AxisAcc);
+            writer.Write(this.AxisMaxVel);
+            writer.Write(this.DirectionAcc);
+            writer.Write(this.DirectionMaxVel);
+            writer.Write(this.fieldpad1);
+            writer.Write(this.AlignmentHookesLawE);
+            writer.Write(this.AlignmentAcc);
+            writer.Write(this.AlignmentMaxVel);
+            writer.Write(this.fieldpad2);
         }
         [System.FlagsAttribute()]
         public enum Flags : int

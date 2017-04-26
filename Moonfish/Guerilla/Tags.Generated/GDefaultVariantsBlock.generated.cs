@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -55,19 +56,19 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Settings = base.ReadBlockArrayData<GDefaultVariantSettingsBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Settings);
+            base.DeferReferences(writer);
+            writer.Defer(this.Settings);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.VariantName);
-            queueableBinaryWriter.Write(((int)(this.VariantType)));
-            queueableBinaryWriter.WritePointer(this.Settings);
-            queueableBinaryWriter.Write(this.DescriptionIndex);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write(writer);
+            writer.Write(this.VariantName);
+            writer.Write(((int)(this.VariantType)));
+            writer.WritePointer(this.Settings);
+            writer.Write(this.DescriptionIndex);
+            writer.Write(this.fieldpad);
         }
         public enum VariantTypeEnum : int
         {

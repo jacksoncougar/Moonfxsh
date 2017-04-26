@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -74,28 +75,28 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.Write(this.NodeA);
-            queueableBinaryWriter.Write(this.NodeB);
-            queueableBinaryWriter.Write(this.AScale);
-            queueableBinaryWriter.Write(this.AForward);
-            queueableBinaryWriter.Write(this.ALeft);
-            queueableBinaryWriter.Write(this.AUp);
-            queueableBinaryWriter.Write(this.APosition);
-            queueableBinaryWriter.Write(this.BScale);
-            queueableBinaryWriter.Write(this.BForward);
-            queueableBinaryWriter.Write(this.BLeft);
-            queueableBinaryWriter.Write(this.BUp);
-            queueableBinaryWriter.Write(this.BPosition);
-            queueableBinaryWriter.Write(this.EdgeIndex);
-            queueableBinaryWriter.Write(this.fieldpad);
+            base.Write(writer);
+            writer.Write(this.Name);
+            writer.Write(this.NodeA);
+            writer.Write(this.NodeB);
+            writer.Write(this.AScale);
+            writer.Write(this.AForward);
+            writer.Write(this.ALeft);
+            writer.Write(this.AUp);
+            writer.Write(this.APosition);
+            writer.Write(this.BScale);
+            writer.Write(this.BForward);
+            writer.Write(this.BLeft);
+            writer.Write(this.BUp);
+            writer.Write(this.BPosition);
+            writer.Write(this.EdgeIndex);
+            writer.Write(this.fieldpad);
         }
     }
 }

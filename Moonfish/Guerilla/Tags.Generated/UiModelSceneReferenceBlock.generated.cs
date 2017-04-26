@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -74,29 +75,29 @@ namespace Moonfish.Guerilla.Tags
             this.Objects = base.ReadBlockArrayData<UiObjectReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.Lights = base.ReadBlockArrayData<UiLightReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Objects);
-            queueableBinaryWriter.Defer(this.Lights);
+            base.DeferReferences(writer);
+            writer.Defer(this.Objects);
+            writer.Defer(this.Lights);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.UiModelSceneReferenceFlags)));
-            queueableBinaryWriter.Write(((short)(this.AnimationIndex)));
-            queueableBinaryWriter.Write(this.IntroAnimationDelayMilliseconds);
-            queueableBinaryWriter.Write(this.RenderDepthBias);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.WritePointer(this.Objects);
-            queueableBinaryWriter.WritePointer(this.Lights);
-            queueableBinaryWriter.Write(this.AnimationScaleFactor);
-            queueableBinaryWriter.Write(this.CameraPosition);
-            queueableBinaryWriter.Write(this.FovDegress);
-            queueableBinaryWriter.Write(this.UiViewport);
-            queueableBinaryWriter.Write(this.UNUSEDIntroAnim);
-            queueableBinaryWriter.Write(this.UNUSEDOutroAnim);
-            queueableBinaryWriter.Write(this.UNUSEDAmbientAnim);
+            base.Write(writer);
+            writer.Write(((int)(this.UiModelSceneReferenceFlags)));
+            writer.Write(((short)(this.AnimationIndex)));
+            writer.Write(this.IntroAnimationDelayMilliseconds);
+            writer.Write(this.RenderDepthBias);
+            writer.Write(this.fieldpad);
+            writer.WritePointer(this.Objects);
+            writer.WritePointer(this.Lights);
+            writer.Write(this.AnimationScaleFactor);
+            writer.Write(this.CameraPosition);
+            writer.Write(this.FovDegress);
+            writer.Write(this.UiViewport);
+            writer.Write(this.UNUSEDIntroAnim);
+            writer.Write(this.UNUSEDOutroAnim);
+            writer.Write(this.UNUSEDAmbientAnim);
         }
         /// <summary>
         /// Halo y-axis=ui z-axis, and Halo z-axis=ui y-axis.

@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -63,23 +64,23 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Files = base.ReadBlockArrayData<TagImportFileBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            queueableBinaryWriter.Defer(this.Files);
+            base.DeferReferences(writer);
+            writer.Defer(this.Files);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Build);
-            queueableBinaryWriter.Write(this.Version);
-            queueableBinaryWriter.Write(this.ImportDate);
-            queueableBinaryWriter.Write(this.Culprit);
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.ImportTime);
-            queueableBinaryWriter.Write(this.fieldpad0);
-            queueableBinaryWriter.WritePointer(this.Files);
-            queueableBinaryWriter.Write(this.fieldpad1);
+            base.Write(writer);
+            writer.Write(this.Build);
+            writer.Write(this.Version);
+            writer.Write(this.ImportDate);
+            writer.Write(this.Culprit);
+            writer.Write(this.fieldpad);
+            writer.Write(this.ImportTime);
+            writer.Write(this.fieldpad0);
+            writer.WritePointer(this.Files);
+            writer.Write(this.fieldpad1);
         }
     }
 }

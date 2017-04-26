@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -65,24 +66,25 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.ObjectID.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.ObjectID.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.ObjectID.DeferReferences(writer);
+            this.ObjectID.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((int)(this.ScenarioObjectDatumStructPlacementFlags)));
-            queueableBinaryWriter.Write(this.Position);
-            queueableBinaryWriter.Write(this.Rotation);
-            queueableBinaryWriter.Write(this.Scale);
-            queueableBinaryWriter.Write(((short)(this.ScenarioObjectDatumStructTransformFlags)));
-            queueableBinaryWriter.Write(this.ManualBSPFlags);
-            this.ObjectID.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((byte)(this.BSPPolicy)));
-            queueableBinaryWriter.Write(this.fieldpad);
-            queueableBinaryWriter.Write(this.EditorFolder);
+            base.Write(writer);
+            writer.Write(((int)(this.ScenarioObjectDatumStructPlacementFlags)));
+            writer.Write(this.Position);
+            writer.Write(this.Rotation);
+            writer.Write(this.Scale);
+            writer.Write(((short)(this.ScenarioObjectDatumStructTransformFlags)));
+            writer.Write(this.ManualBSPFlags);
+            this.ObjectID.Write(writer);
+            writer.Write(((byte)(this.BSPPolicy)));
+            writer.Write(this.fieldpad);
+            writer.Write(this.EditorFolder);
         }
         [System.FlagsAttribute()]
         public enum PlacementFlags : int

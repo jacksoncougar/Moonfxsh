@@ -13,6 +13,7 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
@@ -59,20 +60,22 @@ namespace Moonfish.Guerilla.Tags
             this.AlongAxis.ReadInstances(binaryReader, pointerQueue);
             this.AwayFromAxis.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.DeferReferences(queueableBinaryWriter);
-            this.AlongAxis.DeferReferences(queueableBinaryWriter);
-            this.AwayFromAxis.DeferReferences(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            this.AlongAxis.DeferReferences(writer);
+            this.AlongAxis.DeferReferences(writer);
+            this.AwayFromAxis.DeferReferences(writer);
+            this.AwayFromAxis.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            this.AlongAxis.Write(queueableBinaryWriter);
-            this.AwayFromAxis.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.ParallelScale);
-            queueableBinaryWriter.Write(this.ParallelThresholdAngle);
-            queueableBinaryWriter.Write(this.ParallelExponent);
+            base.Write(writer);
+            this.AlongAxis.Write(writer);
+            this.AwayFromAxis.Write(writer);
+            writer.Write(this.ParallelScale);
+            writer.Write(this.ParallelThresholdAngle);
+            writer.Write(this.ParallelExponent);
         }
     }
 }

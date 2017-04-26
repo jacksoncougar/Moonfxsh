@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("object_function_block")]
-    public partial class ObjectFunctionBlock : GuerillaBlock, IWriteQueueable
+    public partial class ObjectFunctionBlock : GuerillaBlock, IWriteDeferrable
     {
         public Flags ObjectFunctionFlags;
         public Moonfish.Tags.StringIdent ImportName;
@@ -59,12 +59,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.DefaultFunction.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.DefaultFunction.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.DefaultFunction.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.ObjectFunctionFlags)));

@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("pixel_shader_fragment_block")]
-    public partial class PixelShaderFragmentBlock : GuerillaBlock, IWriteQueueable
+    public partial class PixelShaderFragmentBlock : GuerillaBlock, IWriteDeferrable
     {
         public byte SwitchParameterIndex;
         private byte[] fieldpad = new byte[1];
@@ -51,12 +51,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.PermutationsIndex.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.PermutationsIndex.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.PermutationsIndex.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.SwitchParameterIndex);

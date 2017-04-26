@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("global_new_hud_globals_struct_block")]
-    public partial class GlobalNewHudGlobalsStructBlock : GuerillaBlock, IWriteQueueable
+    public partial class GlobalNewHudGlobalsStructBlock : GuerillaBlock, IWriteDeferrable
     {
         [Moonfish.Tags.TagReferenceAttribute("unic")]
         public Moonfish.Tags.TagReference HudText;
@@ -65,17 +65,17 @@ namespace Moonfish.Guerilla.Tags
             this.PlayerTrainingData = base.ReadBlockArrayData<PlayerTrainingEntryDataBlock>(binaryReader, pointerQueue.Dequeue());
             this.Constants.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Dashlights);
             queueableBinaryWriter.Defer(this.WaypointArrows);
             queueableBinaryWriter.Defer(this.Waypoints);
             queueableBinaryWriter.Defer(this.HudSounds);
             queueableBinaryWriter.Defer(this.PlayerTrainingData);
-            this.Constants.Defer(queueableBinaryWriter);
+            this.Constants.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.HudText);

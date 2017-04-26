@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("sound_effect_templates_block")]
-    public partial class SoundEffectTemplatesBlock : GuerillaBlock, IWriteQueueable
+    public partial class SoundEffectTemplatesBlock : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Tags.StringIdent DspEffect;
         /// <summary>
@@ -61,13 +61,13 @@ namespace Moonfish.Guerilla.Tags
             this.Explanation = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
             this.Parameters = base.ReadBlockArrayData<SoundEffectTemplateParameterBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Explanation);
             queueableBinaryWriter.Defer(this.Parameters);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.DspEffect);

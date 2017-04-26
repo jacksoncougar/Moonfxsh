@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("vocalization_definitions_block_1")]
-    public partial class VocalizationDefinitionsBlock1 : GuerillaBlock, IWriteQueueable
+    public partial class VocalizationDefinitionsBlock1 : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Tags.StringIdent Vocalization;
         public Moonfish.Tags.StringIdent ParentVocalization;
@@ -100,13 +100,13 @@ namespace Moonfish.Guerilla.Tags
             this.Reponses = base.ReadBlockArrayData<ResponseBlock>(binaryReader, pointerQueue.Dequeue());
             this.Children = base.ReadBlockArrayData<VocalizationDefinitionsBlock2>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Reponses);
             queueableBinaryWriter.Defer(this.Children);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Vocalization);

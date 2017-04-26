@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("structure_bsp_debug_info_block")]
-    public partial class StructureBspDebugInfoBlock : GuerillaBlock, IWriteQueueable
+    public partial class StructureBspDebugInfoBlock : GuerillaBlock, IWriteDeferrable
     {
         private byte[] fieldpad = new byte[64];
         public StructureBspClusterDebugInfoBlock[] Clusters = new StructureBspClusterDebugInfoBlock[0];
@@ -55,14 +55,14 @@ namespace Moonfish.Guerilla.Tags
             this.FogPlanes = base.ReadBlockArrayData<StructureBspFogPlaneDebugInfoBlock>(binaryReader, pointerQueue.Dequeue());
             this.FogZones = base.ReadBlockArrayData<StructureBspFogZoneDebugInfoBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Clusters);
             queueableBinaryWriter.Defer(this.FogPlanes);
             queueableBinaryWriter.Defer(this.FogZones);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.fieldpad);

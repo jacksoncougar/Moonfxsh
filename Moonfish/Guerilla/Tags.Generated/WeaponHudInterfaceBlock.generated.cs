@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("wphi")]
     [TagBlockOriginalNameAttribute("weapon_hud_interface_block")]
-    public partial class WeaponHudInterfaceBlock : GuerillaBlock, IWriteQueueable
+    public partial class WeaponHudInterfaceBlock : GuerillaBlock, IWriteDeferrable
     {
         [Moonfish.Tags.TagReferenceAttribute("wphi")]
         public Moonfish.Tags.TagReference ChildHud;
@@ -109,9 +109,9 @@ namespace Moonfish.Guerilla.Tags
             this.GNullBlock = base.ReadBlockArrayData<GNullBlock>(binaryReader, pointerQueue.Dequeue());
             this.ScreenEffect = base.ReadBlockArrayData<GlobalHudScreenEffectDefinition>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.StaticElements);
             queueableBinaryWriter.Defer(this.MeterElements);
             queueableBinaryWriter.Defer(this.NumberElements);
@@ -120,7 +120,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.GNullBlock);
             queueableBinaryWriter.Defer(this.ScreenEffect);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.ChildHud);

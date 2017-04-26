@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("structure_bsp_instanced_geometry_definition_block")]
-    public partial class StructureBspInstancedGeometryDefinitionBlock : GuerillaBlock, IWriteQueueable
+    public partial class StructureBspInstancedGeometryDefinitionBlock : GuerillaBlock, IWriteDeferrable
     {
         public StructureInstancedGeometryRenderInfoStructBlock RenderInfo = new StructureInstancedGeometryRenderInfoStructBlock();
         public int Checksum;
@@ -65,16 +65,16 @@ namespace Moonfish.Guerilla.Tags
             this.RenderLeaves = base.ReadBlockArrayData<StructureBspLeafBlock>(binaryReader, pointerQueue.Dequeue());
             this.SurfaceReferences = base.ReadBlockArrayData<StructureBspSurfaceReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.RenderInfo.Defer(queueableBinaryWriter);
-            this.CollisionInfo.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.RenderInfo.DeferReferences(queueableBinaryWriter);
+            this.CollisionInfo.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.BspPhysics);
             queueableBinaryWriter.Defer(this.RenderLeaves);
             queueableBinaryWriter.Defer(this.SurfaceReferences);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.RenderInfo.Write(queueableBinaryWriter);

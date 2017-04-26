@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("dc*s")]
     [TagBlockOriginalNameAttribute("scenario_decorators_resource_block")]
-    public partial class ScenarioDecoratorsResourceBlock : GuerillaBlock, IWriteQueueable
+    public partial class ScenarioDecoratorsResourceBlock : GuerillaBlock, IWriteDeferrable
     {
         public DecoratorPlacementDefinitionBlock[] Decorator = new DecoratorPlacementDefinitionBlock[0];
         public ScenarioDecoratorSetPaletteEntryBlock[] DecoratorPalette = new ScenarioDecoratorSetPaletteEntryBlock[0];
@@ -51,13 +51,13 @@ namespace Moonfish.Guerilla.Tags
             this.Decorator = base.ReadBlockArrayData<DecoratorPlacementDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
             this.DecoratorPalette = base.ReadBlockArrayData<ScenarioDecoratorSetPaletteEntryBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Decorator);
             queueableBinaryWriter.Defer(this.DecoratorPalette);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.Decorator);

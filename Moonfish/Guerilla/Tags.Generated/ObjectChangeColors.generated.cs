@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("object_change_colors")]
-    public partial class ObjectChangeColors : GuerillaBlock, IWriteQueueable
+    public partial class ObjectChangeColors : GuerillaBlock, IWriteDeferrable
     {
         public ObjectChangeColorInitialPermutation[] InitialPermutations = new ObjectChangeColorInitialPermutation[0];
         public ObjectChangeColorFunction[] Functions = new ObjectChangeColorFunction[0];
@@ -50,13 +50,13 @@ namespace Moonfish.Guerilla.Tags
             this.InitialPermutations = base.ReadBlockArrayData<ObjectChangeColorInitialPermutation>(binaryReader, pointerQueue.Dequeue());
             this.Functions = base.ReadBlockArrayData<ObjectChangeColorFunction>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.InitialPermutations);
             queueableBinaryWriter.Defer(this.Functions);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.InitialPermutations);

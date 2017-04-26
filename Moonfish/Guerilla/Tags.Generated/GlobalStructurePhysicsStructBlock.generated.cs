@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("global_structure_physics_struct_block")]
-    public partial class GlobalStructurePhysicsStructBlock : GuerillaBlock, IWriteQueueable
+    public partial class GlobalStructurePhysicsStructBlock : GuerillaBlock, IWriteDeferrable
     {
         public byte[] moppCode;
         private byte[] fieldpad = new byte[4];
@@ -59,14 +59,14 @@ namespace Moonfish.Guerilla.Tags
             this.BreakableSurfacesMoppCode = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
             this.BreakableSurfaceKeyTable = base.ReadBlockArrayData<BreakableSurfaceKeyTableBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.moppCode);
             queueableBinaryWriter.Defer(this.BreakableSurfacesMoppCode);
             queueableBinaryWriter.Defer(this.BreakableSurfaceKeyTable);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.moppCode);

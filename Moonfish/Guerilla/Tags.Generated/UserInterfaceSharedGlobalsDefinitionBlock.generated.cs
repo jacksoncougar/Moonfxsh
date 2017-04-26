@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("wigl")]
     [TagBlockOriginalNameAttribute("user_interface_shared_globals_definition_block")]
-    public partial class UserInterfaceSharedGlobalsDefinitionBlock : GuerillaBlock, IWriteQueueable
+    public partial class UserInterfaceSharedGlobalsDefinitionBlock : GuerillaBlock, IWriteDeferrable
     {
         private byte[] fieldpad = new byte[2];
         private byte[] fieldpad0 = new byte[2];
@@ -248,9 +248,9 @@ namespace Moonfish.Guerilla.Tags
             this.ListItemSkins = base.ReadBlockArrayData<ListSkinReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.SkillMappings = base.ReadBlockArrayData<SkillToRankMappingBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Errors);
             queueableBinaryWriter.Defer(this.ScreenAnimations);
             queueableBinaryWriter.Defer(this.ShapeGroups);
@@ -258,7 +258,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.ListItemSkins);
             queueableBinaryWriter.Defer(this.SkillMappings);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.fieldpad);

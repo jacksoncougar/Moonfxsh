@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("bipd")]
     [TagBlockOriginalNameAttribute("biped_block")]
-    public partial class BipedBlock : UnitBlock, IWriteQueueable
+    public partial class BipedBlock : UnitBlock, IWriteDeferrable
     {
         public float MovingTurningSpeed;
         public BipedFlags BipedBipedFlags;
@@ -113,14 +113,14 @@ namespace Moonfish.Guerilla.Tags
             this.Physics.ReadInstances(binaryReader, pointerQueue);
             this.ContactPoints = base.ReadBlockArrayData<ContactPointBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.LockonData.Defer(queueableBinaryWriter);
-            this.Physics.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.LockonData.DeferReferences(queueableBinaryWriter);
+            this.Physics.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.ContactPoints);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.MovingTurningSpeed);

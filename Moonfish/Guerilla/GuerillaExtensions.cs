@@ -1,20 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using Moonfish.Tags;
 
 namespace Moonfish.Guerilla
 {
     public static class GuerillaExtensions
     {
-        public static void Write(this Stream output, GuerillaBlock block)
-        {
-            var queueableBinaryWriter = new QueueableBlamBinaryWriter(output);
-
-            block.Defer(queueableBinaryWriter);
-            block.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Commit();
-        }
-
         public delegate void PreProcessFieldSet(BlamBinaryReader reader, List<tag_field> fieldSet);
 
         public static List<tag_field> ReadFields(this BlamBinaryReader reader)

@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("beam_block")]
-    public partial class BeamBlock : GuerillaBlock, IWriteQueueable
+    public partial class BeamBlock : GuerillaBlock, IWriteDeferrable
     {
         [Moonfish.Tags.TagReferenceAttribute("shad")]
         public Moonfish.Tags.TagReference Shader;
@@ -69,17 +69,17 @@ namespace Moonfish.Guerilla.Tags
             this.Yaw.ReadInstances(binaryReader, pointerQueue);
             this.Pitch.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.Color.Defer(queueableBinaryWriter);
-            this.Alpha.Defer(queueableBinaryWriter);
-            this.Width.Defer(queueableBinaryWriter);
-            this.Length.Defer(queueableBinaryWriter);
-            this.Yaw.Defer(queueableBinaryWriter);
-            this.Pitch.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.Color.DeferReferences(queueableBinaryWriter);
+            this.Alpha.DeferReferences(queueableBinaryWriter);
+            this.Width.DeferReferences(queueableBinaryWriter);
+            this.Length.DeferReferences(queueableBinaryWriter);
+            this.Yaw.DeferReferences(queueableBinaryWriter);
+            this.Pitch.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Shader);

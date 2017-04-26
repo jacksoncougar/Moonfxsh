@@ -6,6 +6,7 @@ using Moonfish.Guerilla;
 
 namespace Moonfish.Tags
 {
+    
     [GuerillaType(MoonfishFieldType.FieldShortBlockIndex1)]
     [StructLayout(LayoutKind.Sequential, Size = 2)]
     public struct ShortBlockIndex1

@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("window_pane_reference_block")]
-    public partial class WindowPaneReferenceBlock : GuerillaBlock, IWriteQueueable
+    public partial class WindowPaneReferenceBlock : GuerillaBlock, IWriteDeferrable
     {
         /// <summary>
         /// Define the screen's panes here (normal screens have 1 pane, tab-view screens have 2+ panes)
@@ -78,9 +78,9 @@ namespace Moonfish.Guerilla.Tags
             this.HudBlocks = base.ReadBlockArrayData<HudBlockReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.PlayerBlocks = base.ReadBlockArrayData<PlayerBlockReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Buttons);
             queueableBinaryWriter.Defer(this.ListBlock);
             queueableBinaryWriter.Defer(this.TableView);
@@ -91,7 +91,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.HudBlocks);
             queueableBinaryWriter.Defer(this.PlayerBlocks);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.fieldpad);

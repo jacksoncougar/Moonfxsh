@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("vibration_definition_struct_block")]
-    public partial class VibrationDefinitionStructBlock : GuerillaBlock, IWriteQueueable
+    public partial class VibrationDefinitionStructBlock : GuerillaBlock, IWriteDeferrable
     {
         public VibrationFrequencyDefinitionStructBlock LowFrequencyVibration = new VibrationFrequencyDefinitionStructBlock();
         public VibrationFrequencyDefinitionStructBlock HighFrequencyVibration = new VibrationFrequencyDefinitionStructBlock();
@@ -50,13 +50,13 @@ namespace Moonfish.Guerilla.Tags
             this.LowFrequencyVibration.ReadInstances(binaryReader, pointerQueue);
             this.HighFrequencyVibration.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.LowFrequencyVibration.Defer(queueableBinaryWriter);
-            this.HighFrequencyVibration.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.LowFrequencyVibration.DeferReferences(queueableBinaryWriter);
+            this.HighFrequencyVibration.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.LowFrequencyVibration.Write(queueableBinaryWriter);

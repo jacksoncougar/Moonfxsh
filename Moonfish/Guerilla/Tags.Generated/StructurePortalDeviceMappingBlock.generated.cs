@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("structure_portal_device_mapping_block")]
-    public partial class StructurePortalDeviceMappingBlock : GuerillaBlock, IWriteQueueable
+    public partial class StructurePortalDeviceMappingBlock : GuerillaBlock, IWriteDeferrable
     {
         public StructureDevicePortalAssociationBlock[] DevicePortalAssociations = new StructureDevicePortalAssociationBlock[0];
         public GamePortalToPortalMappingBlock[] GamePortalToPortalMap = new GamePortalToPortalMappingBlock[0];
@@ -50,13 +50,13 @@ namespace Moonfish.Guerilla.Tags
             this.DevicePortalAssociations = base.ReadBlockArrayData<StructureDevicePortalAssociationBlock>(binaryReader, pointerQueue.Dequeue());
             this.GamePortalToPortalMap = base.ReadBlockArrayData<GamePortalToPortalMappingBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.DevicePortalAssociations);
             queueableBinaryWriter.Defer(this.GamePortalToPortalMap);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.DevicePortalAssociations);

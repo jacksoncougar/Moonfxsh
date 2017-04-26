@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("weapon_hud_crosshair_block")]
-    public partial class WeaponHudCrosshairBlock : GuerillaBlock, IWriteQueueable
+    public partial class WeaponHudCrosshairBlock : GuerillaBlock, IWriteDeferrable
     {
         public CrosshairTypeEnum CrosshairType;
         private byte[] fieldpad = new byte[2];
@@ -62,12 +62,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.CrosshairOverlays = base.ReadBlockArrayData<WeaponHudCrosshairItemBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.CrosshairOverlays);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.CrosshairType)));

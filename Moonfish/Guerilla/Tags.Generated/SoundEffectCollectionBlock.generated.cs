@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("sfx+")]
     [TagBlockOriginalNameAttribute("sound_effect_collection_block")]
-    public partial class SoundEffectCollectionBlock : GuerillaBlock, IWriteQueueable
+    public partial class SoundEffectCollectionBlock : GuerillaBlock, IWriteDeferrable
     {
         public PlatformSoundPlaybackBlock[] SoundEffects = new PlatformSoundPlaybackBlock[0];
         public override int SerializedSize
@@ -48,12 +48,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.SoundEffects = base.ReadBlockArrayData<PlatformSoundPlaybackBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.SoundEffects);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.SoundEffects);

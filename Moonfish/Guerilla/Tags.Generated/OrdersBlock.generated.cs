@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("orders_block")]
-    public partial class OrdersBlock : GuerillaBlock, IWriteQueueable
+    public partial class OrdersBlock : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Tags.String32 Name;
         public Moonfish.Tags.ShortBlockIndex1 Style;
@@ -79,16 +79,16 @@ namespace Moonfish.Guerilla.Tags
             this.SpecialMovement = base.ReadBlockArrayData<SpecialMovementBlock>(binaryReader, pointerQueue.Dequeue());
             this.OrderEndings = base.ReadBlockArrayData<OrderEndingBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.PrimaryAreaSet);
             queueableBinaryWriter.Defer(this.SecondaryAreaSet);
             queueableBinaryWriter.Defer(this.SecondarySetTrigger);
             queueableBinaryWriter.Defer(this.SpecialMovement);
             queueableBinaryWriter.Defer(this.OrderEndings);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Name);

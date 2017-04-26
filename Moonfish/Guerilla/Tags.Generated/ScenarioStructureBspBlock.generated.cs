@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("sbsp")]
     [TagBlockOriginalNameAttribute("scenario_structure_bsp_block")]
-    public partial class ScenarioStructureBspBlock : GuerillaBlock, IWriteQueueable
+    public partial class ScenarioStructureBspBlock : GuerillaBlock, IWriteDeferrable
     {
         public GlobalTagImportInfoBlock[] ImportInfo = new GlobalTagImportInfoBlock[0];
         private byte[] fieldpad = new byte[4];
@@ -199,9 +199,9 @@ namespace Moonfish.Guerilla.Tags
             this.ObjectFakeLightprobes = base.ReadBlockArrayData<StructureBspFakeLightprobesBlock>(binaryReader, pointerQueue.Dequeue());
             this.Decorators0 = base.ReadBlockArrayData<DecoratorPlacementDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.ImportInfo);
             queueableBinaryWriter.Defer(this.CollisionMaterials);
             queueableBinaryWriter.Defer(this.CollisionBSP);
@@ -239,14 +239,14 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.ReverbSoundClusters);
             queueableBinaryWriter.Defer(this.TransparentPlanes);
             queueableBinaryWriter.Defer(this.DebugInfo);
-            this.StructurePhysics.Defer(queueableBinaryWriter);
+            this.StructurePhysics.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.WaterDefinitions);
             queueableBinaryWriter.Defer(this.portaldeviceMapping);
             queueableBinaryWriter.Defer(this.Audibility);
             queueableBinaryWriter.Defer(this.ObjectFakeLightprobes);
             queueableBinaryWriter.Defer(this.Decorators0);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.ImportInfo);

@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("global_geometry_section_struct_block")]
-    public partial class GlobalGeometrySectionStructBlock : GuerillaBlock, IWriteQueueable
+    public partial class GlobalGeometrySectionStructBlock : GuerillaBlock, IWriteDeferrable
     {
         public GlobalGeometryPartBlockNew[] Parts = new GlobalGeometryPartBlockNew[0];
         public GlobalSubpartsBlock[] Subparts = new GlobalSubpartsBlock[0];
@@ -72,9 +72,9 @@ namespace Moonfish.Guerilla.Tags
             this.MoppReorderTable = base.ReadBlockArrayData<GlobalGeometrySectionStripIndexBlock>(binaryReader, pointerQueue.Dequeue());
             this.VertexBuffers = base.ReadBlockArrayData<GlobalGeometrySectionVertexBufferBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter writer)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Defer(writer);
+            base.DeferReferences(writer);
             writer.Defer(this.Parts);
             writer.Defer(this.Subparts);
             writer.Defer(this.VisibilityBounds);
@@ -84,7 +84,7 @@ namespace Moonfish.Guerilla.Tags
             writer.Defer(this.MoppReorderTable);
             writer.Defer(this.VertexBuffers);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter writer)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
             base.Write(writer);
             writer.WritePointer(this.Parts);

@@ -84,6 +84,11 @@ namespace Moonfish
             return value;
         }
 
+        public virtual bool Contains(TK key)
+        {
+            return keymap.ContainsKey(key);
+        }
+
         public event EventHandler<DereferenceCallback>
             GetExternalReferenceEventHandler;
 

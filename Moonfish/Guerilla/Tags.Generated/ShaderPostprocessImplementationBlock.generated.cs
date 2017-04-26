@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("shader_postprocess_implementation_block")]
-    public partial class ShaderPostprocessImplementationBlock : GuerillaBlock, IWriteQueueable
+    public partial class ShaderPostprocessImplementationBlock : GuerillaBlock, IWriteDeferrable
     {
         public ShaderGpuStateReferenceStructBlock GPUConstantState = new ShaderGpuStateReferenceStructBlock();
         public ShaderGpuStateReferenceStructBlock GPUVolatileState = new ShaderGpuStateReferenceStructBlock();
@@ -74,21 +74,21 @@ namespace Moonfish.Guerilla.Tags
             this.ColorOverlays.ReadInstances(binaryReader, pointerQueue);
             this.VertexShaderConstants.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.GPUConstantState.Defer(queueableBinaryWriter);
-            this.GPUVolatileState.Defer(queueableBinaryWriter);
-            this.BitmapParameters.Defer(queueableBinaryWriter);
-            this.BitmapTransforms.Defer(queueableBinaryWriter);
-            this.ValueParameters.Defer(queueableBinaryWriter);
-            this.ColorParameters.Defer(queueableBinaryWriter);
-            this.BitmapTransformOverlays.Defer(queueableBinaryWriter);
-            this.ValueOverlays.Defer(queueableBinaryWriter);
-            this.ColorOverlays.Defer(queueableBinaryWriter);
-            this.VertexShaderConstants.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.GPUConstantState.DeferReferences(queueableBinaryWriter);
+            this.GPUVolatileState.DeferReferences(queueableBinaryWriter);
+            this.BitmapParameters.DeferReferences(queueableBinaryWriter);
+            this.BitmapTransforms.DeferReferences(queueableBinaryWriter);
+            this.ValueParameters.DeferReferences(queueableBinaryWriter);
+            this.ColorParameters.DeferReferences(queueableBinaryWriter);
+            this.BitmapTransformOverlays.DeferReferences(queueableBinaryWriter);
+            this.ValueOverlays.DeferReferences(queueableBinaryWriter);
+            this.ColorOverlays.DeferReferences(queueableBinaryWriter);
+            this.VertexShaderConstants.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.GPUConstantState.Write(queueableBinaryWriter);

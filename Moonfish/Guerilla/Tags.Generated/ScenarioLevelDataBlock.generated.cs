@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("scenario_level_data_block")]
-    public partial class ScenarioLevelDataBlock : GuerillaBlock, IWriteQueueable
+    public partial class ScenarioLevelDataBlock : GuerillaBlock, IWriteDeferrable
     {
         [Moonfish.Tags.TagReferenceAttribute("unic")]
         public Moonfish.Tags.TagReference LevelDescription;
@@ -53,13 +53,13 @@ namespace Moonfish.Guerilla.Tags
             this.CampaignLevelData = base.ReadBlockArrayData<GlobalUiCampaignLevelBlock>(binaryReader, pointerQueue.Dequeue());
             this.Multiplayer = base.ReadBlockArrayData<GlobalUiMultiplayerLevelBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.CampaignLevelData);
             queueableBinaryWriter.Defer(this.Multiplayer);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.LevelDescription);

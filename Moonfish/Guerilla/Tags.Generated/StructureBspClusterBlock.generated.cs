@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("structure_bsp_cluster_block")]
-    public partial class StructureBspClusterBlock : GuerillaBlock, IWriteQueueable
+    public partial class StructureBspClusterBlock : GuerillaBlock, IWriteDeferrable
     {
         public GlobalGeometrySectionInfoStructBlock SectionInfo = new GlobalGeometrySectionInfoStructBlock();
         public GlobalGeometryBlockInfoStructBlock GeometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
@@ -107,11 +107,11 @@ namespace Moonfish.Guerilla.Tags
             this.IndexReorderTable = base.ReadBlockArrayData<GlobalGeometrySectionStripIndexBlock>(binaryReader, pointerQueue.Dequeue());
             this.CollisionMoppCode = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.SectionInfo.Defer(queueableBinaryWriter);
-            this.GeometryBlockInfo.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.SectionInfo.DeferReferences(queueableBinaryWriter);
+            this.GeometryBlockInfo.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.ClusterData);
             queueableBinaryWriter.Defer(this.PredictedResources);
             queueableBinaryWriter.Defer(this.Portals);
@@ -119,7 +119,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.IndexReorderTable);
             queueableBinaryWriter.Defer(this.CollisionMoppCode);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.SectionInfo.Write(queueableBinaryWriter);

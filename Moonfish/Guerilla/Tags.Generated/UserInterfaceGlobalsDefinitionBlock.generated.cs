@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("wgtz")]
     [TagBlockOriginalNameAttribute("user_interface_globals_definition_block")]
-    public partial class UserInterfaceGlobalsDefinitionBlock : GuerillaBlock, IWriteQueueable
+    public partial class UserInterfaceGlobalsDefinitionBlock : GuerillaBlock, IWriteDeferrable
     {
         /// <summary>
         /// This is a reference to the ui shared globals tag
@@ -66,12 +66,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.ScreenWidgets = base.ReadBlockArrayData<UserInterfaceWidgetReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.ScreenWidgets);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.SharedGlobals);

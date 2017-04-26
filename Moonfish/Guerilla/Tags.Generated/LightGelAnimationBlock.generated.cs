@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("light_gel_animation_block")]
-    public partial class LightGelAnimationBlock : GuerillaBlock, IWriteQueueable
+    public partial class LightGelAnimationBlock : GuerillaBlock, IWriteDeferrable
     {
         public MappingFunctionBlock Dx = new MappingFunctionBlock();
         public MappingFunctionBlock Dy = new MappingFunctionBlock();
@@ -50,13 +50,13 @@ namespace Moonfish.Guerilla.Tags
             this.Dx.ReadInstances(binaryReader, pointerQueue);
             this.Dy.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.Dx.Defer(queueableBinaryWriter);
-            this.Dy.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.Dx.DeferReferences(queueableBinaryWriter);
+            this.Dy.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.Dx.Write(queueableBinaryWriter);

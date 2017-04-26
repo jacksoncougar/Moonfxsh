@@ -13,13 +13,14 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("global_geometry_section_vertex_buffer_block")]
-    public partial class GlobalGeometrySectionVertexBufferBlock : GuerillaBlock, IWriteQueueable
+    public partial class GlobalGeometrySectionVertexBufferBlock : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Tags.VertexBuffer VertexBuffer;
         public override int SerializedSize
@@ -46,14 +47,15 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(writer);
+            writer.Defer(this.VertexBuffer);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.VertexBuffer);
+            base.Write(writer);
+            writer.Write(this.VertexBuffer);
         }
     }
 }

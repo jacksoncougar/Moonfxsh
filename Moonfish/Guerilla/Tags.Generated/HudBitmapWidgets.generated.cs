@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("hud_bitmap_widgets")]
-    public partial class HudBitmapWidgets : GuerillaBlock, IWriteQueueable
+    public partial class HudBitmapWidgets : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Tags.StringIdent Name;
         public HudWidgetInputsStructBlock HudWidgetInputsStruct = new HudWidgetInputsStructBlock();
@@ -89,14 +89,14 @@ namespace Moonfish.Guerilla.Tags
             this.HudWidgetStateDefinitionStruct.ReadInstances(binaryReader, pointerQueue);
             this.Effect = base.ReadBlockArrayData<HudWidgetEffectBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.HudWidgetInputsStruct.Defer(queueableBinaryWriter);
-            this.HudWidgetStateDefinitionStruct.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.HudWidgetInputsStruct.DeferReferences(queueableBinaryWriter);
+            this.HudWidgetStateDefinitionStruct.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Effect);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Name);

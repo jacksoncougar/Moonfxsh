@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("liquid_arc_block")]
-    public partial class LiquidArcBlock : GuerillaBlock, IWriteQueueable
+    public partial class LiquidArcBlock : GuerillaBlock, IWriteDeferrable
     {
         public Flags LiquidArcFlags;
         public SpriteCountEnum SpriteCount;
@@ -123,17 +123,17 @@ namespace Moonfish.Guerilla.Tags
             this.Rangescale.ReadInstances(binaryReader, pointerQueue);
             this.Brightnessscale.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.HorizontalRange.Defer(queueableBinaryWriter);
-            this.VerticalRange.Defer(queueableBinaryWriter);
-            this.Roughness.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.HorizontalRange.DeferReferences(queueableBinaryWriter);
+            this.VerticalRange.DeferReferences(queueableBinaryWriter);
+            this.Roughness.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Cores);
-            this.Rangescale.Defer(queueableBinaryWriter);
-            this.Brightnessscale.Defer(queueableBinaryWriter);
+            this.Rangescale.DeferReferences(queueableBinaryWriter);
+            this.Brightnessscale.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.LiquidArcFlags)));

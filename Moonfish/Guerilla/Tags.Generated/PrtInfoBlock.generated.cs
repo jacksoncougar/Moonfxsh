@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("prt_info_block")]
-    public partial class PrtInfoBlock : GuerillaBlock, IWriteQueueable
+    public partial class PrtInfoBlock : GuerillaBlock, IWriteDeferrable
     {
         public short SHOrder;
         public short NumOfClusters;
@@ -77,16 +77,16 @@ namespace Moonfish.Guerilla.Tags
             this.VertexBuffers = base.ReadBlockArrayData<PrtVertexBuffersBlock>(binaryReader, pointerQueue.Dequeue());
             this.GeometryBlockInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.LodInfo);
             queueableBinaryWriter.Defer(this.ClusterBasis);
             queueableBinaryWriter.Defer(this.RawPcaData);
             queueableBinaryWriter.Defer(this.VertexBuffers);
-            this.GeometryBlockInfo.Defer(queueableBinaryWriter);
+            this.GeometryBlockInfo.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.SHOrder);

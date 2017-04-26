@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("skin")]
     [TagBlockOriginalNameAttribute("user_interface_list_skin_definition_block")]
-    public partial class UserInterfaceListSkinDefinitionBlock : GuerillaBlock, IWriteQueueable
+    public partial class UserInterfaceListSkinDefinitionBlock : GuerillaBlock, IWriteDeferrable
     {
         public ListFlags UserInterfaceListSkinDefinitionListFlags;
         [Moonfish.Tags.TagReferenceAttribute("bitm")]
@@ -69,16 +69,16 @@ namespace Moonfish.Guerilla.Tags
             this.HudBlocks = base.ReadBlockArrayData<HudBlockReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.PlayerBlocks = base.ReadBlockArrayData<PlayerBlockReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.ItemAnimations);
             queueableBinaryWriter.Defer(this.TextBlocks);
             queueableBinaryWriter.Defer(this.BitmapBlocks);
             queueableBinaryWriter.Defer(this.HudBlocks);
             queueableBinaryWriter.Defer(this.PlayerBlocks);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.UserInterfaceListSkinDefinitionListFlags)));

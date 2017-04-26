@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("character_physics_struct_block")]
-    public partial class CharacterPhysicsStructBlock : GuerillaBlock, IWriteQueueable
+    public partial class CharacterPhysicsStructBlock : GuerillaBlock, IWriteDeferrable
     {
         public Flags CharacterPhysicsStructFlags;
         public float HeightStanding;
@@ -81,18 +81,18 @@ namespace Moonfish.Guerilla.Tags
             this.DeadPhysics.ReadInstances(binaryReader, pointerQueue);
             this.SentinelPhysics.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.DeadSphereShapes);
             queueableBinaryWriter.Defer(this.PillShapes);
             queueableBinaryWriter.Defer(this.SphereShapes);
-            this.GroundPhysics.Defer(queueableBinaryWriter);
-            this.FlyingPhysics.Defer(queueableBinaryWriter);
-            this.DeadPhysics.Defer(queueableBinaryWriter);
-            this.SentinelPhysics.Defer(queueableBinaryWriter);
+            this.GroundPhysics.DeferReferences(queueableBinaryWriter);
+            this.FlyingPhysics.DeferReferences(queueableBinaryWriter);
+            this.DeadPhysics.DeferReferences(queueableBinaryWriter);
+            this.SentinelPhysics.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.CharacterPhysicsStructFlags)));

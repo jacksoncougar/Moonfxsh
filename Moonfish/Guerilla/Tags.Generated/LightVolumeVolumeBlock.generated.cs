@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("light_volume_volume_block")]
-    public partial class LightVolumeVolumeBlock : GuerillaBlock, IWriteQueueable
+    public partial class LightVolumeVolumeBlock : GuerillaBlock, IWriteDeferrable
     {
         public Flags LightVolumeVolumeFlags;
         [Moonfish.Tags.TagReferenceAttribute("bitm")]
@@ -93,18 +93,18 @@ namespace Moonfish.Guerilla.Tags
             this.Aspect = base.ReadBlockArrayData<LightVolumeAspectBlock>(binaryReader, pointerQueue.Dequeue());
             this.LightVolumeRuntimeOffsetBlock = base.ReadBlockArrayData<LightVolumeRuntimeOffsetBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.OffsetFunction.Defer(queueableBinaryWriter);
-            this.RadiusFunction.Defer(queueableBinaryWriter);
-            this.BrightnessFunction.Defer(queueableBinaryWriter);
-            this.ColorFunction.Defer(queueableBinaryWriter);
-            this.FacingFunction.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.OffsetFunction.DeferReferences(queueableBinaryWriter);
+            this.RadiusFunction.DeferReferences(queueableBinaryWriter);
+            this.BrightnessFunction.DeferReferences(queueableBinaryWriter);
+            this.ColorFunction.DeferReferences(queueableBinaryWriter);
+            this.FacingFunction.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Aspect);
             queueableBinaryWriter.Defer(this.LightVolumeRuntimeOffsetBlock);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.LightVolumeVolumeFlags)));

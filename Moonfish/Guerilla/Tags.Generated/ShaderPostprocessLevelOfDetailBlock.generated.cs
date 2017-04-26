@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("shader_postprocess_level_of_detail_block")]
-    public partial class ShaderPostprocessLevelOfDetailBlock : GuerillaBlock, IWriteQueueable
+    public partial class ShaderPostprocessLevelOfDetailBlock : GuerillaBlock, IWriteDeferrable
     {
         public float ProjectedHeightPercentage;
         public int AvailableLayers;
@@ -84,9 +84,9 @@ namespace Moonfish.Guerilla.Tags
             this.VertexShaderConstants = base.ReadBlockArrayData<ShaderPostprocessVertexShaderConstantBlock>(binaryReader, pointerQueue.Dequeue());
             this.GPUState.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Layers);
             queueableBinaryWriter.Defer(this.Passes);
             queueableBinaryWriter.Defer(this.Implementations);
@@ -98,9 +98,9 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.ValueOverlays);
             queueableBinaryWriter.Defer(this.ColorOverlays);
             queueableBinaryWriter.Defer(this.VertexShaderConstants);
-            this.GPUState.Defer(queueableBinaryWriter);
+            this.GPUState.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.ProjectedHeightPercentage);

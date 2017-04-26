@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("rasterizer_screen_effect_texcoord_generation_advanced_control_block")]
-    public partial class RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock : GuerillaBlock, IWriteQueueable
+    public partial class RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock : GuerillaBlock, IWriteDeferrable
     {
         public Stage0Flags RasterizerScreenEffectTexcoordGenerationAdvancedControlStage0Flags;
         public Stage1Flags RasterizerScreenEffectTexcoordGenerationAdvancedControlStage1Flags;
@@ -60,11 +60,11 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.RasterizerScreenEffectTexcoordGenerationAdvancedControlStage0Flags)));

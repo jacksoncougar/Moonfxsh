@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("animation_reference_block")]
-    public partial class AnimationReferenceBlock : GuerillaBlock, IWriteQueueable
+    public partial class AnimationReferenceBlock : GuerillaBlock, IWriteDeferrable
     {
         public Flags AnimationReferenceFlags;
         /// <summary>
@@ -74,14 +74,14 @@ namespace Moonfish.Guerilla.Tags
             this.Keyframes0 = base.ReadBlockArrayData<ScreenAnimationKeyframeReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.Keyframes1 = base.ReadBlockArrayData<ScreenAnimationKeyframeReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Keyframes);
             queueableBinaryWriter.Defer(this.Keyframes0);
             queueableBinaryWriter.Defer(this.Keyframes1);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.AnimationReferenceFlags)));

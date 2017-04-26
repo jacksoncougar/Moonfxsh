@@ -257,8 +257,9 @@ namespace Moonfish.Guerilla
         /// <returns></returns>
         public static IEnumerable<MoonfishTagField> PostProcess(string name, IList<MoonfishTagField> fields)
         {
-            var preProcess = preProcessFieldsFunctions.Where(x => x.Key == name).Select(x => x.Value).FirstOrDefault();
-            return preProcess != null ? preProcess(fields) : fields;
+            IEnumerable<ProcessFieldsDelegate> preProcess = preProcessFieldsFunctions.Where(x => x.Key == name || x.Key == "*").Select(x => x.Value);
+
+            return preProcess.Aggregate(fields, (current, function) => function?.Invoke(current));
         }
 
         public static string ReadString(BlamBinaryReader reader, int address)

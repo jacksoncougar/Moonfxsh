@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("instantaneous_damage_repsonse_block")]
-    public partial class InstantaneousDamageRepsonseBlock : GuerillaBlock, IWriteQueueable
+    public partial class InstantaneousDamageRepsonseBlock : GuerillaBlock, IWriteDeferrable
     {
         public ResponseTypeEnum ResponseType;
         public ConstraintDamageTypeEnum ConstraintDamageType;
@@ -103,13 +103,13 @@ namespace Moonfish.Guerilla.Tags
             this.DamageEffect.ReadInstances(binaryReader, pointerQueue);
             this.DamageEffectMarker.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.DamageEffect.Defer(queueableBinaryWriter);
-            this.DamageEffectMarker.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.DamageEffect.DeferReferences(queueableBinaryWriter);
+            this.DamageEffectMarker.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.ResponseType)));

@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("shape_group_reference_block")]
-    public partial class ShapeGroupReferenceBlock : GuerillaBlock, IWriteQueueable
+    public partial class ShapeGroupReferenceBlock : GuerillaBlock, IWriteDeferrable
     {
         public ShapeBlockReferenceBlock[] Shapes = new ShapeBlockReferenceBlock[0];
         public UiModelSceneReferenceBlock[] ModelSceneBlocks = new UiModelSceneReferenceBlock[0];
@@ -53,14 +53,14 @@ namespace Moonfish.Guerilla.Tags
             this.ModelSceneBlocks = base.ReadBlockArrayData<UiModelSceneReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.BitmapBlocks = base.ReadBlockArrayData<BitmapBlockReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Shapes);
             queueableBinaryWriter.Defer(this.ModelSceneBlocks);
             queueableBinaryWriter.Defer(this.BitmapBlocks);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.Shapes);

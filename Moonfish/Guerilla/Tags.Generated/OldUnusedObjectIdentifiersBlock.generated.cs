@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("old_unused_object_identifiers_block")]
-    public partial class OldUnusedObjectIdentifiersBlock : GuerillaBlock, IWriteQueueable
+    public partial class OldUnusedObjectIdentifiersBlock : GuerillaBlock, IWriteDeferrable
     {
         public ScenarioObjectIdStructBlock ObjectID = new ScenarioObjectIdStructBlock();
         public override int SerializedSize
@@ -47,12 +47,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.ObjectID.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.ObjectID.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.ObjectID.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.ObjectID.Write(queueableBinaryWriter);

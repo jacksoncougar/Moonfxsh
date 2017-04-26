@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("lightmap_vertex_buffer_bucket_block")]
-    public partial class LightmapVertexBufferBucketBlock : GuerillaBlock, IWriteQueueable
+    public partial class LightmapVertexBufferBucketBlock : GuerillaBlock, IWriteDeferrable
     {
         public Flags LightmapVertexBufferBucketFlags;
         private byte[] fieldpad = new byte[2];
@@ -57,14 +57,14 @@ namespace Moonfish.Guerilla.Tags
             this.GeometryBlockInfo.ReadInstances(binaryReader, pointerQueue);
             this.CacheData = base.ReadBlockArrayData<LightmapVertexBufferBucketCacheDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.RawVertices);
-            this.GeometryBlockInfo.Defer(queueableBinaryWriter);
+            this.GeometryBlockInfo.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.CacheData);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.LightmapVertexBufferBucketFlags)));

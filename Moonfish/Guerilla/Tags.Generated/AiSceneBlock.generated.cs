@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("ai_scene_block")]
-    public partial class AiSceneBlock : GuerillaBlock, IWriteQueueable
+    public partial class AiSceneBlock : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Tags.StringIdent Name;
         public Flags AiSceneFlags;
@@ -54,13 +54,13 @@ namespace Moonfish.Guerilla.Tags
             this.TriggerConditions = base.ReadBlockArrayData<AiSceneTriggerBlock>(binaryReader, pointerQueue.Dequeue());
             this.Roles = base.ReadBlockArrayData<AiSceneRoleBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.TriggerConditions);
             queueableBinaryWriter.Defer(this.Roles);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Name);

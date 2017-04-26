@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("shader_postprocess_definition_new_block")]
-    public partial class ShaderPostprocessDefinitionNewBlock : GuerillaBlock, IWriteQueueable
+    public partial class ShaderPostprocessDefinitionNewBlock : GuerillaBlock, IWriteDeferrable
     {
         public int ShaderTemplateIndex;
         public ShaderPostprocessBitmapNewBlock[] Bitmaps = new ShaderPostprocessBitmapNewBlock[0];
@@ -91,9 +91,9 @@ namespace Moonfish.Guerilla.Tags
             this.ValueProperties = base.ReadBlockArrayData<ShaderPostprocessValuePropertyBlock>(binaryReader, pointerQueue.Dequeue());
             this.OldLevelsOfDetail = base.ReadBlockArrayData<ShaderPostprocessLevelOfDetailBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Bitmaps);
             queueableBinaryWriter.Defer(this.PixelConstants);
             queueableBinaryWriter.Defer(this.VertexConstants);
@@ -110,7 +110,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.ValueProperties);
             queueableBinaryWriter.Defer(this.OldLevelsOfDetail);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.ShaderTemplateIndex);

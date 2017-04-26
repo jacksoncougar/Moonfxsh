@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("unhi")]
     [TagBlockOriginalNameAttribute("unit_hud_interface_block")]
-    public partial class UnitHudInterfaceBlock : GuerillaBlock, IWriteQueueable
+    public partial class UnitHudInterfaceBlock : GuerillaBlock, IWriteDeferrable
     {
         public AnchorEnum Anchor;
         private byte[] fieldpad = new byte[2];
@@ -412,9 +412,9 @@ namespace Moonfish.Guerilla.Tags
             this.Sounds = base.ReadBlockArrayData<UnitHudSoundBlock>(binaryReader, pointerQueue.Dequeue());
             this.Meters = base.ReadBlockArrayData<UnitHudAuxilaryPanelBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.MultitexOverlay);
             queueableBinaryWriter.Defer(this.MultitexOverlay0);
             queueableBinaryWriter.Defer(this.GNullBlock);
@@ -426,7 +426,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.Sounds);
             queueableBinaryWriter.Defer(this.Meters);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.Anchor)));

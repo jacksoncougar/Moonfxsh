@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("global_collision_bsp_block")]
-    public partial class GlobalCollisionBspBlock : GuerillaBlock, IWriteQueueable
+    public partial class GlobalCollisionBspBlock : GuerillaBlock, IWriteDeferrable
     {
         public Bsp3dNodesBlock[] BSP3DNodes = new Bsp3dNodesBlock[0];
         public PlanesBlock[] Planes = new PlanesBlock[0];
@@ -68,9 +68,9 @@ namespace Moonfish.Guerilla.Tags
             this.Edges = base.ReadBlockArrayData<EdgesBlock>(binaryReader, pointerQueue.Dequeue());
             this.Vertices = base.ReadBlockArrayData<VerticesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.BSP3DNodes);
             queueableBinaryWriter.Defer(this.Planes);
             queueableBinaryWriter.Defer(this.Leaves);
@@ -80,7 +80,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.Edges);
             queueableBinaryWriter.Defer(this.Vertices);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.BSP3DNodes);

@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("hmt ")]
     [TagBlockOriginalNameAttribute("hud_message_text_block")]
-    public partial class HudMessageTextBlock : GuerillaBlock, IWriteQueueable
+    public partial class HudMessageTextBlock : GuerillaBlock, IWriteDeferrable
     {
         public byte[] TextData;
         public HudMessageElementsBlock[] MessageElements = new HudMessageElementsBlock[0];
@@ -56,14 +56,14 @@ namespace Moonfish.Guerilla.Tags
             this.MessageElements = base.ReadBlockArrayData<HudMessageElementsBlock>(binaryReader, pointerQueue.Dequeue());
             this.Messages = base.ReadBlockArrayData<HudMessagesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.TextData);
             queueableBinaryWriter.Defer(this.MessageElements);
             queueableBinaryWriter.Defer(this.Messages);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.TextData);

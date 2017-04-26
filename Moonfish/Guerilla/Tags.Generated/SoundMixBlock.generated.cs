@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("snmx")]
     [TagBlockOriginalNameAttribute("sound_mix_block")]
-    public partial class SoundMixBlock : GuerillaBlock, IWriteQueueable
+    public partial class SoundMixBlock : GuerillaBlock, IWriteDeferrable
     {
         /// <summary>
         /// for first person sounds to the left of you
@@ -77,12 +77,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.GlobalMix.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.GlobalMix.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.GlobalMix.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.LeftStereoGain);

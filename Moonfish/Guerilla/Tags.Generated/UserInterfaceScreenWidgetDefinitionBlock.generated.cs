@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("wgit")]
     [TagBlockOriginalNameAttribute("user_interface_screen_widget_definition_block")]
-    public partial class UserInterfaceScreenWidgetDefinitionBlock : GuerillaBlock, IWriteQueueable
+    public partial class UserInterfaceScreenWidgetDefinitionBlock : GuerillaBlock, IWriteDeferrable
     {
         public Flags UserInterfaceScreenWidgetDefinitionFlags;
         public ScreenIDEnum ScreenID;
@@ -95,14 +95,14 @@ namespace Moonfish.Guerilla.Tags
             this.LocalStrings = base.ReadBlockArrayData<LocalStringIdListSectionReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.LocalBitmaps = base.ReadBlockArrayData<LocalBitmapReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Panes);
             queueableBinaryWriter.Defer(this.LocalStrings);
             queueableBinaryWriter.Defer(this.LocalBitmaps);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.UserInterfaceScreenWidgetDefinitionFlags)));

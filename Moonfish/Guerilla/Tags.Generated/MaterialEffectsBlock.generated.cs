@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("foot")]
     [TagBlockOriginalNameAttribute("material_effects_block")]
-    public partial class MaterialEffectsBlock : GuerillaBlock, IWriteQueueable
+    public partial class MaterialEffectsBlock : GuerillaBlock, IWriteDeferrable
     {
         public MaterialEffectBlockV2[] Effects = new MaterialEffectBlockV2[0];
         public override int SerializedSize
@@ -48,12 +48,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Effects = base.ReadBlockArrayData<MaterialEffectBlockV2>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Effects);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.Effects);

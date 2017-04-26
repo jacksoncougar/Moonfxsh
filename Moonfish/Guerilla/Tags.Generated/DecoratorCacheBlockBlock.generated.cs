@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("decorator_cache_block_block")]
-    public partial class DecoratorCacheBlockBlock : GuerillaBlock, IWriteQueueable
+    public partial class DecoratorCacheBlockBlock : GuerillaBlock, IWriteDeferrable
     {
         public GlobalGeometryBlockInfoStructBlock GeometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
         public DecoratorCacheBlockDataBlock[] CacheBlockData = new DecoratorCacheBlockDataBlock[0];
@@ -50,13 +50,13 @@ namespace Moonfish.Guerilla.Tags
             this.GeometryBlockInfo.ReadInstances(binaryReader, pointerQueue);
             this.CacheBlockData = base.ReadBlockArrayData<DecoratorCacheBlockDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.GeometryBlockInfo.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.GeometryBlockInfo.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.CacheBlockData);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.GeometryBlockInfo.Write(queueableBinaryWriter);

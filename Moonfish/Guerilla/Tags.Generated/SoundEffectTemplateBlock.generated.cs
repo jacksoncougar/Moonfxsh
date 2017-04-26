@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("<fx>")]
     [TagBlockOriginalNameAttribute("sound_effect_template_block")]
-    public partial class SoundEffectTemplateBlock : GuerillaBlock, IWriteQueueable
+    public partial class SoundEffectTemplateBlock : GuerillaBlock, IWriteDeferrable
     {
         public SoundEffectTemplatesBlock[] TemplateCollection = new SoundEffectTemplatesBlock[0];
         public Moonfish.Tags.StringIdent InputEffectName;
@@ -56,14 +56,14 @@ namespace Moonfish.Guerilla.Tags
             this.AdditionalSoundInputs = base.ReadBlockArrayData<SoundEffectTemplateAdditionalSoundInputBlock>(binaryReader, pointerQueue.Dequeue());
             this.PlatformSoundEffectTemplateCollectionBlock = base.ReadBlockArrayData<PlatformSoundEffectTemplateCollectionBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.TemplateCollection);
             queueableBinaryWriter.Defer(this.AdditionalSoundInputs);
             queueableBinaryWriter.Defer(this.PlatformSoundEffectTemplateCollectionBlock);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.TemplateCollection);

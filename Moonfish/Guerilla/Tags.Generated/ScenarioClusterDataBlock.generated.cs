@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("scenario_cluster_data_block")]
-    public partial class ScenarioClusterDataBlock : GuerillaBlock, IWriteQueueable
+    public partial class ScenarioClusterDataBlock : GuerillaBlock, IWriteDeferrable
     {
         [Moonfish.Tags.TagReferenceAttribute("sbsp")]
         public Moonfish.Tags.TagReference BSP;
@@ -64,16 +64,16 @@ namespace Moonfish.Guerilla.Tags
             this.WeatherProperties = base.ReadBlockArrayData<ScenarioClusterWeatherPropertiesBlock>(binaryReader, pointerQueue.Dequeue());
             this.AtmosphericFogProperties = base.ReadBlockArrayData<ScenarioClusterAtmosphericFogPropertiesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.BackgroundSounds);
             queueableBinaryWriter.Defer(this.SoundEnvironments);
             queueableBinaryWriter.Defer(this.ClusterCentroids);
             queueableBinaryWriter.Defer(this.WeatherProperties);
             queueableBinaryWriter.Defer(this.AtmosphericFogProperties);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.BSP);

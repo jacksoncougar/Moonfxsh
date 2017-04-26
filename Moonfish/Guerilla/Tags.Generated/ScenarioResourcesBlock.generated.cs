@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("scenario_resources_block")]
-    public partial class ScenarioResourcesBlock : GuerillaBlock, IWriteQueueable
+    public partial class ScenarioResourcesBlock : GuerillaBlock, IWriteDeferrable
     {
         public ScenarioResourceReferenceBlock[] References = new ScenarioResourceReferenceBlock[0];
         public ScenarioHsSourceReferenceBlock[] ScriptSource = new ScenarioHsSourceReferenceBlock[0];
@@ -53,14 +53,14 @@ namespace Moonfish.Guerilla.Tags
             this.ScriptSource = base.ReadBlockArrayData<ScenarioHsSourceReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.AIResources = base.ReadBlockArrayData<ScenarioAiResourceReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.References);
             queueableBinaryWriter.Defer(this.ScriptSource);
             queueableBinaryWriter.Defer(this.AIResources);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.References);

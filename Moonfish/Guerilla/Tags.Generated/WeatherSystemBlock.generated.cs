@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("weat")]
     [TagBlockOriginalNameAttribute("weather_system_block")]
-    public partial class WeatherSystemBlock : GuerillaBlock, IWriteQueueable
+    public partial class WeatherSystemBlock : GuerillaBlock, IWriteDeferrable
     {
         public GlobalParticleSystemLiteBlock[] ParticleSystem = new GlobalParticleSystemLiteBlock[0];
         public GlobalWeatherBackgroundPlateBlock[] BackgroundPlates = new GlobalWeatherBackgroundPlateBlock[0];
@@ -56,14 +56,14 @@ namespace Moonfish.Guerilla.Tags
             this.BackgroundPlates = base.ReadBlockArrayData<GlobalWeatherBackgroundPlateBlock>(binaryReader, pointerQueue.Dequeue());
             this.WindModel.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.ParticleSystem);
             queueableBinaryWriter.Defer(this.BackgroundPlates);
-            this.WindModel.Defer(queueableBinaryWriter);
+            this.WindModel.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.ParticleSystem);

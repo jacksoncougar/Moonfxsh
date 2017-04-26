@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("unit_seat_block")]
-    public partial class UnitSeatBlock : GuerillaBlock, IWriteQueueable
+    public partial class UnitSeatBlock : GuerillaBlock, IWriteDeferrable
     {
         public Flags UnitSeatFlags;
         public Moonfish.Tags.StringIdent Label;
@@ -121,14 +121,14 @@ namespace Moonfish.Guerilla.Tags
             this.UnitCamera.ReadInstances(binaryReader, pointerQueue);
             this.UnitHudInterface = base.ReadBlockArrayData<UnitHudReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.Acceleration.Defer(queueableBinaryWriter);
-            this.UnitCamera.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.Acceleration.DeferReferences(queueableBinaryWriter);
+            this.UnitCamera.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.UnitHudInterface);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.UnitSeatFlags)));

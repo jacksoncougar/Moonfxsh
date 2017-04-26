@@ -43,5 +43,11 @@ namespace Moonfish.Guerilla.Tags
         {
             throw new NotImplementedException();
         }
+
+        public bool Contains(long offset)
+        {
+            //+1 because the address just after the end of the data needs to map to the last resource.
+            return ResourceDataOffset <= offset && offset < ResourceDataOffset + ResourceDataSize;
+        }
     }
 }

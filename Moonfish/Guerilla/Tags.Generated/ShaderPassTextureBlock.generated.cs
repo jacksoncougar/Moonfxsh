@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("shader_pass_texture_block")]
-    public partial class ShaderPassTextureBlock : GuerillaBlock, IWriteQueueable
+    public partial class ShaderPassTextureBlock : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Tags.StringIdent SourceParameter;
         public SourceExternEnum SourceExtern;
@@ -77,16 +77,16 @@ namespace Moonfish.Guerilla.Tags
             this.MiscState = base.ReadBlockArrayData<ShaderTextureStateMiscStateBlock>(binaryReader, pointerQueue.Dequeue());
             this.Constants = base.ReadBlockArrayData<ShaderTextureStateConstantBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.AddressState);
             queueableBinaryWriter.Defer(this.FilterState);
             queueableBinaryWriter.Defer(this.KillState);
             queueableBinaryWriter.Defer(this.MiscState);
             queueableBinaryWriter.Defer(this.Constants);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.SourceParameter);

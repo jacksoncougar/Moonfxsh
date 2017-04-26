@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("light_volume_aspect_block")]
-    public partial class LightVolumeAspectBlock : GuerillaBlock, IWriteQueueable
+    public partial class LightVolumeAspectBlock : GuerillaBlock, IWriteDeferrable
     {
         public ScalarFunctionStructBlock AlongAxis = new ScalarFunctionStructBlock();
         public ScalarFunctionStructBlock AwayFromAxis = new ScalarFunctionStructBlock();
@@ -59,13 +59,13 @@ namespace Moonfish.Guerilla.Tags
             this.AlongAxis.ReadInstances(binaryReader, pointerQueue);
             this.AwayFromAxis.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.AlongAxis.Defer(queueableBinaryWriter);
-            this.AwayFromAxis.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.AlongAxis.DeferReferences(queueableBinaryWriter);
+            this.AwayFromAxis.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.AlongAxis.Write(queueableBinaryWriter);

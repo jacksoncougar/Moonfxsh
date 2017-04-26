@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("particle_system_lite_data_block")]
-    public partial class ParticleSystemLiteDataBlock : GuerillaBlock, IWriteQueueable
+    public partial class ParticleSystemLiteDataBlock : GuerillaBlock, IWriteDeferrable
     {
         public ParticlesRenderDataBlock[] ParticlesRenderData = new ParticlesRenderDataBlock[0];
         public ParticlesUpdateDataBlock[] ParticlesOtherData = new ParticlesUpdateDataBlock[0];
@@ -52,13 +52,13 @@ namespace Moonfish.Guerilla.Tags
             this.ParticlesRenderData = base.ReadBlockArrayData<ParticlesRenderDataBlock>(binaryReader, pointerQueue.Dequeue());
             this.ParticlesOtherData = base.ReadBlockArrayData<ParticlesUpdateDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.ParticlesRenderData);
             queueableBinaryWriter.Defer(this.ParticlesOtherData);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.ParticlesRenderData);

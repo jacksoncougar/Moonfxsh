@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("node_render_leaves_block")]
-    public partial class NodeRenderLeavesBlock : GuerillaBlock, IWriteQueueable
+    public partial class NodeRenderLeavesBlock : GuerillaBlock, IWriteDeferrable
     {
         public BspLeafBlock[] CollisionLeaves = new BspLeafBlock[0];
         public BspSurfaceReferenceBlock[] SurfaceReferences = new BspSurfaceReferenceBlock[0];
@@ -50,13 +50,13 @@ namespace Moonfish.Guerilla.Tags
             this.CollisionLeaves = base.ReadBlockArrayData<BspLeafBlock>(binaryReader, pointerQueue.Dequeue());
             this.SurfaceReferences = base.ReadBlockArrayData<BspSurfaceReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.CollisionLeaves);
             queueableBinaryWriter.Defer(this.SurfaceReferences);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.CollisionLeaves);

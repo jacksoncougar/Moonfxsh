@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("gear_block")]
-    public partial class GearBlock : GuerillaBlock, IWriteQueueable
+    public partial class GearBlock : GuerillaBlock, IWriteDeferrable
     {
         public TorqueCurveStructBlock LoadedTorqueCurve = new TorqueCurveStructBlock();
         public TorqueCurveStructBlock CruisingTorqueCurve = new TorqueCurveStructBlock();
@@ -60,13 +60,13 @@ namespace Moonfish.Guerilla.Tags
             this.LoadedTorqueCurve.ReadInstances(binaryReader, pointerQueue);
             this.CruisingTorqueCurve.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.LoadedTorqueCurve.Defer(queueableBinaryWriter);
-            this.CruisingTorqueCurve.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.LoadedTorqueCurve.DeferReferences(queueableBinaryWriter);
+            this.CruisingTorqueCurve.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.LoadedTorqueCurve.Write(queueableBinaryWriter);

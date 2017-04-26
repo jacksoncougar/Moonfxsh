@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("global_geometry_point_data_struct_block")]
-    public partial class GlobalGeometryPointDataStructBlock : GuerillaBlock, IWriteQueueable
+    public partial class GlobalGeometryPointDataStructBlock : GuerillaBlock, IWriteDeferrable
     {
         public GlobalGeometryRawPointBlock[] RawPoints = new GlobalGeometryRawPointBlock[0];
         public byte[] RuntimePointData;
@@ -56,15 +56,15 @@ namespace Moonfish.Guerilla.Tags
             this.RigidPointGroups = base.ReadBlockArrayData<GlobalGeometryRigidPointGroupBlock>(binaryReader, pointerQueue.Dequeue());
             this.VertexPointIndices = base.ReadBlockArrayData<GlobalGeometryPointDataIndexBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.RawPoints);
             queueableBinaryWriter.Defer(this.RuntimePointData);
             queueableBinaryWriter.Defer(this.RigidPointGroups);
             queueableBinaryWriter.Defer(this.VertexPointIndices);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.RawPoints);

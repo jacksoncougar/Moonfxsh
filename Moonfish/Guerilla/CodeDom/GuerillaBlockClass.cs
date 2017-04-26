@@ -83,7 +83,7 @@ namespace Moonfish.Guerilla.CodeDom
 			TargetClass.BaseTypes.AddRange(new[]
 			{
 				new CodeTypeReference(typeof (GuerillaBlock).Name),
-				new CodeTypeReference(typeof (IWriteQueueable).Name)
+				new CodeTypeReference(typeof (IWriteDeferrable).Name)
 			});
 		}
 
@@ -427,7 +427,7 @@ namespace Moonfish.Guerilla.CodeDom
 		{
 			var method = new CodeMemberMethod
 			{
-				Name = StaticReflection.GetMemberName((IWriteQueueable item) => item.Defer(null)),
+				Name = StaticReflection.GetMemberName((IWriteDeferrable item) => item.DeferReferences(null)),
 				Attributes = MemberAttributes.Override | MemberAttributes.Public,
 				ReturnType = new CodeTypeReference(typeof(void))
 			};
@@ -440,7 +440,7 @@ namespace Moonfish.Guerilla.CodeDom
 			//  add QueueableBinaryWriter parameter
 			const string queueableBinaryWriter = "writer";
 			var queueableBinaryWriterParameterDeclaration =
-				new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(QueueableBlamBinaryWriter)),
+				new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(LinearBinaryWriter)),
 					queueableBinaryWriter);
 			var queueableBinaryWriterArgument = new CodeArgumentReferenceExpression(queueableBinaryWriter);
 
@@ -459,9 +459,21 @@ namespace Moonfish.Guerilla.CodeDom
 				var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),
 					field.Name);
 				var systemType = ReflectionMethods.GetType(field.Type.BaseType);
+                
+                if (systemType == typeof(VertexBuffer))
+                {
+                    var alignment = (int)(codeObject.UserData.Contains("alignment") ? codeObject.UserData["alignment"] : 4);
+                    var methodName = StaticReflection.GetMemberName((LinearBinaryWriter item) => item.Defer(new short[0], 4));
 
-				//  Single dimensional arrays
-				if (field.Type.ArrayRank == 1)
+                    if (alignment == 4)
+                        method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
+                            fieldReference));
+                    else
+                        method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
+                            fieldReference, new CodePrimitiveExpression(alignment)));
+                }
+                //  Single dimensional arrays
+                if (field.Type.ArrayRank == 1)
 				{
 					var fieldInitializer = (CodeArrayCreateExpression)field.InitExpression;
 					var arraySize = fieldInitializer?.Size ?? 0;
@@ -477,7 +489,7 @@ namespace Moonfish.Guerilla.CodeDom
 					{
 					    var methodName =
 							StaticReflection.GetMemberName(
-								(IWriteQueueable item) => item.Defer(null));
+								(IWriteDeferrable item) => item.DeferReferences(null));
 
 						//  add loop iterator variable if needed
 						if (!method.Statements.Contains(loopVariableDeclaration))
@@ -500,7 +512,7 @@ namespace Moonfish.Guerilla.CodeDom
 					    var codeMemberField = codeObject as CodeMemberField;
 
 					    var alignment = (int) (codeObject.UserData.Contains("alignment") ? codeObject.UserData["alignment"] : 4);
-					    var methodName = StaticReflection.GetMemberName((QueueableBlamBinaryWriter item) => item.Defer(new byte[0], 4));
+					    var methodName = StaticReflection.GetMemberName((LinearBinaryWriter item) => item.Defer(new byte[0], 4));
 
                         if (alignment == 4)
 					        method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
@@ -513,7 +525,7 @@ namespace Moonfish.Guerilla.CodeDom
 					else if (systemType == typeof (short))
                     {
                         var alignment = (int)(codeObject.UserData.Contains("alignment") ? codeObject.UserData["alignment"] : 4);
-                        var methodName = StaticReflection.GetMemberName((QueueableBlamBinaryWriter item) => item.Defer(new short[0], 4));
+                        var methodName = StaticReflection.GetMemberName((LinearBinaryWriter item) => item.Defer(new short[0], 4));
                         
                         if (alignment == 4)
                             method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
@@ -522,14 +534,15 @@ namespace Moonfish.Guerilla.CodeDom
                             method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
                                 fieldReference, new CodePrimitiveExpression(alignment)));
                     }
-					//  tagBlock array
-					else
-					{
-					    var methodName =
-					        StaticReflection.GetMemberName((QueueableBlamBinaryWriter item) => item.Defer(new GuerillaBlock[0]));
+                    //  tagBlock array
+                    else
+                    {
+                        var methodName =
+                            StaticReflection.GetMemberName((LinearBinaryWriter item) => item.Defer(new GuerillaBlock[0]));
 
-					    method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName, fieldReference));
-					}
+                        method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
+                            fieldReference));
+                    }
 				}
 				//  like an inline struct where T : GuerillaBlock
 				else if (field.UserData.Contains("GuerillaBlock"))
@@ -538,7 +551,7 @@ namespace Moonfish.Guerilla.CodeDom
 
                     var methodName =
 						StaticReflection.GetMemberName(
-							(IWriteQueueable item) => item.Defer(null));
+							(IWriteDeferrable item) => item.DeferReferences(null));
 
 					method.Statements.Add(new CodeMethodInvokeExpression(fieldReference, methodName,
 						queueableBinaryWriterArgument));
@@ -571,7 +584,7 @@ namespace Moonfish.Guerilla.CodeDom
 			//  add QueueableBinaryWriter parameter
 			const string queueableBinaryWriter = "writer";
 			var queueableBinaryWriterParameterDeclaration =
-				new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(QueueableBlamBinaryWriter)),
+				new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(LinearBinaryWriter)),
 					queueableBinaryWriter);
 			var queueableBinaryWriterArgument = new CodeArgumentReferenceExpression(queueableBinaryWriter);
 
@@ -601,7 +614,7 @@ namespace Moonfish.Guerilla.CodeDom
 					if (systemType == typeof(byte) && arraySize > 0)
 					{
 						var methodName =
-							StaticReflection.GetMemberName((QueueableBlamBinaryWriter item) => item.Write(new byte[0]));
+							StaticReflection.GetMemberName((LinearBinaryWriter item) => item.Write(new byte[0]));
 
 						method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
 							fieldReference));
@@ -633,7 +646,7 @@ namespace Moonfish.Guerilla.CodeDom
 					{
 						var writePointerMethodName =
 							StaticReflection.GetMemberName(
-								(QueueableBlamBinaryWriter item) => item.WritePointer(new byte[0]));
+								(LinearBinaryWriter item) => item.WritePointer(new byte[0]));
 
 						method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument,
 							writePointerMethodName,
@@ -644,7 +657,7 @@ namespace Moonfish.Guerilla.CodeDom
 					{
 						var writePointerMethodName =
 							StaticReflection.GetMemberName(
-								(QueueableBlamBinaryWriter item) => item.WritePointer(new short[0]));
+								(LinearBinaryWriter item) => item.WritePointer(new short[0]));
 
 						method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument,
 							writePointerMethodName,
@@ -655,7 +668,7 @@ namespace Moonfish.Guerilla.CodeDom
 					{
 						var writePointerMethodName =
 							StaticReflection.GetMemberName(
-								(QueueableBlamBinaryWriter item) => item.WritePointer(new GuerillaBlock[0]));
+								(LinearBinaryWriter item) => item.WritePointer(new GuerillaBlock[0]));
 
 						method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument,
 							writePointerMethodName,

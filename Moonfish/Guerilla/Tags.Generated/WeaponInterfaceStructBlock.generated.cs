@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("weapon_interface_struct_block")]
-    public partial class WeaponInterfaceStructBlock : GuerillaBlock, IWriteQueueable
+    public partial class WeaponInterfaceStructBlock : GuerillaBlock, IWriteDeferrable
     {
         public WeaponSharedInterfaceStructBlock SharedInterface = new WeaponSharedInterfaceStructBlock();
         public WeaponFirstPersonInterfaceBlock[] FirstPerson = new WeaponFirstPersonInterfaceBlock[0];
@@ -53,13 +53,13 @@ namespace Moonfish.Guerilla.Tags
             this.SharedInterface.ReadInstances(binaryReader, pointerQueue);
             this.FirstPerson = base.ReadBlockArrayData<WeaponFirstPersonInterfaceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.SharedInterface.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.SharedInterface.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.FirstPerson);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.SharedInterface.Write(queueableBinaryWriter);

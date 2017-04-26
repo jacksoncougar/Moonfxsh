@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("animation_mode_block")]
-    public partial class AnimationModeBlock : GuerillaBlock, IWriteQueueable
+    public partial class AnimationModeBlock : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Tags.StringIdent Label;
         public WeaponClassBlock[] WeaponClassAABBCC = new WeaponClassBlock[0];
@@ -52,13 +52,13 @@ namespace Moonfish.Guerilla.Tags
             this.WeaponClassAABBCC = base.ReadBlockArrayData<WeaponClassBlock>(binaryReader, pointerQueue.Dequeue());
             this.ModeIkAABBCC = base.ReadBlockArrayData<AnimationIkBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.WeaponClassAABBCC);
             queueableBinaryWriter.Defer(this.ModeIkAABBCC);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Label);

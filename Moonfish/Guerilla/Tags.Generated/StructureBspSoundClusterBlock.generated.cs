@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("structure_bsp_sound_cluster_block")]
-    public partial class StructureBspSoundClusterBlock : GuerillaBlock, IWriteQueueable
+    public partial class StructureBspSoundClusterBlock : GuerillaBlock, IWriteDeferrable
     {
         private byte[] fieldpad = new byte[2];
         private byte[] fieldpad0 = new byte[2];
@@ -54,13 +54,13 @@ namespace Moonfish.Guerilla.Tags
             this.EnclosingPortalDesignators = base.ReadBlockArrayData<StructureSoundClusterPortalDesignators>(binaryReader, pointerQueue.Dequeue());
             this.InteriorClusterIndices = base.ReadBlockArrayData<StructureSoundClusterInteriorClusterIndices>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.EnclosingPortalDesignators);
             queueableBinaryWriter.Defer(this.InteriorClusterIndices);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.fieldpad);

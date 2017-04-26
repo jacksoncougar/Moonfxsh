@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("prismatic_constraints_block")]
-    public partial class PrismaticConstraintsBlock : GuerillaBlock, IWriteQueueable
+    public partial class PrismaticConstraintsBlock : GuerillaBlock, IWriteDeferrable
     {
         public ConstraintBodiesStructBlock ConstraintBodies = new ConstraintBodiesStructBlock();
         private byte[] fieldpad = new byte[4];
@@ -55,12 +55,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.ConstraintBodies.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.ConstraintBodies.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.ConstraintBodies.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.ConstraintBodies.Write(queueableBinaryWriter);

@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("lens")]
     [TagBlockOriginalNameAttribute("lens_flare_block")]
-    public partial class LensFlareBlock : GuerillaBlock, IWriteQueueable
+    public partial class LensFlareBlock : GuerillaBlock, IWriteDeferrable
     {
         public float FalloffAngle;
         public float CutoffAngle;
@@ -101,15 +101,15 @@ namespace Moonfish.Guerilla.Tags
             this.Color = base.ReadBlockArrayData<LensFlareColorAnimationBlock>(binaryReader, pointerQueue.Dequeue());
             this.Rotation = base.ReadBlockArrayData<LensFlareScalarAnimationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Reflections);
             queueableBinaryWriter.Defer(this.Brightness);
             queueableBinaryWriter.Defer(this.Color);
             queueableBinaryWriter.Defer(this.Rotation);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.FalloffAngle);

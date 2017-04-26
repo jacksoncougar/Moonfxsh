@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("vertex_shader_classification_block")]
-    public partial class VertexShaderClassificationBlock : GuerillaBlock, IWriteQueueable
+    public partial class VertexShaderClassificationBlock : GuerillaBlock, IWriteDeferrable
     {
         private byte[] fieldpad = new byte[4];
         public short[] CompiledShader;
@@ -54,13 +54,13 @@ namespace Moonfish.Guerilla.Tags
             this.CompiledShader = base.ReadDataShortArray(binaryReader, pointerQueue.Dequeue());
             this.Code = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.CompiledShader);
             queueableBinaryWriter.Defer(this.Code);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.fieldpad);

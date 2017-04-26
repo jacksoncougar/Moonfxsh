@@ -16,7 +16,7 @@ namespace Moonfish.Guerilla.Tags
     using System.Collections.Generic;
     using System.Linq;
     
-    public partial class MouseCursorBitmapReferenceBlock : GuerillaBlock, IWriteQueueable
+    public partial class MouseCursorBitmapReferenceBlock : GuerillaBlock, IWriteDeferrable
     {
         /// <summary>
         /// 0 - Normal mouse cursor
@@ -50,14 +50,14 @@ namespace Moonfish.Guerilla.Tags
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter linearBinaryWriter)
         {
-            base.Defer(queueableBlamBinaryWriter);
+            base.DeferReferences(linearBinaryWriter);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter linearBinaryWriter)
         {
-            base.Write_(queueableBlamBinaryWriter);
-            queueableBlamBinaryWriter.Write(this.Bitmap);
+            base.Write(linearBinaryWriter);
+            linearBinaryWriter.Write(this.Bitmap);
         }
     }
 }

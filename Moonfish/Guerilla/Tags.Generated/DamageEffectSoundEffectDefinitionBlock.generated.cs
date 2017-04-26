@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("damage_effect_sound_effect_definition_block")]
-    public partial class DamageEffectSoundEffectDefinitionBlock : GuerillaBlock, IWriteQueueable
+    public partial class DamageEffectSoundEffectDefinitionBlock : GuerillaBlock, IWriteDeferrable
     {
         /// <summary>
         /// EMPTY STRING
@@ -54,12 +54,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.EffectScaleFunction.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.EffectScaleFunction.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.EffectScaleFunction.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.EffectName);

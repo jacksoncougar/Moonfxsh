@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("jmad")]
     [TagBlockOriginalNameAttribute("model_animation_graph_block")]
-    public partial class ModelAnimationGraphBlock : GuerillaBlock, IWriteQueueable
+    public partial class ModelAnimationGraphBlock : GuerillaBlock, IWriteDeferrable
     {
         public AnimationGraphResourcesStructBlock Resources = new AnimationGraphResourcesStructBlock();
         public AnimationGraphContentsStructBlock Content = new AnimationGraphContentsStructBlock();
@@ -66,18 +66,18 @@ namespace Moonfish.Guerilla.Tags
             this.XboxAnimationDataBlock = base.ReadBlockArrayData<MoonfishXboxAnimationRawBlock>(binaryReader, pointerQueue.Dequeue());
             this.XboxUnknownAnimationBlock = base.ReadBlockArrayData<MoonfishXboxAnimationUnknownBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.Resources.Defer(queueableBinaryWriter);
-            this.Content.Defer(queueableBinaryWriter);
-            this.RunTimeData.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.Resources.DeferReferences(queueableBinaryWriter);
+            this.Content.DeferReferences(queueableBinaryWriter);
+            this.RunTimeData.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.LastImportResults);
             queueableBinaryWriter.Defer(this.AdditionalNodeData);
             queueableBinaryWriter.Defer(this.XboxAnimationDataBlock);
             queueableBinaryWriter.Defer(this.XboxUnknownAnimationBlock);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.Resources.Write(queueableBinaryWriter);

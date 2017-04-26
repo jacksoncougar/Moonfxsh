@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("ai_conversation_block")]
-    public partial class AiConversationBlock : GuerillaBlock, IWriteQueueable
+    public partial class AiConversationBlock : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Tags.String32 Name;
         public Flags AiConversationFlags;
@@ -65,14 +65,14 @@ namespace Moonfish.Guerilla.Tags
             this.Lines = base.ReadBlockArrayData<AiConversationLineBlock>(binaryReader, pointerQueue.Dequeue());
             this.GNullBlock = base.ReadBlockArrayData<GNullBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Participants);
             queueableBinaryWriter.Defer(this.Lines);
             queueableBinaryWriter.Defer(this.GNullBlock);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Name);

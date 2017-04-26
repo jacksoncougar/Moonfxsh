@@ -10,20 +10,17 @@ namespace Moonfish.Tags
         public readonly int StartAddress;
         public readonly int ElementSize;
 
-        private readonly int endAddress;
-
         public int this[int index]
         {
             get { return StartAddress + ElementSize*index; }
         }
 
-        public BlamPointer(int count, int address, int elementsize, int alignment = 4)
+        public BlamPointer(int count, int address, int elementsize, int alignment = Moonfish.Alignment.Default)
         {
             Alignment = alignment;
             ElementCount = count;
             StartAddress = Padding.Align(address, alignment);
             ElementSize = elementsize;
-            endAddress = StartAddress + ElementSize*ElementCount;
         }
 
         private BlamPointer(int count, int elementsize, int startAddress, int endAddress, int alignment)
@@ -32,25 +29,13 @@ namespace Moonfish.Tags
             ElementCount = count;
             ElementSize = elementsize;
             StartAddress = startAddress;
-            this.endAddress = endAddress;
         }
 
-        public BlamPointer Shift(int offset)
-        {
-            return new BlamPointer(ElementCount, ElementSize, StartAddress + offset, endAddress + offset, Alignment);
-        }
+        public int PointedSize => ElementCount*ElementSize;
 
-        public int PointedSize
-        {
-            get { return ElementCount*ElementSize; }
-        }
+        public int EndAddress => StartAddress + ElementSize*ElementCount;
 
-        public int EndAddress
-        {
-            get { return endAddress; }
-        }
-
-        public static BlamPointer Null { get { return new BlamPointer(0, 0, 0, 0, 4); } }
+        public static BlamPointer Null { get { return new BlamPointer(0, 0, 0, 0, Moonfish.Alignment.Default); } }
 
         public IEnumerator<int> GetEnumerator()
         {
@@ -93,12 +78,18 @@ namespace Moonfish.Tags
 
         public override string ToString()
         {
-            return string.Format("{0}:{1}", StartAddress, ElementCount);
+            return $"{StartAddress}:{ElementCount}";
         }
 
-        internal static bool IsNull(BlamPointer pointer)
+        public static bool operator ==(BlamPointer left, BlamPointer right)
         {
-            return pointer.ElementCount == 0 && pointer.StartAddress == 0;
+            return left.StartAddress == right.StartAddress && left.ElementCount == right.ElementCount &&
+                   left.EndAddress == right.EndAddress;
+        }
+
+        public static bool operator !=(BlamPointer left, BlamPointer right)
+        {
+            return !(left == right);
         }
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Moonfish.Guerilla;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 
@@ -282,7 +281,8 @@ namespace Moonfish
 
                 Padding.AssertIsAligned(4, buffer);
 
-                buffer.Write(data);
+                throw new NotImplementedException("Implement Block Writing Here");
+                //buffer.Write(data);
                 buffer.Align();
                 var length = (int) buffer.Position - dataAddress;
 
@@ -393,7 +393,7 @@ namespace Moonfish
                 //  padding it to 4 byte alignement
                 var sbspBlock =
                     (ScenarioStructureBspBlock) Deserialize(sbspReference.Ident);
-                virtualMemoryStream.Write(sbspBlock);
+                throw new NotImplementedException("sbspBlock need to be written here.");
                 virtualMemoryStream.Align();
 
                 //  if the lightmap is not null write out the meta data into the virtual stream
@@ -404,7 +404,6 @@ namespace Moonfish
                     var ltmpBlock =
                         (ScenarioStructureLightmapBlock)
                             Deserialize(ltmpReference.Ident);
-                    virtualMemoryStream.Write(ltmpBlock);
                 }
 
 

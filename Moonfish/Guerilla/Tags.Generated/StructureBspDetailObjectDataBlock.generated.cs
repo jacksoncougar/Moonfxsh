@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("structure_bsp_detail_object_data_block")]
-    public partial class StructureBspDetailObjectDataBlock : GuerillaBlock, IWriteQueueable
+    public partial class StructureBspDetailObjectDataBlock : GuerillaBlock, IWriteDeferrable
     {
         public GlobalDetailObjectCellsBlock[] Cells = new GlobalDetailObjectCellsBlock[0];
         public GlobalDetailObjectBlock[] Instances = new GlobalDetailObjectBlock[0];
@@ -60,15 +60,15 @@ namespace Moonfish.Guerilla.Tags
             this.Counts = base.ReadBlockArrayData<GlobalDetailObjectCountsBlock>(binaryReader, pointerQueue.Dequeue());
             this.ZReferenceVectors = base.ReadBlockArrayData<GlobalZReferenceVectorBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Cells);
             queueableBinaryWriter.Defer(this.Instances);
             queueableBinaryWriter.Defer(this.Counts);
             queueableBinaryWriter.Defer(this.ZReferenceVectors);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.Cells);

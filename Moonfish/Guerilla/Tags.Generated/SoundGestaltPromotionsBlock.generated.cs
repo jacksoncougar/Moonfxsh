@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("sound_gestalt_promotions_block")]
-    public partial class SoundGestaltPromotionsBlock : GuerillaBlock, IWriteQueueable
+    public partial class SoundGestaltPromotionsBlock : GuerillaBlock, IWriteDeferrable
     {
         public SoundPromotionRuleBlock[] SoundPromotionRules = new SoundPromotionRuleBlock[0];
         public SoundPromotionRuntimeTimerBlock[] SoundPromotionRuntimeTimers = new SoundPromotionRuntimeTimerBlock[0];
@@ -52,13 +52,13 @@ namespace Moonfish.Guerilla.Tags
             this.SoundPromotionRules = base.ReadBlockArrayData<SoundPromotionRuleBlock>(binaryReader, pointerQueue.Dequeue());
             this.SoundPromotionRuntimeTimers = base.ReadBlockArrayData<SoundPromotionRuntimeTimerBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.SoundPromotionRules);
             queueableBinaryWriter.Defer(this.SoundPromotionRuntimeTimers);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.SoundPromotionRules);

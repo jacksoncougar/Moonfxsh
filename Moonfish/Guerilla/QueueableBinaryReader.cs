@@ -59,7 +59,7 @@ namespace Moonfish.Guerilla
                 //  if the pointer has data, and the stream is not already at the data start address
                 //  then seek the data start address using a current stream offset to preserve the read/write 
                 //  cache.
-                if ( !BlamPointer.IsNull( item.Pointer ) && BaseStream.Position != item.Pointer.StartAddress )
+                if (item.Pointer != BlamPointer.Null && BaseStream.Position != item.Pointer.StartAddress )
                 {
                     var offset = item.Pointer.StartAddress - BaseStream.Position;
                     BaseStream.Seek( offset, SeekOrigin.Current );

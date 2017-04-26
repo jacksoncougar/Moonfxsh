@@ -7,6 +7,7 @@ using Moonfish;
 using Moonfish.Guerilla;
 using Moonfish.Guerilla.CodeDom;
 using Moonfish.Guerilla.Tags;
+using Moonfish.Tags;
 
 namespace MoonfishUnitTests
 {
@@ -21,7 +22,7 @@ namespace MoonfishUnitTests
             foreach (var datum in map)
             {
                 var block = map.Deserialize(datum.Identifier);
-                var writer = new QueueableBlamBinaryWriter(new TestingStream());
+                var writer = new LinearBinaryWriter(new TestingStream());
                 writer.Write(block);
             }
         }
@@ -35,7 +36,7 @@ namespace MoonfishUnitTests
         {
             var map = GuerillaCodeDom.GetAllMaps().First();
             Assert.IsNotNull(map);
-            foreach (var datum in map)
+            foreach (var datum in map.Index.Where(TagClass.Sbsp))
             {
                 var block = map.Deserialize(datum.Identifier) as IResourceContainer<object>;
                 if (block == null)

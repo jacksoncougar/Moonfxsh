@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("scnr")]
     [TagBlockOriginalNameAttribute("scenario_block")]
-    public partial class ScenarioBlock : GuerillaBlock, IWriteQueueable
+    public partial class ScenarioBlock : GuerillaBlock, IWriteDeferrable
     {
         [Moonfish.Tags.TagReferenceAttribute("sbsp")]
         public Moonfish.Tags.TagReference DoNotUse;
@@ -386,9 +386,9 @@ namespace Moonfish.Guerilla.Tags
             this.ScreenEffectReferences = base.ReadBlockArrayData<ScenarioScreenEffectReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.SimulationDefinitionTable = base.ReadBlockArrayData<ScenarioSimulationDefinitionTableBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Skies);
             queueableBinaryWriter.Defer(this.childScenarios);
             queueableBinaryWriter.Defer(this.PredictedResources);
@@ -470,7 +470,7 @@ namespace Moonfish.Guerilla.Tags
             int i;
             for (i = 0; (i < 32); i = (i + 1))
             {
-                this.ObjectSalts00[i].Defer(queueableBinaryWriter);
+                this.ObjectSalts00[i].DeferReferences(queueableBinaryWriter);
             }
             queueableBinaryWriter.Defer(this.SpawnData);
             queueableBinaryWriter.Defer(this.Crates);
@@ -492,7 +492,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.ScreenEffectReferences);
             queueableBinaryWriter.Defer(this.SimulationDefinitionTable);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.DoNotUse);
@@ -629,7 +629,7 @@ namespace Moonfish.Guerilla.Tags
             SnapToWhiteAtStart = 128,
         }
         [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
-        public class ObjectSaltsBlock : GuerillaBlock, IWriteQueueable
+        public class ObjectSaltsBlock : GuerillaBlock, IWriteDeferrable
         {
             public int EMPTYSTRING;
             public override int SerializedSize
@@ -656,11 +656,11 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
             {
-                base.Defer(queueableBinaryWriter);
+                base.DeferReferences(queueableBinaryWriter);
             }
-            public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+            public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
             {
                 base.Write(queueableBinaryWriter);
                 queueableBinaryWriter.Write(this.EMPTYSTRING);

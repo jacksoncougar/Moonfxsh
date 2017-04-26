@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("animation_transition_destination_block")]
-    public partial class AnimationTransitionDestinationBlock : GuerillaBlock, IWriteQueueable
+    public partial class AnimationTransitionDestinationBlock : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Tags.StringIdent FullName;
         public Moonfish.Tags.StringIdent Mode;
@@ -54,13 +54,13 @@ namespace Moonfish.Guerilla.Tags
             this.StateInfo.ReadInstances(binaryReader, pointerQueue);
             this.Animation.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.StateInfo.Defer(queueableBinaryWriter);
-            this.Animation.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.StateInfo.DeferReferences(queueableBinaryWriter);
+            this.Animation.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.FullName);

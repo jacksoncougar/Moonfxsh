@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("ligh")]
     [TagBlockOriginalNameAttribute("light_block")]
-    public partial class LightBlock : GuerillaBlock, IWriteQueueable
+    public partial class LightBlock : GuerillaBlock, IWriteDeferrable
     {
         public Flags LightFlags;
         public TypeEnum Type;
@@ -166,14 +166,14 @@ namespace Moonfish.Guerilla.Tags
             this.ColorAnimation = base.ReadBlockArrayData<LightColorAnimationBlock>(binaryReader, pointerQueue.Dequeue());
             this.GelAnimation = base.ReadBlockArrayData<LightGelAnimationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.BrightnessAnimation);
             queueableBinaryWriter.Defer(this.ColorAnimation);
             queueableBinaryWriter.Defer(this.GelAnimation);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.LightFlags)));

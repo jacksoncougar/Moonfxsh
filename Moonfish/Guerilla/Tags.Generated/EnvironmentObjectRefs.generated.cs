@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("environment_object_refs")]
-    public partial class EnvironmentObjectRefs : GuerillaBlock, IWriteQueueable
+    public partial class EnvironmentObjectRefs : GuerillaBlock, IWriteDeferrable
     {
         public Flags EnvironmentObjectRefsFlags;
         private byte[] fieldpad = new byte[2];
@@ -58,13 +58,13 @@ namespace Moonfish.Guerilla.Tags
             this.Bsps = base.ReadBlockArrayData<EnvironmentObjectBspRefs>(binaryReader, pointerQueue.Dequeue());
             this.Nodes = base.ReadBlockArrayData<EnvironmentObjectNodes>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Bsps);
             queueableBinaryWriter.Defer(this.Nodes);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.EnvironmentObjectRefsFlags)));

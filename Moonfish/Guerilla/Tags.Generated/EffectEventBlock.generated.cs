@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("effect_event_block")]
-    public partial class EffectEventBlock : GuerillaBlock, IWriteQueueable
+    public partial class EffectEventBlock : GuerillaBlock, IWriteDeferrable
     {
         public Flags EffectEventFlags;
         public float SkipFraction;
@@ -64,15 +64,15 @@ namespace Moonfish.Guerilla.Tags
             this.Accelerations = base.ReadBlockArrayData<EffectAccelerationsBlock>(binaryReader, pointerQueue.Dequeue());
             this.ParticleSystems = base.ReadBlockArrayData<ParticleSystemDefinitionBlockNew>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Parts);
             queueableBinaryWriter.Defer(this.Beams);
             queueableBinaryWriter.Defer(this.Accelerations);
             queueableBinaryWriter.Defer(this.ParticleSystems);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.EffectEventFlags)));

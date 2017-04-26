@@ -127,6 +127,8 @@
   <ItemGroup>
     <Compile Include="Cache\Package.cs" />
     <Compile Include="Cache\StreamAddressWrapper.cs" />
+    <Compile Include="Guerilla\Alignment.cs" />
+    <Compile Include="Guerilla\BlamBinaryWriter.cs" />
     <Compile Include="Guerilla\LayoutAttribute.cs" />
     <Compile Include="Guerilla\BinaryReader.cs" />
     <Compile Include="Guerilla\ResourceLinker.cs" />
@@ -1304,7 +1306,7 @@
     <Compile Include="Guerilla\GuerillaBlock.cs" />
     <Compile Include="Guerilla\CodeDom\GuerillaBlockClass.cs" />
     <Compile Include="Guerilla\GuerillaBlockExtensions.cs" />
-    <Compile Include="Guerilla\IWriteQueueable.cs" />
+    <Compile Include="Guerilla\IWriteDeferrable.cs" />
     <Compile Include="Guerilla\QueueableBinaryWriter.cs" />
     <Compile Include="Guerilla\Reflection\AccessModifiers.cs" />
     <Compile Include="Guerilla\Reflection\AccessModifiersExtensions.cs" />

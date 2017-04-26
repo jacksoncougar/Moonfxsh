@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("spas")]
     [TagBlockOriginalNameAttribute("shader_pass_block")]
-    public partial class ShaderPassBlock : GuerillaBlock, IWriteQueueable
+    public partial class ShaderPassBlock : GuerillaBlock, IWriteDeferrable
     {
         public byte[] Documentation;
         public ShaderPassParameterBlock[] Parameters = new ShaderPassParameterBlock[0];
@@ -61,15 +61,15 @@ namespace Moonfish.Guerilla.Tags
             this.Implementations = base.ReadBlockArrayData<ShaderPassImplementationBlock>(binaryReader, pointerQueue.Dequeue());
             this.PostprocessDefinition = base.ReadBlockArrayData<ShaderPassPostprocessDefinitionNewBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Documentation);
             queueableBinaryWriter.Defer(this.Parameters);
             queueableBinaryWriter.Defer(this.Implementations);
             queueableBinaryWriter.Defer(this.PostprocessDefinition);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.Documentation);

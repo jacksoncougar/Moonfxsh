@@ -4,7 +4,9 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class DecoratorCacheBlockBlock : IResourceBlock, IResourceDescriptor<GlobalGeometryBlockResourceBlock>, IResourceBlock<DecoratorCacheBlockDataBlock>
+    public partial class DecoratorCacheBlockBlock : 
+        IResourceDescriptor<GlobalGeometryBlockResourceBlock>, 
+        IResourceBlock<DecoratorCacheBlockDataBlock>
     {
         public ResourcePointer GetResourcePointer(int index = 0)
         {
@@ -41,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
             return CacheBlockData[index];
         }
 
-        void IResourceBlock<DecoratorCacheBlockDataBlock>.ReadResource(Func<IResourceBlock, int, Stream> @delegate, int index = -1)
+        void IResourceBlock<DecoratorCacheBlockDataBlock>.ReadResource(Func<IResourceBlock, int, Stream> @delegate, int index)
         {
             CacheBlockData = new[]
             {
@@ -50,9 +52,9 @@ namespace Moonfish.Guerilla.Tags
             };
         }
 
-        void IResourceBlock<DecoratorCacheBlockDataBlock>.WriteResource(Stream output, int index = -1)
+        void IResourceBlock<DecoratorCacheBlockDataBlock>.WriteResource(Stream output, int index)
         {
-            throw new NotImplementedException();
+            ResourceLinker.WriteResource(this, output);
         }
     }
 }

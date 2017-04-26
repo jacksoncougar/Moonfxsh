@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("structure_bsp_fake_lightprobes_block")]
-    public partial class StructureBspFakeLightprobesBlock : GuerillaBlock, IWriteQueueable
+    public partial class StructureBspFakeLightprobesBlock : GuerillaBlock, IWriteDeferrable
     {
         public ScenarioObjectIdStructBlock ObjectIdentifier = new ScenarioObjectIdStructBlock();
         public RenderLightingStructBlock RenderLighting = new RenderLightingStructBlock();
@@ -50,13 +50,13 @@ namespace Moonfish.Guerilla.Tags
             this.ObjectIdentifier.ReadInstances(binaryReader, pointerQueue);
             this.RenderLighting.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.ObjectIdentifier.Defer(queueableBinaryWriter);
-            this.RenderLighting.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.ObjectIdentifier.DeferReferences(queueableBinaryWriter);
+            this.RenderLighting.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.ObjectIdentifier.Write(queueableBinaryWriter);

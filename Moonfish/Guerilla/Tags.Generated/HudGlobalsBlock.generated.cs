@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("hudg")]
     [TagBlockOriginalNameAttribute("hud_globals_block")]
-    public partial class HudGlobalsBlock : GuerillaBlock, IWriteQueueable
+    public partial class HudGlobalsBlock : GuerillaBlock, IWriteDeferrable
     {
         public AnchorEnum Anchor;
         private byte[] fieldpad = new byte[2];
@@ -247,14 +247,14 @@ namespace Moonfish.Guerilla.Tags
             this.WaypointArrows = base.ReadBlockArrayData<HudWaypointArrowBlock>(binaryReader, pointerQueue.Dequeue());
             this.NewGlobals.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.ButtonIcons);
             queueableBinaryWriter.Defer(this.WaypointArrows);
-            this.NewGlobals.Defer(queueableBinaryWriter);
+            this.NewGlobals.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.Anchor)));

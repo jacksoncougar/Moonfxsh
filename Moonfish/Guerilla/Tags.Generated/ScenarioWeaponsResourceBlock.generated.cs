@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("*eap")]
     [TagBlockOriginalNameAttribute("scenario_weapons_resource_block")]
-    public partial class ScenarioWeaponsResourceBlock : GuerillaBlock, IWriteQueueable
+    public partial class ScenarioWeaponsResourceBlock : GuerillaBlock, IWriteDeferrable
     {
         public ScenarioObjectNamesBlock[] Names = new ScenarioObjectNamesBlock[0];
         public DontUseMeScenarioEnvironmentObjectBlock[] DontUseMeScenarioEnvironmentObjectBlock = new DontUseMeScenarioEnvironmentObjectBlock[0];
@@ -65,9 +65,9 @@ namespace Moonfish.Guerilla.Tags
             this.Objects = base.ReadBlockArrayData<ScenarioWeaponBlock>(binaryReader, pointerQueue.Dequeue());
             this.EditorFolders = base.ReadBlockArrayData<GScenarioEditorFolderBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Names);
             queueableBinaryWriter.Defer(this.DontUseMeScenarioEnvironmentObjectBlock);
             queueableBinaryWriter.Defer(this.StructureReferences);
@@ -75,7 +75,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.Objects);
             queueableBinaryWriter.Defer(this.EditorFolders);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.Names);

@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("weapon_triggers")]
-    public partial class WeaponTriggers : GuerillaBlock, IWriteQueueable
+    public partial class WeaponTriggers : GuerillaBlock, IWriteDeferrable
     {
         public Flags WeaponTriggersFlags;
         public InputEnum Input;
@@ -64,13 +64,13 @@ namespace Moonfish.Guerilla.Tags
             this.Autofire.ReadInstances(binaryReader, pointerQueue);
             this.Charging.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.Autofire.Defer(queueableBinaryWriter);
-            this.Charging.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.Autofire.DeferReferences(queueableBinaryWriter);
+            this.Charging.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.WeaponTriggersFlags)));

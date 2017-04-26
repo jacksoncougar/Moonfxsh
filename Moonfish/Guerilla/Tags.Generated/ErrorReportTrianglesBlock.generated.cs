@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("error_report_triangles_block")]
-    public partial class ErrorReportTrianglesBlock : GuerillaBlock, IWriteQueueable
+    public partial class ErrorReportTrianglesBlock : GuerillaBlock, IWriteDeferrable
     {
         public PointsBlock[] Points00 = new PointsBlock[3];
         public OpenTK.Vector4 Color;
@@ -58,16 +58,16 @@ namespace Moonfish.Guerilla.Tags
                 this.Points00[i].ReadInstances(binaryReader, pointerQueue);
             }
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             int i;
             for (i = 0; (i < 3); i = (i + 1))
             {
-                this.Points00[i].Defer(queueableBinaryWriter);
+                this.Points00[i].DeferReferences(queueableBinaryWriter);
             }
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             int i;
@@ -78,7 +78,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.Color);
         }
         [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
-        public class PointsBlock : GuerillaBlock, IWriteQueueable
+        public class PointsBlock : GuerillaBlock, IWriteDeferrable
         {
             public OpenTK.Vector3 Position;
             public NodeIndicesBlock[] NodeIndices00 = new NodeIndicesBlock[4];
@@ -127,20 +127,20 @@ namespace Moonfish.Guerilla.Tags
                     this.NodeWeights00[i].ReadInstances(binaryReader, pointerQueue);
                 }
             }
-            public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
             {
-                base.Defer(queueableBinaryWriter);
+                base.DeferReferences(queueableBinaryWriter);
                 int i;
                 for (i = 0; (i < 4); i = (i + 1))
                 {
-                    this.NodeIndices00[i].Defer(queueableBinaryWriter);
+                    this.NodeIndices00[i].DeferReferences(queueableBinaryWriter);
                 }
                 for (i = 0; (i < 4); i = (i + 1))
                 {
-                    this.NodeWeights00[i].Defer(queueableBinaryWriter);
+                    this.NodeWeights00[i].DeferReferences(queueableBinaryWriter);
                 }
             }
-            public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+            public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
             {
                 base.Write(queueableBinaryWriter);
                 queueableBinaryWriter.Write(this.Position);
@@ -155,7 +155,7 @@ namespace Moonfish.Guerilla.Tags
                 }
             }
             [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
-            public class NodeIndicesBlock : GuerillaBlock, IWriteQueueable
+            public class NodeIndicesBlock : GuerillaBlock, IWriteDeferrable
             {
                 public byte NodeIndex;
                 public override int SerializedSize
@@ -182,18 +182,18 @@ namespace Moonfish.Guerilla.Tags
                 {
                     base.ReadInstances(binaryReader, pointerQueue);
                 }
-                public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+                public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
                 {
-                    base.Defer(queueableBinaryWriter);
+                    base.DeferReferences(queueableBinaryWriter);
                 }
-                public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+                public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
                 {
                     base.Write(queueableBinaryWriter);
                     queueableBinaryWriter.Write(this.NodeIndex);
                 }
             }
             [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
-            public class NodeWeightsBlock : GuerillaBlock, IWriteQueueable
+            public class NodeWeightsBlock : GuerillaBlock, IWriteDeferrable
             {
                 public float NodeWeight;
                 public override int SerializedSize
@@ -220,11 +220,11 @@ namespace Moonfish.Guerilla.Tags
                 {
                     base.ReadInstances(binaryReader, pointerQueue);
                 }
-                public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+                public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
                 {
-                    base.Defer(queueableBinaryWriter);
+                    base.DeferReferences(queueableBinaryWriter);
                 }
-                public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+                public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
                 {
                     base.Write(queueableBinaryWriter);
                     queueableBinaryWriter.Write(this.NodeWeight);

@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("animation_blend_screen_block")]
-    public partial class AnimationBlendScreenBlock : GuerillaBlock, IWriteQueueable
+    public partial class AnimationBlendScreenBlock : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Tags.StringIdent Label;
         public AnimationAimingScreenStructBlock AimingScreen = new AnimationAimingScreenStructBlock();
@@ -49,12 +49,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.AimingScreen.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.AimingScreen.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.AimingScreen.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Label);

@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("materials_block")]
-    public partial class MaterialsBlock : GuerillaBlock, IWriteQueueable
+    public partial class MaterialsBlock : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Tags.StringIdent Name;
         public Moonfish.Tags.StringIdent ParentName;
@@ -75,13 +75,13 @@ namespace Moonfish.Guerilla.Tags
             this.PhysicsProperties.ReadInstances(binaryReader, pointerQueue);
             this.Sweeteners.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.PhysicsProperties.Defer(queueableBinaryWriter);
-            this.Sweeteners.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.PhysicsProperties.DeferReferences(queueableBinaryWriter);
+            this.Sweeteners.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Name);

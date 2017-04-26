@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("proj")]
     [TagBlockOriginalNameAttribute("projectile_block")]
-    public partial class ProjectileBlock : ObjectBlock, IWriteQueueable
+    public partial class ProjectileBlock : ObjectBlock, IWriteDeferrable
     {
         public ProjectileFlags ProjectileProjectileFlags;
         public DetonationTimerStartsEnum DetonationTimerStarts;
@@ -145,14 +145,14 @@ namespace Moonfish.Guerilla.Tags
             this.Blah.ReadInstances(binaryReader, pointerQueue);
             this.MaterialResponses = base.ReadBlockArrayData<ProjectileMaterialResponseBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.YourMomma.Defer(queueableBinaryWriter);
-            this.Blah.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.YourMomma.DeferReferences(queueableBinaryWriter);
+            this.Blah.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.MaterialResponses);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.ProjectileProjectileFlags)));

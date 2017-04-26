@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("global_damage_info_block")]
-    public partial class GlobalDamageInfoBlock : GuerillaBlock, IWriteQueueable
+    public partial class GlobalDamageInfoBlock : GuerillaBlock, IWriteDeferrable
     {
         public Flags GlobalDamageInfoFlags;
         public Moonfish.Tags.StringIdent GlobalIndirectMaterialName;
@@ -127,15 +127,15 @@ namespace Moonfish.Guerilla.Tags
             this.DamageSeats = base.ReadBlockArrayData<DamageSeatInfoBlock>(binaryReader, pointerQueue.Dequeue());
             this.DamageConstraints = base.ReadBlockArrayData<DamageConstraintInfoBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.DamageSections);
             queueableBinaryWriter.Defer(this.Nodes);
             queueableBinaryWriter.Defer(this.DamageSeats);
             queueableBinaryWriter.Defer(this.DamageConstraints);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.GlobalDamageInfoFlags)));

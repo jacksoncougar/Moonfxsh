@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("model_animation_runtime_data_struct_block")]
-    public partial class ModelAnimationRuntimeDataStructBlock : GuerillaBlock, IWriteQueueable
+    public partial class ModelAnimationRuntimeDataStructBlock : GuerillaBlock, IWriteDeferrable
     {
         public InheritedAnimationBlock[] InheritenceListBBAAAA = new InheritedAnimationBlock[0];
         public WeaponClassLookupBlock[] WeaponListBBAAAA = new WeaponClassLookupBlock[0];
@@ -54,13 +54,13 @@ namespace Moonfish.Guerilla.Tags
             this.InheritenceListBBAAAA = base.ReadBlockArrayData<InheritedAnimationBlock>(binaryReader, pointerQueue.Dequeue());
             this.WeaponListBBAAAA = base.ReadBlockArrayData<WeaponClassLookupBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.InheritenceListBBAAAA);
             queueableBinaryWriter.Defer(this.WeaponListBBAAAA);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.InheritenceListBBAAAA);

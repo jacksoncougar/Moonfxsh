@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("old_unused_strucure_physics_block")]
-    public partial class OldUnusedStrucurePhysicsBlock : GuerillaBlock, IWriteQueueable
+    public partial class OldUnusedStrucurePhysicsBlock : GuerillaBlock, IWriteDeferrable
     {
         public byte[] moppCode;
         public OldUnusedObjectIdentifiersBlock[] EvironmentObjectIdentifiers = new OldUnusedObjectIdentifiersBlock[0];
@@ -56,13 +56,13 @@ namespace Moonfish.Guerilla.Tags
             this.moppCode = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
             this.EvironmentObjectIdentifiers = base.ReadBlockArrayData<OldUnusedObjectIdentifiersBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.moppCode);
             queueableBinaryWriter.Defer(this.EvironmentObjectIdentifiers);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.moppCode);

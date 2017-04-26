@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("jpt!")]
     [TagBlockOriginalNameAttribute("damage_effect_block")]
-    public partial class DamageEffectBlock : GuerillaBlock, IWriteQueueable
+    public partial class DamageEffectBlock : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Model.Range Radius;
         public float CutoffScale;
@@ -169,13 +169,13 @@ namespace Moonfish.Guerilla.Tags
             this.Blah.ReadInstances(binaryReader, pointerQueue);
             this.PlayerResponses = base.ReadBlockArrayData<DamageEffectPlayerResponseBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.Blah.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.Blah.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.PlayerResponses);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Radius);

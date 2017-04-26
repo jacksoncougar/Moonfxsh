@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("havok_vehicle_physics_struct_block")]
-    public partial class HavokVehiclePhysicsStructBlock : GuerillaBlock, IWriteQueueable
+    public partial class HavokVehiclePhysicsStructBlock : GuerillaBlock, IWriteDeferrable
     {
         public Flags HavokVehiclePhysicsStructFlags;
         public float GroundFriction;
@@ -77,14 +77,14 @@ namespace Moonfish.Guerilla.Tags
             this.FrictionPoints = base.ReadBlockArrayData<FrictionPointDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
             this.shapePhantomShape = base.ReadBlockArrayData<VehiclePhantomShapeBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.AntiGravityPoints);
             queueableBinaryWriter.Defer(this.FrictionPoints);
             queueableBinaryWriter.Defer(this.shapePhantomShape);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.HavokVehiclePhysicsStructFlags)));

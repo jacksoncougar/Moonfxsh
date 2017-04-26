@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("shader_gpu_state_reference_struct_block")]
-    public partial class ShaderGpuStateReferenceStructBlock : GuerillaBlock, IWriteQueueable
+    public partial class ShaderGpuStateReferenceStructBlock : GuerillaBlock, IWriteDeferrable
     {
         public TagBlockIndexStructBlock RenderStates = new TagBlockIndexStructBlock();
         public TagBlockIndexStructBlock TextureStageStates = new TagBlockIndexStructBlock();
@@ -65,18 +65,18 @@ namespace Moonfish.Guerilla.Tags
             this.VnConstants.ReadInstances(binaryReader, pointerQueue);
             this.CnConstants.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.RenderStates.Defer(queueableBinaryWriter);
-            this.TextureStageStates.Defer(queueableBinaryWriter);
-            this.RenderStateParameters.Defer(queueableBinaryWriter);
-            this.TextureStageParameters.Defer(queueableBinaryWriter);
-            this.Textures.Defer(queueableBinaryWriter);
-            this.VnConstants.Defer(queueableBinaryWriter);
-            this.CnConstants.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.RenderStates.DeferReferences(queueableBinaryWriter);
+            this.TextureStageStates.DeferReferences(queueableBinaryWriter);
+            this.RenderStateParameters.DeferReferences(queueableBinaryWriter);
+            this.TextureStageParameters.DeferReferences(queueableBinaryWriter);
+            this.Textures.DeferReferences(queueableBinaryWriter);
+            this.VnConstants.DeferReferences(queueableBinaryWriter);
+            this.CnConstants.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.RenderStates.Write(queueableBinaryWriter);

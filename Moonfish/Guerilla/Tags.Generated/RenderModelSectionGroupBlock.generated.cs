@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("render_model_section_group_block")]
-    public partial class RenderModelSectionGroupBlock : GuerillaBlock, IWriteQueueable
+    public partial class RenderModelSectionGroupBlock : GuerillaBlock, IWriteDeferrable
     {
         public DetailLevels RenderModelSectionGroupDetailLevels;
         private byte[] fieldpad = new byte[2];
@@ -51,12 +51,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.CompoundNodes = base.ReadBlockArrayData<RenderModelCompoundNodeBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.CompoundNodes);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.RenderModelSectionGroupDetailLevels)));

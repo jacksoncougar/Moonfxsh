@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("clwd")]
     [TagBlockOriginalNameAttribute("cloth_block")]
-    public partial class ClothBlock : GuerillaBlock, IWriteQueueable
+    public partial class ClothBlock : GuerillaBlock, IWriteDeferrable
     {
         public Flags ClothFlags;
         public Moonfish.Tags.StringIdent MarkerAttachmentName;
@@ -78,16 +78,16 @@ namespace Moonfish.Guerilla.Tags
             this.StripIndices = base.ReadBlockArrayData<ClothIndicesBlock>(binaryReader, pointerQueue.Dequeue());
             this.Links = base.ReadBlockArrayData<ClothLinksBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.Properties.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.Properties.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Vertices);
             queueableBinaryWriter.Defer(this.Indices);
             queueableBinaryWriter.Defer(this.StripIndices);
             queueableBinaryWriter.Defer(this.Links);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.ClothFlags)));

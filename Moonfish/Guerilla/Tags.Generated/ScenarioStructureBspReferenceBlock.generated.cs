@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("scenario_structure_bsp_reference_block")]
-    public partial class ScenarioStructureBspReferenceBlock : GuerillaBlock, IWriteQueueable
+    public partial class ScenarioStructureBspReferenceBlock : GuerillaBlock, IWriteDeferrable
     {
         public MoonfishGlobalStructureBlockInfoStructBlock StructureBlockInfo = new MoonfishGlobalStructureBlockInfoStructBlock();
         [Moonfish.Tags.TagReferenceAttribute("sbsp")]
@@ -73,12 +73,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.StructureBlockInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.StructureBlockInfo.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.StructureBlockInfo.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.StructureBlockInfo.Write(queueableBinaryWriter);

@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("structure_bsp_audibility_block")]
-    public partial class StructureBspAudibilityBlock : GuerillaBlock, IWriteQueueable
+    public partial class StructureBspAudibilityBlock : GuerillaBlock, IWriteDeferrable
     {
         public int DoorPortalCount;
         public Moonfish.Model.Range ClusterDistanceBounds;
@@ -63,16 +63,16 @@ namespace Moonfish.Guerilla.Tags
             this.ClusterDistances = base.ReadBlockArrayData<EncodedClusterDistancesBlock>(binaryReader, pointerQueue.Dequeue());
             this.MachineDoorMapping = base.ReadBlockArrayData<OccluderToMachineDoorMapping>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.EncodedDoorPas);
             queueableBinaryWriter.Defer(this.ClusterDoorPortalEncodedPas);
             queueableBinaryWriter.Defer(this.AiDeafeningPas);
             queueableBinaryWriter.Defer(this.ClusterDistances);
             queueableBinaryWriter.Defer(this.MachineDoorMapping);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.DoorPortalCount);

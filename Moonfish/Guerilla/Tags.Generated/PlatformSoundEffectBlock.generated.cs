@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("platform_sound_effect_block")]
-    public partial class PlatformSoundEffectBlock : GuerillaBlock, IWriteQueueable
+    public partial class PlatformSoundEffectBlock : GuerillaBlock, IWriteDeferrable
     {
         public PlatformSoundEffectFunctionBlock[] FunctionInputs = new PlatformSoundEffectFunctionBlock[0];
         public PlatformSoundEffectConstantBlock[] ConstantInputs = new PlatformSoundEffectConstantBlock[0];
@@ -55,14 +55,14 @@ namespace Moonfish.Guerilla.Tags
             this.ConstantInputs = base.ReadBlockArrayData<PlatformSoundEffectConstantBlock>(binaryReader, pointerQueue.Dequeue());
             this.TemplateOverrideDescriptors = base.ReadBlockArrayData<PlatformSoundEffectOverrideDescriptorBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.FunctionInputs);
             queueableBinaryWriter.Defer(this.ConstantInputs);
             queueableBinaryWriter.Defer(this.TemplateOverrideDescriptors);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.FunctionInputs);

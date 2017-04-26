@@ -150,7 +150,7 @@ namespace Moonfish.Forms
             var key = toolStripComboBox1.SelectedItem as GuerillaBlock;
             if ( key == null ) return;
             var newStream = new MemoryStream( );
-            newStream.Write( key );
+            throw new NotImplementedException("need to write key here");
             var buffer = newStream.ToArray( );
             if ( hexBox1.ByteProvider.Length >= buffer.Length )
             {

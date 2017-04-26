@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("shader_pass_postprocess_implementation_new_block")]
-    public partial class ShaderPassPostprocessImplementationNewBlock : GuerillaBlock, IWriteQueueable
+    public partial class ShaderPassPostprocessImplementationNewBlock : GuerillaBlock, IWriteDeferrable
     {
         public TagBlockIndexStructBlock Textures = new TagBlockIndexStructBlock();
         public TagBlockIndexStructBlock RenderStates = new TagBlockIndexStructBlock();
@@ -105,27 +105,27 @@ namespace Moonfish.Guerilla.Tags
             this.VertexConstantInfo.ReadInstances(binaryReader, pointerQueue);
             this.RenderStateInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.Textures.Defer(queueableBinaryWriter);
-            this.RenderStates.Defer(queueableBinaryWriter);
-            this.TextureStates.Defer(queueableBinaryWriter);
-            this.PsFragments.Defer(queueableBinaryWriter);
-            this.PsPermutations.Defer(queueableBinaryWriter);
-            this.PsCombiners.Defer(queueableBinaryWriter);
-            this.DefaultRenderStates.Defer(queueableBinaryWriter);
-            this.RenderStateExterns.Defer(queueableBinaryWriter);
-            this.TextureStateExterns.Defer(queueableBinaryWriter);
-            this.PixelConstantExterns.Defer(queueableBinaryWriter);
-            this.VertexConstantExterns.Defer(queueableBinaryWriter);
-            this.PsConstants.Defer(queueableBinaryWriter);
-            this.VsConstants.Defer(queueableBinaryWriter);
-            this.PixelConstantInfo.Defer(queueableBinaryWriter);
-            this.VertexConstantInfo.Defer(queueableBinaryWriter);
-            this.RenderStateInfo.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.Textures.DeferReferences(queueableBinaryWriter);
+            this.RenderStates.DeferReferences(queueableBinaryWriter);
+            this.TextureStates.DeferReferences(queueableBinaryWriter);
+            this.PsFragments.DeferReferences(queueableBinaryWriter);
+            this.PsPermutations.DeferReferences(queueableBinaryWriter);
+            this.PsCombiners.DeferReferences(queueableBinaryWriter);
+            this.DefaultRenderStates.DeferReferences(queueableBinaryWriter);
+            this.RenderStateExterns.DeferReferences(queueableBinaryWriter);
+            this.TextureStateExterns.DeferReferences(queueableBinaryWriter);
+            this.PixelConstantExterns.DeferReferences(queueableBinaryWriter);
+            this.VertexConstantExterns.DeferReferences(queueableBinaryWriter);
+            this.PsConstants.DeferReferences(queueableBinaryWriter);
+            this.VsConstants.DeferReferences(queueableBinaryWriter);
+            this.PixelConstantInfo.DeferReferences(queueableBinaryWriter);
+            this.VertexConstantInfo.DeferReferences(queueableBinaryWriter);
+            this.RenderStateInfo.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.Textures.Write(queueableBinaryWriter);

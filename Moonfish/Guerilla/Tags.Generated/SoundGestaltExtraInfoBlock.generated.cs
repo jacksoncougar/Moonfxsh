@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("sound_gestalt_extra_info_block")]
-    public partial class SoundGestaltExtraInfoBlock : GuerillaBlock, IWriteQueueable
+    public partial class SoundGestaltExtraInfoBlock : GuerillaBlock, IWriteDeferrable
     {
         public SoundEncodedDialogueSectionBlock[] EncodedPermutationSection = new SoundEncodedDialogueSectionBlock[0];
         public GlobalGeometryBlockInfoStructBlock GeometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
@@ -50,13 +50,13 @@ namespace Moonfish.Guerilla.Tags
             this.EncodedPermutationSection = base.ReadBlockArrayData<SoundEncodedDialogueSectionBlock>(binaryReader, pointerQueue.Dequeue());
             this.GeometryBlockInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.EncodedPermutationSection);
-            this.GeometryBlockInfo.Defer(queueableBinaryWriter);
+            this.GeometryBlockInfo.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.EncodedPermutationSection);

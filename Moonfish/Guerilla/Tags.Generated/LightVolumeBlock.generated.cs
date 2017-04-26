@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("MGS2")]
     [TagBlockOriginalNameAttribute("light_volume_block")]
-    public partial class LightVolumeBlock : GuerillaBlock, IWriteQueueable
+    public partial class LightVolumeBlock : GuerillaBlock, IWriteDeferrable
     {
         /// <summary>
         /// Light volumes are rendered as a sequence of glowy sprites, just like in Metal Gear Solid 2. Each instance of the light volume is rendered separately; this allows, for example, a narrow bright white volume to be overlaid on top of a fuzzy wide colored volume, or anything else you want!
@@ -55,12 +55,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.Volumes = base.ReadBlockArrayData<LightVolumeVolumeBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Volumes);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.FalloffDistanceFromCamera);

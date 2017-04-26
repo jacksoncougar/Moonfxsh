@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("vehicle_phantom_shape_block")]
-    public partial class VehiclePhantomShapeBlock : GuerillaBlock, IWriteQueueable
+    public partial class VehiclePhantomShapeBlock : GuerillaBlock, IWriteDeferrable
     {
         private byte[] fieldskip = new byte[4];
         public short Size;
@@ -98,20 +98,20 @@ namespace Moonfish.Guerilla.Tags
                 this.Multispheres00[i].ReadInstances(binaryReader, pointerQueue);
             }
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             int i;
             for (i = 0; (i < 4); i = (i + 1))
             {
-                this.ChildShapesStorage00[i].Defer(queueableBinaryWriter);
+                this.ChildShapesStorage00[i].DeferReferences(queueableBinaryWriter);
             }
             for (i = 0; (i < 4); i = (i + 1))
             {
-                this.Multispheres00[i].Defer(queueableBinaryWriter);
+                this.Multispheres00[i].DeferReferences(queueableBinaryWriter);
             }
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.fieldskip);
@@ -141,7 +141,7 @@ namespace Moonfish.Guerilla.Tags
             }
         }
         [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
-        public class ChildShapesStorageBlock : GuerillaBlock, IWriteQueueable
+        public class ChildShapesStorageBlock : GuerillaBlock, IWriteDeferrable
         {
             public ShapeTypeEnum ShapeType;
             public Moonfish.Tags.ShortBlockIndex2 Shape;
@@ -172,11 +172,11 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
             {
-                base.Defer(queueableBinaryWriter);
+                base.DeferReferences(queueableBinaryWriter);
             }
-            public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+            public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
             {
                 base.Write(queueableBinaryWriter);
                 queueableBinaryWriter.Write(((short)(this.ShapeType)));
@@ -210,7 +210,7 @@ namespace Moonfish.Guerilla.Tags
             HasAabbPhantom = 1,
         }
         [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
-        public class MultispheresBlock : GuerillaBlock, IWriteQueueable
+        public class MultispheresBlock : GuerillaBlock, IWriteDeferrable
         {
             private byte[] fieldskip = new byte[4];
             public short Size;
@@ -257,16 +257,16 @@ namespace Moonfish.Guerilla.Tags
                     this.FourVectorsStorage00[i].ReadInstances(binaryReader, pointerQueue);
                 }
             }
-            public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
             {
-                base.Defer(queueableBinaryWriter);
+                base.DeferReferences(queueableBinaryWriter);
                 int i;
                 for (i = 0; (i < 8); i = (i + 1))
                 {
-                    this.FourVectorsStorage00[i].Defer(queueableBinaryWriter);
+                    this.FourVectorsStorage00[i].DeferReferences(queueableBinaryWriter);
                 }
             }
-            public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+            public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
             {
                 base.Write(queueableBinaryWriter);
                 queueableBinaryWriter.Write(this.fieldskip);
@@ -281,7 +281,7 @@ namespace Moonfish.Guerilla.Tags
                 }
             }
             [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
-            public class FourVectorsStorageBlock : GuerillaBlock, IWriteQueueable
+            public class FourVectorsStorageBlock : GuerillaBlock, IWriteDeferrable
             {
                 public OpenTK.Vector3 Sphere;
                 private byte[] fieldskip = new byte[4];
@@ -310,11 +310,11 @@ namespace Moonfish.Guerilla.Tags
                 {
                     base.ReadInstances(binaryReader, pointerQueue);
                 }
-                public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+                public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
                 {
-                    base.Defer(queueableBinaryWriter);
+                    base.DeferReferences(queueableBinaryWriter);
                 }
-                public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+                public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
                 {
                     base.Write(queueableBinaryWriter);
                     queueableBinaryWriter.Write(this.Sphere);

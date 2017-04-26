@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("mulg")]
     [TagBlockOriginalNameAttribute("multiplayer_globals_block")]
-    public partial class MultiplayerGlobalsBlock : GuerillaBlock, IWriteQueueable
+    public partial class MultiplayerGlobalsBlock : GuerillaBlock, IWriteDeferrable
     {
         public MultiplayerUniversalBlock[] Universal = new MultiplayerUniversalBlock[0];
         public MultiplayerRuntimeBlock[] Runtime = new MultiplayerRuntimeBlock[0];
@@ -51,13 +51,13 @@ namespace Moonfish.Guerilla.Tags
             this.Universal = base.ReadBlockArrayData<MultiplayerUniversalBlock>(binaryReader, pointerQueue.Dequeue());
             this.Runtime = base.ReadBlockArrayData<MultiplayerRuntimeBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Universal);
             queueableBinaryWriter.Defer(this.Runtime);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.Universal);

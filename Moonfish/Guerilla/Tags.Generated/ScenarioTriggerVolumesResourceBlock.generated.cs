@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("trg*")]
     [TagBlockOriginalNameAttribute("scenario_trigger_volumes_resource_block")]
-    public partial class ScenarioTriggerVolumesResourceBlock : GuerillaBlock, IWriteQueueable
+    public partial class ScenarioTriggerVolumesResourceBlock : GuerillaBlock, IWriteDeferrable
     {
         public ScenarioTriggerVolumeBlock[] KillTriggerVolumes = new ScenarioTriggerVolumeBlock[0];
         public ScenarioObjectNamesBlock[] ObjectNames = new ScenarioObjectNamesBlock[0];
@@ -51,13 +51,13 @@ namespace Moonfish.Guerilla.Tags
             this.KillTriggerVolumes = base.ReadBlockArrayData<ScenarioTriggerVolumeBlock>(binaryReader, pointerQueue.Dequeue());
             this.ObjectNames = base.ReadBlockArrayData<ScenarioObjectNamesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.KillTriggerVolumes);
             queueableBinaryWriter.Defer(this.ObjectNames);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.KillTriggerVolumes);

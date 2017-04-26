@@ -21,10 +21,11 @@ namespace Moonfish.Guerilla
     /// (5) Removes the address component from every pointer written to the stream.
     /// (6) Appends a four character tag ("blkf") to the end of the stream.
     /// </remarks>
-    /// <seealso cref="Moonfish.Guerilla.QueueableBlamBinaryWriter" />
-    public class ResourceWriter : QueueableBlamBinaryWriter
+    /// <seealso cref="LinearBinaryWriter" />
+    public sealed class ResourceWriter : LinearBinaryWriter
     {
         private const int SectionDataOffset = -8;
+        private const int VertexBufferPrimaryLocator = 56;
 
         public ResourceWriter(Stream output) : base(output)
         {
@@ -38,7 +39,7 @@ namespace Moonfish.Guerilla
         /// <exception cref="System.IO.IOException">Attempted to write over existing data.</exception>
         public override void Commit()
         {
-            Defer(TagClass.Blkf, 4);
+            Defer(TagClass.Blkf);
             base.Commit();
         }
 
@@ -48,7 +49,7 @@ namespace Moonfish.Guerilla
         /// </summary>
         /// <param name="data">The data.</param>
         /// <param name="alignment"></param>
-        public override void Defer(byte[] data, int alignment = 4)
+        public override void Defer(byte[] data, int alignment = Alignment.Default)
         {
             if (data.Length > 0)
                 Defer(TagClass.Rsrc, alignment);
@@ -63,12 +64,12 @@ namespace Moonfish.Guerilla
         /// <param name="data">The data to defer</param>
         /// <param name="alignment">The alignment in the destination stream the data should
         /// begin on.</param>
-        public override void Defer(short[] data, int alignment = 4)
+        public override void Defer(short[] data, int alignment = Alignment.Default)
         {
             if (data.Length > 0)
                 Defer(TagClass.Rsrc, alignment);
 
-            base.Defer(data);
+            base.Defer(data, alignment);
         }
 
         /// <summary>
@@ -81,16 +82,14 @@ namespace Moonfish.Guerilla
         {
             if (blocks.Length > 0)
             {
-                Defer(TagClass.Rsrc, 4);
+                Defer(TagClass.Rsrc);
                 base.Defer(blocks);
             }
-            var vertexBufferBlocks = blocks as GlobalGeometrySectionVertexBufferBlock[];
+        }
 
-            if (vertexBufferBlocks != null)
-                foreach (var guerillaBlock in vertexBufferBlocks)
-                {
-                    Defer(guerillaBlock.VertexBuffer.Data);
-                }
+        public override void Defer(VertexBuffer vertexBuffer)
+        {
+            Defer(vertexBuffer.Data);
         }
 
         public override void Write(VertexBuffer buffer)
@@ -105,12 +104,12 @@ namespace Moonfish.Guerilla
             Write(0);
         }
         
-        public override void WritePointer<T>(T instanceFIeld)
+        public override void WritePointer<T>(T instance)
         {
-            var pointer = GetItemPointer(instanceFIeld);
-            var bytes = instanceFIeld as byte[];
+            var pointer = GetItemPointer(instance);
+            var bytes = instance as byte[];
 
-            if (!BlamPointer.IsNull(pointer))
+            if (pointer != BlamPointer.Null)
             {
                 if (bytes != null)
                 {
@@ -118,21 +117,21 @@ namespace Moonfish.Guerilla
                 }
                 else
                 {
-                    AddDescriptor(instanceFIeld, GetItemPointer(instanceFIeld), (short) (BaseStream.Position + SectionDataOffset));
+                    AddDescriptor(instance, GetItemPointer(instance), (short) (BaseStream.Position + SectionDataOffset));
                 }
             }
 
-            base.WritePointer(instanceFIeld);
+            base.WritePointer(instance);
         }
 
         protected override void Defer(GuerillaBlock guerillaBlock)
         {
-            Defer(TagClass.Blkh, 4);
+            Defer(TagClass.Blkh);
             Defer(() =>
             {
                 unsafe
                 {
-                    var datalength = QueueAddress + SectionDataOffset - guerillaBlock.SerializedSize - sizeof (TagClass);
+                    var datalength = AllocationLength + SectionDataOffset - guerillaBlock.SerializedSize - sizeof (TagClass);
                     return datalength;
                 }
             }); //defer the end address (the length of the stream).
@@ -161,6 +160,7 @@ namespace Moonfish.Guerilla
 
         private void AddDescriptor([NotNull] byte[] resource, BlamPointer pointerToResource, short position)
         {
+            //ToDo: this is probably not enough: there are padded values.
             if (resource == null)
                 throw new ArgumentNullException(nameof(resource));
 
@@ -197,10 +197,11 @@ namespace Moonfish.Guerilla
                 ResourceDescriptors.FindLastIndex(
                     item =>
                         item.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer ||
-                        item.PrimaryLocator == 56);
+                        item.PrimaryLocator == VertexBufferPrimaryLocator);
             ResourceDescriptors.Insert(lastIndex + 1, descriptor);
         }
 
+        // ReSharper disable once UnusedMember.Local
         private void Clear()
         {
             ResourceDescriptors.Clear();
@@ -214,27 +215,27 @@ namespace Moonfish.Guerilla
 
         private void Defer(Func<int> value)
         {
-            var blamPointer = new BlamPointer(1, QueueAddress, sizeof (int));
+            var blamPointer = new BlamPointer(1, AllocationLength, sizeof (int));
             var classQueueItem = new ClosureQueueItem(value);
-            QueueAddress = blamPointer.EndAddress;
+            AllocationLength = blamPointer.EndAddress;
             Queue.Enqueue(classQueueItem);
         }
 
-        private void Defer(TagClass tagClass, int alignment)
+        private unsafe void Defer(TagClass tagClass, int alignment = Alignment.Default)
         {
-            var count = (int)Padding.GetCount(QueueAddress, alignment) - 4;
+            var count = (int)Padding.GetCount(AllocationLength, alignment) - sizeof(TagClass);
             count = count < 0 ? alignment + count : count;
 
             if (count > 0)
             {
                 Defer(() =>
                 { Write(new byte[count]); });
-                QueueAddress += count;
+                AllocationLength += count;
             }
 
-            var blamPointer = new BlamPointer(1, QueueAddress, 4);
+            var blamPointer = new BlamPointer(1, AllocationLength, Alignment.Default);
             var classQueueItem = new GenericQueueItem(tagClass) {Pointer = blamPointer};
-            QueueAddress = blamPointer.EndAddress;
+            AllocationLength = blamPointer.EndAddress;
             Queue.Enqueue(classQueueItem);
         }
 
@@ -256,7 +257,7 @@ namespace Moonfish.Guerilla
             /// <value>The reference field.</value>
             public override object ReferenceField => Action;
 
-            public override void Write(QueueableBlamBinaryWriter writer)
+            public override void Write(LinearBinaryWriter writer)
             {
                 Action?.Invoke();
             }
@@ -280,7 +281,7 @@ namespace Moonfish.Guerilla
             /// <value>The reference field.</value>
             public override object ReferenceField => Value;
 
-            public override void Write(QueueableBlamBinaryWriter writer)
+            public override void Write(LinearBinaryWriter writer)
             {
                 writer.Write(Value?.Invoke() ?? 0);
             }
@@ -293,7 +294,7 @@ namespace Moonfish.Guerilla
                 Data = item;
             }
 
-            public dynamic Data { get; }
+            private dynamic Data { get; }
 
             /// <summary>Gets or sets the pointer to the allocated space in the stream.</summary>
             /// <value>The pointer to allocated space in the stream.</value>
@@ -307,7 +308,7 @@ namespace Moonfish.Guerilla
                 get { return Data; }
             }
 
-            public override void Write(QueueableBlamBinaryWriter writer)
+            public override void Write(LinearBinaryWriter writer)
             {
                 //TODO maybe remove the dynamic
                 writer.Write(Data);

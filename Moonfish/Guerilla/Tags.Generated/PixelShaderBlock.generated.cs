@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     using System.Linq;
     
     [TagClassAttribute("pixl")]
-    public partial class PixelShaderBlock : GuerillaBlock, IWriteQueueable
+    public partial class PixelShaderBlock : GuerillaBlock, IWriteDeferrable
     {
         private byte[] fieldpad = new byte[4];
         public byte[] CompiledShader;
@@ -47,16 +47,16 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.CompiledShader = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter linearBinaryWriter)
         {
-            base.Defer(queueableBlamBinaryWriter);
-            queueableBlamBinaryWriter.Defer(this.CompiledShader);
+            base.DeferReferences(linearBinaryWriter);
+            linearBinaryWriter.Defer(this.CompiledShader);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter linearBinaryWriter)
         {
-            base.Write_(queueableBlamBinaryWriter);
-            queueableBlamBinaryWriter.Write(this.fieldpad);
-            queueableBlamBinaryWriter.WritePointer(this.CompiledShader);
+            base.Write_(linearBinaryWriter);
+            linearBinaryWriter.Write(this.fieldpad);
+            linearBinaryWriter.WritePointer(this.CompiledShader);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("ugh!")]
     [TagBlockOriginalNameAttribute("sound_cache_file_gestalt_block")]
-    public partial class SoundCacheFileGestaltBlock : GuerillaBlock, IWriteQueueable
+    public partial class SoundCacheFileGestaltBlock : GuerillaBlock, IWriteDeferrable
     {
         public SoundGestaltPlaybackBlock[] Playbacks = new SoundGestaltPlaybackBlock[0];
         public SoundGestaltScaleBlock[] Scales = new SoundGestaltScaleBlock[0];
@@ -78,9 +78,9 @@ namespace Moonfish.Guerilla.Tags
             this.Promotions = base.ReadBlockArrayData<SoundGestaltPromotionsBlock>(binaryReader, pointerQueue.Dequeue());
             this.ExtraInfos = base.ReadBlockArrayData<SoundGestaltExtraInfoBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Playbacks);
             queueableBinaryWriter.Defer(this.Scales);
             queueableBinaryWriter.Defer(this.ImportNames);
@@ -93,7 +93,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.Promotions);
             queueableBinaryWriter.Defer(this.ExtraInfos);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.Playbacks);

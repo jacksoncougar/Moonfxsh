@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("shader_template_postprocess_definition_new_block")]
-    public partial class ShaderTemplatePostprocessDefinitionNewBlock : GuerillaBlock, IWriteQueueable
+    public partial class ShaderTemplatePostprocessDefinitionNewBlock : GuerillaBlock, IWriteDeferrable
     {
         public ShaderTemplatePostprocessLevelOfDetailNewBlock[] LevelsOfDetail = new ShaderTemplatePostprocessLevelOfDetailNewBlock[0];
         public TagBlockIndexBlock[] Layers = new TagBlockIndexBlock[0];
@@ -59,16 +59,16 @@ namespace Moonfish.Guerilla.Tags
             this.Implementations = base.ReadBlockArrayData<ShaderTemplatePostprocessImplementationNewBlock>(binaryReader, pointerQueue.Dequeue());
             this.Remappings = base.ReadBlockArrayData<ShaderTemplatePostprocessRemappingNewBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.LevelsOfDetail);
             queueableBinaryWriter.Defer(this.Layers);
             queueableBinaryWriter.Defer(this.Passes);
             queueableBinaryWriter.Defer(this.Implementations);
             queueableBinaryWriter.Defer(this.Remappings);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.LevelsOfDetail);

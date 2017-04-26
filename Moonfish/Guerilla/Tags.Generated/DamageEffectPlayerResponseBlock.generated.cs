@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("damage_effect_player_response_block")]
-    public partial class DamageEffectPlayerResponseBlock : GuerillaBlock, IWriteQueueable
+    public partial class DamageEffectPlayerResponseBlock : GuerillaBlock, IWriteDeferrable
     {
         public ResponseTypeEnum ResponseType;
         private byte[] fieldpad = new byte[2];
@@ -57,14 +57,14 @@ namespace Moonfish.Guerilla.Tags
             this.Vibration.ReadInstances(binaryReader, pointerQueue);
             this.SoundEffect.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.ScreenFlash.Defer(queueableBinaryWriter);
-            this.Vibration.Defer(queueableBinaryWriter);
-            this.SoundEffect.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.ScreenFlash.DeferReferences(queueableBinaryWriter);
+            this.Vibration.DeferReferences(queueableBinaryWriter);
+            this.SoundEffect.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.ResponseType)));

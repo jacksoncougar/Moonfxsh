@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("animation_graph_resources_struct_block")]
-    public partial class AnimationGraphResourcesStructBlock : GuerillaBlock, IWriteQueueable
+    public partial class AnimationGraphResourcesStructBlock : GuerillaBlock, IWriteDeferrable
     {
         [Moonfish.Tags.TagReferenceAttribute("jmad")]
         public Moonfish.Tags.TagReference ParentAnimationGraph;
@@ -68,16 +68,16 @@ namespace Moonfish.Guerilla.Tags
             this.BlendScreensABCDCC = base.ReadBlockArrayData<AnimationBlendScreenBlock>(binaryReader, pointerQueue.Dequeue());
             this.AnimationsABCDCC = base.ReadBlockArrayData<AnimationPoolBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.SkeletonNodesABCDCC);
             queueableBinaryWriter.Defer(this.SoundReferencesABCDCC);
             queueableBinaryWriter.Defer(this.EffectReferencesABCDCC);
             queueableBinaryWriter.Defer(this.BlendScreensABCDCC);
             queueableBinaryWriter.Defer(this.AnimationsABCDCC);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.ParentAnimationGraph);

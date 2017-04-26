@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("decorator_cell_collection_block")]
-    public partial class DecoratorCellCollectionBlock : GuerillaBlock, IWriteQueueable
+    public partial class DecoratorCellCollectionBlock : GuerillaBlock, IWriteDeferrable
     {
         public ChildIndicesBlock[] ChildIndices00 = new ChildIndicesBlock[8];
         public Moonfish.Tags.ShortBlockIndex1 CacheBlockIndex;
@@ -62,16 +62,16 @@ namespace Moonfish.Guerilla.Tags
                 this.ChildIndices00[i].ReadInstances(binaryReader, pointerQueue);
             }
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             int i;
             for (i = 0; (i < 8); i = (i + 1))
             {
-                this.ChildIndices00[i].Defer(queueableBinaryWriter);
+                this.ChildIndices00[i].DeferReferences(queueableBinaryWriter);
             }
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             int i;
@@ -84,7 +84,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Write(this.GroupStartIndex);
         }
         [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
-        public class ChildIndicesBlock : GuerillaBlock, IWriteQueueable
+        public class ChildIndicesBlock : GuerillaBlock, IWriteDeferrable
         {
             public short ChildIndex;
             public override int SerializedSize
@@ -111,11 +111,11 @@ namespace Moonfish.Guerilla.Tags
             {
                 base.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
             {
-                base.Defer(queueableBinaryWriter);
+                base.DeferReferences(queueableBinaryWriter);
             }
-            public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+            public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
             {
                 base.Write(queueableBinaryWriter);
                 queueableBinaryWriter.Write(this.ChildIndex);

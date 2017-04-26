@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("gldf")]
     [TagBlockOriginalNameAttribute("chocolate_mountain_block")]
-    public partial class ChocolateMountainBlock : GuerillaBlock, IWriteQueueable
+    public partial class ChocolateMountainBlock : GuerillaBlock, IWriteDeferrable
     {
         public LightingVariablesBlock[] LightingVariables = new LightingVariablesBlock[0];
         public override int SerializedSize
@@ -48,12 +48,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.LightingVariables = base.ReadBlockArrayData<LightingVariablesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.LightingVariables);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.LightingVariables);

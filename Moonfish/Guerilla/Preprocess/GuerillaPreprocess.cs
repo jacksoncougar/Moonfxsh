@@ -12,6 +12,29 @@ namespace Moonfish.Guerilla.Preprocess
     [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
     internal class GuerillaPreprocess
     {
+        [GuerillaPreProcessFieldsMethod(BlockName = "decorator_cache_block_data_block")]
+        protected static IList<MoonfishTagField> Test(IList<MoonfishTagField> fields)
+        {
+            return fields;
+        }
+
+        /// <summary>
+        /// Fixes the RGB8 fields by inserting a padding bytes after them.
+        /// </summary>
+        [GuerillaPreProcessFieldsMethod(BlockName = "*")]
+        protected static IList<MoonfishTagField> FixRgb8Fields(IList<MoonfishTagField> fields)
+        {
+            if (fields.Any(item => item.Type == MoonfishFieldType.FieldVertexBuffer))
+            {
+                
+            }
+            foreach (var colourField in fields.Where(field=>field.Type == MoonfishFieldType.FieldRgbColor).ToArray())
+            {
+                fields.Insert(fields.IndexOf(colourField) + 1, new MoonfishTagField(MoonfishFieldType.FieldPad, "rgb8-padding", 1));
+            }
+            return fields;
+        }
+        
         /// <summary>
         /// (1) Removes 4 bytes of padding from the end of the block.
         /// </summary>
@@ -306,18 +329,7 @@ namespace Moonfish.Guerilla.Preprocess
             fields.Insert(fields.Count - 1, unknownBlock);
             return fields;
         }
-
-        /// <summary>
-        /// (1) Inserts a padding byte after the colour rgb field.
-        /// </summary>
-        [GuerillaPreProcessFieldsMethod(BlockName = "hud_waypoint_arrow_block")]
-        protected static IList<MoonfishTagField> PreprocessHudWaypointArrowBlockFields(IList<MoonfishTagField> fields)
-        {
-            if (fields[2].Type == MoonfishFieldType.FieldRgbColor)
-                fields.Insert(3, new MoonfishTagField(MoonfishFieldType.FieldPad, "", 1));
-            return fields;
-        }
-
+        
         /// <summary>
         /// (1) Removes the postprocess properties block entirely.
         /// </summary>
@@ -426,17 +438,6 @@ namespace Moonfish.Guerilla.Preprocess
         protected static IList<MoonfishTagField> GuerillaPreProcessMethod(IList<MoonfishTagField> fields)
         {
             fields.RemoveAt(fields.Count - 2);
-            return fields;
-        }
-
-        /// <summary>
-        /// (1) Inserts a padding byte after the RGB colours because padding changed on xbox.
-        /// </summary>
-        [GuerillaPreProcessFieldsMethod(BlockName = "decorator_permutations_block")]
-        protected static IList<MoonfishTagField> ProprocessDecoratorPermutationsBlockFields(IList<MoonfishTagField> fields)
-        {
-            fields.Insert(10, new MoonfishTagField(MoonfishFieldType.FieldPad, "", 1));
-            fields.Insert(9, new MoonfishTagField(MoonfishFieldType.FieldPad, "", 1));
             return fields;
         }
 

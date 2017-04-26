@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("shader_template_postprocess_implementation_new_block")]
-    public partial class ShaderTemplatePostprocessImplementationNewBlock : GuerillaBlock, IWriteQueueable
+    public partial class ShaderTemplatePostprocessImplementationNewBlock : GuerillaBlock, IWriteDeferrable
     {
         public TagBlockIndexStructBlock Bitmaps = new TagBlockIndexStructBlock();
         public TagBlockIndexStructBlock PixelConstants = new TagBlockIndexStructBlock();
@@ -53,14 +53,14 @@ namespace Moonfish.Guerilla.Tags
             this.PixelConstants.ReadInstances(binaryReader, pointerQueue);
             this.VertexConstants.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.Bitmaps.Defer(queueableBinaryWriter);
-            this.PixelConstants.Defer(queueableBinaryWriter);
-            this.VertexConstants.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.Bitmaps.DeferReferences(queueableBinaryWriter);
+            this.PixelConstants.DeferReferences(queueableBinaryWriter);
+            this.VertexConstants.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.Bitmaps.Write(queueableBinaryWriter);

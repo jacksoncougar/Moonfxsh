@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("inherited_animation_block")]
-    public partial class InheritedAnimationBlock : GuerillaBlock, IWriteQueueable
+    public partial class InheritedAnimationBlock : GuerillaBlock, IWriteDeferrable
     {
         [Moonfish.Tags.TagReferenceAttribute("jmad")]
         public Moonfish.Tags.TagReference InheritedGraph;
@@ -57,13 +57,13 @@ namespace Moonfish.Guerilla.Tags
             this.NodeMap = base.ReadBlockArrayData<InheritedAnimationNodeMapBlock>(binaryReader, pointerQueue.Dequeue());
             this.NodeMapFlags = base.ReadBlockArrayData<InheritedAnimationNodeMapFlagBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.NodeMap);
             queueableBinaryWriter.Defer(this.NodeMapFlags);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.InheritedGraph);

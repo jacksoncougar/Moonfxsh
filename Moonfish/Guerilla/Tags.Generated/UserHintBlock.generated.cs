@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("user_hint_block")]
-    public partial class UserHintBlock : GuerillaBlock, IWriteQueueable
+    public partial class UserHintBlock : GuerillaBlock, IWriteDeferrable
     {
         public UserHintPointBlock[] PointGeometry = new UserHintPointBlock[0];
         public UserHintRayBlock[] RayGeometry = new UserHintRayBlock[0];
@@ -71,9 +71,9 @@ namespace Moonfish.Guerilla.Tags
             this.WellHints = base.ReadBlockArrayData<UserHintWellBlock>(binaryReader, pointerQueue.Dequeue());
             this.FlightHints = base.ReadBlockArrayData<UserHintFlightBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.PointGeometry);
             queueableBinaryWriter.Defer(this.RayGeometry);
             queueableBinaryWriter.Defer(this.LineSegmentGeometry);
@@ -84,7 +84,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.WellHints);
             queueableBinaryWriter.Defer(this.FlightHints);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.PointGeometry);

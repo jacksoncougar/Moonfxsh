@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("pixel_shader_permutation_block")]
-    public partial class PixelShaderPermutationBlock : GuerillaBlock, IWriteQueueable
+    public partial class PixelShaderPermutationBlock : GuerillaBlock, IWriteDeferrable
     {
         public short EnumIndex;
         public Flags PixelShaderPermutationFlags;
@@ -58,13 +58,13 @@ namespace Moonfish.Guerilla.Tags
             this.Constants.ReadInstances(binaryReader, pointerQueue);
             this.Combiners.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.Constants.Defer(queueableBinaryWriter);
-            this.Combiners.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.Constants.DeferReferences(queueableBinaryWriter);
+            this.Combiners.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.EnumIndex);

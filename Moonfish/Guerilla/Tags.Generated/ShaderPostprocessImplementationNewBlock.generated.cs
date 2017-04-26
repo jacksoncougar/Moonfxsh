@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("shader_postprocess_implementation_new_block")]
-    public partial class ShaderPostprocessImplementationNewBlock : GuerillaBlock, IWriteQueueable
+    public partial class ShaderPostprocessImplementationNewBlock : GuerillaBlock, IWriteDeferrable
     {
         public TagBlockIndexStructBlock BitmapTransforms = new TagBlockIndexStructBlock();
         public TagBlockIndexStructBlock RenderStates = new TagBlockIndexStructBlock();
@@ -59,16 +59,16 @@ namespace Moonfish.Guerilla.Tags
             this.PixelConstants.ReadInstances(binaryReader, pointerQueue);
             this.VertexConstants.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.BitmapTransforms.Defer(queueableBinaryWriter);
-            this.RenderStates.Defer(queueableBinaryWriter);
-            this.TextureStates.Defer(queueableBinaryWriter);
-            this.PixelConstants.Defer(queueableBinaryWriter);
-            this.VertexConstants.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.BitmapTransforms.DeferReferences(queueableBinaryWriter);
+            this.RenderStates.DeferReferences(queueableBinaryWriter);
+            this.TextureStates.DeferReferences(queueableBinaryWriter);
+            this.PixelConstants.DeferReferences(queueableBinaryWriter);
+            this.VertexConstants.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.BitmapTransforms.Write(queueableBinaryWriter);

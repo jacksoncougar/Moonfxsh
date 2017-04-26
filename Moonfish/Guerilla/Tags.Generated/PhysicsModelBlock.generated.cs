@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("phmo")]
     [TagBlockOriginalNameAttribute("physics_model_block")]
-    public partial class PhysicsModelBlock : GuerillaBlock, IWriteQueueable
+    public partial class PhysicsModelBlock : GuerillaBlock, IWriteDeferrable
     {
         public Flags PhysicsModelFlags;
         public float Mass;
@@ -142,9 +142,9 @@ namespace Moonfish.Guerilla.Tags
             this.PrismaticConstraints = base.ReadBlockArrayData<PrismaticConstraintsBlock>(binaryReader, pointerQueue.Dequeue());
             this.Phantoms = base.ReadBlockArrayData<PhantomsBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.PhantomTypes);
             queueableBinaryWriter.Defer(this.NodeEdges);
             queueableBinaryWriter.Defer(this.RigidBodies);
@@ -175,7 +175,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.PrismaticConstraints);
             queueableBinaryWriter.Defer(this.Phantoms);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.PhysicsModelFlags)));

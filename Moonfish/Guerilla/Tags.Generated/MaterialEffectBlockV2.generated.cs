@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("material_effect_block_v2")]
-    public partial class MaterialEffectBlockV2 : GuerillaBlock, IWriteQueueable
+    public partial class MaterialEffectBlockV2 : GuerillaBlock, IWriteDeferrable
     {
         public OldMaterialEffectMaterialBlock[] OldMaterials = new OldMaterialEffectMaterialBlock[0];
         public MaterialEffectMaterialBlock[] Sounds = new MaterialEffectMaterialBlock[0];
@@ -53,14 +53,14 @@ namespace Moonfish.Guerilla.Tags
             this.Sounds = base.ReadBlockArrayData<MaterialEffectMaterialBlock>(binaryReader, pointerQueue.Dequeue());
             this.Effects = base.ReadBlockArrayData<MaterialEffectMaterialBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.OldMaterials);
             queueableBinaryWriter.Defer(this.Sounds);
             queueableBinaryWriter.Defer(this.Effects);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.OldMaterials);

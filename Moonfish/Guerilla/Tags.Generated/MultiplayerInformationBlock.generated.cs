@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("multiplayer_information_block")]
-    public partial class MultiplayerInformationBlock : GuerillaBlock, IWriteQueueable
+    public partial class MultiplayerInformationBlock : GuerillaBlock, IWriteDeferrable
     {
         [Moonfish.Tags.TagReferenceAttribute("item")]
         public Moonfish.Tags.TagReference Flag;
@@ -88,9 +88,9 @@ namespace Moonfish.Guerilla.Tags
             this.GNullBlock = base.ReadBlockArrayData<GNullBlock>(binaryReader, pointerQueue.Dequeue());
             this.KingEvents = base.ReadBlockArrayData<GameEngineKingEventBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Vehicles);
             queueableBinaryWriter.Defer(this.Sounds);
             queueableBinaryWriter.Defer(this.GeneralEvents);
@@ -100,7 +100,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.GNullBlock);
             queueableBinaryWriter.Defer(this.KingEvents);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Flag);

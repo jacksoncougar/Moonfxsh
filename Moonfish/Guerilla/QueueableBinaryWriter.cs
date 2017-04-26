@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -5,23 +6,41 @@ using Moonfish.Tags;
 
 namespace Moonfish.Guerilla
 {
-    public class QueueableBlamBinaryWriter : BlamBinaryWriter
+    /// <summary>Writes blam! reference data as binary to a stream linearly.</summary>
+    /// <remarks>
+    ///     Achieves linear writes by deferring writing reference fields to the stream
+    ///     until after the preceeding values have been written. Defer: allocates space
+    ///     for the reference field(s) at the end of the currently allocated space,
+    ///     then writes the reference field(s) as binary to the stream after previous
+    ///     deferred writes have completed. Commit: causes deferred writes to be
+    ///     written to the stream at thier allocated spaces. Known Issues: cannot have
+    ///     references that point to the same location in the stream.
+    /// </remarks>
+    /// <seealso cref="Moonfish.Guerilla.BlamBinaryWriter" />
+    public class LinearBinaryWriter : BlamBinaryWriter
     {
         private readonly Dictionary<object, QueueItem> lookupDictionary;
         protected readonly Queue<QueueItem> Queue;
 
-        public QueueableBlamBinaryWriter(Stream output) : base(output, Encoding.Default, true)
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="LinearBinaryWriter" />
+        ///     class.
+        /// </summary>
+        /// <param name="output">The output stream to write to.</param>
+        public LinearBinaryWriter(Stream output) : base(output, Encoding.Default, true)
         {
-            QueueAddress = 0;
+            AllocationLength = 0;
             Queue = new Queue<QueueItem>(100);
             lookupDictionary = new Dictionary<object, QueueItem>(100);
         }
 
-        protected int QueueAddress { get; set; }
+        /// <summary>get or sets the length of allocated data.</summary>
+        /// <value>The queue address.</value>
+        protected int AllocationLength { get; set; }
 
-        /// <summary>Commits all deffered writes to the stream.</summary>
+        /// <summary>Commits all deferred writes to the stream.</summary>
         /// <exception cref="IOException">Wrote more/less data than expected.</exception>
-        /// <exception cref="System.IO.IOException">Attempted to write over existing data.</exception>
+        /// <exception cref="IOException">Attempted to write over existing data.</exception>
         public virtual void Commit()
         {
             while (Queue.Count > 0)
@@ -31,7 +50,7 @@ namespace Moonfish.Guerilla
                 //  if the pointer has data, and the stream is not already at the data start address
                 //  then seek the data start address using a current stream offset to preserve the read/write 
                 //  cache.
-                if (!BlamPointer.IsNull(item.Pointer) && BaseStream.Position != item.Pointer.StartAddress)
+                if (item.Pointer != BlamPointer.Null && BaseStream.Position != item.Pointer.StartAddress)
                 {
 #if DEBUG
                     var offset = item.Pointer.StartAddress - BaseStream.Position;
@@ -45,11 +64,8 @@ namespace Moonfish.Guerilla
 
                 item.Write(this);
 
-                if (!BlamPointer.IsNull(item.Pointer))
+                if (item.Pointer != BlamPointer.Null)
                 {
-                    if (item.Pointer.Alignment == 16)
-                    {
-                    }
                     if (BaseStream.Position < item.Pointer.EndAddress)
                         Write(new byte[item.Pointer.EndAddress - BaseStream.Position]);
 #if DEBUG
@@ -75,8 +91,8 @@ namespace Moonfish.Guerilla
             Enqueue(blocks);
 
             //  all guerilla blocks implement IWriteQueueable
-            foreach (IWriteQueueable block in blocks)
-                block.Defer(this);
+            foreach (IWriteDeferrable block in blocks)
+                block.DeferReferences(this);
         }
 
         /// <summary>
@@ -89,7 +105,7 @@ namespace Moonfish.Guerilla
         ///     The alignment in the destination stream the data should
         ///     begin on.
         /// </param>
-        public virtual void Defer(byte[] data, int alignment = 4)
+        public virtual void Defer(byte[] data, int alignment = Alignment.Default)
         {
             //  if the array is empty there's nothing to write, so return
             if (data.Length <= 0)
@@ -97,7 +113,6 @@ namespace Moonfish.Guerilla
 
             Enqueue(data, alignment);
         }
-
 
         /// <summary>
         ///     Reserves space in the stream and then defers writing the specified
@@ -109,7 +124,7 @@ namespace Moonfish.Guerilla
         ///     The alignment in the destination stream the data should
         ///     begin on.
         /// </param>
-        public virtual void Defer(short[] data, int alignment = 4)
+        public virtual void Defer(short[] data, int alignment = Alignment.Default)
         {
             //  if the array is empty there's nothing to write, so return
             if (data.Length <= 0)
@@ -118,22 +133,25 @@ namespace Moonfish.Guerilla
             Enqueue(data, alignment);
         }
 
+        public virtual void Defer(VertexBuffer vertexBuffer)
+        {
+            throw new NotImplementedException("Cannot defer vertex buffer in this context");
+        }
+
         /// <summary>Writes the specified guerilla block.</summary>
         /// <param name="guerillaBlock">The guerilla block.</param>
         public void Write(GuerillaBlock guerillaBlock)
         {
-            Defer(guerillaBlock);
-            guerillaBlock.Defer(this);
-            Commit();
+            Defer(guerillaBlock); //allocate the block fields here...
+            guerillaBlock.DeferReferences(this); //allocate the nested tag blocks.
+            Commit(); //write everything to the stream.
         }
 
         /// <summary>Writes the pointer for the given object to the stream.</summary>
         /// <typeparam name="T">The type of the given object</typeparam>
-        /// <param name="@object">The object to write the pointer for.</param>
-        /// <remarks>
-        ///     If the object is not found then writes <see cref="BlamPointer.Null" />
-        ///     to the stream.
-        /// </remarks>
+        /// <param name="object">The object to write the pointer of.</param>
+        /// <remarks>If the object is not found then writes <see cref="BlamPointer.Null" />
+        ///     to the stream.</remarks>
         public virtual void WritePointer<T>(T @object)
         {
             QueueItem queueItem;
@@ -144,11 +162,11 @@ namespace Moonfish.Guerilla
         {
             var elementSize = guerillaBlock.SerializedSize;
             var alignment = guerillaBlock.Alignment;
-            var blamPointer = new BlamPointer(1, QueueAddress, elementSize, alignment);
+            var blamPointer = new BlamPointer(1, AllocationLength, elementSize, alignment);
 
             var guerillaQueueItem = new GuerillaQueueItem(guerillaBlock) {Pointer = blamPointer};
             Queue.Enqueue(guerillaQueueItem);
-            QueueAddress = blamPointer.EndAddress;
+            AllocationLength = blamPointer.EndAddress;
         }
 
         protected BlamPointer GetItemPointer(object key)
@@ -167,37 +185,37 @@ namespace Moonfish.Guerilla
             return queueItem;
         }
 
-        private void Enqueue(byte[] data, int alignment = 4)
+        private void Enqueue(byte[] data, int alignment = Alignment.Default)
         {
-            var blamPointer = new BlamPointer(data.Length, QueueAddress, 1, alignment);
+            var blamPointer = new BlamPointer(data.Length, AllocationLength, 1, alignment);
             var dataQueueItem = new ByteDataQueueItem(data) {Pointer = blamPointer};
             lookupDictionary[data] = dataQueueItem;
             Queue.Enqueue(dataQueueItem);
-            QueueAddress = blamPointer.EndAddress;
+            AllocationLength = blamPointer.EndAddress;
         }
 
-        private void Enqueue(short[] data, int alignment = 4)
+        private void Enqueue(short[] data, int alignment = Alignment.Default)
         {
-            var blamPointer = new BlamPointer(data.Length, QueueAddress, 2, alignment);
+            var blamPointer = new BlamPointer(data.Length, AllocationLength, 2, alignment);
             var dataQueueItem = new ShortDataQueueItem(data) {Pointer = blamPointer};
             lookupDictionary[data] = dataQueueItem;
             Queue.Enqueue(dataQueueItem);
-            QueueAddress = blamPointer.EndAddress;
+            AllocationLength = blamPointer.EndAddress;
         }
 
         private void Enqueue(GuerillaBlock[] dataBlocks)
         {
             var elementSize = dataBlocks.GetElementSize();
             var alignment = dataBlocks.GetAlignment();
-            var blamPointer = new BlamPointer(dataBlocks.Length, QueueAddress, elementSize, alignment);
+            var blamPointer = new BlamPointer(dataBlocks.Length, AllocationLength, elementSize, alignment);
 
             var guerillaQueueItem = new GuerillaQueueItem(dataBlocks) {Pointer = blamPointer};
             lookupDictionary[dataBlocks] = guerillaQueueItem;
             Queue.Enqueue(guerillaQueueItem);
-            QueueAddress = blamPointer.EndAddress;
+            AllocationLength = blamPointer.EndAddress;
         }
 
-        protected class ByteDataQueueItem : QueueItem
+        private class ByteDataQueueItem : QueueItem
         {
             public ByteDataQueueItem(byte[] data)
             {
@@ -212,13 +230,13 @@ namespace Moonfish.Guerilla
                 get { return Data; }
             }
 
-            public override void Write(QueueableBlamBinaryWriter writer)
+            public override void Write(LinearBinaryWriter writer)
             {
                 writer.Write(Data);
             }
         }
 
-        protected class ShortDataQueueItem : QueueItem
+        private class ShortDataQueueItem : QueueItem
         {
             public ShortDataQueueItem(short[] data)
             {
@@ -233,7 +251,7 @@ namespace Moonfish.Guerilla
                 get { return Data; }
             }
 
-            public override void Write(QueueableBlamBinaryWriter writer)
+            public override void Write(LinearBinaryWriter writer)
             {
                 short[] buffer = Data;
                 foreach (var item in buffer)
@@ -243,7 +261,7 @@ namespace Moonfish.Guerilla
             }
         }
 
-        protected class GuerillaQueueItem : QueueItem
+        private class GuerillaQueueItem : QueueItem
         {
             public GuerillaQueueItem(GuerillaBlock guerillaBlock)
             {
@@ -263,7 +281,7 @@ namespace Moonfish.Guerilla
                 get { return DataBlocks; }
             }
 
-            public override void Write(QueueableBlamBinaryWriter writer)
+            public override void Write(LinearBinaryWriter writer)
             {
                 foreach (var block in DataBlocks)
                 {
@@ -276,7 +294,7 @@ namespace Moonfish.Guerilla
         ///     Queue item used for allocating space for read and write operations on
         ///     a stream.
         /// </summary>
-        public abstract class QueueItem
+        protected abstract class QueueItem
         {
             /// <summary>Gets or sets the pointer to the allocated space in the stream.</summary>
             /// <value>The pointer to allocated space in the stream.</value>
@@ -287,7 +305,7 @@ namespace Moonfish.Guerilla
             /// <value>The reference field.</value>
             public abstract object ReferenceField { get; }
 
-            public abstract void Write(QueueableBlamBinaryWriter writer);
+            public abstract void Write(LinearBinaryWriter writer);
         }
     }
 }

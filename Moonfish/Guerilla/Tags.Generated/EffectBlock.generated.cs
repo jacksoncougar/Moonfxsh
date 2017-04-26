@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("effe")]
     [TagBlockOriginalNameAttribute("effect_block")]
-    public partial class EffectBlock : GuerillaBlock, IWriteQueueable
+    public partial class EffectBlock : GuerillaBlock, IWriteDeferrable
     {
         public Flags EffectFlags;
         public Moonfish.Tags.ShortBlockIndex1 LoopStartEvent;
@@ -70,13 +70,13 @@ namespace Moonfish.Guerilla.Tags
             this.Locations = base.ReadBlockArrayData<EffectLocationsBlock>(binaryReader, pointerQueue.Dequeue());
             this.Events = base.ReadBlockArrayData<EffectEventBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Locations);
             queueableBinaryWriter.Defer(this.Events);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.EffectFlags)));

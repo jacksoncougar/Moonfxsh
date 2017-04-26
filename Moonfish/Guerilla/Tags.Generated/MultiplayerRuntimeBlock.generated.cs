@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("multiplayer_runtime_block")]
-    public partial class MultiplayerRuntimeBlock : GuerillaBlock, IWriteQueueable
+    public partial class MultiplayerRuntimeBlock : GuerillaBlock, IWriteDeferrable
     {
         [Moonfish.Tags.TagReferenceAttribute("item")]
         public Moonfish.Tags.TagReference Flag;
@@ -282,12 +282,12 @@ namespace Moonfish.Guerilla.Tags
             this.MultiplayerConstants = base.ReadBlockArrayData<MultiplayerConstantsBlock>(binaryReader, pointerQueue.Dequeue());
             this.StateResponses = base.ReadBlockArrayData<GameEngineStatusResponseBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Weapons);
             queueableBinaryWriter.Defer(this.Vehicles);
-            this.Arr.Defer(queueableBinaryWriter);
+            this.Arr.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Sounds);
             queueableBinaryWriter.Defer(this.GeneralEvents);
             queueableBinaryWriter.Defer(this.FlavorEvents);
@@ -307,7 +307,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.MultiplayerConstants);
             queueableBinaryWriter.Defer(this.StateResponses);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Flag);

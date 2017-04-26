@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("weapon_type_block")]
-    public partial class WeaponTypeBlock : GuerillaBlock, IWriteQueueable
+    public partial class WeaponTypeBlock : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Tags.StringIdent Label;
         public AnimationEntryBlock[] ActionsAABBCC = new AnimationEntryBlock[0];
@@ -64,9 +64,9 @@ namespace Moonfish.Guerilla.Tags
             this.HighPrecacheCCCCC = base.ReadBlockArrayData<PrecacheListBlock>(binaryReader, pointerQueue.Dequeue());
             this.LowPrecacheCCCCC = base.ReadBlockArrayData<PrecacheListBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.ActionsAABBCC);
             queueableBinaryWriter.Defer(this.OverlaysAABBCC);
             queueableBinaryWriter.Defer(this.DeathAndDamageAABBCC);
@@ -74,7 +74,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.HighPrecacheCCCCC);
             queueableBinaryWriter.Defer(this.LowPrecacheCCCCC);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Label);

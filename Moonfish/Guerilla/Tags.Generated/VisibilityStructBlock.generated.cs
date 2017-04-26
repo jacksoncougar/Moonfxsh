@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("visibility_struct_block")]
-    public partial class VisibilityStructBlock : GuerillaBlock, IWriteQueueable
+    public partial class VisibilityStructBlock : GuerillaBlock, IWriteDeferrable
     {
         public short ProjectionCount;
         public short ClusterCount;
@@ -64,15 +64,15 @@ namespace Moonfish.Guerilla.Tags
             this.ClusterRemapTable = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
             this.VisibilityVolumes = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Projections);
             queueableBinaryWriter.Defer(this.VisibilityClusters);
             queueableBinaryWriter.Defer(this.ClusterRemapTable);
             queueableBinaryWriter.Defer(this.VisibilityVolumes);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.ProjectionCount);

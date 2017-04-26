@@ -13,23 +13,25 @@ namespace Moonfish.Guerilla.Tags
     using JetBrains.Annotations;
     using Moonfish.Tags;
     using Moonfish.Model;
+    using Moonfish.Guerilla;
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("decal_vertices_block")]
-    public partial class DecalVerticesBlock : GuerillaBlock, IWriteQueueable
+    public partial class DecalVerticesBlock : GuerillaBlock, IWriteDeferrable
     {
         public OpenTK.Vector3 Position;
         public OpenTK.Vector2 Texcoord0;
         public OpenTK.Vector2 Texcoord1;
         public Moonfish.Tags.ColourR1G1B1 Color;
+        private byte[] rgb8padding = new byte[1];
         public override int SerializedSize
         {
             get
             {
-                return 31;
+                return 32;
             }
         }
         public override int Alignment
@@ -46,23 +48,25 @@ namespace Moonfish.Guerilla.Tags
             this.Texcoord0 = binaryReader.ReadVector2();
             this.Texcoord1 = binaryReader.ReadVector2();
             this.Color = binaryReader.ReadColourR1G1B1();
+            this.rgb8padding = binaryReader.ReadBytes(1);
             return pointerQueue;
         }
         public override void ReadInstances(Moonfish.Guerilla.BlamBinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
         {
             base.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(writer);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter writer)
         {
-            base.Write(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Position);
-            queueableBinaryWriter.Write(this.Texcoord0);
-            queueableBinaryWriter.Write(this.Texcoord1);
-            queueableBinaryWriter.Write(this.Color);
+            base.Write(writer);
+            writer.Write(this.Position);
+            writer.Write(this.Texcoord0);
+            writer.Write(this.Texcoord1);
+            writer.Write(this.Color);
+            writer.Write(this.rgb8padding);
         }
     }
 }

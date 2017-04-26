@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("ui_levels_definition_block")]
-    public partial class UiLevelsDefinitionBlock : GuerillaBlock, IWriteQueueable
+    public partial class UiLevelsDefinitionBlock : GuerillaBlock, IWriteDeferrable
     {
         public UiCampaignBlock[] Campaigns = new UiCampaignBlock[0];
         public GlobalUiCampaignLevelBlock[] CampaignLevels = new GlobalUiCampaignLevelBlock[0];
@@ -53,14 +53,14 @@ namespace Moonfish.Guerilla.Tags
             this.CampaignLevels = base.ReadBlockArrayData<GlobalUiCampaignLevelBlock>(binaryReader, pointerQueue.Dequeue());
             this.MultiplayerLevels = base.ReadBlockArrayData<GlobalUiMultiplayerLevelBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Campaigns);
             queueableBinaryWriter.Defer(this.CampaignLevels);
             queueableBinaryWriter.Defer(this.MultiplayerLevels);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.Campaigns);

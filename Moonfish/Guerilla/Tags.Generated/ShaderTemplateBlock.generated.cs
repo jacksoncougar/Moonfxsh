@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("stem")]
     [TagBlockOriginalNameAttribute("shader_template_block")]
-    public partial class ShaderTemplateBlock : GuerillaBlock, IWriteQueueable
+    public partial class ShaderTemplateBlock : GuerillaBlock, IWriteDeferrable
     {
         public byte[] Documentation;
         public Moonfish.Tags.StringIdent DefaultMaterialName;
@@ -98,9 +98,9 @@ namespace Moonfish.Guerilla.Tags
             this.EMPTYSTRING0 = base.ReadBlockArrayData<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryReader, pointerQueue.Dequeue());
             this.PostprocessDefinition = base.ReadBlockArrayData<ShaderTemplatePostprocessDefinitionNewBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Documentation);
             queueableBinaryWriter.Defer(this.Properties);
             queueableBinaryWriter.Defer(this.Categories);
@@ -109,7 +109,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.EMPTYSTRING0);
             queueableBinaryWriter.Defer(this.PostprocessDefinition);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.Documentation);

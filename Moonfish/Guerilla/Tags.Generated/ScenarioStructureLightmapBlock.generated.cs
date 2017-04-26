@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("ltmp")]
     [TagBlockOriginalNameAttribute("scenario_structure_lightmap_block")]
-    public partial class ScenarioStructureLightmapBlock : GuerillaBlock, IWriteQueueable
+    public partial class ScenarioStructureLightmapBlock : GuerillaBlock, IWriteDeferrable
     {
         /// <summary>
         /// The following fields control the behavior of the lightmapper
@@ -116,13 +116,13 @@ namespace Moonfish.Guerilla.Tags
             this.LightmapGroups = base.ReadBlockArrayData<StructureLightmapGroupBlock>(binaryReader, pointerQueue.Dequeue());
             this.Errors = base.ReadBlockArrayData<GlobalErrorReportCategoriesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.LightmapGroups);
             queueableBinaryWriter.Defer(this.Errors);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.SearchDistanceLowerBound);

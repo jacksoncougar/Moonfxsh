@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("character_weapons_block")]
-    public partial class CharacterWeaponsBlock : GuerillaBlock, IWriteQueueable
+    public partial class CharacterWeaponsBlock : GuerillaBlock, IWriteDeferrable
     {
         public WeaponsFlags CharacterWeaponsWeaponsFlags;
         [Moonfish.Tags.TagReferenceAttribute("weap")]
@@ -123,12 +123,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.FiringPatterns = base.ReadBlockArrayData<CharacterFiringPatternBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.FiringPatterns);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.CharacterWeaponsWeaponsFlags)));

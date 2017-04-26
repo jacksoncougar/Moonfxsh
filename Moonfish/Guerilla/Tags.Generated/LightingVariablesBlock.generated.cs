@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("lighting_variables_block")]
-    public partial class LightingVariablesBlock : GuerillaBlock, IWriteQueueable
+    public partial class LightingVariablesBlock : GuerillaBlock, IWriteDeferrable
     {
         public ObjectAffected LightingVariablesObjectAffected;
         /// <summary>
@@ -63,15 +63,15 @@ namespace Moonfish.Guerilla.Tags
             this.AmbientLight.ReadInstances(binaryReader, pointerQueue);
             this.LightmapShadows.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.PrimaryLight.Defer(queueableBinaryWriter);
-            this.SecondaryLight.Defer(queueableBinaryWriter);
-            this.AmbientLight.Defer(queueableBinaryWriter);
-            this.LightmapShadows.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.PrimaryLight.DeferReferences(queueableBinaryWriter);
+            this.SecondaryLight.DeferReferences(queueableBinaryWriter);
+            this.AmbientLight.DeferReferences(queueableBinaryWriter);
+            this.LightmapShadows.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.LightingVariablesObjectAffected)));

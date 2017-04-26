@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("lsnd")]
     [TagBlockOriginalNameAttribute("sound_looping_block")]
-    public partial class SoundLoopingBlock : GuerillaBlock, IWriteQueueable
+    public partial class SoundLoopingBlock : GuerillaBlock, IWriteDeferrable
     {
         public Flags SoundLoopingFlags;
         public float MartysMusicTime;
@@ -62,13 +62,13 @@ namespace Moonfish.Guerilla.Tags
             this.Tracks = base.ReadBlockArrayData<LoopingSoundTrackBlock>(binaryReader, pointerQueue.Dequeue());
             this.DetailSounds = base.ReadBlockArrayData<LoopingSoundDetailBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Tracks);
             queueableBinaryWriter.Defer(this.DetailSounds);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.SoundLoopingFlags)));

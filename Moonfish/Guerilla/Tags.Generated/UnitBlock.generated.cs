@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("unit")]
     [TagBlockOriginalNameAttribute("unit_block")]
-    public partial class UnitBlock : ObjectBlock, IWriteQueueable
+    public partial class UnitBlock : ObjectBlock, IWriteDeferrable
     {
         public UnitFlags UnitUnitFlags;
         public DefaultTeamEnum DefaultTeam;
@@ -152,23 +152,23 @@ namespace Moonfish.Guerilla.Tags
             this.Boost.ReadInstances(binaryReader, pointerQueue);
             this.Lipsync.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.UnitCamera.Defer(queueableBinaryWriter);
-            this.Acceleration.Defer(queueableBinaryWriter);
-            this.MoreDamnNodes.Defer(queueableBinaryWriter);
-            this.YourMomma.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.UnitCamera.DeferReferences(queueableBinaryWriter);
+            this.Acceleration.DeferReferences(queueableBinaryWriter);
+            this.MoreDamnNodes.DeferReferences(queueableBinaryWriter);
+            this.YourMomma.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Postures);
             queueableBinaryWriter.Defer(this.NEWHUDINTERFACES);
             queueableBinaryWriter.Defer(this.DialogueVariants);
             queueableBinaryWriter.Defer(this.PoweredSeats);
             queueableBinaryWriter.Defer(this.Weapons);
             queueableBinaryWriter.Defer(this.Seats);
-            this.Boost.Defer(queueableBinaryWriter);
-            this.Lipsync.Defer(queueableBinaryWriter);
+            this.Boost.DeferReferences(queueableBinaryWriter);
+            this.Lipsync.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.UnitUnitFlags)));

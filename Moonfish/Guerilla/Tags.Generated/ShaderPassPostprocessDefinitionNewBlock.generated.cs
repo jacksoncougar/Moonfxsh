@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("shader_pass_postprocess_definition_new_block")]
-    public partial class ShaderPassPostprocessDefinitionNewBlock : GuerillaBlock, IWriteQueueable
+    public partial class ShaderPassPostprocessDefinitionNewBlock : GuerillaBlock, IWriteDeferrable
     {
         public ShaderPassPostprocessImplementationNewBlock[] Implementations = new ShaderPassPostprocessImplementationNewBlock[0];
         public ShaderPassPostprocessTextureNewBlock[] Textures = new ShaderPassPostprocessTextureNewBlock[0];
@@ -77,9 +77,9 @@ namespace Moonfish.Guerilla.Tags
             this.ConstantInfo = base.ReadBlockArrayData<ShaderPassPostprocessConstantInfoNewBlock>(binaryReader, pointerQueue.Dequeue());
             this.OldImplementations = base.ReadBlockArrayData<ShaderPassPostprocessImplementationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Implementations);
             queueableBinaryWriter.Defer(this.Textures);
             queueableBinaryWriter.Defer(this.RenderStates);
@@ -92,7 +92,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.ConstantInfo);
             queueableBinaryWriter.Defer(this.OldImplementations);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.Implementations);

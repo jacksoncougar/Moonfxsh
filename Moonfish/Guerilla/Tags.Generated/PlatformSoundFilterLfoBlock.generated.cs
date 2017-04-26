@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("platform_sound_filter_lfo_block")]
-    public partial class PlatformSoundFilterLfoBlock : GuerillaBlock, IWriteQueueable
+    public partial class PlatformSoundFilterLfoBlock : GuerillaBlock, IWriteDeferrable
     {
         public SoundPlaybackParameterDefinitionBlock Delay = new SoundPlaybackParameterDefinitionBlock();
         public SoundPlaybackParameterDefinitionBlock Frequency = new SoundPlaybackParameterDefinitionBlock();
@@ -56,15 +56,15 @@ namespace Moonfish.Guerilla.Tags
             this.CutoffModulation.ReadInstances(binaryReader, pointerQueue);
             this.GainModulation.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.Delay.Defer(queueableBinaryWriter);
-            this.Frequency.Defer(queueableBinaryWriter);
-            this.CutoffModulation.Defer(queueableBinaryWriter);
-            this.GainModulation.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.Delay.DeferReferences(queueableBinaryWriter);
+            this.Frequency.DeferReferences(queueableBinaryWriter);
+            this.CutoffModulation.DeferReferences(queueableBinaryWriter);
+            this.GainModulation.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.Delay.Write(queueableBinaryWriter);

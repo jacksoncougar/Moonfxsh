@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("sslt")]
     [TagBlockOriginalNameAttribute("scenario_structure_lighting_resource_block")]
-    public partial class ScenarioStructureLightingResourceBlock : GuerillaBlock, IWriteQueueable
+    public partial class ScenarioStructureLightingResourceBlock : GuerillaBlock, IWriteDeferrable
     {
         public ScenarioStructureBspSphericalHarmonicLightingBlock[] StructureLighting = new ScenarioStructureBspSphericalHarmonicLightingBlock[0];
         public override int SerializedSize
@@ -48,12 +48,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.StructureLighting = base.ReadBlockArrayData<ScenarioStructureBspSphericalHarmonicLightingBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.StructureLighting);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.StructureLighting);

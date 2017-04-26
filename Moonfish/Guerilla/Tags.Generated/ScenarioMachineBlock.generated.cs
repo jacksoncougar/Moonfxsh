@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("scenario_machine_block")]
-    public partial class ScenarioMachineBlock : GuerillaBlock, IWriteQueueable
+    public partial class ScenarioMachineBlock : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Tags.ShortBlockIndex1 Type;
         public Moonfish.Tags.ShortBlockIndex1 Name;
@@ -57,14 +57,14 @@ namespace Moonfish.Guerilla.Tags
             this.DeviceData.ReadInstances(binaryReader, pointerQueue);
             this.MachineData.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.ObjectData.Defer(queueableBinaryWriter);
-            this.DeviceData.Defer(queueableBinaryWriter);
-            this.MachineData.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.ObjectData.DeferReferences(queueableBinaryWriter);
+            this.DeviceData.DeferReferences(queueableBinaryWriter);
+            this.MachineData.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Type);

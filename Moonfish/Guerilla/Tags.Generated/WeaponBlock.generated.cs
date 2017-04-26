@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("weap")]
     [TagBlockOriginalNameAttribute("weapon_block")]
-    public partial class WeaponBlock : ItemBlock, IWriteQueueable
+    public partial class WeaponBlock : ItemBlock, IWriteDeferrable
     {
         public WeaponFlags WeaponWeaponFlags;
         public Moonfish.Tags.StringIdent FieldOldStringId;
@@ -204,20 +204,20 @@ namespace Moonfish.Guerilla.Tags
             this.NewTriggers = base.ReadBlockArrayData<WeaponTriggers>(binaryReader, pointerQueue.Dequeue());
             this.Barrels = base.ReadBlockArrayData<WeaponBarrels>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.MeleeAimAssist.Defer(queueableBinaryWriter);
-            this.MeleeDamageParameters.Defer(queueableBinaryWriter);
-            this.WeaponAimAssist.Defer(queueableBinaryWriter);
-            this.Tracking.Defer(queueableBinaryWriter);
-            this.PlayerInterface.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.MeleeAimAssist.DeferReferences(queueableBinaryWriter);
+            this.MeleeDamageParameters.DeferReferences(queueableBinaryWriter);
+            this.WeaponAimAssist.DeferReferences(queueableBinaryWriter);
+            this.Tracking.DeferReferences(queueableBinaryWriter);
+            this.PlayerInterface.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.PredictedResources0);
             queueableBinaryWriter.Defer(this.Magazines);
             queueableBinaryWriter.Defer(this.NewTriggers);
             queueableBinaryWriter.Defer(this.Barrels);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.WeaponWeaponFlags)));

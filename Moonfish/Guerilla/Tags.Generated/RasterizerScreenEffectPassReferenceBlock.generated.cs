@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("rasterizer_screen_effect_pass_reference_block")]
-    public partial class RasterizerScreenEffectPassReferenceBlock : GuerillaBlock, IWriteQueueable
+    public partial class RasterizerScreenEffectPassReferenceBlock : GuerillaBlock, IWriteDeferrable
     {
         public byte[] Explanation;
         /// <summary>
@@ -84,14 +84,14 @@ namespace Moonfish.Guerilla.Tags
             this.AdvancedControl = base.ReadBlockArrayData<RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock>(binaryReader, pointerQueue.Dequeue());
             this.Convolution = base.ReadBlockArrayData<RasterizerScreenEffectConvolutionBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Explanation);
             queueableBinaryWriter.Defer(this.AdvancedControl);
             queueableBinaryWriter.Defer(this.Convolution);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.Explanation);

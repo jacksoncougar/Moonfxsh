@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("grenade_and_powerup_struct_block")]
-    public partial class GrenadeAndPowerupStructBlock : GuerillaBlock, IWriteQueueable
+    public partial class GrenadeAndPowerupStructBlock : GuerillaBlock, IWriteDeferrable
     {
         public GrenadeBlock[] Grenades = new GrenadeBlock[0];
         public PowerupBlock[] Powerups = new PowerupBlock[0];
@@ -50,13 +50,13 @@ namespace Moonfish.Guerilla.Tags
             this.Grenades = base.ReadBlockArrayData<GrenadeBlock>(binaryReader, pointerQueue.Dequeue());
             this.Powerups = base.ReadBlockArrayData<PowerupBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Grenades);
             queueableBinaryWriter.Defer(this.Powerups);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.Grenades);

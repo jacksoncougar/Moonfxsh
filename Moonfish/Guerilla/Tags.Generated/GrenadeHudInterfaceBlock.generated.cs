@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("grhi")]
     [TagBlockOriginalNameAttribute("grenade_hud_interface_block")]
-    public partial class GrenadeHudInterfaceBlock : GuerillaBlock, IWriteQueueable
+    public partial class GrenadeHudInterfaceBlock : GuerillaBlock, IWriteDeferrable
     {
         public AnchorEnum Anchor;
         private byte[] fieldpad = new byte[2];
@@ -206,15 +206,15 @@ namespace Moonfish.Guerilla.Tags
             this.Overlays = base.ReadBlockArrayData<GrenadeHudOverlayBlock>(binaryReader, pointerQueue.Dequeue());
             this.WarningSounds = base.ReadBlockArrayData<GrenadeHudSoundBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.MultitexOverlay);
             queueableBinaryWriter.Defer(this.MultitexOverlay0);
             queueableBinaryWriter.Defer(this.Overlays);
             queueableBinaryWriter.Defer(this.WarningSounds);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.Anchor)));

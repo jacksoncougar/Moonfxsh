@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("flock_definition_block")]
-    public partial class FlockDefinitionBlock : GuerillaBlock, IWriteQueueable
+    public partial class FlockDefinitionBlock : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Tags.ShortBlockIndex1 Bsp;
         private byte[] fieldpad = new byte[2];
@@ -115,13 +115,13 @@ namespace Moonfish.Guerilla.Tags
             this.Sources = base.ReadBlockArrayData<FlockSourceBlock>(binaryReader, pointerQueue.Dequeue());
             this.Sinks = base.ReadBlockArrayData<FlockSinkBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Sources);
             queueableBinaryWriter.Defer(this.Sinks);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Bsp);

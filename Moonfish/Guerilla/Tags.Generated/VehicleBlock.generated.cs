@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("vehi")]
     [TagBlockOriginalNameAttribute("vehicle_block")]
-    public partial class VehicleBlock : UnitBlock, IWriteQueueable
+    public partial class VehicleBlock : UnitBlock, IWriteDeferrable
     {
         public VehicleFlags VehicleVehicleFlags;
         public TypeEnum Type;
@@ -150,13 +150,13 @@ namespace Moonfish.Guerilla.Tags
             this.Gears = base.ReadBlockArrayData<GearBlock>(binaryReader, pointerQueue.Dequeue());
             this.HavokVehiclePhysics.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Gears);
-            this.HavokVehiclePhysics.Defer(queueableBinaryWriter);
+            this.HavokVehiclePhysics.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.VehicleVehicleFlags)));

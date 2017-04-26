@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("goof")]
     [TagBlockOriginalNameAttribute("multiplayer_variant_settings_interface_definition_block")]
-    public partial class MultiplayerVariantSettingsInterfaceDefinitionBlock : GuerillaBlock, IWriteQueueable
+    public partial class MultiplayerVariantSettingsInterfaceDefinitionBlock : GuerillaBlock, IWriteDeferrable
     {
         [Moonfish.Tags.TagReferenceAttribute("wgit")]
         public Moonfish.Tags.TagReference TagReference;
@@ -102,27 +102,27 @@ namespace Moonfish.Guerilla.Tags
                 this.UnusedCreateNewVariants00[i].ReadInstances(binaryReader, pointerQueue);
             }
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.GameEngineSettings);
             queueableBinaryWriter.Defer(this.DefaultVariants);
-            this.CreateNewVariantStruct.Defer(queueableBinaryWriter);
-            this.CreateNewVariantStruct0.Defer(queueableBinaryWriter);
-            this.CreateNewVariantStruct1.Defer(queueableBinaryWriter);
-            this.CreateNewVariantStruct2.Defer(queueableBinaryWriter);
-            this.CreateNewVariantStruct3.Defer(queueableBinaryWriter);
-            this.CreateNewVariantStruct4.Defer(queueableBinaryWriter);
-            this.CreateNewVariantStruct5.Defer(queueableBinaryWriter);
-            this.CreateNewVariantStruct6.Defer(queueableBinaryWriter);
-            this.CreateNewVariantStruct7.Defer(queueableBinaryWriter);
+            this.CreateNewVariantStruct.DeferReferences(queueableBinaryWriter);
+            this.CreateNewVariantStruct0.DeferReferences(queueableBinaryWriter);
+            this.CreateNewVariantStruct1.DeferReferences(queueableBinaryWriter);
+            this.CreateNewVariantStruct2.DeferReferences(queueableBinaryWriter);
+            this.CreateNewVariantStruct3.DeferReferences(queueableBinaryWriter);
+            this.CreateNewVariantStruct4.DeferReferences(queueableBinaryWriter);
+            this.CreateNewVariantStruct5.DeferReferences(queueableBinaryWriter);
+            this.CreateNewVariantStruct6.DeferReferences(queueableBinaryWriter);
+            this.CreateNewVariantStruct7.DeferReferences(queueableBinaryWriter);
             int i;
             for (i = 0; (i < 7); i = (i + 1))
             {
-                this.UnusedCreateNewVariants00[i].Defer(queueableBinaryWriter);
+                this.UnusedCreateNewVariants00[i].DeferReferences(queueableBinaryWriter);
             }
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.TagReference);
@@ -147,7 +147,7 @@ namespace Moonfish.Guerilla.Tags
             }
         }
         [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
-        public class UnusedCreateNewVariantsBlock : GuerillaBlock, IWriteQueueable
+        public class UnusedCreateNewVariantsBlock : GuerillaBlock, IWriteDeferrable
         {
             public CreateNewVariantStructBlock CreateNewVariantStruct = new CreateNewVariantStructBlock();
             public override int SerializedSize
@@ -175,12 +175,12 @@ namespace Moonfish.Guerilla.Tags
                 base.ReadInstances(binaryReader, pointerQueue);
                 this.CreateNewVariantStruct.ReadInstances(binaryReader, pointerQueue);
             }
-            public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+            public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
             {
-                base.Defer(queueableBinaryWriter);
-                this.CreateNewVariantStruct.Defer(queueableBinaryWriter);
+                base.DeferReferences(queueableBinaryWriter);
+                this.CreateNewVariantStruct.DeferReferences(queueableBinaryWriter);
             }
-            public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+            public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
             {
                 base.Write(queueableBinaryWriter);
                 this.CreateNewVariantStruct.Write(queueableBinaryWriter);

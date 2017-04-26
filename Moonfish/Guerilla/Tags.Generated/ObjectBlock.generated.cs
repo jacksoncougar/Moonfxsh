@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("obje")]
     [TagBlockOriginalNameAttribute("object_block")]
-    public partial class ObjectBlock : GuerillaBlock, IWriteQueueable
+    public partial class ObjectBlock : GuerillaBlock, IWriteDeferrable
     {
         private byte[] fieldpad = new byte[2];
         public Flags ObjectFlags;
@@ -136,9 +136,9 @@ namespace Moonfish.Guerilla.Tags
             this.ChangeColors = base.ReadBlockArrayData<ObjectChangeColors>(binaryReader, pointerQueue.Dequeue());
             this.PredictedResources = base.ReadBlockArrayData<PredictedResourceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.AiProperties);
             queueableBinaryWriter.Defer(this.Functions);
             queueableBinaryWriter.Defer(this.Attachments);
@@ -147,7 +147,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.ChangeColors);
             queueableBinaryWriter.Defer(this.PredictedResources);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.fieldpad);

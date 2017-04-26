@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("multiplayer_ui_block")]
-    public partial class MultiplayerUiBlock : GuerillaBlock, IWriteQueueable
+    public partial class MultiplayerUiBlock : GuerillaBlock, IWriteDeferrable
     {
         [Moonfish.Tags.TagReferenceAttribute("unic")]
         public Moonfish.Tags.TagReference RandomPlayerNames;
@@ -56,13 +56,13 @@ namespace Moonfish.Guerilla.Tags
             this.ObsoleteProfileColors = base.ReadBlockArrayData<MultiplayerColorBlock>(binaryReader, pointerQueue.Dequeue());
             this.TeamColors = base.ReadBlockArrayData<MultiplayerColorBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.ObsoleteProfileColors);
             queueableBinaryWriter.Defer(this.TeamColors);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.RandomPlayerNames);

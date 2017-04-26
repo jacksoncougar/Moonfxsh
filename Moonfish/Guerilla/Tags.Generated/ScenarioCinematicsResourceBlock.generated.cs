@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("cin*")]
     [TagBlockOriginalNameAttribute("scenario_cinematics_resource_block")]
-    public partial class ScenarioCinematicsResourceBlock : GuerillaBlock, IWriteQueueable
+    public partial class ScenarioCinematicsResourceBlock : GuerillaBlock, IWriteDeferrable
     {
         public ScenarioCutsceneFlagBlock[] Flags = new ScenarioCutsceneFlagBlock[0];
         public ScenarioCutsceneCameraPointBlock[] CameraPoints = new ScenarioCutsceneCameraPointBlock[0];
@@ -54,14 +54,14 @@ namespace Moonfish.Guerilla.Tags
             this.CameraPoints = base.ReadBlockArrayData<ScenarioCutsceneCameraPointBlock>(binaryReader, pointerQueue.Dequeue());
             this.RecordedAnimations = base.ReadBlockArrayData<RecordedAnimationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Flags);
             queueableBinaryWriter.Defer(this.CameraPoints);
             queueableBinaryWriter.Defer(this.RecordedAnimations);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.Flags);

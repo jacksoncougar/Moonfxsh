@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("vibration_frequency_definition_struct_block")]
-    public partial class VibrationFrequencyDefinitionStructBlock : GuerillaBlock, IWriteQueueable
+    public partial class VibrationFrequencyDefinitionStructBlock : GuerillaBlock, IWriteDeferrable
     {
         /// <summary>
         /// EMPTY STRING
@@ -52,12 +52,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.DirtyWhore.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.DirtyWhore.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.DirtyWhore.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Duration);

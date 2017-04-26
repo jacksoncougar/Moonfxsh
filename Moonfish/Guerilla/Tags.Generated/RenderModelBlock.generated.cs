@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("mode")]
     [TagBlockOriginalNameAttribute("render_model_block")]
-    public partial class RenderModelBlock : GuerillaBlock, IWriteQueueable
+    public partial class RenderModelBlock : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Tags.StringIdent Name;
         public Flags RenderModelFlags;
@@ -110,9 +110,9 @@ namespace Moonfish.Guerilla.Tags
             this.PRTInfo = base.ReadBlockArrayData<PrtInfoBlock>(binaryReader, pointerQueue.Dequeue());
             this.SectionRenderLeaves = base.ReadBlockArrayData<SectionRenderLeavesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.ImportInfo);
             queueableBinaryWriter.Defer(this.CompressionInfo);
             queueableBinaryWriter.Defer(this.Regions);
@@ -127,7 +127,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.PRTInfo);
             queueableBinaryWriter.Defer(this.SectionRenderLeaves);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Name);

@@ -1,14 +1,50 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
 using System.Resources;
+using Moonfish.Graphics;
 using Moonfish.Guerilla.Tags;
 using Moonfish.ResourceManagement;
 using Moonfish.Tags;
 
 namespace Moonfish.Guerilla
 {
+    /// <summary> Converts a block resource <see cref="Stream"/> into a <see cref="GuerillaBlock"/> object. </summary>
+    /// <remarks>
+    /// What we have to work with:
+    /// The <see cref="Stream"/> containing the resource data.
+    /// The <see cref="GlobalGeometryBlockInfoStructBlock"/> object within the parent.
+    /// 
+    /// What we need to return:
+    /// A <see cref="GuerillaBlock"/> containing the resource structure.
+    /// 
+    /// Problem:
+    ///   <see cref="VertexBuffer"/>: vertex data streams have no storage location in the structure.
+    /// Proposed Solution:
+    ///   Can add a field to the <see cref="VertexBuffer"/> to hold the data.
+    ///     pro: links description with data
+    ///     con: editing the layout of a Blam! structure.
+    /// 
+    /// Problem:
+    ///   No pointer addresses in the resource stream.
+    /// Solution: 
+    ///   Can restore the pointer, and then read normally (con: 2x pass process).
+    ///   pro: 
+    /// Solution
+    ///   Can read the resources using only the descriptors (<see cref="GlobalGeometryBlockResourceBlock"/>)
+    ///   pro: single pass io.
+    ///   con: need to initialize the structure without "reading".
+    ///   con: don't know which resource block belong to which <see cref="GuerillaBlock"/> object.
+    /// 
+    /// 
+    /// 
+    /// </remarks>
+    public class BlockResourceDecompiler
+    {
+    }
+
     /// <summary>
     ///     Contains generic methods to Write resources from IResourceBlocks and
     ///     update the internal resource values accordingly.
@@ -37,16 +73,14 @@ namespace Moonfish.Guerilla
         }
 
         /// <summary>
-        ///     Writes the <see cref="GuerillaBlock" /> resource object to the given stream
-        ///     and updates the resource length, position, and
-        ///     <see cref="IResourceDescriptor{T}" />'s in the given <see cref="T" />
-        ///     block.
+        /// Writes the <see cref="GuerillaBlock" /> resource object to the given stream
+        /// and updates the resource length, position, and
+        /// <see cref="IResourceDescriptor{T}" />'s in the given <see cref="T" />
+        /// block.
         /// </summary>
-        /// <typeparam name="T">
-        ///     A <see cref="GuerillaBlock" /> object that implements
-        ///     <see cref="IResourceBlock{T}" />,
-        ///     <see cref="IResourceDescriptor{T}" />
-        /// </typeparam>
+        /// <typeparam name="T">A <see cref="GuerillaBlock" /> object that implements
+        /// <see cref="IResourceBlock{T}" />,
+        /// <see cref="IResourceDescriptor{T}" /></typeparam>
         /// <param name="block">The object which conatains the resource to write.</param>
         /// <param name="output">The output stream to write the resource to.</param>
         /// <param name="index">The index of the resource to write.</param>
@@ -117,27 +151,56 @@ namespace Moonfish.Guerilla
             public override VertexBuffer ReadVertexBuffer()
             {
                 var offset = BaseStream.Position;
-
-                var block = info.Resources.Single(item => item.PrimaryLocator == 56 && item.SecondaryLocator == 32);
-                var index = (int) (offset - block.ResourceDataOffset - info.SectionDataSize)/block.SecondaryLocator;
-
-                var vertexBufferInfo =
-                    info.Resources.Single(item => item.PrimaryLocator == 56 && item.SecondaryLocator == index);
-
                 var vertexBuffer = base.ReadVertexBuffer();
 
-                //TODO: make this linear
-                using (BaseStream.Pin())
+                if (vertexBuffer.Type != VertexAttributeType.None)
                 {
-                    BaseStream.Position = vertexBufferInfo.ResourceDataOffset + info.SectionDataSize;
-                    vertexBuffer.Data = ReadBytes(vertexBufferInfo.ResourceDataSize);
-                    var check = ReadTagClass();
-                    if (check != TagClass.Rsrc && check != TagClass.Blkf)
-                        throw new InvalidDataException("Not a resource!");
+                    vertexBuffer.Data = ReadVertexBufferData(offset, vertexBuffer);
                 }
 
                 return vertexBuffer;
             }
+
+            private byte[] ReadVertexBufferData(long offset, VertexBuffer vertexBuffer)
+            {
+                // reverse lookup the resource that contains this VertexBuffer field.
+                var resource = info.Resources.SingleOrDefault(item => item.Contains(offset - info.SectionDataSize));
+
+                // if no resource was found then the VertexBuffer must be in the head of the block.
+                if (resource == null)
+                {
+                    resource =
+                        info.Resources.Single(
+                            item =>
+                                item.PrimaryLocator == offset &&
+                                item.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer);
+                }
+                // other wise find the apropriate VertexBuffer resource based on the index.
+                else
+                {
+                    //note: this should floor the value.
+                    var index = (int) (offset - info.SectionDataSize - resource.ResourceDataOffset)/
+                                resource.SecondaryLocator;
+
+                    resource =
+                        info.Resources.Single(
+                            item =>
+                                item.PrimaryLocator == resource.PrimaryLocator && item.SecondaryLocator == index &&
+                                item.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer);
+                }
+
+                //TODO: make this linear
+                byte[] data;
+                using (BaseStream.Pin())
+                {
+                    BaseStream.Position = resource.ResourceDataOffset + info.SectionDataSize;
+                    data = ReadBytes(resource.ResourceDataSize);
+                    var check = ReadTagClass();
+                    if (check != TagClass.Rsrc && check != TagClass.Blkf)
+                        throw new InvalidDataException("Not a resource!");
+                }
+                return data;
+            }
         }
-    }
+    };
 }

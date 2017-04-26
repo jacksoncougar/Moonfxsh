@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("model_variant_block")]
-    public partial class ModelVariantBlock : GuerillaBlock, IWriteQueueable
+    public partial class ModelVariantBlock : GuerillaBlock, IWriteDeferrable
     {
         public Moonfish.Tags.StringIdent Name;
         private byte[] fieldpad = new byte[16];
@@ -61,13 +61,13 @@ namespace Moonfish.Guerilla.Tags
             this.Regions = base.ReadBlockArrayData<ModelVariantRegionBlock>(binaryReader, pointerQueue.Dequeue());
             this.Objects = base.ReadBlockArrayData<ModelVariantObjectBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Regions);
             queueableBinaryWriter.Defer(this.Objects);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.Name);

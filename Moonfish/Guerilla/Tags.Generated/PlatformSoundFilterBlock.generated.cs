@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("platform_sound_filter_block")]
-    public partial class PlatformSoundFilterBlock : GuerillaBlock, IWriteQueueable
+    public partial class PlatformSoundFilterBlock : GuerillaBlock, IWriteDeferrable
     {
         public FilterTypeEnum FilterType;
         public int FilterWidth;
@@ -60,15 +60,15 @@ namespace Moonfish.Guerilla.Tags
             this.RightFilterFrequency.ReadInstances(binaryReader, pointerQueue);
             this.RightFilterGain.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.LeftFilterFrequency.Defer(queueableBinaryWriter);
-            this.LeftFilterGain.Defer(queueableBinaryWriter);
-            this.RightFilterFrequency.Defer(queueableBinaryWriter);
-            this.RightFilterGain.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.LeftFilterFrequency.DeferReferences(queueableBinaryWriter);
+            this.LeftFilterGain.DeferReferences(queueableBinaryWriter);
+            this.RightFilterFrequency.DeferReferences(queueableBinaryWriter);
+            this.RightFilterGain.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((int)(this.FilterType)));

@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("render_model_section_block")]
-    public partial class RenderModelSectionBlock : GuerillaBlock, IWriteQueueable
+    public partial class RenderModelSectionBlock : GuerillaBlock, IWriteDeferrable
     {
         public GlobalGeometryClassificationEnumDefinitionEnum GlobalGeometryClassificationEnumDefinition;
         private byte[] fieldpad = new byte[2];
@@ -61,14 +61,14 @@ namespace Moonfish.Guerilla.Tags
             this.SectionData = base.ReadBlockArrayData<RenderModelSectionDataBlock>(binaryReader, pointerQueue.Dequeue());
             this.GeometryBlockInfo.ReadInstances(binaryReader, pointerQueue);
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.SectionInfo.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.SectionInfo.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.SectionData);
-            this.GeometryBlockInfo.Defer(queueableBinaryWriter);
+            this.GeometryBlockInfo.DeferReferences(queueableBinaryWriter);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.GlobalGeometryClassificationEnumDefinition)));

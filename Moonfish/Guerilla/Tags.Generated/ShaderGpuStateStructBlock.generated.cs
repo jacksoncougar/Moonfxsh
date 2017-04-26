@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("shader_gpu_state_struct_block")]
-    public partial class ShaderGpuStateStructBlock : GuerillaBlock, IWriteQueueable
+    public partial class ShaderGpuStateStructBlock : GuerillaBlock, IWriteDeferrable
     {
         public RenderStateBlock[] RenderStates = new RenderStateBlock[0];
         public TextureStageStateBlock[] TextureStageStates = new TextureStageStateBlock[0];
@@ -65,9 +65,9 @@ namespace Moonfish.Guerilla.Tags
             this.VnConstants = base.ReadBlockArrayData<VertexShaderConstantBlock>(binaryReader, pointerQueue.Dequeue());
             this.CnConstants = base.ReadBlockArrayData<VertexShaderConstantBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.RenderStates);
             queueableBinaryWriter.Defer(this.TextureStageStates);
             queueableBinaryWriter.Defer(this.RenderStateParameters);
@@ -76,7 +76,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.VnConstants);
             queueableBinaryWriter.Defer(this.CnConstants);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.RenderStates);

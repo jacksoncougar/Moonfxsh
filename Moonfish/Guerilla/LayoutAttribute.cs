@@ -1,11 +1,14 @@
 ﻿using System;
+using JetBrains.Annotations;
+using Moonfish.Guerilla.Tags;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla
 {
     [AttributeUsage(AttributeTargets.Field)]
     public class LayoutAttribute : Attribute
     {
-        private int pack = 4;
+        private int pack = Alignment.Default;
 
         /// <summary>
         /// Controls the alignment of reference fields in memory.

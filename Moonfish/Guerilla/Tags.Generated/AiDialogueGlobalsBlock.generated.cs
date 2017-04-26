@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("adlg")]
     [TagBlockOriginalNameAttribute("ai_dialogue_globals_block")]
-    public partial class AiDialogueGlobalsBlock : GuerillaBlock, IWriteQueueable
+    public partial class AiDialogueGlobalsBlock : GuerillaBlock, IWriteDeferrable
     {
         public VocalizationDefinitionsBlock0[] Vocalizations = new VocalizationDefinitionsBlock0[0];
         public VocalizationPatternsBlock[] Patterns = new VocalizationPatternsBlock[0];
@@ -59,15 +59,15 @@ namespace Moonfish.Guerilla.Tags
             this.DialogueData = base.ReadBlockArrayData<DialogueDataBlock>(binaryReader, pointerQueue.Dequeue());
             this.InvoluntaryData = base.ReadBlockArrayData<InvoluntaryDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Vocalizations);
             queueableBinaryWriter.Defer(this.Patterns);
             queueableBinaryWriter.Defer(this.DialogueData);
             queueableBinaryWriter.Defer(this.InvoluntaryData);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.Vocalizations);

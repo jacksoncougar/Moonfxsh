@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("error_reports_block")]
-    public partial class ErrorReportsBlock : GuerillaBlock, IWriteQueueable
+    public partial class ErrorReportsBlock : GuerillaBlock, IWriteDeferrable
     {
         public TypeEnum Type;
         public Flags ErrorReportsFlags;
@@ -89,9 +89,9 @@ namespace Moonfish.Guerilla.Tags
             this.Quads = base.ReadBlockArrayData<ErrorReportQuadsBlock>(binaryReader, pointerQueue.Dequeue());
             this.Comments = base.ReadBlockArrayData<ErrorReportCommentsBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Text);
             queueableBinaryWriter.Defer(this.Vertices);
             queueableBinaryWriter.Defer(this.Vectors);
@@ -100,7 +100,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.Quads);
             queueableBinaryWriter.Defer(this.Comments);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.Type)));

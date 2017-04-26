@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("slit")]
     [TagBlockOriginalNameAttribute("shader_light_response_block")]
-    public partial class ShaderLightResponseBlock : GuerillaBlock, IWriteQueueable
+    public partial class ShaderLightResponseBlock : GuerillaBlock, IWriteDeferrable
     {
         public ShaderTemplateCategoryBlock[] Categories = new ShaderTemplateCategoryBlock[0];
         public ShaderTemplateLevelOfDetailBlock[] ShaderLODs = new ShaderTemplateLevelOfDetailBlock[0];
@@ -55,13 +55,13 @@ namespace Moonfish.Guerilla.Tags
             this.Categories = base.ReadBlockArrayData<ShaderTemplateCategoryBlock>(binaryReader, pointerQueue.Dequeue());
             this.ShaderLODs = base.ReadBlockArrayData<ShaderTemplateLevelOfDetailBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Categories);
             queueableBinaryWriter.Defer(this.ShaderLODs);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.Categories);

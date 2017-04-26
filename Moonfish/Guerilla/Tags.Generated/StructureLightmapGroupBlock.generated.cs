@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("structure_lightmap_group_block")]
-    public partial class StructureLightmapGroupBlock : GuerillaBlock, IWriteQueueable
+    public partial class StructureLightmapGroupBlock : GuerillaBlock, IWriteDeferrable
     {
         public TypeEnum Type;
         public Flags StructureLightmapGroupFlags;
@@ -86,9 +86,9 @@ namespace Moonfish.Guerilla.Tags
             this.SceneryObjectInfo = base.ReadBlockArrayData<LightmapSceneryObjectInfoBlock>(binaryReader, pointerQueue.Dequeue());
             this.SceneryObjectBucketRefs = base.ReadBlockArrayData<LightmapInstanceBucketReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.SectionPalette);
             queueableBinaryWriter.Defer(this.WritablePalettes);
             queueableBinaryWriter.Defer(this.Clusters);
@@ -101,7 +101,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.SceneryObjectInfo);
             queueableBinaryWriter.Defer(this.SceneryObjectBucketRefs);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.Type)));

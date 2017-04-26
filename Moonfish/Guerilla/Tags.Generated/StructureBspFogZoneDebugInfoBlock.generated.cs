@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("structure_bsp_fog_zone_debug_info_block")]
-    public partial class StructureBspFogZoneDebugInfoBlock : GuerillaBlock, IWriteQueueable
+    public partial class StructureBspFogZoneDebugInfoBlock : GuerillaBlock, IWriteDeferrable
     {
         public int MediaIndex;
         public int BaseFogPlaneIndex;
@@ -62,15 +62,15 @@ namespace Moonfish.Guerilla.Tags
             this.BoundingFogPlaneIndices = base.ReadBlockArrayData<StructureBspDebugInfoIndicesBlock>(binaryReader, pointerQueue.Dequeue());
             this.CollisionFogPlaneIndices = base.ReadBlockArrayData<StructureBspDebugInfoIndicesBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Lines);
             queueableBinaryWriter.Defer(this.ImmersedClusterIndices);
             queueableBinaryWriter.Defer(this.BoundingFogPlaneIndices);
             queueableBinaryWriter.Defer(this.CollisionFogPlaneIndices);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.MediaIndex);

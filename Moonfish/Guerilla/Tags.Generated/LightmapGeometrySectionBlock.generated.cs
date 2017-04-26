@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("lightmap_geometry_section_block")]
-    public partial class LightmapGeometrySectionBlock : GuerillaBlock, IWriteQueueable
+    public partial class LightmapGeometrySectionBlock : GuerillaBlock, IWriteDeferrable
     {
         public GlobalGeometrySectionInfoStructBlock GeometryInfo = new GlobalGeometrySectionInfoStructBlock();
         public GlobalGeometryBlockInfoStructBlock GeometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
@@ -53,14 +53,14 @@ namespace Moonfish.Guerilla.Tags
             this.GeometryBlockInfo.ReadInstances(binaryReader, pointerQueue);
             this.CacheData = base.ReadBlockArrayData<LightmapGeometrySectionCacheDataBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.GeometryInfo.Defer(queueableBinaryWriter);
-            this.GeometryBlockInfo.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.GeometryInfo.DeferReferences(queueableBinaryWriter);
+            this.GeometryBlockInfo.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.CacheData);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             this.GeometryInfo.Write(queueableBinaryWriter);

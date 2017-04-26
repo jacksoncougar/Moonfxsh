@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("game_engine_ctf_event_block")]
-    public partial class GameEngineCtfEventBlock : GuerillaBlock, IWriteQueueable
+    public partial class GameEngineCtfEventBlock : GuerillaBlock, IWriteDeferrable
     {
         public Flags GameEngineCtfEventFlags;
         private byte[] fieldpad = new byte[2];
@@ -89,13 +89,13 @@ namespace Moonfish.Guerilla.Tags
             this.ExtraSounds.ReadInstances(binaryReader, pointerQueue);
             this.SoundPermutations = base.ReadBlockArrayData<SoundResponseDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
-            this.ExtraSounds.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
+            this.ExtraSounds.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.SoundPermutations);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(((short)(this.GameEngineCtfEventFlags)));

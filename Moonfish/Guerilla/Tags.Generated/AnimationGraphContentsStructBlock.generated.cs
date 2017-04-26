@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("animation_graph_contents_struct_block")]
-    public partial class AnimationGraphContentsStructBlock : GuerillaBlock, IWriteQueueable
+    public partial class AnimationGraphContentsStructBlock : GuerillaBlock, IWriteDeferrable
     {
         public AnimationModeBlock[] ModesAABBCC = new AnimationModeBlock[0];
         public VehicleSuspensionBlock[] VehicleSuspensionCCAABB = new VehicleSuspensionBlock[0];
@@ -53,14 +53,14 @@ namespace Moonfish.Guerilla.Tags
             this.VehicleSuspensionCCAABB = base.ReadBlockArrayData<VehicleSuspensionBlock>(binaryReader, pointerQueue.Dequeue());
             this.ObjectOverlaysCCAABB = base.ReadBlockArrayData<ObjectAnimationBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.ModesAABBCC);
             queueableBinaryWriter.Defer(this.VehicleSuspensionCCAABB);
             queueableBinaryWriter.Defer(this.ObjectOverlaysCCAABB);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.ModesAABBCC);

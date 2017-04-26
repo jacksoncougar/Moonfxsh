@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagBlockOriginalNameAttribute("pathfinding_data_block")]
-    public partial class PathfindingDataBlock : GuerillaBlock, IWriteQueueable
+    public partial class PathfindingDataBlock : GuerillaBlock, IWriteDeferrable
     {
         public SectorBlock[] Sectors = new SectorBlock[0];
         public SectorLinkBlock[] Links = new SectorLinkBlock[0];
@@ -78,9 +78,9 @@ namespace Moonfish.Guerilla.Tags
             this.InstancedGeometryRefs = base.ReadBlockArrayData<InstancedGeometryReferenceBlock>(binaryReader, pointerQueue.Dequeue());
             this.UserplacedHints = base.ReadBlockArrayData<UserHintBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.Sectors);
             queueableBinaryWriter.Defer(this.Links);
             queueableBinaryWriter.Defer(this.Refs);
@@ -92,7 +92,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.Defer(this.InstancedGeometryRefs);
             queueableBinaryWriter.Defer(this.UserplacedHints);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.Sectors);

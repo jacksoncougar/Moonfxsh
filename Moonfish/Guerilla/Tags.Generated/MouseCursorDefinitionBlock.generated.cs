@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     using System.Linq;
     
     [TagClassAttribute("mcsr")]
-    public partial class MouseCursorDefinitionBlock : GuerillaBlock, IWriteQueueable
+    public partial class MouseCursorDefinitionBlock : GuerillaBlock, IWriteDeferrable
     {
         public MouseCursorBitmapReferenceBlock[] MouseCursorBitmaps = new MouseCursorBitmapReferenceBlock[0];
         public float AnimationSpeed;
@@ -50,16 +50,16 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             //this.MouseCursorBitmaps = base.ReadBlockArrayData<MouseCursorBitmapReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter linearBinaryWriter)
         {
-            base.Defer(queueableBlamBinaryWriter);
-            queueableBlamBinaryWriter.Defer(this.MouseCursorBitmaps);
+            base.DeferReferences(linearBinaryWriter);
+            linearBinaryWriter.Defer(this.MouseCursorBitmaps);
         }
-        public override void Write_(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBlamBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter linearBinaryWriter)
         {
-            base.Write_(queueableBlamBinaryWriter);
-            queueableBlamBinaryWriter.WritePointer(this.MouseCursorBitmaps);
-            queueableBlamBinaryWriter.Write(this.AnimationSpeed);
+            base.Write_(linearBinaryWriter);
+            linearBinaryWriter.WritePointer(this.MouseCursorBitmaps);
+            linearBinaryWriter.Write(this.AnimationSpeed);
         }
     }
 }

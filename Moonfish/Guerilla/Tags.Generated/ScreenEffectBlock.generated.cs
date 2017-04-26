@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("egor")]
     [TagBlockOriginalNameAttribute("screen_effect_block")]
-    public partial class ScreenEffectBlock : GuerillaBlock, IWriteQueueable
+    public partial class ScreenEffectBlock : GuerillaBlock, IWriteDeferrable
     {
         /// <summary>
         /// A screen effect is essentially a collection of pass references, each one corresponding to a shader pass reference from the template. Note that only shader passes in the TRANSPARENT layer are considered during screen effect rendering.
@@ -58,12 +58,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.PassReferences = base.ReadBlockArrayData<RasterizerScreenEffectPassReferenceBlock>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.PassReferences);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.fieldpad);

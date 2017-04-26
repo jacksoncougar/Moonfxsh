@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     [JetBrains.Annotations.UsedImplicitlyAttribute(ImplicitUseTargetFlags.WithMembers)]
     [TagClassAttribute("vehc")]
     [TagBlockOriginalNameAttribute("vehicle_collection_block")]
-    public partial class VehicleCollectionBlock : GuerillaBlock, IWriteQueueable
+    public partial class VehicleCollectionBlock : GuerillaBlock, IWriteDeferrable
     {
         public VehiclePermutation[] VehiclePermutations = new VehiclePermutation[0];
         public short SpawnTime;
@@ -52,12 +52,12 @@ namespace Moonfish.Guerilla.Tags
             base.ReadInstances(binaryReader, pointerQueue);
             this.VehiclePermutations = base.ReadBlockArrayData<VehiclePermutation>(binaryReader, pointerQueue.Dequeue());
         }
-        public override void Defer(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void DeferReferences(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
-            base.Defer(queueableBinaryWriter);
+            base.DeferReferences(queueableBinaryWriter);
             queueableBinaryWriter.Defer(this.VehiclePermutations);
         }
-        public override void Write(Moonfish.Guerilla.QueueableBlamBinaryWriter queueableBinaryWriter)
+        public override void Write(Moonfish.Guerilla.LinearBinaryWriter queueableBinaryWriter)
         {
             base.Write(queueableBinaryWriter);
             queueableBinaryWriter.WritePointer(this.VehiclePermutations);
